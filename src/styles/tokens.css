@@ -1,0 +1,89 @@
+/* Generated from AIDE's design/tokens.json by scripts/sync-from-aide.mjs. Do not edit. */
+
+:root {
+    --space-xxs: 2px;
+    --space-xs: 4px;
+    --space-s: 6px;
+    --space-m: 8px;
+    --space-l: 12px;
+    --space-xl: 16px;
+    --space-xxl: 24px;
+    --space-xxxl: 32px;
+    --content-inset: 24px;
+    --content-inset-phone: 16px;
+    --panel-inset: 14px;
+    --reading-width: 720px;
+    --panel-width: 280px;
+    --rail-button: 32px;
+    --row-min-height: 28px;
+    --radius-s: 6px;
+    --radius-m: 10px;
+    --radius-l: 14px;
+    --radius-pill: 999px;
+    --font-apple: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    --font-gnome: "Adwaita Sans", Cantarell, "Noto Sans", system-ui, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Adwaita Mono", Menlo, monospace;
+    --chrome: #ececec;
+    --card: #ffffff;
+    --fill: #e2e2e4;
+    --separator: #d4d4d6;
+    --text: #1c1c1e;
+    --text-secondary: #636366;
+    --text-tertiary: #8e8e93;
+    --accent: #0a7aff;
+    --on-accent: #ffffff;
+    --accent-soft: #e3efff;
+    --success: #1f7a35;
+    --warning: #b25000;
+    --danger: #d70015;
+    --editor-bg: #ffffff;
+    --editor-fg: #1c1c1e;
+    --editor-muted: #8e8e93;
+    --editor-code: rgba(120,120,128,0.12);
+    --editor-quote: rgba(120,120,128,0.35);
+}
+
+:root[data-theme="dark"] {
+    --chrome: #282828;
+    --card: #1e1e1e;
+    --fill: #38383a;
+    --separator: #3d3d40;
+    --text: #f2f2f7;
+    --text-secondary: #a1a1a6;
+    --text-tertiary: #7c7c80;
+    --accent: #0a84ff;
+    --on-accent: #ffffff;
+    --accent-soft: #1b2c44;
+    --success: #30d158;
+    --warning: #ff9f0a;
+    --danger: #ff453a;
+    --editor-bg: #1c1c1e;
+    --editor-fg: #f2f2f7;
+    --editor-muted: #8e8e93;
+    --editor-code: rgba(120,120,128,0.24);
+    --editor-quote: rgba(142,142,147,0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --chrome: #282828;
+        --card: #1e1e1e;
+        --fill: #38383a;
+        --separator: #3d3d40;
+        --text: #f2f2f7;
+        --text-secondary: #a1a1a6;
+        --text-tertiary: #7c7c80;
+        --accent: #0a84ff;
+        --on-accent: #ffffff;
+        --accent-soft: #1b2c44;
+        --success: #30d158;
+        --warning: #ff9f0a;
+        --danger: #ff453a;
+        --editor-bg: #1c1c1e;
+        --editor-fg: #f2f2f7;
+        --editor-muted: #8e8e93;
+        --editor-code: rgba(120,120,128,0.24);
+        --editor-quote: rgba(142,142,147,0.45);
+    }
+}
+

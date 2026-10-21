@@ -1,0 +1,6 @@
+@import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+
+:root {
+    --font-sans:
+        "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Noto Sans", sans-serif;
+}

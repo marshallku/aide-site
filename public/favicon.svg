@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1254 1254">
+<defs><linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#2b2d52"/><stop offset="1" stop-color="#5856d6"/>
+</linearGradient></defs>
+<rect width="1254" height="1254" rx="282.15000000000003" fill="url(#tile)"/>
+<path transform="translate(627 627) scale(0.7920) translate(-624 -628)" fill="#fff" fill-rule="evenodd" clip-rule="evenodd" d="M624 153C528 219 420 275 245 329C238 331 235 336 235 344V605C235 826 382 993 621 1103C862 991 1013 824 1013 605V344C1013 337 1010 333 1003 331C828 277 721 220 624 153ZM532 297H606V572C583 580 566 601 566 627C566 653 583 674 606 682L621 1040C579 865 505 733 368 623C458 526 512 413 532 297ZM642 297H715C736 413 790 526 877 623C743 731 667 865 622 1040L642 682C665 674 682 653 682 627C682 601 665 580 642 572V297Z"/>
+</svg>
