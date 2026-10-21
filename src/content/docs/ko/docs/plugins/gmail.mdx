@@ -1,0 +1,181 @@
+---
+title: Gmail
+description: 하루에 한 번 답장이 필요한 메일, 다른 사람의 답을 기다리는 스레드, 나머지 메일 수를 날짜 노트에 써 주고, 급한 메일은 푸시 알림으로 보내요.
+sidebar:
+    order: 18
+---
+
+import { Aside, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+Gmail 플러그인이 메일을 대신 읽어 줘서 하루 종일 메일을 확인하지 않아도 돼요. 18:00에 답장할 것과 답을 기다리는
+것을 날짜 노트에 쓰고, AI가 급하다고 판단한 메일은 푸시 알림으로 보내요. 읽기만 할 수 있어요. 메일을 보내거나,
+라벨을 붙이거나, 보관하거나, 지우지 않아요.
+
+<PluginFacts id="gmail" />
+
+## 하는 일
+
+**5분마다** Gmail에 바뀐 스레드가 있는지 물어요. 헤더만 읽고 스레드 ID만 보관해요.
+
+**18:00에** 날짜 노트(다른 노트를 고르지 않았다면 `briefings/<date>`)에 **📬 메일** 섹션을 써요.
+
+- **답장할 것**: 지난 7일 동안 받은 편지함에 온 메일 중 나에게 무언가를 요청하는 메일이에요. 플러그인은 최대
+  30개 스레드의 최신 메시지를 가져와 뉴스레터와 Gmail의 프로모션, 소셜, 업데이트, 포럼 카테고리를 빼고, 각각
+  텍스트 2 KB로 잘라 AI에게 분류를 맡겨요. 줄마다 Gmail의 스레드로 연결돼요. AI가 없거나 실패하면 후보를 모두
+  **살펴볼 메일**(AI 없이 고른 것) 아래에 대신 나열해요.
+- **답을 기다리는 것**: 내가 마지막으로 쓴 지 3일이 넘었고(최대 30개) 나 말고 다른 사람이 참여한 스레드예요.
+  나에게 보낸 메모는 빼요.
+- 오늘 받은 메일 수와 그중 뉴스레터와 알림 수예요.
+
+이 섹션은 플러그인 전용이에요. 매일 다시 쓰고 노트의 나머지는 건드리지 않아요. 데일리 템플릿에 날짜 노트 링크를
+넣으면 데일리 노트에서 볼 수 있고, **쓸 노트**를 `daily`로 두면 섹션이 데일리 노트에 바로 들어가요([데일리 노트와
+템플릿](/ko/docs/guides/periodic-notes/)).
+
+**급한 메일.** AI가 메일을 급하다고 표시하면 플러그인이 기기에 한 번 푸시 알림을 보내요. 제목은
+`📬 <subject>`이고 보낸 사람과 급한 이유가 담기며, 스레드로 연결돼요. 멈추려면 **급한 메일 알림**을 꺼요.
+
+**토큰이 망가지면** 하루에 한 번 알려 줘요. **Gmail을 다시 연결해 주세요** 항목이 푸시 알림으로 와요.
+
+18:00에 컴퓨터가 잠자기 상태였다면 6시간 안에 깨어날 때 그날의 섹션을 써요.
+
+## 시작하기 전에
+
+- **서버 플러그인을 실행하는 서버나 데스크톱 호스트**가 브라우저를 열 수 있는 컴퓨터에 있어야 해요. 데스크톱
+  호스트라면 AIDE가 보관소를 호스팅하는 컴퓨터예요([데스크톱에서 호스팅하기](/ko/docs/self-hosting/desktop-host/)).
+- **직접 만든 Google OAuth 클라이언트.** AIDE에는 들어 있지 않아요. Google Cloud에서 무료로 만들면 플러그인이
+  그걸로 Gmail과 통신해요. 방법은 아래에 있어요.
+- 메일을 분류할 **AI**([AI와 모델](/ko/docs/guides/ai/)). AI가 없어도 플러그인은 메일을 분류하지 않은 채로
+  나열해요.
+
+## 설정하기
+
+### 1. Google OAuth 클라이언트 만들기
+
+<Steps>
+
+1. [Google Cloud 콘솔](https://console.cloud.google.com/)을 열고 프로젝트를 만들어요(이름은 아무거나, 예를 들어
+   `AIDE`).
+2. **APIs & Services › Library**에서 **Gmail API**를 찾아 **Enable**을 선택해요.
+3. 동의 화면을 설정해요(**APIs & Services › OAuth consent screen**, 새 콘솔에서는 **Google Auth Platform**). 앱
+   이름을 넣고, 지원 및 연락처 주소에 내 이메일을 넣고, 사용자 유형은 **External**로 해요.
+4. **Audience**(또는 동의 화면 요약)에서 **Publish app**을 선택해 상태를 **In production**으로 만들어요.
+   **Testing**으로 두면 Google이 7일마다 로그인을 만료시켜요.
+5. 클라이언트를 만들어요. **APIs & Services › Credentials › Create credentials › OAuth client ID**(또는
+   **Clients › Create client**)에서 애플리케이션 유형으로 **Desktop app**을 고르고 **Create**를 선택해요.
+6. **Download JSON**을 선택해요. 파일을 플러그인이 기본으로 읽는 경로인
+   `~/.config/life-assistant/credentials.json`에 저장해요.
+
+   ```sh
+   mkdir -p ~/.config/life-assistant
+   mv ~/Downloads/client_secret_*.json ~/.config/life-assistant/credentials.json
+   ```
+
+</Steps>
+
+### 2. Google로 로그인하기
+
+플러그인을 실행하는 컴퓨터에서 `aide-plugins google-auth gmail`을 실행해요. 브라우저에 Google 동의 페이지가
+열리고 최대 10분 동안 기다려요. 로그인하고 메일 읽기 권한을 허용하면 토큰이
+`~/.config/aide-plugins/gmail-token.json`에 저장돼요.
+
+`aide-plugins`는 AIDE의 데스크톱 호스트에 함께 들어 있어요.
+
+<Tabs syncKey="os">
+<TabItem label="macOS">
+
+앱 안에 있어요. AIDE가 `~/Applications`에 있다면(설치 스크립트가 설치하는 위치예요):
+
+```sh
+~/Applications/AIDE.app/Contents/MacOS/aide-plugins google-auth gmail
+```
+
+AIDE를 `/Applications`로 옮겼다면 `/Applications/AIDE.app/Contents/MacOS/aide-plugins`를 써요.
+
+</TabItem>
+<TabItem label="Linux">
+
+호스트 런타임 폴더에 AIDE 버전마다 하나씩 있어요.
+
+```sh
+ls ~/.local/lib/aide/
+~/.local/lib/aide/host-0.4.16/aide-plugins google-auth gmail
+```
+
+설치한 AIDE의 `host-<version>` 폴더를 써요.
+
+</TabItem>
+</Tabs>
+
+Google이 검증하지 않은 클라이언트라서 동의 페이지에 Google이 앱을 확인하지 않았다는 경고가 떠요. 내가 만든
+클라이언트이니 **Advanced**를 선택하고 계속 진행해요. 끝나면 명령이 `Saved the token to … Turn the plugin on in
+AIDE.`를 출력해요.
+
+`-credentials <file>`와 `-token <file>`로 명령이 쓸 다른 경로를 고를 수 있어요. 플러그인 자체는 기본 경로를
+읽으니, 호스트의 로컬 플러그인 설정에서도 경로를 바꾸지 않았다면 파일은 기본 경로에 두세요([데스크톱에서
+호스팅하기](/ko/docs/self-hosting/desktop-host/)).
+
+### 3. 켜기
+
+<Steps>
+
+1. AIDE에서 **설정**을 열고 **서버에 저장** 아래의 **Gmail**을 선택해요(Linux에서는 **설정 › 플러그인 ›
+   Gmail**).
+2. **활성화됨**을 켜요. 1분 안에 플러그인이 시작돼요.
+
+</Steps>
+
+첫 섹션은 18:00에 와요. 그때까지 플러그인은 5분마다 스레드를 살펴요.
+
+## 설정
+
+<PluginSettings
+    id="gmail"
+    defaults={{ at: "18:00", note: "briefings/{date}", followUpDays: "3", urgent: "켬" }}
+/>
+
+- **쓸 노트**에는 `{date}`가 들어간 노트 경로(`briefings/{date}`, `mail/{date}`…)나 데일리 노트를 뜻하는
+  `daily`를 넣어요.
+- **답장 대기 기준(일)**: 내가 마지막으로 쓴 스레드는 이만큼 기다리면 목록에 나오고, 30일이 지나면 빠져요.
+
+## 문제 해결
+
+### 18:00에 아무것도 오지 않았어요
+
+- 플러그인이 **활성화됨**인지, 18:00에 호스트가 실행 중이었거나 6시간 안에 깨어났는지 확인하세요.
+- `~/.config/life-assistant/credentials.json`과 `~/.config/aide-plugins/gmail-token.json` 두 파일이 다
+  있는지 확인하세요. 없으면 플러그인이 시작하지 못해요.
+
+### Gmail을 다시 연결해 주세요
+
+토큰이 더 이상 작동하지 않아요. AIDE의 접근 권한을 없앴거나, Google 비밀번호를 바꿨거나, 동의 화면이
+**Testing** 상태라 7일이 지났을 때예요. 동의 화면을 게시하고(**In production**) `aide-plugins google-auth
+gmail`을 다시 실행하세요.
+
+### google: no refresh token came back
+
+Google이 전에 토큰을 준 적이 있어서 오래가는 토큰을 다시 주지 않는 경우예요.
+[myaccount.google.com/permissions](https://myaccount.google.com/permissions)에서 앱의 접근 권한을 없앤 뒤
+명령을 다시 실행하세요.
+
+### google: no answer from the browser
+
+10분 안에 동의 페이지를 끝내지 않았어요. 명령을 다시 실행하세요. 로그인할 브라우저가 있는 컴퓨터에서 실행해야
+해요. Google이 그 컴퓨터의 주소로 다시 돌려보내기 때문이에요.
+
+### 모두 살펴볼 메일 아래에 있어요
+
+AI를 쓸 수 없었거나 AI의 답을 쓸 수 없어서 플러그인이 후보를 모두 나열했어요. [AI와
+모델](/ko/docs/guides/ai/)을 확인하세요.
+
+## 개인정보
+
+- 플러그인은 Google에 `gmail.readonly`만 요청해요. 메일을 보내거나 바꿀 수 없어요.
+- OAuth 클라이언트와 토큰은 플러그인을 실행하는 컴퓨터의 파일에 남아요. 갱신된 토큰은 그 컴퓨터에 있는
+  플러그인 자체 상태에 보관돼요.
+- 메일이 아니라 스레드 ID를 저장해요. 메일 자체는 매번 Gmail에서 읽어요.
+- 분류를 위해 하루 최대 30통(각각 보낸 사람, 제목, 최대 2 KB의 텍스트)이 설정한 AI로 가요. 메일은 지시가 아닌
+  데이터로 전달돼요.
+- **📬 메일** 섹션(제목, 보낸 사람, 답장이 필요한 이유)은 노트라서 기기에 동기화돼요. 급한 메일의 제목과 이유는
+  푸시 알림으로 나가요.

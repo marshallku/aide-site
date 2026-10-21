@@ -1,0 +1,148 @@
+---
+title: Daily notes and templates
+description: Set up daily, weekly, monthly, quarterly and yearly notes, write their templates, and let plugins fill parts of them.
+sidebar:
+    order: 2
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Periodic notes are one note per day, week, month, quarter or year, made from a template the first time you open them. They're where AIDE puts the day's todos, your calendar agenda and what plugins write about a day.
+
+## Opening them
+
+- **Today** opens today's daily note: <kbd>⌘</kbd><kbd>T</kbd> on the Mac, <kbd>Ctrl</kbd><kbd>T</kbd> on Linux, or the **Today** tile in the Wiki.
+- The Wiki's **Journal** section has a tile for each period you've turned on: **Today**, **This week**, **This month**, **Quarter** and **This year**. **Calendar** beside the heading shows a month calendar with week numbers; click a day, a week or the month to open its note.
+- The command palette lists this week's, month's, quarter's and year's notes.
+- A link to a periodic note that doesn't exist yet, such as `[[2026-10-23]]`, creates it when you follow it.
+- `aide://today` opens today's note from outside the app, and `aidectl daily` prints or creates it from the command line (see [aidectl](/docs/developers/aidectl/)).
+
+A note is made only when you open it (or a plugin such as the morning briefing makes today's). Review never creates one.
+
+## Settings › Wiki
+
+**Settings › Wiki** sets where each period's notes live and what they're called. Each period has **Enabled**, **Folder**, **Format** and **Template**, and **Now** shows the path its format gives today, so you can check a format before saving.
+
+| Period | On by default | Folder | Format | Example path | Template |
+| --- | --- | --- | --- | --- | --- |
+| Daily | yes | `daily` | `YYYY-MM-DD` | `daily/2026-10-22.md` | `templates/daily` |
+| Weekly | yes | `weekly` | `GGGG-[W]WW` | `weekly/2026-W43.md` | `templates/weekly` |
+| Monthly | yes | `monthly` | `YYYY-MM` | `monthly/2026-10.md` | `templates/monthly` |
+| Quarterly | no | `quarterly` | `YYYY-[Q]Q` | `quarterly/2026-Q4.md` | `templates/quarterly` |
+| Yearly | no | `yearly` | `YYYY` | `yearly/2026.md` | `templates/yearly` |
+
+Formats use moment.js tokens, as in Obsidian:
+
+| Token | Means |
+| --- | --- |
+| `YYYY` | year |
+| `Q` | quarter |
+| `MM` `M` | month, with or without a leading zero |
+| `MMM` `MMMM` | `Oct`, `October` |
+| `DD` `D` `Do` | day of the month (`Do` is `1st`, `2nd` …) |
+| `dddd` `ddd` | weekday name, for display only |
+| `GGGG` `WW` `W` | ISO week-year and week |
+| `gggg` `ww` `w` | week-year and week by your week start |
+| `[text]` | literal text |
+
+A `/` in a format makes folders, and a format may hold spaces and punctuation (`YYYY-MM-DD dddd`, `dddd, MMMM Do YYYY`), but not `\ : * ? " < > |`. A folder may have spaces and capitals, such as `Daily Notes`.
+
+**Calendar** holds two settings shared by every period:
+
+- **Week starts on**: **Monday (ISO weeks)**, the default, or **Sunday** (week 1 is the week with January 1st).
+- **Timezone**: an IANA name such as `Asia/Seoul`. It decides what "today" is for notes and completion stamps. Left empty, it's the server's timezone, or the device's in a local vault.
+
+Changing a format leaves existing notes where they are, and they stay that period's note. To rename them, save the new formats first, then press **Move existing notes to these formats…**: it lists the moves and how many notes' links will change, and nothing moves until you press **Move**. A note whose new path is already taken stays where it is.
+
+In a local vault these settings are saved inside the vault folder, so they travel with it. With a server they're kept on the server and every device uses them.
+
+## Templates
+
+A template is an ordinary note, `templates/daily` by default. When a period's template note doesn't exist, AIDE uses a built-in one. The built-in daily template is:
+
+```markdown
+# {{date}}
+
+## Todo
+
+## Notes
+```
+
+The built-in weekly template links the month and each day of the week, and the monthly, quarterly and yearly ones list the shorter period's notes inside them, each with a `## Summary` heading that [Review](/docs/guides/search-graph-review/) shows.
+
+### Variables
+
+Variable names match in any case and may have spaces inside the braces (`{{ Date }}`). An unknown variable stays as written.
+
+| Variable | Gives |
+| --- | --- |
+| `{{date}}` | the period's first day, `2026-10-22` |
+| `{{title}}` | the new note's file name |
+| `{{time}}` | the time the note was made, `HH:mm` |
+| `{{date:FORMAT}}`, `{{time:FORMAT}}` | the note's date with a moment.js format, such as `{{date:dddd, MMMM Do}}` |
+| `{{date+1d}}`, `{{date-2w:YYYY-MM-DD}}`, `{{time+30m:HH:mm}}` | the date or time moved by `y` years, `Q` quarters, `M` months, `w` weeks, `d` days, `h` hours, `m` minutes or `s` seconds |
+| `{{yesterday}}`, `{{tomorrow}}` | in a daily note, the previous and next day's note name in your daily format, so `[[{{yesterday}}]]` links it |
+| `{{monday:FORMAT}}` … `{{sunday:FORMAT}}` | in a weekly note, that day of the week |
+| `{{week}}` | the ISO week, `2026-W43` |
+| `{{month}}` | `2026-10` |
+| `{{quarter}}` | `2026-Q4` |
+| `{{year}}` | `2026` |
+| `{{mon}}` … `{{sun}}` | the dates of that ISO week's days |
+| `{{prev}}`, `{{next}}` | a relative link to the previous and next note of the same period |
+| `{{parent}}` | a relative link to the longer period's note that contains this one (a day's week, a week's month) |
+| `{{mon-link}}` … `{{sun-link}}` | relative links to that week's daily notes |
+| `{{children}}` | a list of links to the shorter period's notes inside this one |
+| `{{day}}` | the weekday as a one-letter Korean name (`월`, `화` …) |
+
+The link variables give only the path, for a Markdown link such as `[Last week]({{prev}})`. A link variable is empty when the period it points to is turned off.
+
+<Aside type="tip">
+For an English weekday name, use `{{date:dddd}}` rather than `{{day}}`.
+</Aside>
+
+Months, quarters and years keep the day within the month (January 31 plus one month is February 28). The whole template uses one moment, in your timezone.
+
+## Slots
+
+A line `{{slot plugin.name}}` in a template becomes an empty block in the new note that a plugin owns and fills later. The plugin only ever rewrites the lines inside its own block; everything around it is yours. In the editor the block is marked with the plugin's name.
+
+Two slots go in a daily template:
+
+| Slot | Filled by |
+| --- | --- |
+| `{{slot todo-carry.open}}` | yesterday's open todos, when **Carry open todos** in **Settings › Todos** isn't **Off** (see [Todos](/docs/guides/todos/) and [Todo carry](/docs/plugins/todo-carry/)) |
+| `{{slot gcal.today}}` | today's agenda, kept up to date |
+
+In a local vault, AIDE fills both itself while the app is open: the agenda from this device's calendars (the system calendars on the Mac and iPhone once you allow access in the Calendar tab, the calendars you added in Settings on Linux). With a server or a [desktop host](/docs/self-hosting/desktop-host/), the [Todo carry](/docs/plugins/todo-carry/) and [Google Calendar](/docs/plugins/gcal/) plugins fill them and need to be turned on.
+
+A daily template using both:
+
+```markdown
+# {{date:dddd, MMMM Do}}
+
+[[{{yesterday}}]] · [[{{tomorrow}}]]
+
+## Todo
+{{slot todo-carry.open}}
+
+## Today
+{{slot gcal.today}}
+
+## Notes
+```
+
+## The day note
+
+Plugins that write about a day — the [morning briefing](/docs/plugins/briefing/), the [evening recap](/docs/plugins/recap/), [Gmail](/docs/plugins/gmail/)'s mail summary and calendar prep — write into a separate note, `briefings/` followed by the date (`briefings/2026-10-22`), so your daily note stays yours. Each of them has a **note** setting: another path containing `{date}`, or `daily` to write into the daily note itself as owned blocks.
+
+To reach the day note from your daily note, link it in the daily template. With the default `daily/` folder:
+
+```markdown
+[Briefing](../briefings/{{date}}.md)
+```
+
+## Coming from Obsidian
+
+When you open an Obsidian vault in AIDE for the first time, AIDE reads Obsidian's Daily notes settings (`.obsidian/daily-notes.json`) and uses its folder, format and template for AIDE's daily notes, so your existing daily notes are recognised. Obsidian's template variables (`{{title}}`, `{{date:FORMAT}}`, `{{time}}`, offsets) and Periodic Notes' `{{monday:FORMAT}}` work in AIDE's templates.
+
+This happens once, before AIDE has its own settings for the vault; after that, **Settings › Wiki** is the only place they change. The other periods keep AIDE's defaults. Obsidian's template is used only when exactly one note has that path; otherwise the daily notes come without it. If Obsidian's folder or format can't be used, AIDE keeps its defaults and **Files that need attention** in Settings says why. See [Vaults and your files](/docs/guides/vaults/).

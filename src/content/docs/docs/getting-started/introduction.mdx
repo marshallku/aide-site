@@ -1,0 +1,101 @@
+---
+title: What is AIDE
+description: AIDE is a personal assistant you own end to end, from the notes editor to the server that runs your plugins and AI.
+sidebar:
+    order: 1
+---
+
+import { Card, CardGrid, LinkCard, Badge } from "@astrojs/starlight/components";
+
+AIDE is a notes app and a personal assistant that you run yourself. You write in a Markdown editor
+with todos and a scratchpad; AIDE files your scratch notes into your wiki, plans your day with you,
+and collects what happens elsewhere (calendar, mail, Slack, anything that can post an event) into one
+Feed sorted by what needs you.
+
+## The problem it solves
+
+Personal assistants built from other people's products break at the seams. One attempt used a chat
+app as its screen, a Git wiki or an Obsidian vault as its memory, and phone shortcuts as its input:
+each piece had its own limits, and every join between them was a place where things got lost.
+
+AIDE owns the whole chain instead: its own apps and its own server. The app is the window; the
+server is the brain, the memory and the scheduler. Your notes stay plain Markdown files in a folder
+you can open with any other editor, and the AI is the one you bring: your own Anthropic API key, the
+Claude Code or Codex you already have on your computer, or no AI at all.
+
+## What you get
+
+<CardGrid>
+    <Card title="Notes and the editor" icon="document">
+        A live-preview Markdown editor with wikilinks, embeds, tables and tabs. Open an existing Obsidian
+        vault in place. [Notes and the editor](/docs/guides/editor/)
+    </Card>
+    <Card title="Daily notes" icon="seti:clock">
+        Daily, weekly, monthly, quarterly and yearly notes with templates that plugins fill in.
+        [Daily notes and templates](/docs/guides/periodic-notes/)
+    </Card>
+    <Card title="Todos" icon="approve-check">
+        Every `- [ ]` in every note is a todo, with Obsidian Tasks and Dataview fields, time blocks and
+        six view presets. [Todos](/docs/guides/todos/)
+    </Card>
+    <Card title="Scratch and Organize" icon="pencil">
+        Jot things down without deciding where they go; Organize proposes a home in your wiki for each.
+        [Scratch and Organize](/docs/guides/scratch/)
+    </Card>
+    <Card title="The Feed" icon="rss">
+        One event log for everything your plugins and scripts publish, sorted into Act on, Need to know
+        and Might interest you. [The Feed](/docs/guides/feed/)
+    </Card>
+    <Card title="The assistant" icon="star">
+        Plan your day by chatting: it sees your todos and calendar and proposes changes you take or drop.
+        [The assistant](/docs/guides/assistant/)
+    </Card>
+    <Card title="Meetings" icon="comment">
+        Record and transcribe on the device, then get a summary, decisions and action items.
+        [Meetings](/docs/guides/meetings/)
+    </Card>
+    <Card title="Plugins" icon="puzzle">
+        Server plugins (morning briefing, evening recap, Slack, Radar, Google Calendar…) and sandboxed
+        device plugins. [How plugins work](/docs/plugins/overview/)
+    </Card>
+</CardGrid>
+
+AIDE also comes with a terminal on the desktop ([Terminal and SSH](/docs/guides/terminal/)), a
+command-line tool, `aidectl` ([aidectl](/docs/developers/aidectl/)), and an MCP server so the Claude
+app can read and write your notes ([MCP and the Claude app](/docs/developers/mcp/)).
+
+## Three apps
+
+| App | Requires | Status |
+| --- | --- | --- |
+| Mac | macOS 14 Sonoma or later, Apple silicon or Intel | Public release, signed and notarized |
+| Linux | x86_64, GTK 4 and libadwaita | Public release |
+| iPhone | iOS 17 or later | TestFlight beta, not public yet <Badge text="Beta" variant="caution" /> |
+
+All three share one design and the same notes format; what differs per platform is said on each
+page. [Install](/docs/getting-started/install/) covers the Mac and Linux.
+
+## Three ways to run
+
+1. **Local mode.** Notes in a folder on one device, no server. The editor, todos, scratch, wiki,
+   calendar, assistant and meetings all work; the Feed, notifications and server plugins don't.
+2. **Desktop host.** Your Mac or Linux computer runs AIDE's server for a vault, with its own
+   database and plugin runner bundled in the app. Your phone and other computers pair with it.
+3. **Your own server.** The same server on a machine that is always on.
+
+[Ways to run AIDE](/docs/getting-started/ways-to-run/) compares them and helps you choose.
+
+## What AIDE is not
+
+- **Not a cloud service.** Nobody runs a server for you. Without a desktop host or your own server,
+  AIDE is a notes app on one device.
+- **Not on the App Store.** The iPhone app is in a TestFlight beta and isn't publicly available yet.
+  Push notifications to an iPhone need a push relay, and there is no public one yet.
+- **Not a ready-made server image.** The server's Docker image isn't published yet; the desktop host
+  is the way to get server features today.
+- **Not multi-user.** One server belongs to one person. Sharing a vault with other people isn't a
+  feature.
+- **Not an AI subscription.** AIDE doesn't sell model access. Bring your own key or CLI, or use the
+  rules that work without AI.
+
+<LinkCard title="Install AIDE" href="/docs/getting-started/install/" description="Homebrew or the install script on the Mac, the install script on Linux." />

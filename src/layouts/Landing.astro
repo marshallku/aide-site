@@ -1,41 +1,62 @@
 ---
 import "#styles/fonts.css";
 import "#styles/tokens.css";
+import "#styles/landing.css";
+
+import SiteFooter from "#components/landing/SiteFooter.astro";
+import SiteHeader from "#components/landing/SiteHeader.astro";
+import { COPY, type Lang } from "#lib/landing-copy";
 
 interface Props {
-    title: string;
-    description: string;
-    lang: "en" | "ko";
+    lang: Lang;
 }
 
-const { title, description, lang } = Astro.props;
-const alternate = lang === "en" ? "/ko/" : "/";
+const { lang } = Astro.props;
+const copy = COPY[lang];
+const path = lang === "en" ? "/" : "/ko/";
+const absolute = (href: string) => new URL(href, Astro.site).href;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} class="no-js" data-theme="light">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{title}</title>
-        <meta name="description" content={description} />
+        <title>{copy.meta.title}</title>
+        <meta name="description" content={copy.meta.description} />
+        <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
-        <link rel="alternate" hreflang="en" href={new URL("/", Astro.site)} />
-        <link rel="alternate" hreflang="ko" href={new URL("/ko/", Astro.site)} />
-        <link rel="alternate" hreflang="x-default" href={new URL("/", Astro.site)} />
-        <link rel="alternate" hreflang={lang === "en" ? "ko" : "en"} href={alternate} />
+        <link rel="canonical" href={absolute(path)} />
+        <link rel="alternate" hreflang="en" href={absolute("/")} />
+        <link rel="alternate" hreflang="ko" href={absolute("/ko/")} />
+        <link rel="alternate" hreflang="x-default" href={absolute("/")} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={copy.meta.title} />
+        <meta property="og:description" content={copy.meta.description} />
+        <meta property="og:url" content={absolute(path)} />
+        <meta property="og:image" content={absolute("/og.png")} />
+        <meta property="og:locale" content={lang === "ko" ? "ko_KR" : "en_US"} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script is:inline>
+            // Before the first paint: the theme chosen in the manual or here, else the system's.
+            try {
+                const chosen = localStorage.getItem("starlight-theme");
+                const dark = chosen ? chosen === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+                document.documentElement.dataset.theme = dark ? "dark" : "light";
+            } catch {
+                if (matchMedia("(prefers-color-scheme: dark)").matches) document.documentElement.dataset.theme = "dark";
+            }
+        </script>
     </head>
     <body>
-        <slot />
+        <SiteHeader lang={lang} />
+        <main id="main">
+            <slot />
+        </main>
+        <SiteFooter lang={lang} />
+        <script>
+            import "#scripts/landing";
+        </script>
     </body>
 </html>
-
-<style is:global>
-    body {
-        margin: 0;
-        font-family: var(--font-sans);
-        background: var(--card);
-        color: var(--text);
-    }
-</style>

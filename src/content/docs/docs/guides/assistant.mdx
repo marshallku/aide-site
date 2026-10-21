@@ -1,0 +1,212 @@
+---
+title: The assistant
+description: Plan your day by chatting with an assistant that sees your todos and calendar and proposes changes you take or drop.
+sidebar:
+    order: 9
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+The assistant plans your day with you. You tell it what you want ("Plan my day", "I lost the
+afternoon, what can move?"), and it answers with a short reply and concrete changes to your todos:
+a time block, an estimate, a new todo, a move to another day. Nothing changes until you take a
+change, unless you tell it to apply them right away.
+
+The assistant runs in the app on your device. It needs a model: see
+[Where the model comes from](#where-the-model-comes-from).
+
+## Open it
+
+- **Mac and Linux:** the **Assistant** button in the Todos header opens it in the right panel,
+  beside whatever you're looking at.
+- **iPhone:** the **Assistant** button under Todos' **More** menu opens it in a sheet over Today.
+  You can keep using Todos below it.
+
+Type a message, or start with one of the suggestions: **Plan my day**, **Re-plan the rest of
+today**, **What can move to tomorrow?** On the Mac, <kbd>Return</kbd> or <kbd>⌘</kbd><kbd>Return</kbd>
+sends; on Linux, <kbd>Enter</kbd> sends and <kbd>Shift</kbd><kbd>Enter</kbd> starts a new line. The
+button beside Send starts a **New conversation**.
+
+## What it sees
+
+Each message goes to the model with a picture of your day, built on your device:
+
+- your open todos, grouped as today (in today's daily note, or due or scheduled today), overdue,
+  upcoming (the next 7 days) and later, up to 120 of them, with their time blocks, estimates,
+  priorities and dates;
+- today's calendar events, the time now, your workday (default 09:00–18:00) and the free time in it
+  (gaps under 10 minutes left out), and how many minutes today's todos still ask for;
+- your memory and goals notes (below), and what you finished this week;
+- the last 12 messages of the conversation.
+
+When the calendar can't be read, the assistant is told the day isn't known to be free, and you see
+a notice.
+
+## Proposals: Take, Drop, Undo
+
+The reply comes with proposal cards, one per todo it wants to change and one per new or moved todo.
+A card shows a summary such as `10:00–11:00 · Write the report`, why, and warnings when they apply:
+**Already past**, **Outside your workday**, **Overlaps** (an event, another block, or another
+proposal).
+
+The assistant can propose to:
+
+| Change | What happens to the note |
+|---|---|
+| Schedule / unschedule | Gives the todo a time block (`10:30 - 12:00 …`) or takes it away. |
+| Estimate | Sets how long it should take, 5 minutes to 12 hours (`[estimate:: 45m]`). |
+| Status | Marks it open, in progress, done or cancelled. |
+| Add | A new todo in that day's daily note, today or up to a year ahead. |
+| Move | The todo, with its memo and subtasks, goes to another day's daily note; it is marked migrated `[>]` where it was. |
+
+- **Take** (✓) applies one card. **Drop** (✕) discards it. **Take all** takes every waiting card of
+  a reply, in order.
+- Open proposals also show on **Todos**: a change under the todo it changes, a new todo in a
+  **Proposed** section at the top, each with ✓ and ✕.
+- A taken card has **Undo**. It puts the line back only if it's still exactly as the assistant left
+  it; if you've edited it since, Undo says so and leaves your note alone.
+- A card can be taken for 24 hours. When you take it later, its times are checked again against the
+  day as it is now; a new clash asks you to choose **Take anyway**.
+- Taking a card twice, here or on another device, applies it once.
+
+Every applied change leaves a small action record at the end of the note it changed (shown as a
+marker in the editor). That record is how AIDE knows a change was applied and how Undo finds it.
+
+### Ask for each change, or apply right away
+
+**Settings › Assistant › Changes** (on Linux, the **Apply right away (yolo)** switch):
+
+- **Ask for each change** (the default): proposals wait until you take or drop each one.
+- **Apply right away (yolo)**: every proposal that passes the checks (a real todo, a valid time) is
+  applied at once. Each can still be undone from its card.
+
+Proposals made when the assistant speaks first, memory lines, and plans sent from the Claude app
+are never applied on their own, even in yolo.
+
+## Memory and goals
+
+Two notes are yours to edit and are sent with every message (the first 2 KB of each):
+
+- `assistant/memory`: things the assistant should know about you. When it proposes to remember
+  something, that's a card too; taken, it adds a line to this note.
+- `assistant/goals`: what you're working toward.
+
+## Reading your notes
+
+The assistant can ask to read up to three notes before answering. Some it reads without asking:
+notes under `assistant/`, `radar/` and `people/`, the note of any todo it was given, today's daily
+note and this week's weekly note. For anything else it shows a card, **The assistant wants to read:
+…**, with **Allow** and **Deny**. Each note it reads is sent cut to 4 KB.
+
+**Never read** (**Settings › Assistant**, folders separated by commas, such as `private/, health/`)
+keeps whole folders out: their todos are left out of what the assistant sees, and a note it asks
+for there isn't sent. The setting belongs to each device's assistant. It doesn't limit the
+[Claude app connection](/docs/developers/mcp/), which can read every note.
+
+## Conversations
+
+With **Keep conversations** on (the default), each exchange is written to that day's note
+`assistant/<date>`, with what became of each proposal (**Took**, **Dropped**). Every device shows
+the same conversation, and it survives a restart. Turning it off also turns off speaking first.
+
+## Speaking first
+
+The assistant can start the conversation on its own, under **Settings › Assistant › Speak first**
+(needs **Keep conversations**). Times are `HH:MM`; leave a field empty to turn that one off.
+
+| Setting | Default | What it does |
+|---|---|---|
+| **Morning plan** | 08:30 | Plans your day from your todos and calendar. Made up for 3 hours if AIDE wasn't open. |
+| **Evening recap** | 21:00 | What got done, what's left, what should move to tomorrow. Made up for 3 hours. |
+| **Before meetings** | 15 minutes | Checks your todos and calendar before each timed event and tells you only when there's something to say. Off, 5, 10, 15, 30 or 60 minutes. |
+| **When a time block passes** | On | Within an hour after a todo's time block ends while it's still open: "A time block passed", with **Done** and **Tomorrow**. No model involved. |
+| **Quiet from** / **Quiet until** | 22:00 / 07:00 | Meeting checks and nudges hold off; the morning and evening still run but say nothing aloud. |
+
+- It tells you through a notification (**Today's plan**, **This evening**, **Before** a meeting);
+  clicking it opens Todos with the assistant. At most six meeting checks and nudges a day.
+- It runs while AIDE is open on the Mac or Linux, and while AIDE is in front on the iPhone. Each
+  occurrence runs once across your devices.
+- Its proposals always wait for you on Todos.
+- When the system has AIDE's notifications turned off, the settings say **System notifications are
+  off** with **Open notification settings**.
+
+## On the desktop
+
+On the Mac and Linux, **Settings › Assistant › Show on the desktop** (off by default) floats the
+assistant's character over every window. Click it for the same conversation as the right panel. It
+steps aside while an AIDE window is in front, unless it's open, listening or has something to say;
+**Also while AIDE is in front** keeps it out there too. You can also show or hide it from the Go
+menu with **Show Assistant on the Desktop** (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>A</kbd>; on Linux
+<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>A</kbd>).
+
+**Character** picks who it is: **Mochi** (the default) or **Piyo**. It looks like it's thinking
+while it works, listens while you talk, and holds up a note while proposals wait.
+
+What the assistant says first also shows in a speech bubble beside the character, with **Open
+conversation** (and **Done** and **Tomorrow** for a nudge), so you see it even with system
+notifications off. With **Show on the desktop** off, the character comes out only for a bubble.
+
+On Linux the character floats over other windows on Hyprland, KDE and other wlroots desktops when
+gtk4-layer-shell is installed; elsewhere it's a small ordinary window.
+
+## Voice
+
+You can say a message instead of typing it:
+
+- Hold the mic beside Send and talk, or click it to start and stop (it also stops 1.5 seconds after
+  you stop speaking). <kbd>Esc</kbd> throws the recording away. A recording lasts up to 60 seconds.
+- On the Mac and Linux you can also hold the desktop character. On the Mac, **Settings › Assistant ›
+  Voice › Hold to talk** sets a shortcut that works in any app (none by default). On Linux,
+  <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Space</kbd> works in AIDE; for a shortcut anywhere, bind
+  `aide-desktop --voice` in your desktop's keyboard settings.
+- On the iPhone, say "Talk to AIDE" to Siri or Shortcuts.
+- **Send when I stop** (on by default) sends the words when you stop. Off, or when you already typed
+  something, the words go into the composer for you to edit.
+- **Language**: **Automatic**, **English** or **한국어**.
+
+Speech is written down on the device: on the Mac and iPhone by Apple's on-device recognition, on
+Linux by whisper.cpp with a speech model (about 142 MB) that AIDE downloads once you agree. The
+audio is never saved or sent; only the text goes to the assistant, as if you had typed it. When the
+device can't write your language down on its own, there's no mic.
+
+## Where the model comes from
+
+**Settings › Assistant › Model from** picks where the assistant's model runs:
+
+| Choice | Where | Default model |
+|---|---|---|
+| **Automatic** | The first that works, in this order: Claude Code, Codex, your Anthropic key, the server. | — |
+| **Claude Code** | The `claude` program on this computer, with your login. Mac and Linux. | `sonnet` |
+| **Codex** | The `codex` program on this computer, with your login. Mac and Linux. | Codex's own |
+| **Anthropic API key** | Your Anthropic key saved on this device. | `sonnet` |
+| **Server** | Your server's AI; counts toward its daily limit. Only with a server. | `sonnet` |
+
+**Test** checks the choice and says how long it took. The model field takes a tier (`sonnet`,
+`opus`, `haiku`) or a model id. See [AI and models](/docs/guides/ai/) for how the choices compare
+and what is sent.
+
+On the iPhone the choices are **Automatic**, **Anthropic API key** and **Server**.
+
+### Use my Claude Code setup
+
+Claude Code and Codex normally run with no tools, in an empty folder: they only read what the
+assistant sends. On the Mac and Linux, with **Model from** set to **Automatic** or **Claude Code**,
+**Use my Claude Code setup** (off by default) runs Claude Code for the conversations you start as
+your terminal would: your skills, MCP servers, `CLAUDE.md` and login, from your home folder, for up
+to 5 minutes a turn. It may use only what your own Claude Code allows without asking, plus the
+rules you add in **Also allowed** (one rule per line, like `Bash(slack-read *)`); never its
+file-editing tools or your hooks. Speaking first and meeting summaries never use it.
+
+<Aside type="caution">
+With your setup on, the assistant is told to only read and to put changes in proposals, but that is
+an instruction, not a fence. Whatever the allowed tools can do, it can do: post to Slack, change
+files, read notes under Never read.
+</Aside>
+
+## From the Claude app
+
+The Claude app (or another MCP client) connected to AIDE can plan with the same todos. It reads
+them, with your memory and goals, and sends a plan; the plan is kept in that day's `assistant/`
+note and its proposals wait on Todos like the assistant's own, never applied on their own. Its
+timed proposals are checked against your calendar and workday when you take them. See
+[MCP and the Claude app](/docs/developers/mcp/).

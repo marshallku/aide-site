@@ -1,0 +1,115 @@
+---
+title: Privacy and security
+description: What stays on your devices, what goes to your AI provider and when, and how AIDE protects tokens, secrets and connections.
+sidebar:
+    order: 4
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+AIDE is built so you own the whole chain: your notes are files on your own computer or server, and AI runs
+on a provider you pick or not at all. This page lists what leaves your devices, to whom, and how to keep
+it from leaving.
+
+## What stays on the device
+
+- **Voice.** When you talk to the assistant, speech is written down on the device: Apple's on-device
+  recognition on the Mac and iPhone, whisper.cpp on Linux. Never a server's recognition. The audio stays in
+  memory for that one recording and is never written to disk or sent. Only the text goes on, as a typed
+  message would.
+- **Meeting audio.** A meeting is recorded and transcribed on the device that records it. The audio never
+  leaves that device. What was said reaches the meeting note as text. See [Meetings](/docs/guides/meetings/).
+- **Your device's calendars.** On the Mac and iPhone, the Calendar reads your calendars on the device and
+  doesn't upload them to the server.
+- **Radar's Slack feed.** With Slack's **Follow my channels** on, messages from your channels are kept on
+  the computer that runs the plugins, for 14 days, and never sent to the server. See
+  [Radar](/docs/plugins/radar/).
+- **Device plugins' storage.** A device plugin's own storage stays on that device.
+
+## What goes to your AI provider, and when
+
+AI runs only where you set it up: an Anthropic API key, Claude Code or Codex on your computer, your own
+gateway, or the server's AI. See [AI and models](/docs/guides/ai/). Each of these sends text to the
+provider behind it:
+
+| Feature | What's sent | When |
+| ------- | ----------- | ---- |
+| Organize | The scratch notes you select, and your wiki's page names | When you choose **Propose** |
+| Feed triage | Each new event's title and up to 2 KB of its body, and up to 200 of your wiki's terms as your interests | As events arrive |
+| The assistant | Your open todos, today's calendar events and free time, its memory and goals notes, and the notes it asks to read | Each time you send it a message, or it speaks first |
+| Meetings | The transcript, the glossary and the notes linked to the meeting | When a recording is summed up |
+| Server plugins | What each plugin gathers: the briefing's calendar and todos, the recap's daily note, Gmail threads that may need a reply, a Slack thread you save, and so on | At the plugin's schedule, or when it reacts |
+
+Claude Code and Codex, when the assistant uses them, run with no tools in an empty temporary folder: the
+prompt goes in and the reply comes out. They can't read your files on their own.
+
+### How to keep things from being sent
+
+- **Use no AI.** In **Settings › AI**, choose **Rules (no AI)**. Organize then files notes by rules (the
+  first `#tag` goes to `topics/<tag>`, notes with todos go to today's daily note) and triage sorts events
+  by keywords. In local mode, leaving out the API key does the same for Organize.
+- **Never read.** In **Settings › Assistant**, list folders under **Never read** (like `private/` or
+  `health/`). Nothing under them is sent to the assistant: their todos are left out, and a note it asks for
+  there isn't read. Radar never reads or writes the folders in its own `neverRead` setting.
+- **Read approval.** When the assistant wants a note it isn't allowed by default, it asks first: **The
+  assistant wants to read: …** with **Allow** and **Deny**.
+- **Leave plugins off.** Every server plugin is off until you turn it on.
+
+## Tokens and pairing
+
+- **Device tokens** are stored on the server only as SHA-256 hashes. On the device, the token lives in the
+  keychain (Mac and iPhone) or your keyring (Linux), or in a private file when no unlocked keyring is
+  found.
+- **Pairing codes** for a server are single use, expire after 10 minutes, and a client address that fails
+  10 times is blocked for 10 minutes. **Settings › Devices** lists every device, and **Revoke** signs one
+  out.
+- **Pairing with a desktop host** uses a link that works for 5 minutes, for one device, and you approve
+  the device on the host after comparing its key's fingerprint.
+- **Plugin tokens** are scoped: each server plugin gets a token limited to the notes it may read or write,
+  the event topics it may publish, and whether it may run AI. They're stored hashed, like device tokens.
+- **The Claude app's token** (**Settings › Claude app**) reads notes, and writes them only if you allow
+  it. You can disconnect it, which revokes the token.
+- **The local API** on your computer, which `aidectl` uses, answers only programs running as your own user.
+
+## Secrets on the server
+
+AI keys, gateway tokens and plugin secrets (Slack's tokens, for example) are sealed with AES-256-GCM using
+the server's key before they're stored. The apps can save a secret but never read it back: they only learn
+that one is set. Only the plugin a secret belongs to can read it.
+
+On a desktop host, the sealing key lives in the Mac's keychain or your Linux keyring. On a dedicated server
+it's `AIDE_SECRET_KEY`.
+
+## Connections between devices
+
+- **Desktop host**: TLS 1.3 in both directions. Each device pins the host's key, and the host lets in only
+  devices whose certificates it issued after you approved them. Network access is off until you turn it
+  on, and it listens only on the address you pick. See
+  [Host on your desktop](/docs/self-hosting/desktop-host/).
+- **Dedicated server**: HTTPS through the proxy you put in front of it (Tailscale, Cloudflare Tunnel,
+  Caddy). The apps ask for HTTPS for anything but a server on the same computer.
+
+## Device plugins
+
+Device plugins run inside a sandboxed web view on the iPhone, Mac and Linux.
+
+- **Capabilities.** At install you see each capability a plugin asks for (reading notes under a folder,
+  writing todos, its own storage, HTTPS to a named host…) and turn on only the ones you agree to. Any call
+  outside them fails.
+- **No network by default.** The plugin's page can't load anything from the network. It can reach only the
+  hosts you approved, through AIDE.
+- **Pinned files.** A plugin is identified by a hash of all its files. If a file changes on the device
+  afterwards, the plugin is turned off until you install it again.
+
+See [Installing device plugins](/docs/plugins/device-plugins/).
+
+## Updates
+
+AIDE's releases come from its public GitHub releases. Both `install.sh` and the in-app updater check each
+download against the release's `SHA256SUMS`. The Mac app is signed with a Developer ID and notarized by
+Apple, and the updater also checks that the new app is signed by the same team before swapping it in. If a
+new version doesn't start, AIDE goes back to the previous one.
+
+<Aside type="note">
+On Linux, the checksum confirms the download is intact. The release isn't signed separately.
+</Aside>

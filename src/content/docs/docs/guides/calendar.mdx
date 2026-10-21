@@ -1,0 +1,127 @@
+---
+title: Calendar
+description: See your calendars in AIDE, choose which ones show and remind you, and start a meeting note from any event.
+sidebar:
+    order: 8
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+The Calendar section shows your events next to your notes and todos, so you can plan a day in one
+place and start a meeting note from an event. The same events appear under **Todos › Today** and
+feed the [assistant](/docs/guides/assistant/) when it plans your day. AIDE reads calendars; it
+doesn't create or edit events.
+
+## Where the events come from
+
+Which calendars you see depends on how you run AIDE.
+
+<Tabs>
+<TabItem label="With a server">
+When your notes are on a desktop host or your own server, the Calendar section shows your **Google
+calendars**, brought in by the [Calendar plugin](/docs/plugins/gcal/) running beside the server. It
+syncs every five minutes and keeps last week through the next six weeks. Until the plugin has
+connected, the Calendar section says **Calendar isn't connected**.
+
+Every device sees the same calendars and the same choices: which calendars show, their colours and
+which ones remind you are saved on the server.
+</TabItem>
+<TabItem label="Mac and iPhone, no server">
+With notes kept on the device and no server, AIDE reads the calendars of the Mac or iPhone itself
+(the ones in Apple's Calendar app, including any accounts you added there). The first time, the
+system asks whether AIDE may read them. If you said no, the section shows **Calendar access is off**:
+allow AIDE in System Settings (Settings on the iPhone) › **Privacy & Security** › **Calendars**.
+
+These events stay on the device. AIDE shows 60 days back and a year ahead. Which calendars show and
+their colours are saved on that device only.
+</TabItem>
+<TabItem label="Linux, no server">
+Without a server, the Linux app reads iCalendar (`.ics`) calendars you add yourself, by web
+address (`https://` or `webcal://`) or as a file on the computer:
+
+1. Open **Settings › Calendars**.
+2. Under **Add a calendar**, type a **Name** and the **Web address or file**, then choose **Add**.
+
+Web calendars refresh every 30 minutes and when you open the Calendar section after 15 minutes or
+more; files refresh whenever they change. A calendar may be up to 10 MB. The list is also kept in
+`config.toml` under `[[calendar.sources]]`, so you can edit it by hand. To rename or remove one,
+open its row in **Settings › Calendars** (**Remove this calendar**).
+
+These calendars are read-only and stay on the computer.
+</TabItem>
+</Tabs>
+
+## Views
+
+Choose a view at the top: **Schedule**, **Day**, **Week** or **Month**. AIDE remembers the one you
+used last.
+
+- **Schedule** lists the days from the one you're on to the end of what's synced.
+- **Day** and **Week** lay the events out on a 24-hour timeline. Click a day in Week to open it in
+  Day.
+- **Month** shows a grid; click a day to open it in Day.
+
+**Today** jumps back to today, and the arrows beside it move one day, week or month. You can also
+swipe sideways: with a finger on the iPhone, with two fingers on a Mac or Linux trackpad. The
+**Daily note** button in the header opens today's daily note.
+
+When the server's copy hasn't been synced for more than 15 minutes, a warning beside the arrows
+says when it last was, for example **Synced 2 hours ago**.
+
+## Choose calendars, colours and reminders
+
+The **Calendars** button opens the list of your calendars, grouped as **My calendars** and **Other
+calendars**. For each one:
+
+- the switch shows or hides it;
+- the coloured dot picks its colour: one of Google Calendar's colours, **Custom**, or back to the
+  original with **Use Google's color** (**Use the calendar's color** for a device or `.ics`
+  calendar);
+- the bell (with a server only) turns reminders for that calendar on or off.
+
+A calendar that failed to sync says **Sync failed** with the reason.
+
+### Reminders and prep
+
+With a server, the same list has a **Reminders** section. These run on the server, so they reach
+you even when no app is open:
+
+| Setting | Default | What it does |
+|---|---|---|
+| **Remind before events** | On | Sends a reminder before each timed event in a calendar with the bell on. |
+| **When** | 10 min before | 5, 10, 15, 30 or 60 minutes before. |
+| **AI prep notes in the daily note** | On | After the reminder, the server's AI looks through your notes for anything related and writes a short prep note into the day's note. |
+| **Tell me when there's something to prepare** | Off | Also notifies you with that prep, but only when the AI found something worth telling you. |
+
+The prep uses the AI set in **Settings › AI** on the server ([AI and models](/docs/guides/ai/)).
+The [assistant](/docs/guides/assistant/#speaking-first) can also check before meetings, on your
+computer; with both turned on, you may hear about a meeting twice.
+
+Calendars read from the device or from `.ics` files have no bells and no reminders of AIDE's own:
+the Mac and iPhone alert you through the system's Calendar as usual.
+
+## An event's details
+
+Click an event to open it. Under its title you see when it is, where, who is attending and which
+calendar it's in, then its description. The toolbar has:
+
+- **Meeting note**: opens the meeting note for this event, and makes it the first time.
+- **Join video call**: when the event has a video call link.
+- **Open in Google Calendar** for a Google event, or **Open link** for a device calendar's event
+  when it has a link.
+
+### Meeting notes from events
+
+**Meeting note** makes a note under `meetings/` named after the day and the event, for example
+`meetings/2026-10-17-design-review`, with the event's title, start, end and attendees. It also
+lists notes that look related (the previous meeting in the same series, notes linked from the
+description, notes titled like an attendee, and search hits for the title), adds the meeting to
+that day's daily note, and gathers a word list (names, product words) to help the transcription.
+A repeating event gets one note per occurrence, and the same occurrence always opens the same note,
+even if the event moves.
+
+For a Google event, the Calendar plugin also fills the note's **Context** section with what the
+calendar knows (when, where, the video link, attendees, the full description) and updates it while
+the event changes, until 30 days after the meeting.
+
+From there you can record and sum up the meeting: see [Meetings](/docs/guides/meetings/).

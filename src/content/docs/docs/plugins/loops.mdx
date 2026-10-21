@@ -1,0 +1,102 @@
+---
+title: Open loops
+description: Every evening at 21:15, your AI updates your open-loops note from today's daily note, closing what's done and refreshing next actions, without ever dropping an item.
+sidebar:
+    order: 15
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+Open loops keeps one note of everything you've started and not finished: projects, errands, things you're waiting on. Each evening your AI reads the day's daily note and updates that list for you.
+
+<PluginFacts id="loops" />
+
+## What it does
+
+At 21:15 (or the time you set) the plugin:
+
+1. Reads your open-loops note (`loops/open` by default) and today's daily note.
+2. Gives your AI the items that aren't closed, and today's daily as the only evidence. The AI:
+    - sets an item to `closed` when the daily shows it's done,
+    - updates its next action and review date when there was progress,
+    - adds an item for something clearly newly started today,
+    - leaves everything else alone, and invents no pressure ("untouched for N days").
+3. Takes back only the items the AI changed or added, checks them against the note's format, and merges them into the note by id. An item the AI didn't mention stays exactly as it was, so a long note never has to fit in one answer, and nothing is ever deleted. Closed items stay in the note, under their heading.
+4. Saves the note only if it changed, and only if you didn't edit it in the meantime. If you did, it reads it again and retries 10 minutes later, so your edit is never overwritten.
+
+A day without a daily note (or with an empty one) leaves the list as it is. An evening missed while the computer was off or asleep is made up if it wakes within 3 hours.
+
+## Before you start
+
+- A [desktop host](/docs/self-hosting/desktop-host/) or your own server.
+- An AI in **Settings › AI**: **Anthropic API key** or **My gateway**.
+- The open-loops note itself. The plugin never creates it: until a note exists at `loops/open` (or the path you set), it does nothing.
+
+## Set it up
+
+<Steps>
+
+1. Create a note at `loops/open` and write your loops in the format below. A heading line alone (`# Open loops`) is a valid start; the AI adds items as your dailies mention new ones.
+2. Turn the plugin on: **Open loops** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+3. Optional: let the [evening recap](/docs/plugins/recap/) read the list too, with `"recap": { "loopsNote": "loops/open" }` in `plugins.json`.
+
+</Steps>
+
+## The note's format
+
+The format is strict, so the plugin can check every answer before it writes:
+
+```markdown
+# Open loops
+
+Anything above the first ## heading is yours and kept as it is.
+
+## Home
+- **Renew the passport** · in_progress · review 2026-11-01 · `passport`
+  - Book the photo appointment
+- **Fix the bathroom fan** · active · `bathroom-fan`
+  - Ask the landlord which model it is
+
+## Work
+- **Quarterly report** · incubating · `q4-report`
+- **Hire a designer** · closed · `hire-designer`
+```
+
+- Each `## ` heading is a domain. Every item sits under one.
+- An item is one line: `- **Title** · status · id in backticks`, with ` · review YYYY-MM-DD` before the id when you want a review date. The separators are a space, a middle dot (`·`) and a space.
+- The status is one of `active`, `in_progress`, `incubating` or `closed`.
+- The id is lowercase letters, digits and hyphens, starting with a letter or digit, and unique in the note.
+- The next action goes on lines right under the item, each starting with two spaces and `- `, with no blank line between them and the item.
+- A title can't contain a backtick, `**` or ` · `.
+- Blank lines are fine between items and domains.
+
+<Aside>
+The middle dot is the character `·` (U+00B7), not a period or a bullet. Copy it from the example if your keyboard doesn't have it.
+</Aside>
+
+## Settings
+
+<PluginSettings id="loops" defaults={{ at: "21:15", note: "loops/open" }} />
+
+**Loops note** is a note path. If you rename or move the note, change it here too.
+
+## Troubleshooting
+
+### A Feed event says "⚠️ Open loops update skipped"
+
+The plugin didn't write anything that day, and the event says why. It doesn't notify you. The reasons:
+
+- **The note has an invalid format**: a line in your note doesn't follow the format. The event names the line number; fix that line and the next evening works again.
+- **The AI returned invalid changes**: the answer wasn't in the format, or tried to reuse the id of a closed item. Nothing was changed; tomorrow it tries again.
+- **Open loops is too long**: the open items no longer fit in one request to the AI (about 30 KB together with the instructions). Shorten next actions or close finished items.
+- **Couldn't write open loops**: the merged note would be over 64 KiB.
+
+### Nothing changes in the note
+
+The AI changes only what today's daily gives evidence for. A day whose daily doesn't mention a loop leaves it alone, and so does a day without a daily note. Check also that the note exists at the path in **Loops note**.
+
+## Privacy
+
+Today's daily note (up to 8 KiB) and the items of your open-loops note that aren't closed go to the AI you set in **Settings › AI**. Closed items aren't sent. The note stays on your host or server.

@@ -1,0 +1,57 @@
+---
+import Character from "#components/Character.astro";
+import { COPY, docsHref, type Lang } from "#lib/landing-copy";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = COPY[lang].closing;
+const hero = COPY[lang].hero;
+---
+
+<section class="closing">
+    <div class="wrap panel" data-reveal>
+        <Character id="piyo" size={96} />
+        <h2 class="display">{copy.title}</h2>
+        <p class="lede">{copy.body}</p>
+        <div class="actions">
+            <a class="button button-primary" href="#download">
+                {hero.primary}
+            </a>
+            <a class="button button-ghost" href={docsHref(lang, "getting-started/introduction")}>
+                {copy.docs} →
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .closing {
+        margin-top: var(--section-gap);
+    }
+    .panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: clamp(2.5rem, 6vw, 4.5rem) 1.5rem;
+        border-radius: 28px;
+        background: radial-gradient(70% 90% at 50% 0%, var(--glow), transparent 70%), var(--page-raised);
+        box-shadow: 0 0 0 1px var(--line);
+        text-align: center;
+    }
+    .display {
+        margin-top: 1rem;
+    }
+    .lede {
+        margin-inline: auto;
+    }
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 2rem;
+    }
+</style>

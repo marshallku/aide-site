@@ -1,0 +1,419 @@
+---
+title: Build a server plugin
+description: Write a plugin as a separate process that talks to your AIDE server over HTTP with a token limited to what it needs.
+sidebar:
+    order: 5
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+A server plugin is any program, in any language, that holds a plugin token and talks to the AIDE server over its
+HTTP API. It can register settings the owner fills in from the app, react to note changes, write blocks into notes,
+post to the Feed and ask the owner's AI model. AIDE's own server plugins (the morning briefing, Slack, Radar and the
+rest, see [How plugins work](/docs/plugins/overview/)) are built on exactly this API.
+
+Use a server plugin for work that must happen on a schedule or in the background whether or not an app is open. For
+something that draws on screen, write a [device plugin](/docs/developers/device-plugins/).
+
+<Aside type="caution" title="Your own server only">
+A plugin token is minted with the server's command line, `aide plugin-token`, on the machine that runs the server.
+That makes this page apply to [your own server](/docs/self-hosting/own-server/). A [desktop host](/docs/self-hosting/desktop-host/)
+gives tokens only to the plugins it bundles, and this release has no command to mint one for a plugin of your own.
+</Aside>
+
+## How a plugin works
+
+1. You mint a token for the plugin's id, with the scopes it needs.
+2. On start, the plugin registers its manifest: its name, what it publishes, its settings.
+3. It checks whether the owner turned it on, reads its settings, and does its work: reading and writing notes,
+   waiting for note changes, posting events.
+4. The owner sees it in the app's settings, turns it on or off, and fills in its settings.
+
+Every request carries the token: `Authorization: Bearer aide_p_…`. Request bodies are strict JSON: an unknown field
+is a `400 bad_request`, so typos surface at once.
+
+## Tokens and scopes
+
+On the server's host:
+
+```sh
+aide plugin-token leftovers --off \
+    --scope notes:write:daily \
+    --scope events:read:aide.notes \
+    --scope events:publish:leftovers
+```
+
+The command prints a token starting with `aide_p_`. The server keeps only its hash, so store it where the plugin
+reads it.
+
+| Flag             | Effect                                                                                          |
+| ---------------- | ----------------------------------------------------------------------------------------------- |
+| `--scope <s>`    | A scope the token carries; repeat for several. At least one is required                         |
+| `--off`          | A plugin new to the owner starts switched off, until they turn it on. An existing choice is kept |
+| `--revoke`       | Revokes every token of that plugin (`revoked N token(s) of <id>`)                               |
+
+Minting again issues another token and leaves the earlier ones valid; revoke them when you replace one.
+
+The plugin id is a lowercase letter, then 1–39 lowercase letters, digits or `-`. It can't be one of the app's
+built-in ids (`feed`, `calendar`, `organizer`, `callouts`, `tasks`), and it shouldn't be one of AIDE's own server
+plugins (`briefing`, `gcal`, `slack`…) if those run against the same server.
+
+| Scope                              | Allows                                                                                                         |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `notes:read:<path-prefix\|*>`      | Reading notes at or under that path                                                                            |
+| `notes:write:<path-prefix\|*>`     | Creating, changing, moving and archiving them, and writing the plugin's own sections. Implies read             |
+| `events:publish:<topic-prefix\|*>` | Posting events to those topics. `*` covers every topic except the reserved `aide.*` ones                        |
+| `events:read:<topic-prefix\|*>`    | Reading those topics with `GET /plugins/self/events`. A system topic must be named: `events:read:aide.notes`   |
+| `ai:run`                           | `POST /ai/run`: asking the owner's AI model                                                                    |
+
+Prefixes match whole segments: a path prefix on `/` (`daily` covers `daily/2026-10-22`, not `daily-log`) and a topic
+prefix on `.` (`leftovers` covers `leftovers.daily`). A note outside the plugin's read scope answers `404`, as if it
+didn't exist; a write or move outside its write scope answers `403 scope`. Endpoints that only the owner's devices
+may use (the Feed, AI settings, devices…) answer `403 forbidden` to a plugin token.
+
+## Register the manifest
+
+`PUT /plugins/<id>/manifest` with the plugin's own id (another id is `403 forbidden`). Register on every start: the
+latest one wins.
+
+```json
+{
+    "name": "Yesterday's leftovers",
+    "description": "Lists yesterday's unchecked todos in today's daily note.",
+    "version": "0.1.0",
+    "publishes": ["leftovers"],
+    "slots": ["leftovers.today"],
+    "schedules": [],
+    "settings": [
+        {
+            "key": "post",
+            "title": "Tell me in the Feed",
+            "type": "bool",
+            "help": "Posts a Feed event when there are leftovers."
+        }
+    ],
+    "locales": {
+        "ko": {
+            "name": "어제 남은 일",
+            "description": "어제 체크하지 않은 할 일을 오늘 데일리 노트에 적어요.",
+            "settings.post.title": "피드로 알려 주기"
+        }
+    }
+}
+```
+
+| Field         | Value                                                                                                 |
+| ------------- | ----------------------------------------------------------------------------------------------------- |
+| `name`        | Required                                                                                              |
+| `description` | Shown under the name in the app                                                                       |
+| `version`     | Shown in the plugin's detail screen                                                                   |
+| `publishes`   | The topics it posts to (informational)                                                                |
+| `slots`       | The sections it writes (informational)                                                                |
+| `schedules`   | When it runs, as text (informational)                                                                 |
+| `settings`    | Up to 64 fields the owner edits in the app (below)                                                    |
+| `locales`     | Translations of the above, up to 8 languages (below)                                                  |
+| `syntax`      | Up to 32 custom editor highlights (below)                                                             |
+
+The body is at most 16 KiB and decoded strictly; a manifest that breaks a rule is `422 invalid` with the reason.
+Registering is allowed while the plugin is switched off.
+
+### Settings
+
+| Field     | Value                                                                                                           |
+| --------- | --------------------------------------------------------------------------------------------------------------- |
+| `key`     | A letter, then letters, digits, `_` and `-`; up to 40 characters; not `token`                                   |
+| `title`   | Up to 80 bytes                                                                                                  |
+| `type`    | `string`, `text` (several lines), `number`, `bool`, `enum`, `time` (`HH:MM`), `list` (of strings) or `secret`   |
+| `options` | For `enum`: 1–32 options                                                                                        |
+| `help`    | Up to 300 bytes                                                                                                 |
+| `link`    | `{title, url}`: a button beside the field that opens an `https` page (title up to 60 characters, URL up to 2,000) |
+
+The app draws a form from these in the plugin's detail screen. A `link` is how Slack's settings offer **Create the
+Slack app**: point it at the page where the owner gets the value.
+
+A `secret` field is for tokens and passwords. The owner types it in the app; the server seals it with its secret key
+(`AIDE_SECRET_KEY`), stores it apart from the other settings and never shows it back: the app only shows that a
+value is saved, with **Replace** and **Remove**. Only the plugin reads it. A key that was ever declared a secret stays
+a secret, so it can't later be set as a plain setting. A server without `AIDE_SECRET_KEY` refuses to save secrets
+(`422 secrets_unavailable`).
+
+### Locales
+
+`locales` maps a language code (`ko`, `en`, `pt-BR`) to translations of what the app shows: `name`, `description`,
+and `settings.<key>.title`, `settings.<key>.help`, `settings.<key>.link` (the link's title) and
+`settings.<key>.options` (one label per option of an `enum`, in order; the options are still what's saved). A path
+the manifest doesn't have is refused. Anything a language lacks shows the manifest's own text.
+
+What the plugin writes into notes and the Feed is up to the plugin: read the owner's language from
+`GET /plugins/self/owner` and write in it, as AIDE's own plugins do.
+
+### Syntax
+
+A syntax rule highlights a literal trigger in the editor while the plugin is on, with no regular expressions or code:
+
+```json
+"syntax": [{ "trigger": "@@", "value": "word", "style": "purple", "link": "note", "title": "Person" }]
+```
+
+`trigger` is 1–8 characters with no spaces, `<`, `>`, `&`, quotes or backticks; `value` is `date` (a following `YYYY-MM-DD`), `word`
+(up to the next space) or `none`; `style` is `accent`, `green`, `orange`, `red`, `purple`, `muted` or `strong`;
+`link: "note"` (with `word` only) makes the value a link to that note; `title` (up to 40 characters) is the tooltip.
+
+## Endpoints for plugins
+
+| Method | Path                                                   | Answer                                                                                               |
+| ------ | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| GET    | `/plugins/self`                                        | `{id, registered, enabled, scopes}`                                                                  |
+| PUT    | `/plugins/<id>/manifest`                               | The manifest as stored                                                                               |
+| GET    | `/plugins/self/settings`                               | The owner's settings object (`{}` until they set one)                                                |
+| GET    | `/plugins/self/secrets`                                | `{key: value}` for this plugin's saved secrets (`{}` when none)                                       |
+| GET    | `/plugins/self/owner`                                  | `{language, timezone}`: the language to write in (`""` until chosen: write English) and the timezone |
+| PUT    | `/plugins/self/state`                                  | `204`. A JSON object of up to 512 KB, stored as it is                                                |
+| GET    | `/plugins/self/events?topic=&after=&limit=&wait=`      | `{events: [...]}` after the offset `after`                                                           |
+| POST   | `/events`                                              | Posts an event (see [Publish events to the Feed](/docs/developers/events/))                          |
+| POST   | `/ai/run`                                              | `{text, provider, notes}`                                                                            |
+
+Plus the note routes, within the token's scopes:
+
+| Method | Path                                    | Body / answer                                                                                                   |
+| ------ | --------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| GET    | `/notes?prefix=`                        | `{notes: [...]}`, newest change first, archived left out                                                        |
+| GET    | `/notes/lookup?path=`                   | The note at that path                                                                                           |
+| GET    | `/notes/<id>`                           | The note: `{id, path, kind, title, body, version, todos, …}`                                                    |
+| POST   | `/notes`                                | `{path, body?}` or `{path, template, vars?}` → `201` and the note                                               |
+| PUT    | `/notes/<id>`                           | `{version, body?, path?, title?}`; a stale `version` is `409 version_conflict` with the current note             |
+| POST   | `/notes/<id>/append`                    | `{text, heading?, createHeading?, ifAbsent?}`; no version needed                                                |
+| GET    | `/notes/<id>/sections/<name>`           | `{name, content, todos, version}`                                                                               |
+| PUT    | `/notes/<id>/sections/<name>`           | `{content, version?}` → the note                                                                                |
+| GET    | `/periodic/<period>/<date>`             | The daily, weekly, monthly, quarterly or yearly note, created from its template if missing; `?create=false` only finds it (`404` when there is none). `<date>` may be `today` |
+| GET    | `/search?q=&limit=`                     | `{notes: [{id, path, kind, title, summary?, snippet?}]}`                                                        |
+
+Creating a periodic note needs write access to its path. A note body is at most 1 MiB.
+
+### Turned on or off
+
+The owner switches a plugin on and off in its detail screen (**Enabled**). While it's off, the plugin's settings,
+secrets, state, events, AI and note requests answer `403 plugin_disabled`; only `GET /plugins/self` and registering
+the manifest still work. So a plugin checks `GET /plugins/self` now and then (AIDE's own runner does it every
+minute), does nothing while `enabled` is false, and starts again when it turns true. A plugin that hasn't registered
+a manifest yet counts as on.
+
+Settings change when the owner saves them in the app; read them again before each piece of work rather than once at
+start.
+
+### State and status
+
+`PUT /plugins/self/state` stores a JSON object of up to 512 KB for the owner's apps to read. One key is special:
+
+```json
+{ "status": { "ok": true, "text": "Connected as Marshall in Acme" } }
+```
+
+The app shows `status.text` under the plugin's settings and refreshes it every 5 seconds while the screen is open;
+`ok: false` marks it as a problem. Use it to say whether the plugin is connected, waiting for a token, or failing.
+
+State is for the app to show. A plugin can't read it back through its token, so keep what the plugin itself needs
+(a cursor, a last-run time) in its own storage.
+
+## React to note changes
+
+Every change to a note leaves an event on the system topic `aide.notes`, in the same transaction as the change, so
+reading it in order never skips a change. With the scope `events:read:aide.notes`:
+
+```sh
+curl -s -H "Authorization: Bearer $TOKEN" \
+    "$AIDE_URL/plugins/self/events?topic=aide.notes&after=$CURSOR&wait=25"
+```
+
+The answer is `{events: [...]}` after offset `after` (the default is `0`, from the beginning), at most `limit`
+(1–500, default 100). When there's nothing yet, the request waits up to `wait` seconds (at most 25) for one. Keep the
+last `offset` you handled and pass it as `after` next time; the server keeps no cursor for you. Each event's
+`payload` is:
+
+| Field                     | Value                                                                                       |
+| ------------------------- | ------------------------------------------------------------------------------------------- |
+| `id`, `path`, `version`   | The note                                                                                    |
+| `sourcePath`              | Its exact file path, when it differs from `path`                                            |
+| `kind`                    | `scratch`, `wiki` or `daily`                                                                |
+| `op`                      | `created`, `updated`, `archived`, `restored`, or `deleted` (its file was deleted outside AIDE) |
+| `period`, `periodStart`   | For a periodic note: `daily` and its date, for example                                      |
+| `slots`                   | The well-formed sections in the note's body                                                 |
+
+You can read your own published topics the same way, with `events:read:<topic>`. The stream holds every change,
+including those the plugin can't read; check `path` against what you're after.
+
+## Write into notes: slots
+
+A slot is a block of a note that a plugin owns and rewrites without touching anything around it. The owner puts a
+line in a template:
+
+```md
+{{slot leftovers.today}}
+```
+
+A note made from the template gets an empty block between two markers:
+
+```md
+<!-- aide:slot leftovers.today -->
+<!-- /aide:slot leftovers.today -->
+```
+
+`PUT /notes/<id>/sections/leftovers.today` with `{content}` replaces only what's between the markers, under a lock on
+the note, and adds the block at the end of the note when it's missing. With `version`, a note that changed since is
+`409 version_conflict`. A plugin writes only sections named `<its id>.<name>` (others are `403`); duplicated, nested
+or unclosed markers are `409 section_ambiguous`, and content containing a marker is `422`. Markers inside a fenced
+code block are text.
+
+The `slots` field of each `aide.notes` event tells you a note with your slot was just created, which is the moment to
+fill it. See [Daily notes and templates](/docs/guides/periodic-notes/) for how the owner sets templates up.
+
+## Ask the AI
+
+With `ai:run`:
+
+```json
+{ "prompt": "Summarize what changed this week.", "context": { "notePaths": ["daily/2026-10-21"], "search": "launch" }, "maxTokens": 1000 }
+```
+
+`POST /ai/run` uses the owner's AI backend (**Settings › AI**) and their daily limit. `prompt` is required (up to 32 KiB),
+`context.notePaths` lists up to 10 notes, `context.search` (up to 200 bytes) adds the 5 best title and body matches,
+and `maxTokens` is up to 8,000. Notes go to the model as data blocks, never as instructions, and a note outside the
+plugin's read scope is left out without an error. The answer is plain text, `{text, provider, notes}`; the server
+applies it nowhere. With no AI configured it's `409 ai_unavailable`; over the daily limit, `429 ai_quota`.
+
+## Errors
+
+Every error is `{"error": {"code": "…", "message": "…"}}`, and a version conflict adds `current`, the note as it is
+now.
+
+| Status | Code                                     | When                                                                    |
+| ------ | ---------------------------------------- | ----------------------------------------------------------------------- |
+| 400    | `bad_request`                            | The body isn't valid JSON, or has a field the route doesn't take        |
+| 401    | `unauthorized`                           | No token, or one that is unknown or revoked                             |
+| 403    | `plugin_disabled`                        | The owner turned the plugin off                                         |
+| 403    | `scope`                                  | The token lacks the scope for this note or topic                        |
+| 403    | `forbidden`                              | An owner-only endpoint, or another plugin's manifest                    |
+| 403    | `reserved`                               | Posting to an `aide.*` topic                                            |
+| 404    | `not_found`                              | No such note, or one outside the read scope                             |
+| 409    | `version_conflict`                       | The `version` you sent is stale                                         |
+| 409    | `path_taken`                             | Another note lives at that path                                         |
+| 409    | `section_ambiguous`                      | The section's markers are duplicated, nested or unclosed                |
+| 409    | `ai_unavailable`                         | The owner has no AI backend                                             |
+| 413    | `too_large`                              | A body over 1 MiB                                                       |
+| 422    | `invalid`                                | A manifest, path, setting or value breaks a rule; the message says which |
+| 422    | `secrets_unavailable`                    | The server has no secret key                                            |
+| 429    | `ai_quota`                               | The owner's daily AI limit is used up                                   |
+| 502    | `ai_backend`                             | The AI backend failed                                                   |
+
+## An example in Python
+
+This plugin waits for today's daily note to be created with its slot, and fills the slot with the todos left
+unchecked in yesterday's daily. With **Tell me in the Feed** on, it also posts one event. It uses only Python's
+standard library.
+
+The owner adds `{{slot leftovers.today}}` to their daily template. Mint the token with the scopes above (use your
+daily notes' folder in place of `daily` if you changed it), then run:
+
+```sh
+AIDE_URL=https://aide.example.com AIDE_PLUGIN_TOKEN=aide_p_… python3 leftovers.py
+```
+
+```python
+#!/usr/bin/env python3
+"""Yesterday's leftovers: an AIDE server plugin."""
+import datetime, json, os, time, urllib.error, urllib.request
+from pathlib import Path
+
+URL = os.environ["AIDE_URL"].rstrip("/")
+TOKEN = os.environ["AIDE_PLUGIN_TOKEN"]
+CURSOR = Path(os.environ.get("LEFTOVERS_CURSOR", "leftovers.cursor"))
+
+MANIFEST = {
+    "name": "Yesterday's leftovers",
+    "description": "Lists yesterday's unchecked todos in today's daily note.",
+    "version": "0.1.0",
+    "publishes": ["leftovers"],
+    "slots": ["leftovers.today"],
+    "settings": [{"key": "post", "title": "Tell me in the Feed", "type": "bool",
+                  "help": "Posts a Feed event when there are leftovers."}],
+    "locales": {"ko": {"name": "어제 남은 일", "settings.post.title": "피드로 알려 주기"}},
+}
+
+
+class AideError(Exception):
+    def __init__(self, status, code, message):
+        super().__init__(f"{status} {code}: {message}")
+        self.status, self.code = status, code
+
+
+def call(method, path, body=None, timeout=40):
+    data = json.dumps(body).encode() if body is not None else None
+    request = urllib.request.Request(URL + path, data=data, method=method, headers={
+        "Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            raw = response.read()
+            return json.loads(raw) if raw else None
+    except urllib.error.HTTPError as error:
+        detail = json.loads(error.read() or b"{}").get("error", {})
+        raise AideError(error.code, detail.get("code", ""), detail.get("message", "")) from None
+
+
+def fill(note_id, day):
+    yesterday = (datetime.date.fromisoformat(day) - datetime.timedelta(days=1)).isoformat()
+    try:
+        previous = call("GET", f"/periodic/daily/{yesterday}?create=false")
+    except AideError as error:
+        if error.status != 404:
+            raise
+        previous = None
+    lines = previous["body"].split("\n") if previous else []
+    open_todos = [lines[t["line"]].strip() for t in (previous or {}).get("todos", [])
+                  if not t["done"] and t["indent"] == 0 and t["line"] < len(lines)]
+    content = "\n".join(open_todos) if open_todos else "Nothing left from yesterday."
+    call("PUT", f"/notes/{note_id}/sections/leftovers.today", {"content": content})
+    if open_todos and call("GET", "/plugins/self/settings").get("post"):
+        call("POST", "/events", {
+            "topic": "leftovers", "key": f"leftovers:{day}",
+            "title": f"{len(open_todos)} todos left from yesterday",
+            "body": content, "payload": {"push": "never"}})
+
+
+def main():
+    call("PUT", "/plugins/leftovers/manifest", MANIFEST)
+    after = int(CURSOR.read_text()) if CURSOR.exists() else 0
+    while True:
+        try:
+            if not call("GET", "/plugins/self")["enabled"]:
+                time.sleep(60)
+                continue
+            events = call("GET", f"/plugins/self/events?topic=aide.notes&after={after}&wait=25")["events"]
+            for event in events:
+                change = event["payload"]
+                if (change.get("op") == "created" and change.get("period") == "daily"
+                        and "leftovers.today" in change.get("slots", [])):
+                    fill(change["id"], change["periodStart"])
+                after = event["offset"]
+                CURSOR.write_text(str(after))
+        except AideError as error:
+            if error.code != "plugin_disabled":
+                print(error)
+            time.sleep(10)
+        except OSError as error:  # the server is restarting or unreachable
+            print(error)
+            time.sleep(10)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+It keeps its cursor in a file, so a restart picks up where it stopped; the first run reads the stream from the
+beginning and fills any daily that already has an empty slot. Run it under whatever keeps processes alive on your
+server (systemd, a container, launchd).
+
+<Aside>
+Once it has registered, the plugin shows in the app under **Settings › On the server** (on Linux, **Settings ›
+Plugins**), switched off because the token was minted with `--off`. Turn on **Enabled** there; the plugin notices
+within a minute.
+</Aside>

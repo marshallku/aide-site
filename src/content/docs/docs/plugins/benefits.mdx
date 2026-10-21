@@ -1,0 +1,126 @@
+---
+title: Benefit scout
+description: Every Monday, matches your life profile note against Korean life-stage benefits and recent policy news, and sends one briefing of what's worth acting on.
+sidebar:
+    order: 16
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+The benefit scout watches for government benefits, tax credits and housing programs that fit your situation, and tells you once a week what's worth doing something about. It's built for life in Korea: its catalog and its news sources are Korean.
+
+<PluginFacts id="benefits" />
+
+## What it does
+
+Every Monday at 09:00 the plugin:
+
+1. Reads your **life profile**: the frontmatter of a note (`profile/life` by default) that describes your situation.
+2. Matches it against a built-in catalog of 12 Korean life-stage benefits, in four groups:
+    - **Newlyweds**: the marriage gift deduction (혼인 증여재산 공제).
+    - **Housing**: newlywed jeonse loans (버팀목), newlywed special supply (신혼부부 특별공급), the Didimdol loan (디딤돌), the newborn special supply and loan (신생아 특별공급 / 특례대출).
+    - **Tax**: pension savings and IRP credits, ISA accounts, year-end settlement checks (연말정산), the monthly-rent credit (월세 세액공제).
+    - **Children**: 첫만남이용권, 부모급여 and 아동수당; child tax credits (자녀 세액공제 / 자녀장려금); postpartum care support (산모·신생아 건강관리).
+
+    A benefit matches only when every condition it needs holds (for example: married within the last 7 years **and** living in jeonse), and only at the right time: some are timely in certain months, some within a number of years of your marriage date. A benefit it told you about isn't repeated for 45 days.
+3. Reads recent news: the Ministry of Economy and Finance's press releases (기재부 보도자료), plus Google News searches chosen from your profile (newlywed support and gift tax changes if you're engaged or married, childbirth support if you have or plan children, year-end settlement changes if you're an employee, startup programs if your focus mentions 사업 or 창업, and support in your region). It keeps articles from the last 14 days, at most 4 per source and 15 in all, and never shows the same article twice.
+4. Asks your AI to pick what applies to you and write one briefing: what to act on now (how to apply, the deadline, the estimated amount) and what to look into. News that will matter only when your situation changes (a birth, registering a marriage, a new job) goes on a **watch list** instead.
+5. Posts one event, "🎁 This week's life benefits", with the briefing and, under **👀 Watch list**, the watched items with their links and when they'd apply.
+
+When nothing is worth telling, there's no event that week. A week whose run was missed (the computer was off) is made up within 72 hours; a failed run is retried every 10 minutes until the next Monday.
+
+<Aside type="caution" title="Check before you apply">
+The catalog's amounts, conditions and deadlines are approximate figures written into the plugin, and the AI can't verify them. The briefing marks them as catalog figures, says a benefit "may apply", and asks you to check the official page. Treat every figure as a lead.
+</Aside>
+
+## Before you start
+
+- A [desktop host](/docs/self-hosting/desktop-host/) or your own server.
+- An AI in **Settings › AI**: **Anthropic API key** or **My gateway**.
+- A life profile note with YAML frontmatter (below). Without the note the plugin skips the week quietly.
+
+## Set it up
+
+<Steps>
+
+1. Create a note at `profile/life` and describe yourself in its frontmatter:
+
+    ```markdown
+    ---
+    marital_status: married
+    marriage_date: 2025-05-17
+    residence:
+      region: 서울 강서구
+      tenure: jeonse
+    tax_filing: employee
+    child_plan: planning
+    interests: [재테크, 창업]
+    current_focus: 사업 준비
+    extra_tags: []
+    ---
+
+    Free-form notes about your situation. The scout reads only the frontmatter.
+    ```
+
+2. Turn the plugin on: **Benefit scout** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+3. Wait for Monday 09:00. To try it right away, see `run-now` under [Local keys](#local-keys).
+
+</Steps>
+
+### Profile fields
+
+Every field is optional; leave out what doesn't apply. The plugin also accepts `household` (`size`, `members`), `age` and `occupation`, but doesn't use them yet.
+
+| Field            | Values                                                         | What it changes |
+| ---------------- | -------------------------------------------------------------- | --------------- |
+| `marital_status` | `single`, `engaged`, `married`                                 | Newlywed and marriage-window benefits; marriage news |
+| `marriage_date`  | `YYYY-MM-DD`, past or upcoming                                 | Married within 7 years counts as newlywed; benefits tied to years around the marriage |
+| `residence`      | `region` (as you'd write it in Korean, e.g. `서울 강서구`) and `tenure`: `owned`, `jeonse`, `wolse` | Housing and rent benefits; regional news |
+| `tax_filing`     | `employee`, `freelancer`, `none`                               | `employee` enables year-end settlement benefits and news |
+| `child_plan`     | `none`, `planning`, `expecting`, `parenting`                   | Childbirth and childcare benefits and news |
+| `interests`, `current_focus` | A list; text                                       | Given to the AI; mentioning 사업 or 창업 adds startup-program news |
+| `extra_tags`     | A list of catalog tags: `married`, `engaged`, `newlywed`, `marriage-window`, `employee`, `child`, `jeonse`, `wolse`, `renter`, `home-owner` | Adds a condition by hand when your fields don't express it |
+
+## Settings
+
+<PluginSettings id="benefits" defaults={{ profileNote: "profile/life" }} />
+
+**Profile note** is a note path. Empty means `profile/life`.
+
+### Local keys
+
+Under `"benefits"` in `plugins.json` on a desktop host ([where that is](/docs/plugins/overview/#local-settings)):
+
+| Key       | What it does                                                                                       |
+| --------- | -------------------------------------------------------------------------------------------------- |
+| `sources` | A list of feeds, `{"name": "…", "url": "…"}`, that replaces the news sources chosen from your profile. |
+| `run-now` | `true` runs the current week once when the plugin starts, in addition to the Monday schedule.      |
+
+```json
+{
+    "plugins": {
+        "benefits": { "run-now": true }
+    }
+}
+```
+
+A week already done isn't run twice, even with `run-now`. Remove `run-now` once you've seen a briefing.
+
+## Troubleshooting
+
+### No briefing came on Monday
+
+- A week with nothing matching and nothing worth telling has no event. That's the usual reason.
+- Without the profile note, the week is skipped. Check the path in **Profile note**.
+- A profile note without a frontmatter block (`---` lines at the top) can't be read: the plugin retries every 10 minutes all week, and the host log says `life profile has no YAML frontmatter`.
+- Check that **Settings › AI** isn't **Rules (no AI)**.
+
+### A link in the briefing isn't clickable
+
+Links are kept clickable only when they point at an article the plugin screened or at a Korean government site (`gov.kr`, `go.kr`, `korea.kr`). Any other address is shown as plain code, so a made-up or planted link can't be opened by accident.
+
+## Privacy
+
+The plugin fetches the Ministry of Economy and Finance's press-release feed and Google News searches from the machine that runs the plugins. Your region goes into one of those searches as text. Your marital status and marriage date, region and tenure, tax filing, child plan, interests and current focus, the matching catalog entries and the screened article titles and summaries go to the AI you set in **Settings › AI**. The watch list and which benefits and articles you've already been shown are kept in the plugin's state on your host or server.

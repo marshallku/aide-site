@@ -1,0 +1,132 @@
+---
+title: How AIDE fits together
+description: The ideas behind AIDE — vaults and notes, scratch and the wiki, todos in notes, the Feed, plugins, the assistant — and where AI is and isn't used.
+sidebar:
+    order: 5
+---
+
+AIDE has a handful of ideas that every screen builds on. Knowing them makes the rest of the manual
+quicker to read.
+
+## The pieces
+
+```text
+  iPhone · Mac · Linux apps          aidectl · Claude (MCP)
+             │                               │
+             │ paired devices                │ this computer
+             ▼                               ▼
+  ┌──────────────────────── AIDE server ────────────────────────┐
+  │  notes · todos · Organize · Feed + triage · AI · push       │
+  │                                                             │
+  │  database: the event log, settings, note metadata           │
+  └───────┬──────────────────────────────┬──────────────────────┘
+          │                              │ scoped tokens
+          ▼                              ▼
+  your vault: Markdown files     plugin runner: briefing, recap,
+  in a folder                    Google Calendar, Slack, Radar…
+```
+
+In local mode there is no server box: the app opens the vault folder itself, and `aidectl` reaches it
+through the running app. With a desktop host, the server, its database and the plugin runner run on
+your computer as part of the app. [Ways to run AIDE](/docs/getting-started/ways-to-run/) compares
+the three setups.
+
+## Vaults and notes
+
+A **vault** is a folder of Markdown files. Every `.md` file is a note, images and other files go in
+`attachments/`, and AIDE keeps its own bookkeeping in a hidden `.aide/` folder. There's no export
+step: the files are your notes, and other editors such as Obsidian can open the same folder. AIDE
+picks up their edits and never overwrites them.
+
+Notes link to each other with `[[wikilinks]]`, embed images and drawings, and can carry frontmatter
+properties. Deleting a note moves it to **Settings › Recently deleted**; nothing is deleted for good.
+See [Notes and the editor](/docs/guides/editor/) and [Vaults and your files](/docs/guides/vaults/).
+
+## Scratch, then the wiki
+
+Notes live in two places:
+
+- **Scratch** is where you write without deciding where something goes. On the desktop, typing into
+  an empty tab makes a scratch note.
+- **Wiki** is your organized notes: topics, projects, and the periodic notes (daily, weekly, monthly,
+  quarterly, yearly).
+
+**Organize** moves scratch into the wiki. You pick scratch notes and choose **Propose**; AIDE suggests
+a home for each, a new page or a section appended to an existing one. Nothing changes until you check
+the proposals and **Apply** them, and applied notes are archived from Scratch, not deleted. See
+[Scratch and Organize](/docs/guides/scratch/).
+
+## Todos live in notes
+
+There's no separate todo database. Every `- [ ]` line in any note is a todo, and the **Todos** screen
+gathers them from the whole vault. A todo can carry dates, a priority, a time block, tags and an
+estimate in Obsidian Tasks or Dataview syntax:
+
+```markdown
+- [ ] Send the invoice 📅 2026-10-24 ⏫ #work
+- [/] 09:00 - 10:30 Write the quarterly plan [estimate:: 90m]
+```
+
+Checking one off in the Todos screen edits the line in its note. See [Todos](/docs/guides/todos/).
+
+## The Feed
+
+The **Feed** is one event log for everything that happens outside your notes. Plugins, scripts and
+other services publish events to topics; your devices read the log and keep their place in it. Each
+event is **triaged** into a bucket:
+
+| Bucket | What goes there | Notifies |
+| --- | --- | --- |
+| **Act on** | You have to do something: a deadline, an application, a payment | Always |
+| **Need to know** | Important even with nothing to do | Unless you turn it off |
+| **Might interest you** | Matches the topics of your own wiki | No |
+| **Everything else** | The rest, collapsed | No |
+
+The Feed needs a server or a desktop host. See [The Feed](/docs/guides/feed/) and
+[Publish events to the Feed](/docs/developers/events/).
+
+## Plugins
+
+Plugins come in two kinds:
+
+- **Server plugins** run beside the server in AIDE's plugin runner, each with its own limited token.
+  They work while your devices are closed: the morning briefing, the evening recap, Google Calendar,
+  Gmail, Slack, Radar and others. They are listed under **Settings › Plugins › On the server** and
+  are off until you turn them on. They need a desktop host or your own server.
+- **Device plugins** run inside the app, in a sandbox, with only the access you approve when you
+  install them: a Pomodoro timer, Excalidraw drawings, a word count and others. They work in local
+  mode too.
+
+Plugins write into your notes through **slots**: a line such as `{{slot todo-carry.open}}` in a
+template becomes a block that plugin keeps up to date. See [How plugins work](/docs/plugins/overview/).
+
+## The assistant
+
+The **Assistant** plans your day with you in a chat. It sees your open todos, today's calendar and
+your free time, and answers with proposals (schedule this, estimate that, move it to tomorrow). Each
+proposal waits for you to take or drop it; taken ones are edited into your notes with a record of
+what changed. See [The assistant](/docs/guides/assistant/).
+
+## Where AI is used
+
+AI is optional everywhere. You choose where the model runs:
+
+- **On your computer:** Claude Code or Codex, if you have them installed (Mac and Linux). They run with
+  no tools, in an empty temporary folder: the prompt goes in and the reply comes out.
+- **With your own Anthropic API key**, on the device or stored encrypted on your server.
+- **On your server:** **Settings › AI** picks **Rules (no AI)**, **Anthropic API key** or
+  **My gateway** (a gateway you run with your own Claude login).
+
+Model output is never trusted as is: a reply that doesn't match what AIDE asked for is refused, and
+changes to your notes wait for your approval.
+
+| Feature | With AI | Without AI |
+| --- | --- | --- |
+| Organize | Proposes a home for each scratch note from what it says and your wiki's page names | By rules: a note's first `#tag` goes to `topics/<tag>`, notes with todos go to today's daily note, the rest to `inbox` |
+| Feed triage | The model buckets each event, with a reason | By rules: deadline words ("due", "deadline", "apply by"…) mean Act on, events their publisher marks high severity mean Need to know, events that mention your wiki's topics mean Might interest you |
+| The assistant | Plans with you | Not available |
+| Meetings | Summary, decisions and action items | Recording and transcription still work; transcription runs on the device |
+| Briefing, recap, catch-up and other AI plugins | Write their notes | Not available |
+
+Everything else (the editor, todos, search, the graph, review, calendars, device plugins) never uses
+AI. See [AI and models](/docs/guides/ai/).

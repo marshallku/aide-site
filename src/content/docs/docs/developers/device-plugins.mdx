@@ -1,0 +1,651 @@
+---
+title: Build a device plugin
+description: Write a small JavaScript package that runs in a sandbox on the iPhone, the Mac and Linux, with only the access the owner approves.
+sidebar:
+    order: 4
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+A device plugin is a folder of up to four files that AIDE loads into a sandboxed web view on the iPhone, the Mac
+and the Linux app. It can add a tab, a view in the desktop's right panel, a sheet on notes, palette commands and
+timed runs, and it reaches your notes only through `aide.call(…)`, for the capabilities the owner turned on at
+install. No app update and no server is needed: you host the folder on any static HTTPS server and install it
+from a URL.
+
+Installing and managing plugins as a user is covered in [Installing device plugins](/docs/plugins/device-plugins/).
+For work that has to run whether or not an app is open, write a [server plugin](/docs/developers/server-plugins/)
+instead.
+
+## The package
+
+A package is a folder with these files, each at most 2 MB. Any other file is rejected.
+
+| File            | Required | What it is                                                                                    |
+| --------------- | -------- | --------------------------------------------------------------------------------------------- |
+| `manifest.json` | yes      | What the plugin is, where it shows, and what it asks for                                      |
+| `main.js`       | yes      | The plugin's code                                                                             |
+| `index.html`    | no       | The page (`web` plugins). Without it, AIDE uses a blank page that loads `main.js`             |
+| `styles.css`    | no       | Styles for the page                                                                           |
+
+The package is identified by a SHA-256 hash of all its files. If a file of an installed copy changes on the
+device afterwards, AIDE turns the plugin off until it is installed again.
+
+The page can't load anything from the network: every `http(s)`, `ws`, `file` and `blob` load is blocked, and
+navigation never leaves the plugin's own `aide-plugin://<id>/` origin. Network access goes through `net.fetch`,
+for hosts the owner approved.
+
+## The manifest
+
+```json
+{
+    "id": "eisenhower",
+    "name": "Eisenhower matrix",
+    "version": "1.0.0",
+    "description": "Open todos in a do / schedule / delegate / later grid.",
+    "author": "you",
+    "render": "web",
+    "tabs": [{ "id": "matrix", "title": "Matrix", "icon": "square.grid.2x2" }],
+    "capabilities": ["todos:read", "todos:write"]
+}
+```
+
+| Field          | Required | Value                                                                                                                        |
+| -------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `id`           | yes      | A lowercase letter, then lowercase letters, digits and `-`; 2–40 characters. Installing a package with the same id updates it |
+| `name`         | yes      | Up to 60 characters                                                                                                          |
+| `version`      | yes      | A string. To publish to the public index it must look like `1.2.3` or `1.2.3-beta.1` (at most 32 characters)                  |
+| `description`  | yes      | Shown in Settings and in the index                                                                                           |
+| `author`       | no       | Shown in the index                                                                                                           |
+| `render`       | yes      | `web` (the plugin draws HTML) or `native` (`main.js` sends a tree of the app's own controls)                                  |
+| `capabilities` | yes      | A list of what it asks for (see [Capabilities](#capabilities)); at most 32. `[]` asks for nothing                             |
+| `tabs`         | yes      | Up to 3 sections in the main area, `{id, title, icon}`. `[]` for none                                                         |
+| `panels`       | no       | Up to 3 views of the desktop's right panel, same shape as tabs                                                               |
+| `sheets`       | no       | Up to 3 entries of the note editor's plugin menu, same shape as tabs                                                         |
+| `settingsPage` | no       | `{"title": "…"}` (up to 30 characters): a page of the plugin's own, linked from its detail screen                             |
+| `settings`     | no       | Up to 64 fields the owner edits in the plugin's detail screen (see [Settings](#settings))                                    |
+| `schedules`    | no       | Up to 10 timed runs; needs the `schedule` capability (see [Schedules](#schedules))                                           |
+| `commands`     | no       | Up to 10 command palette entries (see [Commands](#commands))                                                                 |
+| `embeds`       | no       | Up to 4 kinds of attachment this plugin edits (see [Embeds](#embeds))                                                        |
+| `locales`      | no       | Translations of what the app shows from the manifest (see [Languages](#languages))                                           |
+| `strings`      | no       | The plugin's own text catalog for `aide.t` (see [Languages](#languages))                                                     |
+
+In `tabs`, `panels` and `sheets`, each `id` follows the plugin id's pattern and is unique within its list,
+`title` is 1–20 characters, and `icon` is required. Icons are names in the style of SF Symbols
+(`square.grid.2x2`, `checklist`, `textformat.size`); the app draws its own icon for the names it knows and a
+plugin icon for any other. Keys are case-sensitive, and an unknown value type (a number where text belongs, a
+`null` in a list) makes the package invalid.
+
+### Where a plugin shows
+
+- **Tabs** are sections in the main area, beside Scratch, Wiki and the rest. Each tab runs its own page;
+  `aide.tab` holds the id of the tab being drawn.
+- **Panels** are views of the right panel on the Mac and Linux. A panel's page runs while it is the view shown and
+  starts fresh the next time. An iPhone has no side panel, so a panel-only plugin shows nothing there.
+- **Sheets** open from the plugin menu in the note editor, with the note saved first. `aide.close()` closes one.
+- **The settings page** opens from the plugin's detail screen; `aide.close()` goes back.
+
+A plugin can have any mix of these, or none at all (only commands and schedules). Sheets and the settings page
+start fresh each time and end when closed. Turning the plugin off or updating it while one is open stops it there,
+with **Start again**.
+
+`aide.surface` tells the page where it is running:
+
+| `aide.surface.kind` | Other fields          | Running as                                       |
+| ------------------- | --------------------- | ------------------------------------------------ |
+| `tab`               | `id`                  | A tab                                            |
+| `panel`             | `id`                  | A right panel view                               |
+| `sheet`             | `id`, `noteId`, `embed`? | A sheet on the note `noteId`                  |
+| `settings`          | —                     | The settings page                                |
+| `schedule`          | `id`                  | A scheduled run, out of sight                    |
+| `command`           | `id`, `noteId`?       | A palette command, out of sight                  |
+
+A `noteId` grants nothing by itself: reading the note still needs a `notes:read` capability.
+
+## Capabilities
+
+The install screen lists each capability the plugin asks for, and the owner turns on only the ones they agree to.
+A call outside the approved set fails with `not allowed: …`.
+
+| Capability             | Allows                                                                                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `notes:read:<prefix>`  | Reading, searching and watching notes at `<prefix>` or under `<prefix>/`; `*` means every note                                  |
+| `notes:write:<prefix>` | Creating, changing, appending to and archiving those notes, and writing the plugin's own sections in them. Implies read         |
+| `todos:read`           | The open and done todos of every note (each todo's text and fields, not the note's body)                                       |
+| `todos:write`          | Checking off and adding todos (only the todo line changes)                                                                     |
+| `storage`              | 512 KB of the plugin's own JSON on this device                                                                                 |
+| `net:<host>`           | HTTPS requests to that host through `net.fetch`, redirects included                                                            |
+| `schedule`             | Running its `schedules` at set times while AIDE is open on this computer (Mac, Linux)                                         |
+| `attachments:read`     | Reading the images and documents notes embed                                                                                   |
+| `attachments:write`    | Adding new attachments (create-only). Implies read                                                                             |
+
+A prefix matches whole path segments: `notes:read:daily` covers `daily` and `daily/2026-10-22`, not `daily-log`.
+Ask for the narrowest prefix that does the job; the public index's review asks for that too.
+
+## The runtime API
+
+`window.aide.call(method, params)` returns a promise. Every call works the same whether the notes live in a folder
+on the device or on a server: the app sends it to whichever holds them.
+
+| Method                  | Params                                                                         | Returns                                                                                          |
+| ----------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `notes.list`            | `{prefix?}`                                                                    | Note summaries (at most 500)                                                                     |
+| `notes.get`             | `{id}`                                                                         | The note, with `body` and `todos`                                                                |
+| `notes.create`          | `{path, body?}`                                                                | The note                                                                                         |
+| `notes.update`          | `{id, version, body?, path?}`                                                  | The note; fails if `version` is stale                                                            |
+| `notes.append`          | `{id, text, heading?}`                                                         | The note                                                                                         |
+| `notes.search`          | `{query, limit?}` (query ≤ 200 bytes; limit 1–50, default 20)                  | Hits `{id, path, kind, title, summary?, snippet?}`, only notes the plugin can read               |
+| `notes.section.get`     | `{id, name}`                                                                   | `{name, content, todos, version, openLine, closeLine}` or `null`                                 |
+| `notes.section.replace` | `{id, name, content, version?}` (`name` must be `<plugin id>.<name>`)          | The note                                                                                         |
+| `notes.archive`         | `{id, version}`                                                                | `true`; the note goes to **Recently deleted**, where the owner can bring it back                  |
+| `periodic.get`          | `{period, date?}`                                                              | The note, created if missing (creating needs `notes:write:*`)                                    |
+| `periodic.find`         | `{period, date?}`                                                              | The note or `null`                                                                               |
+| `todos.list`            | —                                                                              | Open todos with parsed fields                                                                    |
+| `todos.done`            | `{from, to}` (days, inclusive)                                                 | Done todos `{noteId, notePath, noteTitle, line, text, title, date, stamped}`                     |
+| `todos.setStatus`       | `{noteId, line, version, status, text}`                                        | `{noteId, version}`                                                                              |
+| `todos.add`             | `{text, target?: "today" \| "inbox"}`                                          | `{noteId, path, version}`                                                                        |
+| `settings.get`          | —                                                                              | The owner's settings (declared keys only)                                                        |
+| `storage.get`           | —                                                                              | The stored value or `null`                                                                       |
+| `storage.set`           | `{value}`                                                                      | `true`                                                                                           |
+| `net.fetch`             | `{url, method?, headers?, body?}`                                              | `{status, body, contentType}`                                                                    |
+| `events.subscribe`      | `{events: [...]}` (what `aide.on` calls)                                       | `true`                                                                                           |
+| `attachments.get`       | `{path}`                                                                       | `{path, mime, data}` (`data` in base64) or `null`                                                |
+| `attachments.put`       | `{path, data}` (`data` in base64, ≤ 20 MB)                                     | `{path, mime}`                                                                                   |
+| `panel.open`            | `{id}`                                                                         | Shows the right panel on one of the plugin's panels                                              |
+
+Some details:
+
+- **Ids and dates.** Note ids are UUIDs; anything else is rejected. `period` is `daily`, `weekly`, `monthly`,
+  `quarterly` or `yearly`, and dates are `YYYY-MM-DD`.
+- **Todos.** `todos.list` gives each open todo's `noteId`, `notePath`, `noteTitle`, `line`, `text`, `title`,
+  `status`, `version`, `priority` and `tags`, plus `due`, `scheduled` and `noteDate` when it has them. Pass
+  `noteId`, `line`, `version` and `text` back to `todos.setStatus` with a status character (`x` done, `/` in
+  progress, `-` cancelled, and the others in [Todos](/docs/guides/todos/)). `todos.add` takes one line of at most
+  1,000 characters. `todos.done` needs `todos:read` or `todos:write`.
+- **Search, sections and note events** need some `notes:` capability and only ever return notes the plugin can
+  read, so a search may return fewer hits than `limit`.
+- **Sections** are the blocks between `<!-- aide:slot <name> -->` markers, the same ones a template's
+  `{{slot <name>}}` line creates and server plugins write. A plugin writes only sections named `<its id>.<name>`,
+  in notes it may write; a missing section is added at the end. With `version`, a note that changed since is
+  refused (`the note changed; reload it`); without it, the app writes over whatever the note holds by then,
+  rereading it up to 3 times if another edit races the write.
+- **Attachments** are vault paths of the types the editor embeds (images, SVG, HTML), checked by their contents.
+  `attachments.put` is create-only: the same bytes at an existing path succeed, other bytes fail with
+  `that path already holds another attachment`. A changed drawing is a new path, and the note's reference is
+  changed to it.
+- **`net.fetch`** takes an `https` URL to an approved host; a response over 1 MB fails.
+- **`panel.open`** works from a tab, a sheet, a panel, the settings page or a command the owner ran, never from a
+  scheduled run. It fails on a device without a right panel (`this device has no side panel`).
+
+### Events
+
+`aide.on(event, handler)` subscribes and returns the promise of `events.subscribe`.
+
+| Event          | The handler gets                                    | When                                                                                       |
+| -------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `note.created` | The note's summary, as `notes.list` gives it        | A note the plugin can read appeared                                                        |
+| `note.changed` | The note's summary                                  | A note the plugin can read changed (also one moved into reach)                             |
+| `note.active`  | The summary of the note on screen, or `null`        | Right after subscribing, when another note comes up, and when the one on screen is saved   |
+
+- `note.created` and `note.changed` cover edits in the app, by other plugins (this one too), on other devices and,
+  in a notes folder, by other apps. The app looks every 2 seconds for a notes folder and every 10 seconds with a
+  server. Events come only while the page runs; nothing from before the first `aide.on` is replayed, changes
+  between two looks arrive as one event per note (oldest first, at most 200 per look; a larger burst is dropped),
+  and archiving sends nothing. Fetch the body with `notes.get` when you need it.
+- `note.active` needs no capability: what's on screen is the app's own state. It is `null` when there is no note
+  on screen or when the plugin can't read that note.
+
+### Other bridge members
+
+| Member                                | What it is                                                                                         |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `aide.surface`, `aide.tab`            | Where the page runs (above)                                                                        |
+| `aide.close()`                        | Closes a sheet or the settings page                                                                |
+| `aide.instance`                       | This installation on this device: a UUID kept across updates and rollbacks                         |
+| `aide.locale`                         | The app's language, `en` or `ko`                                                                   |
+| `aide.t(key, …args)`                  | The plugin's own `strings` in the app's language                                                   |
+| `aide.onSchedule(id, handler)`        | The handler for a scheduled run                                                                    |
+| `aide.onCommand(id, handler)`         | The handler for a palette command                                                                  |
+| `aide.render(tree)`, `aide.onAction`  | Drawing with native controls (`render: "native"`)                                                  |
+
+`aide.instance` lets a plugin that writes from several devices give each device its own note, as Recall does with
+its review logs.
+
+## Schedules
+
+On the Mac and Linux, a plugin can run at set times without a server: the app loads its page out of sight and calls
+the handler for the schedule that came due.
+
+```json
+"capabilities": ["notes:write:pomodoro", "schedule"],
+"schedules": [
+    { "id": "evening-log", "at": "21:00", "catchUp": true },
+    { "id": "sync", "every": "15m", "days": ["mon", "tue", "wed", "thu", "fri"] }
+]
+```
+
+```js
+aide.onSchedule("evening-log", async ({ id, scheduledFor, firedAt, catchUp, manual }) => {
+    // The normal API is available. Resolve when done; throw to fail the run.
+});
+```
+
+- Each schedule has an `id` (`a-z`, `0-9` and `-`, 1–40 characters, unique) and exactly one of `at` (`HH:MM`, 24
+  hours, in the owner's timezone) or `every` (`5m` to `24h`, in minutes `m` or hours `h`). `days` limits it to some
+  of `mon tue wed thu fri sat sun`. `catchUp` is only for `at`.
+- **Only while the app is open on that computer.** It checks once a minute, at launch and when the computer wakes.
+  A run up to 10 minutes late still counts as on time. A missed `at` run is skipped, unless `catchUp: true`: then
+  it runs once at launch or wake if it was missed by at most 12 hours. `every` counts from the last run's start and
+  never stacks up: after a night off it runs once.
+- The handler gets `{id, scheduledFor, firedAt, catchUp, manual}` (ISO times; `manual` is true for **Run now**).
+  Register it as soon as `main.js` loads: the app waits 5 seconds for it.
+- One run at a time per plugin, at most 60 seconds each. A run of a plugin that is turned off, changed or removed
+  is stopped.
+- The plugin's detail screen lists its schedules with the next and last run, a **Run now** button each, and
+  **Run on schedule** to stop them all.
+- An iPhone never runs schedules (iOS can't keep a plugin running in the background); it lists them and says they
+  run on AIDE for Mac or Linux while it's open.
+
+## Commands
+
+Commands are entries in the command palette (<kbd>⌘</kbd><kbd>P</kbd> on the Mac, <kbd>Ctrl</kbd><kbd>P</kbd> on
+Linux, **Commands** in the iPhone's Scratch menu). Choosing one loads the page out of sight, as a scheduled run
+does, and calls its handler.
+
+```json
+"commands": [
+    { "id": "stamp", "title": "Stamp the run log", "icon": "clock" },
+    { "id": "count", "title": "Count this note's words", "when": "note" }
+]
+```
+
+```js
+aide.onCommand("count", async () => {
+    const note = await aide.call("notes.get", { id: aide.surface.noteId });
+    // …
+});
+```
+
+`title` is 1–40 characters. With `"when": "note"`, the palette offers the command only while a note is on screen
+(Mac and Linux; never in the iPhone's Scratch), and the run gets `aide.surface.noteId`. The run ends when the
+handler's promise settles (an error is shown to the owner), after 60 seconds, or when the page stops answering. A
+command needs no capability of its own, but what it calls needs the usual ones.
+
+## Embeds
+
+A plugin can be the editor of some attachments, by the end of their name:
+
+```json
+"capabilities": ["notes:write:*", "attachments:write"],
+"sheets": [{ "id": "draw", "title": "Drawing", "icon": "scribble" }],
+"embeds": [{ "suffix": ".excalidraw.svg", "sheet": "draw" }]
+```
+
+`suffix` is lower case, starts with `.`, is 2–40 characters of `a-z 0-9 . -`, and ends with an attachment
+extension (`.svg .png .jpg .jpeg .gif .webp .html .htm`); `sheet` is one of the plugin's sheets. Wherever a note
+embeds an attachment whose path ends with the suffix, the note shows an **Edit** button on it, which opens that
+sheet with `aide.surface.embed = {src, path}`: `src` as the note writes it, `path` the attachment it resolves to.
+Opened from the plugin menu instead, the sheet has no `embed`, meaning a new one.
+
+The attachment is the format: the editor saves a new attachment and points the note's reference at it, so the note
+shows it with the plugin or without. The Excalidraw plugin keeps its drawing inside the SVG it writes.
+
+## Settings
+
+`settings` declares fields the owner edits in the plugin's detail screen; the page reads them with `settings.get`.
+
+```json
+"settings": [
+    { "key": "minutes", "title": "Minutes", "type": "number", "help": "How long a session lasts" },
+    { "key": "mode", "title": "Mode", "type": "enum", "options": ["short", "long"] }
+]
+```
+
+| Field     | Value                                                                                               |
+| --------- | --------------------------------------------------------------------------------------------------- |
+| `key`     | A letter, then letters, digits, `_` and `-`; up to 40 characters; not `token`                       |
+| `title`   | Up to 80 bytes                                                                                      |
+| `type`    | `string`, `text` (several lines), `number`, `bool`, `enum`, `time` (`HH:MM`) or `list` (of strings)  |
+| `options` | For `enum`: 1–32 options                                                                            |
+| `help`    | Optional, up to 300 bytes                                                                           |
+
+Device plugins have no `secret` type. Changing a setting restarts the plugin's open pages.
+
+## Languages
+
+The app speaks English or Korean, and a plugin can follow it.
+
+- `locales` translates what the app shows from the manifest, per language: `name`, `description`, `settingsTitle`,
+  `tabs.<id>.title`, `sheets.<id>.title`, `panels.<id>.title`, `commands.<id>.title`, `settings.<key>.title`,
+  `settings.<key>.help` and `settings.<key>.options` (one label per option, in order; the options are still what's
+  saved).
+- `strings` is the plugin's own catalog. The key is the English as written, with `%@` for text and `%lld` for a
+  whole number; the value is the Korean, or `{"en": {"one": "…", "other": "…"}, "ko": "…"}` for an English plural.
+
+```json
+"locales": { "ko": { "name": "단어 수", "sheets.count.title": "단어 수" } },
+"strings": {
+    "%lld words": { "en": { "one": "%lld word", "other": "%lld words" }, "ko": "%lld단어" },
+    "No note on screen": "화면에 노트가 없어요"
+}
+```
+
+The page calls `aide.t("%lld words", 3)` and gets `3 words` or `3단어`. Apps from before languages have neither
+`aide.locale` nor `aide.t`, so keep a fallback that fills the key's English in:
+
+```js
+const t = (key, ...args) => {
+    if (typeof aide.t === "function") return aide.t(key, ...args);
+    let next = 0;
+    return key.replace(/%(?:(\d+)\$)?(?:@|lld)|%%/g, (spec, position) =>
+        spec === "%%" ? "%" : String(args[position ? position - 1 : next++]),
+    );
+};
+```
+
+Translate only what's shown. What a plugin writes into notes, and anything it reads back later, stays as it is.
+A path the manifest doesn't have, a translation whose placeholders differ from its key's, or more than 500 strings
+(64 KB) makes the package invalid.
+
+## The plugin kit
+
+Every page can load the app's own parts, drawn in the app's design for light and dark and for each platform. They
+are served under the plugin's own origin, so nothing is copied into your package (and your files can't use these
+names):
+
+```html
+<link rel="stylesheet" href="aide-kit.css" />
+<script src="aide-kit.js"></script>
+```
+
+`aideKit.mount(root)` makes an element a kit surface and empties it. Then these build elements, each taking text
+and never HTML:
+
+| Function                                   | Builds                                                                        |
+| ------------------------------------------ | ----------------------------------------------------------------------------- |
+| `header({title?, meta?, actions?})`        | A page title and meta line. A tab already has its title above it: pass only `meta` |
+| `section({label?, children})`              | A labelled group                                                              |
+| `list(rows)`                               | Rows of `{title, meta?, trailing?, onSelect?}`; a row with `onSelect` is a button |
+| `button({title, style?, onClick, disabled?})` | A button; `style` is `prominent` or `destructive`                          |
+| `stats(items)`                             | Figures `{value, label}` side by side                                         |
+| `progress({value, total})`                 | A progress bar                                                                |
+| `banner({text, tone?, action?})`           | A status line; `tone: "danger"` makes it an alert                             |
+| `empty({title, message?, action?})`        | An empty state                                                                |
+| `field({label, help?, control})`, `input({…})`, `check({…})`, `select({…})` | Form controls                    |
+| `card(…)`, `grades(…)`, `review(root, …)`  | Flash cards and a whole review screen, as Recall uses                         |
+
+The app also marks `<html>` with `data-aide-platform` (`ios`, `mac`, `linux`) and `data-aide-scheme` (`light`,
+`dark`, following the app), for your own CSS. `aideKit.version` is `1` and only grows by additions.
+
+## Native plugins
+
+With `"render": "native"`, `main.js` draws with the app's own controls: `aide.render(tree)` replaces the screen,
+and `aide.onAction = (action, value) => …` receives control events. A node is `{type, key?, children?, …}`:
+
+| Type                                  | Fields                                                                 |
+| ------------------------------------- | ---------------------------------------------------------------------- |
+| `VStack`, `HStack`, `List`, `Section` | `children`; `Section` takes a `title`                                  |
+| `Text`                                | `text`, `style`: `largeTitle`, `title`, `headline`, `caption`, `mono`   |
+| `Markdown`                            | `text` (inline Markdown)                                               |
+| `Button`                              | `title`, `action`, `style`: `prominent`, `destructive`                 |
+| `Toggle`                              | `title`, `value` (bool), `action`: the value is the new bool           |
+| `TextField`                           | `placeholder`, `action`: the value is the submitted text               |
+| `Progress`                            | `title?`, `value`, `total`                                             |
+| `Image`                               | `text`: an icon name                                                   |
+| `Divider`, `Spacer`                   | —                                                                      |
+
+A tree is limited to a depth of 32 and 2,000 nodes. The Pomodoro plugin is a native plugin.
+
+## Limits
+
+- A page that doesn't answer for 5 seconds is stopped; the tab offers **Start again**.
+- A scheduled run or a command ends after 60 seconds.
+- At most 8 calls in flight at once, and 1 MB per `net.fetch` response.
+- `storage` holds 512 KB per plugin on each device; it isn't synced between devices.
+- Turning a plugin off, updating or removing it cuts off calls from anything of it still running.
+- Plugin pages can't be opened in a web inspector. Show errors on the page itself while you develop (the
+  example below writes them into a status line).
+
+## A complete example
+
+This plugin adds a tab that shows how many todos are open and adds one to today's daily note. It uses the plugin
+kit, two capabilities and a Korean translation.
+
+`manifest.json`:
+
+```json
+{
+    "id": "quick-todo",
+    "name": "Quick todo",
+    "version": "1.0.0",
+    "description": "Shows how many todos are open and adds one to today's note.",
+    "author": "you",
+    "render": "web",
+    "tabs": [{ "id": "main", "title": "Quick todo", "icon": "checklist" }],
+    "capabilities": ["todos:read", "todos:write"],
+    "locales": {
+        "ko": { "name": "빠른 할 일", "description": "열린 할 일 수를 보여 주고 오늘 노트에 할 일을 추가해요.", "tabs.main.title": "빠른 할 일" }
+    },
+    "strings": {
+        "%lld open": "%lld개 열림",
+        "Open todos": "열린 할 일",
+        "Add to today": "오늘에 추가",
+        "Something to do": "할 일",
+        "Added to %@": "%@에 추가했어요"
+    }
+}
+```
+
+`index.html`:
+
+```html
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="aide-kit.css" />
+    </head>
+    <body>
+        <div id="root"></div>
+        <script src="aide-kit.js"></script>
+        <script src="main.js"></script>
+    </body>
+</html>
+```
+
+`main.js`:
+
+```js
+const t = (key, ...args) => {
+    if (typeof aide.t === "function") return aide.t(key, ...args);
+    let next = 0;
+    return key.replace(/%(?:(\d+)\$)?(?:@|lld)|%%/g, (spec, position) =>
+        spec === "%%" ? "%" : String(args[position ? position - 1 : next++]),
+    );
+};
+
+const root = aideKit.mount(document.getElementById("root"));
+const meta = document.createElement("p");
+const text = aideKit.input({ placeholder: t("Something to do") });
+const status = document.createElement("p");
+status.setAttribute("role", "status");
+
+const refresh = async () => {
+    try {
+        const todos = await aide.call("todos.list");
+        meta.textContent = t("%lld open", todos.length);
+    } catch (error) {
+        status.textContent = String(error);
+    }
+};
+
+const add = async () => {
+    const value = text.value.trim();
+    if (!value) return;
+    try {
+        const added = await aide.call("todos.add", { text: value, target: "today" });
+        text.value = "";
+        status.textContent = t("Added to %@", added.path);
+        await refresh();
+    } catch (error) {
+        status.textContent = String(error);
+    }
+};
+
+root.append(
+    aideKit.section({
+        label: t("Open todos"),
+        children: [meta, text, aideKit.button({ title: t("Add to today"), style: "prominent", onClick: add }), status],
+    }),
+);
+text.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") add();
+});
+// Come back to the tab after editing notes elsewhere: count again.
+document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) refresh();
+});
+refresh();
+```
+
+## Test it locally
+
+`Add from a URL` accepts `http://` for this computer (`localhost`, `127.0.0.1`, `::1`), so you can install straight
+from a local web server on the Mac or Linux. Anywhere else, the package must be served over HTTPS.
+
+<Steps>
+
+1. Serve the plugin's folder:
+
+    ```sh
+    cd quick-todo
+    python3 -m http.server 8000 --bind 127.0.0.1
+    ```
+
+2. In AIDE, open **Settings › On this device › Add from a URL** (on Linux, **Settings › Device plugins › Add from a
+   URL**).
+
+3. Type `http://127.0.0.1:8000/` (the folder that holds `manifest.json` and `main.js`) and choose **Fetch**.
+
+4. Check what it asks for, turn on the capabilities, and choose **Install**. The tab appears in the sidebar.
+
+5. After changing a file, add it from the same URL again. The same id updates the installed plugin, and the
+   version before stays available as **Go back to the previous version** in the plugin's detail screen.
+
+</Steps>
+
+A plugin installed from a URL isn't checked against any index, which is why the install screen says to install only
+what you trust. To try it on an iPhone, host the folder on an HTTPS server the phone can reach.
+
+## Publish it
+
+### Host it yourself
+
+Put the folder on any static HTTPS host (GitHub Pages, a bucket, your own server) and share the folder's URL. Anyone
+can install it with **Add from a URL**.
+
+### A private index
+
+An index is a JSON file listing packages with the SHA-256 of every file, so what gets installed is exactly what was
+listed. The app shows an index's plugins under **Browse plugins** and checks every file against it before
+installing. Its shape:
+
+```json
+{
+    "plugins": [
+        {
+            "id": "quick-todo",
+            "name": "Quick todo",
+            "description": "Shows how many todos are open and adds one to today's note.",
+            "version": "1.0.0",
+            "author": "you",
+            "url": "https://example.com/aide-plugins/quick-todo/",
+            "files": { "main.js": "<sha256>", "index.html": "<sha256>", "manifest.json": "<sha256>" },
+            "hash": "<bundle hash>",
+            "capabilities": ["todos:read", "todos:write"]
+        }
+    ],
+    "revoked": []
+}
+```
+
+- `url` is the package folder; a relative URL is resolved against the index's own URL. `https` only, or `http` to
+  `localhost`.
+- `files` lists each file's SHA-256 in hex. An entry must list exactly the files the folder serves.
+- `hash` is the bundle hash: the SHA-256 of the file names in sorted order, each followed by its hex hash.
+- `revoked` lists `{id, hash?, reason}` entries for versions (or every version, without `hash`) you withdraw; the
+  app turns them off when it next reads the index. Keep the list present, even empty.
+
+This script writes such an index for every package folder next to it:
+
+```python
+#!/usr/bin/env python3
+# usage: build-index.py https://example.com/aide-plugins/   (writes plugins.json)
+import hashlib, json, sys
+from pathlib import Path
+
+base = sys.argv[1].rstrip("/") + "/"
+names = ["manifest.json", "main.js", "index.html", "styles.css"]
+plugins = []
+for folder in sorted(p for p in Path(".").iterdir() if (p / "manifest.json").is_file()):
+    files = {n: (folder / n).read_bytes() for n in names if (folder / n).is_file()}
+    hashes = {n: hashlib.sha256(d).hexdigest() for n, d in files.items()}
+    bundle = hashlib.sha256()
+    for n in sorted(files):
+        bundle.update(n.encode())
+        bundle.update(hashes[n].encode())
+    m = json.loads(files["manifest.json"])
+    entry = {"id": m["id"], "name": m["name"], "description": m.get("description", ""),
+             "version": m["version"], "url": f"{base}{folder.name}/", "files": hashes,
+             "hash": bundle.hexdigest(), "capabilities": m.get("capabilities", [])}
+    if m.get("author"):
+        entry["author"] = m["author"]
+    plugins.append(entry)
+Path("plugins.json").write_text(json.dumps({"plugins": plugins, "revoked": []}, indent=2, ensure_ascii=False) + "\n")
+```
+
+Host `plugins.json` with the folders, then point AIDE at it:
+
+- **Without a server**, type the index's URL into **Settings › On this device › Browse plugins › Index**. Leaving
+  it empty goes back to the public index.
+- **With a server**, the server fetches the index for every device, from its `plugins.indexURL` setting.
+
+### The public index
+
+The public index is [github.com/marshallku/aide-plugins](https://github.com/marshallku/aide-plugins), served at
+`https://marshallku.github.io/aide-plugins/plugins.json`, the app's default. Anyone can submit a plugin, and every
+version is reviewed before it's listed:
+
+<Steps>
+
+1. Release your package on GitHub, with `manifest.json`, `main.js` and, if you have them, `index.html` and
+   `styles.css` as the release's assets. The version must look like `1.2.3` or `1.2.3-beta.1`.
+
+2. Get the bundle hash with the checker in the index repository, which applies the same rules as the app:
+
+    ```sh
+    git clone https://github.com/marshallku/aide-plugins
+    cd aide-plugins/tools/check
+    go build -o aide-plugin-check .
+    ./aide-plugin-check --publish <folder with the release assets>
+    ```
+
+3. Open a pull request adding `submissions/<id>/<version>.json`:
+
+    ```json
+    { "repo": "you/your-plugin", "tag": "v1.0.0", "hash": "<hash from step 2>" }
+    ```
+
+</Steps>
+
+The index's CI downloads the release, checks it, and writes a report with the files as published and the capability
+changes since your last version, which a maintainer reviews. After the merge, the files are copied into the index
+repository and listed. Review looks for readable (not minified or obfuscated) code, the fewest capabilities that do
+the job, a reason for each `net:` host, and a plugin that does what its description says. An id belongs to the
+repository that first published it, and a published version never changes: fix a bad release with a new version.
+
+<Aside>
+A plugin found to be harmful is added to the index's revocation list, and apps turn it off when they next read the
+index. Report one by opening an issue in the index repository.
+</Aside>

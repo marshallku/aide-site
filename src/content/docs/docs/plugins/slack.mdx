@@ -1,0 +1,245 @@
+---
+title: Slack
+description: Save any Slack thread into a note with Slack's Save to AIDE shortcut, summarized with its decisions and action items, and optionally follow your channels for Radar.
+sidebar:
+    order: 20
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+The Slack plugin turns a Slack conversation worth keeping into a note. Choose **Save to AIDE** on any
+message and its whole thread lands in your vault, with a summary, the decisions and the action items
+on top. With **Follow my channels** on, it also keeps your channels' messages on your computer for
+[Radar](/docs/plugins/radar/).
+
+<PluginFacts id="slack" />
+
+## What it does
+
+### Save to AIDE
+
+In Slack, open a message's **⋮** (More actions) menu and choose **Save to AIDE**. It works on the
+thread's first message or on any reply, in public and private channels, DMs and group DMs.
+
+The plugin reads the whole thread, every page of it, and writes it into one note per thread:
+
+```text
+inbox/slack/<channel>/<date>-<first line>
+```
+
+The date is the day the thread started; the name comes from its first line. DMs go under
+`inbox/slack/dm/`. A few seconds later Slack answers you, privately, with `Saved to AIDE: <path>`, and
+a **Saved from Slack** item appears in the Feed (not pushed).
+
+A saved note looks like this:
+
+```markdown
+---
+source: slack
+slack: T0123/C0456/1729500000.000100
+channel: "#launch"
+permalink: https://your-team.slack.com/archives/C0456/p1729500000000100
+saved: 2026-10-21
+tags: [slack]
+---
+# Can we move the launch to Thursday?
+
+<!-- aide:slot slack.summary -->
+_Summary, 2026-10-21 14:05_
+
+The team agreed to move the launch to Thursday so QA can finish the payment tests…
+
+**Decisions**
+- Launch on Thursday at 10:00
+
+**Action items**
+- [ ] Tell support about the new date (Mina)
+<!-- /aide:slot slack.summary -->
+
+<!-- aide:slot slack.thread -->
+…every message, with its author and time…
+<!-- /aide:slot slack.thread -->
+```
+
+- **The summary** comes from your AI: a few sentences, the decisions, and the action items as todos,
+  which show up with your other todos. Turn off **Summarize** to save threads without it.
+- **The thread** is each message's author and time, with its text quoted. Slack's formatting becomes
+  Markdown, mentions become names, and files become links.
+- **Saving the same thread again** updates the same note. Only the two sections are rewritten; what
+  you added around them stays. The summary is asked for again only when the thread changed, so the
+  action items you ticked stay ticked.
+
+### Who can save
+
+Only you can save: the person whose user token the plugin has, in that workspace. Add other people's
+Slack member ids to **Also allowed** to let them save into your AIDE too. Anyone else who uses the
+shortcut is told `Only the owner of this AIDE can save to it.` and nothing is saved.
+
+### When a save fails
+
+A save is kept by the plugin before Slack is answered, so a crash or a restart loses nothing. A save
+that fails is tried again a minute later, up to 6 times. If it still fails, or Slack refuses for good
+(no access to the channel, the thread is gone), Slack tells you
+`AIDE couldn't save this thread: <reason>` and the Feed gets **A Slack thread wasn't saved**.
+
+### Follow my channels
+
+With **Follow my channels** on, every message said in the channels you're in, with its edits and
+deletions, goes into a feed kept **on this computer only**, for 14 days. Nothing of it is sent to the
+AIDE server. [Radar](/docs/plugins/radar/) reads this feed to tell you what you'd miss.
+
+- **Only these channels** limits it to the channels you name; empty means every channel you're in.
+- **Never these channels** leaves channels out.
+- **Follow DMs** includes direct and group messages (on by default).
+- Joins, topic changes and link previews are left out.
+
+When the plugin was disconnected for more than 2 minutes (the computer asleep, AIDE closed), it reads
+back what it missed, at most the last 24 hours: each followed conversation's new messages, the
+replies to their threads, and the replies to the threads active in the last 3 days (up to 200). What
+it couldn't check is noted in the feed, so Radar knows.
+
+## Before you start
+
+- **A desktop host or a server running the server plugins.** The plugin keeps a connection to Slack
+  open from the computer it runs on. Slack can reach it only while that computer is awake and the host
+  is running ([Host on your desktop](/docs/self-hosting/desktop-host/)).
+- **A Slack workspace where you may install apps.** Some workspaces need an admin's approval first.
+- **An AI** for summaries ([AI and models](/docs/guides/ai/)). Without one, threads are saved without
+  a summary.
+
+The plugin uses **Socket Mode**: it connects out to Slack, so nothing on the internet has to reach
+your computer, and it works behind a home router or a company VPN. It reads Slack **as you**, with a
+user token, so it sees exactly what you see, private channels and DMs included, with no bot to invite.
+
+## Set it up
+
+You create your own Slack app (it takes a few minutes), then give the plugin its two tokens.
+
+<Steps>
+
+1. In AIDE, open **Settings** and choose **Slack** under **On the server** (on Linux, **Settings ›
+   Plugins › Slack**). The status under its settings says **Add the app token and user token**.
+2. Next to **App token**, choose **Create the Slack app**. Slack's **Create an app** page opens with
+   the app's manifest filled in: the **Save to AIDE** shortcut, the permissions it reads with, the
+   message events for following, and Socket Mode. Pick your workspace, check the summary and choose
+   **Create**.
+3. In the app's settings on Slack, open **Install App** and choose **Install to &lt;your
+   workspace&gt;**, then **Allow**.
+4. Open **OAuth & Permissions** and copy the **User OAuth Token**. It starts with `xoxp-`.
+5. Back in AIDE, paste it into **User token** and choose **Save**.
+6. On Slack, open **Basic Information**, scroll to **App-Level Tokens** and choose **Generate Token
+   and Scopes**. Name it (for example `aide`), choose **Add Scope**, pick `connections:write`, and
+   choose **Generate**. Copy the token; it starts with `xapp-`.
+7. In AIDE, paste it into **App token** and choose **Save**.
+8. Turn on **Enabled**. Within a minute the status says **Connected as &lt;you&gt; in &lt;your
+   workspace&gt;**.
+9. In Slack, open any message's **⋮** menu and choose **Save to AIDE**. The first time, it may be under
+   **More message shortcuts…**.
+
+</Steps>
+
+The tokens are secret settings. AIDE seals them on the server, only the Slack plugin can read them,
+and the app never shows them again: a saved token reads **Saved in AIDE**, with **Replace** and
+**Remove**.
+
+<Aside type="caution">
+Connect one Slack app to one AIDE. Slack hands a Socket Mode app's shortcuts to any of its
+connections, so two AIDEs sharing an app would each get some of your saves. For a second AIDE, create
+a second app.
+</Aside>
+
+To follow your channels for Radar, also turn on **Follow my channels**.
+
+## Settings
+
+<PluginSettings
+    id="slack"
+    defaults={{
+        appToken: "",
+        userToken: "",
+        folder: "inbox/slack",
+        summarize: "On",
+        users: "",
+        follow: "Off",
+        channels: "",
+        ignore: "",
+        dms: "On",
+    }}
+/>
+
+- **Save into**: each channel gets its own folder inside, named after the channel; DMs go into `dm`.
+  Clearing it brings back `inbox/slack`.
+- **Also allowed**: member ids look like `U01AB2CD3EF`. In Slack, open someone's profile, choose
+  **⋮** and **Copy member ID**.
+- **Only these channels** and **Never these channels** take channel names, as Slack shows them.
+
+Changing a setting restarts the plugin; it picks the change up within a minute.
+
+## Status
+
+The line under the plugin's settings says how it's doing. It updates every few seconds.
+
+| Status                                  | What it means                                                                    |
+| --------------------------------------- | -------------------------------------------------------------------------------- |
+| **Connected as … in …**                 | Connected to Slack as you, in that workspace. Save to AIDE works.                |
+| **Add the app token and user token**    | One or both tokens are missing. The plugin waits until both are saved.           |
+| **Slack refused the tokens: `<code>`**  | Slack won't accept them. The plugin waits until you change them (see below).     |
+| **Reconnecting to Slack…**              | The connection dropped; the plugin is connecting again by itself.                |
+
+## Troubleshooting
+
+### Slack refused the tokens
+
+The code says why:
+
+- `invalid_auth` or `not_authed`: a token was pasted wrong, or the two tokens are from different
+  apps. Copy both again from the same app.
+- `token_revoked`: the app was uninstalled or the token regenerated. Install the app again and save
+  the new **User OAuth Token**.
+- `missing_scope`: the app lacks a permission, usually because it wasn't made with **Create the Slack
+  app**. Create a new app that way.
+- `account_inactive`: the account the token belongs to was deactivated.
+
+### Save to AIDE isn't in the menu
+
+The app isn't installed in this workspace, or Slack hasn't loaded it yet. Check **Install App** in the
+app's settings, then look under **More message shortcuts…** in the message's **⋮** menu.
+
+### The shortcut does nothing, or Slack reports an error
+
+Slack can reach the plugin only while it's connected. If the computer running it is asleep or off,
+the host isn't running, or the plugin is off, the save can't be taken. Check that the status in AIDE
+says **Connected as … in …**, then save again.
+
+### Only the owner of this AIDE can save to it
+
+You used the shortcut from an account other than the token's, or in another workspace. Add your
+member id to **Also allowed**, or use the account the **User token** belongs to.
+
+### AIDE couldn't save this thread
+
+The reason follows. `channel_not_found` or `not_in_channel` means the token's account can't read that
+conversation. `thread_too_long` means Slack won't return the whole thread. Other reasons (network,
+the server) were retried 6 times; try again later.
+
+### Radar sees no Slack messages
+
+- Turn on **Follow my channels**, on the same computer Radar runs on.
+- The app needs the message events. An app made with **Create the Slack app** has them. For an app
+  made another way, add the user events `message.channels`, `message.groups`, `message.im` and
+  `message.mpim` under **Event Subscriptions**, then reinstall the app. Without them only the shortcut
+  works.
+- Radar's status note, `radar/status`, says when Slack last said something on this computer.
+
+## Privacy
+
+- The plugin connects from your computer to Slack. Nothing connects in.
+- It reads Slack with your user token, so it can read what your account can. It doesn't post, except
+  its private replies to your own shortcut.
+- A saved thread becomes a note, stored and synced like any other note. If **Summarize** is on, the
+  thread's text goes to the AI you set up.
+- With **Follow my channels**, your channels' messages are kept in a feed on this computer for 14
+  days and read only by Radar. They never go to the AIDE server.
+- The tokens are sealed on the server, readable only by this plugin, and never shown in the apps.

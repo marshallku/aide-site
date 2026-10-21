@@ -1,0 +1,181 @@
+---
+title: How plugins work
+description: Server plugins and device plugins, where they run, how you turn them on and set them up, and what they write and push.
+sidebar:
+    order: 1
+---
+
+import { Aside, Badge } from "@astrojs/starlight/components";
+
+Plugins add work AIDE does for you: a morning briefing, your Google calendars, a git mirror of your notes, a weekly scan for benefits. Some run beside your AIDE server around the clock; others run inside the app on one device.
+
+## Two kinds of plugins
+
+|                   | Server plugins                                                                                     | Device plugins                                                           |
+| ----------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Where they run    | Beside your AIDE server or desktop host, whether or not an app is open                            | Inside the AIDE app on one iPhone, Mac or Linux computer, in a sandbox   |
+| What they're for  | Scheduled and background work: briefings, sync, reminders, reading Google or Slack                 | Screens and tools: a matrix view of todos, a drawing editor, a timer     |
+| Where you find them | They come with AIDE. All twelve are listed in Settings, each off until you turn it on            | You install them from a plugin index or a URL                            |
+| Access            | A token of their own, limited to the scopes listed on each plugin's page                           | The capabilities you approve when you install them                       |
+| Needs a server    | Yes: a [desktop host](/docs/self-hosting/desktop-host/) or [your own server](/docs/self-hosting/own-server/) | No: they work in local mode too                                 |
+
+Most of this page is about server plugins. Device plugins are covered in [Installing device plugins](#device-plugins) below.
+
+## Where server plugins run
+
+Server plugins run in one process, the plugin runner, next to the server. Each plugin runs separately inside it, with its own token, its own saved state and its own schedule. If one plugin crashes, the runner starts it again after 30 seconds, and the other plugins keep running.
+
+- **On a desktop host** (Mac or Linux), the host starts the runner for you when you [host your vault](/docs/self-hosting/desktop-host/). The runner registers every plugin with the host, each one off until you turn it on. It stops when the host stops. A host only runs while AIDE is open, unless you turn on **Keep running while I'm logged in**.
+- **On your own server**, the runner is a separate service on a machine that can reach the server. It gets each plugin's token from the server. See [Run your own server](/docs/self-hosting/own-server/).
+
+On a desktop host, plugins are turned on and set up on the hosting computer: a phone paired with it sees them but can't change them. With your own server, any signed-in device can turn plugins on and change their settings. Either way the plugins run beside the server, not on the phone.
+
+In local mode (no server, no host), server plugins don't run. <Badge text="Next release" /> Local mode lists them in Settings under **Server plugins**, with **Host this vault…** on the Mac and Linux.
+
+### When a computer sleeps
+
+A daily plugin that was due while the computer slept runs within a minute of waking, if it wakes inside the plugin's catch-up window: 3 hours for the briefing, the recap and open loops, and 72 hours for the weekly benefit scout. A calendar reminder that came due during sleep is skipped, because it would arrive too late to help.
+
+## Turn a plugin on
+
+1. Open **Settings**. On a Mac or iPhone, server plugins are listed under **On the server**, each marked **On** or **Off**. On Linux, open the **Plugins** page; they're in the **On the server** group.
+2. Pick the plugin. On a Mac or iPhone, turn on **Enabled**. On Linux, flip the switch on the plugin's row and expand the row to see its settings.
+3. Wait up to a minute. The runner checks every minute which plugins are on, and starts or stops them to match.
+
+Turning a plugin off stops it within a minute. Its saved state (what it already did, where it got to) stays, so turning it on again continues from there.
+
+## Settings
+
+Under **Enabled**, each plugin shows the settings it declares, drawn as ordinary controls: switches, choices, times (`HH:MM`), text and lists (comma-separated). Each change is saved as you make it. The runner looks for changes every minute and restarts the plugin with the new settings. A setting you leave empty uses the plugin's default, which each plugin page lists.
+
+### Secret fields
+
+Some plugins have secret fields, such as Slack's tokens. You type the value and press **Save**. The server stores it sealed with its secret key; only that plugin can read it. The app never shows the value again: it only says **Saved in AIDE**, with **Replace** and **Remove**. A field may have a link beside it to the page that helps you fill it in.
+
+### Local settings
+
+A few things never come from the app: file paths, credentials and remote addresses (`credentials`, `tokenFile`, `healthDir`, `remote`, `clone`, `stateDir`). The runner reads those from a local file on the machine that runs it, so they never go through the server or the apps. On a desktop host that file is `plugins.json` in the host's data folder:
+
+| System | Folder                                                    |
+| ------ | --------------------------------------------------------- |
+| macOS  | `~/Library/Application Support/AIDE/hosts/<vault id>/`   |
+| Linux  | `~/.local/share/aide/hosts/<vault id>/` (or `$XDG_DATA_HOME/aide/hosts/<vault id>/`) |
+
+`<vault id>` is the `id` in your vault's `.aide/vault.json`. It's also the folder that holds `host.log`, whose path the **Log** row of Settings › Host shows.
+
+The file holds an optional time zone for the plugins' schedules (the computer's own zone by default) and one block per plugin, keyed by the plugin's id:
+
+```json
+{
+    "timezone": "Asia/Seoul",
+    "plugins": {
+        "briefing": {
+            "weather": { "code": "1111056000", "lat": "37.613", "lon": "126.9623" }
+        },
+        "docs-sync": {
+            "remote": "git@github.com:you/notes.git"
+        }
+    }
+}
+```
+
+The host reads `plugins.json` when it starts. After you create or change it, quit AIDE and open it again. If **Keep running while I'm logged in** is on, quitting doesn't stop the host: turn that setting off and on again, and the host restarts around the change.
+
+A value set in the app wins over the same key in `plugins.json`. Each plugin page lists the local keys it reads.
+
+<Aside type="caution">
+A mistake in `plugins.json` (a missing comma, a block that isn't an object) stops the whole runner, so no plugin runs. The host log names the file and the problem.
+</Aside>
+
+### Status line
+
+A plugin can report how it's doing, shown under its settings in a muted line, or in red when something is wrong. Slack, for example, shows that it's connected or that Slack refused the tokens. The app asks again every 5 seconds while you're looking.
+
+## What plugins write
+
+Plugins write into your notes the same way you do, as plain Markdown, and never touch text you wrote.
+
+### Slots
+
+A plugin that writes into a note you own, such as your daily note, writes only inside its own section. You place the section with a slot in a template:
+
+```markdown
+## Todo
+{{slot todo-carry.open}}
+
+## Today
+{{slot gcal.today}}
+```
+
+When AIDE makes a note from that template, each slot becomes an empty section between two marker comments (`<!-- aide:slot gcal.today -->` … `<!-- /aide:slot gcal.today -->`). The plugin replaces what's between the markers and nothing else. A plugin can only write sections named after itself. If the section isn't in the note, the plugin adds it at the end. Slots in your templates are covered in [Daily notes and templates](/docs/guides/periodic-notes/).
+
+### The day note
+
+Plugins that write about a day (the morning briefing, the evening recap, Google Calendar's prep notes, Gmail) don't write into your daily note by default. They write into a separate day note, `briefings/{date}` (for example `briefings/2026-10-22`), each into its own section, so your daily stays yours. AIDE creates the day note the first time a plugin writes to it.
+
+Each of these plugins has a **Write into** setting (`note`): a note path with `{date}` in it, or `daily` to write into the daily note itself. To see the day note from your daily, put a link to it in your daily template.
+
+### The Feed and notifications
+
+Plugins post events to the [Feed](/docs/guides/feed/): the briefing when it's written, a calendar reminder, a sync conflict. The server sorts each event into **Act on**, **Need to know**, **Might interest you** or **Everything else**, and that decides whether you get a notification:
+
+- **Act on** always notifies you.
+- **Need to know** notifies you while **Also push "need to know"** is on in Settings (it is by default).
+- The rest wait in the Feed.
+
+A plugin can override this per event. Some plugins have a **Notification** setting (`push`) for it:
+
+| Value      | What happens                                   |
+| ---------- | ---------------------------------------------- |
+| `force`    | Always notifies you, whatever the sorting says |
+| `never`    | Never notifies you; the event waits in the Feed |
+| empty (**Default**) | The sorting decides                   |
+
+An event older than an hour never notifies you.
+
+### Language
+
+Plugins write in the language you choose in **Settings › Language**: Korean when it's Korean, English for every other choice. A change applies to what a plugin writes next, within five minutes.
+
+### AI
+
+Plugins that summarize or decide (the briefing, the recap, calendar prep, open loops, the benefit scout) ask the AI set in **Settings › AI** on your host or server: **Anthropic API key** or **My gateway**. With **Rules (no AI)**, they can't run their AI step; they retry later. See [AI and models](/docs/guides/ai/).
+
+## Scopes
+
+Each server plugin's token is limited to scopes, listed on its page under **Token scopes**. In plain words:
+
+| Scope                           | What the plugin may do                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------ |
+| `notes:read:<folder>`           | Read notes under that folder. `notes:read:*` reads every note.                 |
+| `notes:write:<folder>`          | Create and change notes under that folder. `notes:write:*` covers every folder. |
+| `events:read:aide.notes`        | Be told when a note is created or changed, so it can react (fill a new daily). |
+| `events:publish:<topic>`        | Post events to the Feed under topics that start with that name.                |
+| `ai:run`                        | Ask the AI from Settings › AI, with only the notes it may already read.        |
+
+A plugin you turned off can't use its token at all: the server refuses every request until you turn it on again.
+
+## Every plugin
+
+| Plugin                                             | Kind   | What it does                                                                                  |
+| -------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------- |
+| [Todo carry](/docs/plugins/todo-carry/)            | Server | Moves yesterday's open todos into today's daily note.                                         |
+| [Google Calendar](/docs/plugins/gcal/)             | Server | Your Google calendars in the app, today's agenda in the daily, reminders and AI prep before events. |
+| [Docs sync](/docs/plugins/docs-sync/)              | Server | Two-way sync of your notes with a git repository.                                             |
+| [Morning briefing](/docs/plugins/briefing/)        | Server | Weather, schedule, suggested todos and yesterday, written each morning.                       |
+| [Evening recap](/docs/plugins/recap/)              | Server | What moved, what slipped and what carries to tomorrow, each evening.                          |
+| [Open loops](/docs/plugins/loops/)                 | Server | Keeps your open-loops note current from each day's daily.                                     |
+| [Benefit scout](/docs/plugins/benefits/)           | Server | A weekly briefing of Korean life-stage benefits and policy news that fit your profile.        |
+| [Recall](/docs/plugins/recall/)                    | Both   | Spaced-repetition cards from your notes, made nightly and reviewed on any device.             |
+| [Gmail](/docs/plugins/gmail/)                      | Server | Once a day, the mail that needs a reply and what you're waiting on; urgent mail pushed.       |
+| [Catch-up](/docs/plugins/catchup/)                 | Server | Each night, your Claude Code and Codex sessions and git history written into your notes.      |
+| [Slack](/docs/plugins/slack/)                      | Server | Save to AIDE saves a Slack thread as a note, with a summary and action items.                 |
+| [Radar](/docs/plugins/radar/)                      | Server | Watches your Slack channels and coding sessions on this computer and tells you what you'd miss. |
+| [Eisenhower matrix](/docs/plugins/eisenhower/)     | Device | Open todos sorted into do, schedule, delegate and later.                                      |
+| [Excalidraw](/docs/plugins/excalidraw/)            | Device | Drawings in your notes, saved as SVG files any reader can show.                               |
+| [Pomodoro](/docs/plugins/pomodoro/)                | Device | A focus timer that logs the day's sessions.                                                   |
+| [Word count](/docs/plugins/word-count/)            | Device | The word count of the note you're reading.                                                    |
+
+## Device plugins
+
+Device plugins are small web packages that run inside the app on one device, in a sandbox, with only the capabilities you approve when you install them (for example: read notes, write notes under one folder, keep a little storage). You add them from **Settings › On this device**, with **Browse plugins** or **Add from a URL**, and each device keeps its own set. They work in local mode, without a server. See [Installing device plugins](/docs/plugins/device-plugins/), and [Build a device plugin](/docs/developers/device-plugins/) to write your own.

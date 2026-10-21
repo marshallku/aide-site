@@ -1,0 +1,170 @@
+---
+title: Notes and the editor
+description: How AIDE's live-preview Markdown editor works, from slash commands and links to embeds, tables, tabs and save conflicts.
+sidebar:
+    order: 1
+---
+
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Every note in AIDE is a Markdown file, and you edit it in one live-preview editor that is the same on the iPhone, the Mac and Linux. What you type stays plain Markdown; the editor only styles it and hides the syntax on lines your cursor isn't on.
+
+## Writing
+
+There is no separate reading mode. A note always opens in the editor: headings, bold text, links and images show rendered, and the line you're on shows its raw Markdown so you can edit it. Clicking a checkbox toggles that todo in place.
+
+While you type, a toolbar sits at the bottom of the editor with **Indent**, **Outdent**, **To-do**, **Commands** (the slash menu), **Link to note**, **Heading** (cycles none → `#` → `##` → `###`), **Table**, **Photo**, **Undo** and **Redo**. Inside a table it switches to table actions.
+
+### Slash commands
+
+Type `/` at the start of a line or after a space to open the command menu, then keep typing to filter it:
+
+| Command | Inserts |
+| --- | --- |
+| Heading 1, Heading 2, Heading 3 | `#`, `##`, `###` |
+| To-do | `- [ ] ` |
+| Bullet list, Numbered list | `- `, `1. ` |
+| Quote | `> ` |
+| Callout note, Callout tip, Callout warning | `> [!note]`, `> [!tip]`, `> [!warning]` |
+| Code block | a fenced code block |
+| Table | a size picker, then the table |
+| Divider | `---` |
+| Today | today's date, `YYYY-MM-DD` |
+| Link to note | `[[]]` with the note list open |
+
+The menu also lists each entry's Korean name, so `/할 일` finds **To-do**.
+
+### Callouts
+
+A quote whose first line is `> [!kind]` draws as a callout with an icon. AIDE draws distinct icons for `note`, `info`, `tip`, `success`, `warning`, `caution`, `danger`, `error`, `question`, `quote`, `todo`, `example` and `bug`; any other kind gets the info icon. The text after `[!kind]` on the first line is the callout's title.
+
+```markdown
+> [!warning] Before you deploy
+> Run the migrations first.
+```
+
+### Frontmatter properties
+
+A YAML block at the very top of a note shows as a **Properties** panel of key and value rows. Click it to edit the raw YAML. AIDE reads a few keys itself:
+
+- `title`: the note's title. Without it, the title is the first heading, then the first line of text, then the file name.
+- `aliases` (or `alias`): other names a `[[link]]` can use to find the note.
+- `tags`: the note's tags, alongside the `#tags` in its text.
+- `summary`: a line shown under the note's title in the Wiki list.
+- `stage`: `seedling`, `budding` or `evergreen` puts a growth-stage icon beside the title in the Wiki list.
+
+### Tables
+
+Tables are a grid you type into. Each cell is its own field and edits only its part of the Markdown row, so the rest of the table keeps its exact text. A **+** at the right and bottom edges adds a column or a row. The **⋯** menu on the focused cell has **Insert row above**, **Insert row below**, **Insert column left**, **Insert column right**, **Delete row**, **Delete column**, **Align left**, **Align center**, **Align right** and **Edit as markdown**, which shows that one table as text until your cursor leaves it.
+
+To make a table, type `/table` or press the toolbar's table button, then move over the size grid (up to 8 × 8) and click; arrow keys and <kbd>Return</kbd> work too. The first row is the header. <kbd>Tab</kbd> moves to the next cell.
+
+A table inside a quote or a list stays plain text.
+
+## Links
+
+AIDE reads both kinds of links Obsidian uses.
+
+- `[[Note]]` finds a note by its file name, then by its title, then by a frontmatter alias. `[[folder/Note]]` names the path.
+- `[[Note|shown text]]` shows the text after `|`.
+- `[[Note#Heading]]` opens the note scrolled to that heading, `[[Note#^block-id]]` to that block, and `[[#Heading]]` jumps within the current note.
+- `[text](other-note.md)` is a regular Markdown link, relative to the note's folder; `#Some%20Heading` after it works the same way.
+- `[[2026-10-22]]`, or a link to a path your daily-note format produces, opens that day's daily note and creates it from its template if it doesn't exist yet.
+
+Typing `[[` opens a list of your notes ranked by what you type; pick one to insert its link. Typing `[text](` offers the same list and inserts the note's relative path. The list offers notes only: a `#Heading` or `#^block` part you type yourself.
+
+Click a rendered link to follow it. <kbd>⌘</kbd>-click (<kbd>Ctrl</kbd>-click on Linux) or a middle-click opens it in a new tab on the desktop. On the line your cursor is on, the link shows as raw text and clicking it just places the cursor.
+
+When a link can't be followed directly, AIDE asks:
+
+- **Which note?** lists the paths of every note the link matches, when several share its name.
+- **No note at** `<file>` appears when nothing matches. **Create note** makes the note at the file Obsidian would create (the vault's top level, or the path the link spells), titled with the link's name, and opens it.
+
+Web links (`https://…`) open in your browser. Other schemes (`mailto:`, `file:`) do nothing.
+
+## Images and embeds
+
+An embed shows a file inside the note, written as `![alt](path)` or Obsidian's `![[name]]`. Anything after a `|` in `![[name|300]]` is ignored: images always draw at most the width of the text and 60% of the window's height.
+
+| File | How it shows |
+| --- | --- |
+| `jpg` `jpeg` `png` `gif` `webp` `heic` `heif` | an image |
+| `svg` | an image; scripts in it don't run and it loads nothing |
+| `html` `htm` | a sandboxed frame below the line |
+
+Each attachment is at most 20 MB, and its contents must match its extension: a PNG renamed to `.jpg` doesn't show. An image can also be an `https://` URL.
+
+`![[name]]` looks for the file at that path, then under `attachments/`, then anywhere in the vault with that name. `![](path)` is relative to the note's folder, then to the vault's top level. An `![[Some note]]` that names a note rather than a file shows as a link to it; AIDE doesn't draw one note inside another.
+
+### Adding a photo
+
+Press **Photo** in the editor's toolbar and pick an image. AIDE re-encodes it as a JPEG of at most 2560 pixels on its long side, which also drops camera metadata such as location, saves it under `attachments/` with a new name, and inserts `![](attachments/…)` at the cursor. A GIF is kept as it is so it still moves.
+
+SVG and HTML files aren't added through the photo picker: put them in the vault folder yourself and link them.
+
+### Drawings
+
+A drawing made with the [Excalidraw plugin](/docs/plugins/excalidraw/) is an SVG file ending in `.excalidraw.svg` with the drawing kept inside it, so it shows as an image on every device, with or without the plugin installed. With the plugin, an embedded drawing has an **Edit** button that reopens it.
+
+### HTML documents
+
+An embedded HTML file runs in a frame of its own, the width of the text:
+
+- Its scripts run, but in a sandbox with no access to the note, the app or other embeds. It can't reach the network, open another page, submit forms or open pop-ups.
+- It can load images, styles, scripts and fonts that sit beside it in the vault through relative URLs.
+- The frame grows to fit the document, between 40 and 6000 pixels tall.
+- To keep long notes light, a frame runs only while it's near what you're looking at, and at most three run at once. One scrolled far away is replaced by a box with the document's name and starts again, losing its state, when you come back.
+- A file that can't be found shows its name and **Not found**.
+
+<Aside type="caution" title="Linux">
+On Linux, an HTML embed shows only what the document carries inline: its own styles and scripts and `data:` images. Files it names beside it don't load, because WebKitGTK refuses that kind of load from a sandboxed frame. The Mac and the iPhone load them.
+</Aside>
+
+## Tabs, panels and finding notes
+
+<Tabs>
+<TabItem label="Mac and Linux">
+
+Notes open in tabs above the main area, as in Obsidian. Each tab shows its note's title, and one note is only ever in one tab: opening a note that's already open switches to its tab.
+
+- **+** at the end of the tab row opens an empty tab. An empty tab is already an editor: the hint reads "Start typing: it becomes a scratch note." and the first text you type becomes a new [scratch note](/docs/guides/scratch/).
+- <kbd>⌘</kbd>-click or middle-click a note in Scratch, the Wiki, search results, Todos, a journal tile, a calendar day, a graph dot or a link to open it in a new tab. **Open in New Tab** is also in a Wiki row's menu.
+- **Open notes in a new tab** (**Settings › Appearance › Window** on the Mac, **Settings › General › Window** on Linux; off by default) makes a plain click on those rows, the calendar and the graph open a new tab too. A link inside a note always stays in its tab.
+- <kbd>⌃</kbd><kbd>Tab</kbd> and <kbd>⌃</kbd><kbd>⇧</kbd><kbd>Tab</kbd> cycle tabs, and <kbd>⌘</kbd><kbd>W</kbd> (<kbd>Ctrl</kbd><kbd>W</kbd>) closes one. Closing the last tab leaves an empty one.
+- Back and forward (<kbd>⌘</kbd><kbd>[</kbd> and <kbd>⌘</kbd><kbd>]</kbd>; <kbd>Alt</kbd><kbd>←</kbd> and <kbd>Alt</kbd><kbd>→</kbd> on Linux; or the mouse's back and forward buttons) walk one trail through everything the window showed: notes in any tab, Todos, the graph, Review and plugin tabs.
+
+The right panel (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>\\</kbd> on the Mac, <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>\\</kbd> on Linux) has an **Outline** of the open note's headings; click one to jump to it.
+
+</TabItem>
+<TabItem label="iPhone">
+
+The iPhone shows one note at a time, pushed from the list you opened it from. The Wiki keeps a **Recent** list of notes you opened; swipe a row to **Remove from recent**. **Find** in the note's bar opens the find bar.
+
+</TabItem>
+</Tabs>
+
+| Mac | Linux | What it does |
+| --- | --- | --- |
+| <kbd>⌘</kbd><kbd>O</kbd> | <kbd>Ctrl</kbd><kbd>O</kbd> | **Open Quickly…**: notes whose title or path matches what you type, then **In text** matches with a snippet. A text match opens the note with the find bar on the words. <kbd>⌘</kbd><kbd>Return</kbd> (<kbd>Ctrl</kbd><kbd>Enter</kbd>) opens it in a new tab. |
+| <kbd>⇧</kbd><kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> | **Search Notes…**: the same window as Open Quickly. |
+| <kbd>⌘</kbd><kbd>P</kbd> | <kbd>Ctrl</kbd><kbd>P</kbd> | **Command Palette…**: every command that can act now, with its shortcut, then notes whose title matches. |
+| <kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>F</kbd> | **Find in Note…**: the editor's find bar. With no note on screen it opens Open Quickly instead. |
+| <kbd>⌘</kbd><kbd>N</kbd> | <kbd>Ctrl</kbd><kbd>N</kbd> | **New Scratch Note** |
+| <kbd>⌘</kbd><kbd>T</kbd> | <kbd>Ctrl</kbd><kbd>T</kbd> | **Today**: today's daily note |
+
+The command palette also has **New page…**, **Organize scratch notes…**, this week's, month's, quarter's and year's notes for each period you've turned on, **Copy link to this note** (an `aide://note/…` link), **Pin this note** or **Unpin this note**, **Close other tabs**, each section, **Settings** and the commands of your device plugins. See [Keyboard shortcuts](/docs/guides/shortcuts/) for the full list.
+
+## Saving and conflicts
+
+AIDE saves as you type. The status in the note's bar reads **Saved**, **Saving**, **Offline**, **Conflict** or **Error**. Your text is also kept in a draft on the device until it's saved, so quitting or losing the connection doesn't lose it; text typed into an empty tab that couldn't become a note yet waits under **Not sent** in Scratch.
+
+Every save names the version of the note it was based on. If the note changed elsewhere in the meantime (another device, the assistant, a plugin), the save is refused rather than overwriting that change, and a banner appears over the note:
+
+> This note changed elsewhere. Your text is kept locally.
+
+- **Keep mine** saves your text as the newest version, replacing the other change.
+- **Use the saved version** drops your text and shows the note as it is now.
+
+When a note sits in another tab with nothing unsaved and changes elsewhere, the editor simply takes the newer text.
+
+In a folder other apps also edit (an Obsidian vault, say), AIDE never overwrites a change it didn't make. If another app writes a file at the moment AIDE saves it, the other app's text is kept as a separate note under `conflicts/`, named after the note with `-external-` in its name. See [Vaults and your files](/docs/guides/vaults/).

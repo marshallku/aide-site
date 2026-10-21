@@ -1,0 +1,556 @@
+---
+// AIDE on the desktop with the iPhone beside it, drawn in HTML from the app's own tokens and
+// layout (design/README.md: rail and panel on chrome, the main card inset by space-s). It tilts up
+// into place when it comes on screen, then the day note fills in.
+import Icon from "#components/Icon.astro";
+import { COPY, type Lang } from "#lib/landing-copy";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = COPY[lang];
+const stage = copy.stage;
+const RAIL_ICONS = ["scratch", "wiki", "todos", "feed", "calendar", "assistant"];
+const BUCKETS = ["action", "need", "interest"] as const;
+---
+
+<section class="stage" aria-hidden="true">
+    <div class="wrap">
+        <div class="scene" data-reveal>
+            <div class="window">
+                <div class="chrome">
+                    <div class="rail">
+                        <div class="lights">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+                        {RAIL_ICONS.map((name, index) => (
+                            <span class:list={["rail-button", { selected: index === 1 }]} title={stage.rail[index]}>
+                                <Icon name={name} size={17} />
+                            </span>
+                        ))}
+                        <span class="rail-spacer"></span>
+                        <span class="rail-button">
+                            <Icon name="settings" size={17} />
+                        </span>
+                    </div>
+                    <div class="panel">
+                        <p class="panel-title">{stage.panelTitle}</p>
+                        <div class="panel-search">
+                            <Icon name="search" size={13} /> <span></span>
+                        </div>
+                        <ul>
+                            {stage.panelItems.map((item, index) => (
+                                <li class:list={{ selected: index === 0 }}>
+                                    <Icon name={index < 2 ? "wiki" : "folder"} size={14} />
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="toolbar">
+                            <span class="nav-arrows">‹ ›</span>
+                            <span class="tabs">
+                                <span class="tab active">{stage.today}</span>
+                                <span class="tab">topics/launch-checklist</span>
+                            </span>
+                            <span class="saved">
+                                <i></i>
+                                {stage.saved}
+                            </span>
+                        </div>
+                        <article class="doc">
+                            <h3 class="doc-title">{stage.today}</h3>
+                            <p class="doc-meta">{stage.todayMeta}</p>
+                            <div class="slot briefing">
+                                <p class="slot-label">☀️ {stage.briefing}</p>
+                                <ul>
+                                    {stage.briefingLines.map((line, index) => (
+                                        <li class="line" style={`--i: ${index}`}>
+                                            {line}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <h4>{stage.todos}</h4>
+                            <ul class="todos">
+                                {stage.todoItems.map((todo, index) => (
+                                    <li class:list={["todo", { done: todo.done }]} style={`--i: ${index}`}>
+                                        <span class="box" />
+                                        <span class="todo-text">{todo.text}</span>
+                                        <span class="todo-meta">{todo.meta}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                            <h4>{stage.agenda}</h4>
+                            <ul class="agenda">
+                                {stage.agendaItems.map((item) => (
+                                    <li>{item}</li>
+                                ))}
+                            </ul>
+                        </article>
+                    </div>
+                </div>
+            </div>
+            <div class="phone">
+                <div class="island"></div>
+                <div class="screen">
+                    <p class="status">9:41</p>
+                    <p class="large-title">{stage.phoneTitle}</p>
+                    {BUCKETS.map((bucket) => (
+                        <div class:list={["bucket", bucket]}>
+                            <p class="bucket-label">{copy.buckets[bucket]}</p>
+                            {copy.feedItems
+                                .filter((item) => item.bucket === bucket)
+                                .map((item, index) => (
+                                    <div class="event" style={`--i: ${index}`}>
+                                        <p class="event-title">{item.title}</p>
+                                        <p class="event-meta">{item.meta}</p>
+                                    </div>
+                                ))}
+                        </div>
+                    ))}
+                    <div class="tabbar">
+                        {["scratch", "wiki", "todos", "feed"].map((name) => (
+                            <Icon name={name} size={19} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .stage {
+        position: relative;
+        padding-bottom: 2rem;
+    }
+    .scene {
+        position: relative;
+        perspective: 1800px;
+        padding: 0 3% 6% 0;
+    }
+    .scene[data-reveal] {
+        transform: none;
+    }
+    .window {
+        position: relative;
+        border-radius: 14px;
+        background: var(--chrome);
+        box-shadow:
+            var(--shadow-window),
+            0 0 0 1px var(--line-strong);
+        overflow: hidden;
+        transform-origin: 50% 0;
+        transform: rotateX(16deg) scale(0.94);
+        transition: transform 1.4s var(--ease-out);
+    }
+    .scene.is-in .window {
+        transform: none;
+    }
+    .chrome {
+        display: grid;
+        grid-template-columns: 3.25rem 14.5rem minmax(0, 1fr);
+        height: clamp(24rem, 46vw, 37rem);
+        font-size: 13px;
+        line-height: 1.45;
+        color: var(--text);
+    }
+    .rail {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.75rem 0;
+        color: var(--text-secondary);
+    }
+    .lights {
+        display: flex;
+        gap: 5px;
+        margin: 0.15rem 0 0.9rem 0.6rem;
+        align-self: flex-start;
+    }
+    .lights i {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #ff5f57;
+    }
+    .lights i:nth-child(2) {
+        background: #febc2e;
+    }
+    .lights i:nth-child(3) {
+        background: #28c840;
+    }
+    .rail-button {
+        display: grid;
+        place-items: center;
+        width: var(--rail-button);
+        height: var(--rail-button);
+        border-radius: var(--radius-s);
+    }
+    .rail-button.selected {
+        background: var(--fill);
+        color: var(--text);
+    }
+    .rail-spacer {
+        flex: 1;
+    }
+    .panel {
+        padding: 0.85rem var(--panel-inset) 0;
+        overflow: hidden;
+    }
+    .panel-title {
+        margin: 0.1rem 0 0.6rem;
+        font-size: 15px;
+        font-weight: 600;
+    }
+    .panel-search {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        height: 1.65rem;
+        padding: 0 0.5rem;
+        border-radius: var(--radius-s);
+        background: var(--fill);
+        color: var(--text-tertiary);
+    }
+    .panel ul {
+        margin: 0.75rem calc(-1 * var(--space-s)) 0;
+        padding: 0;
+        list-style: none;
+    }
+    .panel li {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        height: var(--row-min-height);
+        padding: 0 var(--space-s);
+        border-radius: var(--radius-s);
+        color: var(--text);
+    }
+    .panel li :global(.icon) {
+        color: var(--text-secondary);
+    }
+    .panel li.selected {
+        background: var(--accent-soft);
+    }
+    .card {
+        display: flex;
+        flex-direction: column;
+        margin: var(--space-s) var(--space-s) var(--space-s) 0;
+        border: 1px solid var(--separator);
+        border-radius: var(--radius-m);
+        background: var(--card);
+        overflow: hidden;
+    }
+    .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        height: 2.4rem;
+        padding: 0 0.85rem;
+        color: var(--text-secondary);
+    }
+    .nav-arrows {
+        letter-spacing: 0.3em;
+    }
+    .tabs {
+        display: flex;
+        gap: 0.25rem;
+        overflow: hidden;
+    }
+    .tab {
+        padding: 0.15rem 0.65rem;
+        border-radius: var(--radius-s);
+        white-space: nowrap;
+        font-size: 12px;
+    }
+    .tab.active {
+        background: var(--fill);
+        color: var(--text);
+    }
+    .saved {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin-left: auto;
+        font-size: 12px;
+    }
+    .saved i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--success);
+    }
+    .doc {
+        width: min(100%, 34rem);
+        margin: 0 auto;
+        margin-inline: 8% auto;
+        padding: 1.1rem var(--content-inset) 0;
+        overflow: hidden;
+    }
+    .doc-title {
+        margin: 0;
+        font-size: 1.65rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+    }
+    .doc-meta {
+        margin: 0.2rem 0 1rem;
+        color: var(--text-secondary);
+        font-size: 12px;
+    }
+    .doc h4 {
+        margin: 1rem 0 0.35rem;
+        font-size: 14px;
+    }
+    .slot {
+        padding: 0.65rem 0.85rem;
+        border-left: 3px solid var(--accent);
+        border-radius: 0 var(--radius-s) var(--radius-s) 0;
+        background: color-mix(in srgb, var(--accent) 7%, transparent);
+    }
+    .slot-label {
+        margin: 0 0 0.25rem;
+        font-weight: 600;
+    }
+    .slot ul,
+    .agenda {
+        margin: 0;
+        padding-left: 1.1rem;
+    }
+    .line {
+        opacity: 0;
+        transform: translateY(4px);
+        transition:
+            opacity 0.5s var(--ease-out),
+            transform 0.5s var(--ease-out);
+        transition-delay: calc(0.9s + var(--i) * 0.35s);
+    }
+    .scene.is-in .line {
+        opacity: 1;
+        transform: none;
+    }
+    .todos {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .todo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 1.6rem;
+    }
+    .box {
+        position: relative;
+        flex: none;
+        width: 14px;
+        height: 14px;
+        border: 1.5px solid var(--text-tertiary);
+        border-radius: 4px;
+    }
+    .todo.done .box {
+        border-color: var(--accent);
+        background: var(--accent);
+        transition: background 0.3s 2.4s;
+    }
+    .todo.done .box::after {
+        content: "";
+        position: absolute;
+        left: 3.5px;
+        top: 0.5px;
+        width: 4px;
+        height: 8px;
+        border: solid var(--on-accent);
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+    .todo.done .todo-text {
+        color: var(--text-tertiary);
+        text-decoration: line-through;
+    }
+    .todo-meta {
+        margin-left: auto;
+        color: var(--text-secondary);
+        font-size: 11.5px;
+    }
+    .agenda li::marker {
+        color: var(--accent);
+    }
+
+    .phone {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: clamp(10.5rem, 21%, 15.5rem);
+        aspect-ratio: 9 / 19.2;
+        padding: 0.45rem;
+        border-radius: 2.3rem;
+        background: #1c1c1e;
+        box-shadow:
+            var(--shadow-window),
+            inset 0 0 0 1.5px #3a3a3c;
+        transform: translateY(12%) rotate(2deg);
+        opacity: 0;
+        transition:
+            transform 1.4s var(--ease-out) 0.35s,
+            opacity 0.8s ease 0.35s;
+    }
+    .scene.is-in .phone {
+        transform: none;
+        opacity: 1;
+    }
+    .island {
+        position: absolute;
+        top: 0.85rem;
+        left: 50%;
+        z-index: 1;
+        width: 30%;
+        height: 0.95rem;
+        border-radius: 999px;
+        background: #000;
+        transform: translateX(-50%);
+    }
+    .screen {
+        position: relative;
+        height: 100%;
+        padding: 2.3rem 0.8rem 0;
+        border-radius: 1.9rem;
+        background: var(--chrome);
+        overflow: hidden;
+        font-size: 10.5px;
+        line-height: 1.35;
+        color: var(--text);
+    }
+    .status {
+        position: absolute;
+        top: 0.7rem;
+        left: 1.3rem;
+        margin: 0;
+        font-weight: 600;
+    }
+    .large-title {
+        margin: 0 0 0.6rem;
+        font-size: 1.45rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+    .bucket {
+        margin-bottom: 0.55rem;
+    }
+    .bucket-label {
+        margin: 0 0 0.25rem 0.2rem;
+        color: var(--text-secondary);
+        font-size: 9.5px;
+        font-weight: 600;
+    }
+    .bucket.action .bucket-label {
+        color: var(--danger);
+    }
+    .event {
+        padding: 0.45rem 0.55rem;
+        background: var(--card);
+        opacity: 0;
+        transform: translateX(14px);
+        transition:
+            opacity 0.5s var(--ease-out),
+            transform 0.5s var(--ease-out);
+        transition-delay: calc(1.3s + var(--i) * 0.25s);
+    }
+    .scene.is-in .event {
+        opacity: 1;
+        transform: none;
+    }
+    .event:first-of-type {
+        border-radius: 10px 10px 0 0;
+    }
+    .event:last-of-type {
+        border-radius: 0 0 10px 10px;
+    }
+    .event:only-of-type {
+        border-radius: 10px;
+    }
+    .event + .event {
+        border-top: 0.5px solid var(--separator);
+    }
+    .event-title {
+        margin: 0;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .event-meta {
+        margin: 0.1rem 0 0;
+        color: var(--text-secondary);
+        font-size: 9px;
+    }
+    .tabbar {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: space-around;
+        padding: 0.55rem 0 1.1rem;
+        border-top: 0.5px solid var(--separator);
+        background: color-mix(in srgb, var(--chrome) 90%, transparent);
+        color: var(--text-tertiary);
+    }
+    .tabbar :global(.icon:last-child) {
+        color: var(--accent);
+    }
+
+    @media (max-width: 880px) {
+        .chrome {
+            grid-template-columns: 2.75rem minmax(0, 1fr);
+        }
+        .panel {
+            display: none;
+        }
+        .card {
+            margin-left: 0;
+        }
+    }
+    @media (max-width: 560px) {
+        .scene {
+            padding: 0 0 2rem;
+        }
+        .chrome {
+            height: 25rem;
+            font-size: 12px;
+        }
+        .rail {
+            display: none;
+        }
+        .chrome {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .card {
+            margin: var(--space-s);
+        }
+        .tabs .tab:not(.active),
+        .nav-arrows {
+            display: none;
+        }
+        .phone {
+            display: none;
+        }
+        .doc {
+            width: 100%;
+            margin: 0;
+            padding-inline: var(--content-inset-phone);
+        }
+        .todo-meta {
+            display: none;
+        }
+    }
+</style>

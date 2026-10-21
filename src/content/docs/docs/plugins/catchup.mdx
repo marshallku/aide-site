@@ -1,0 +1,139 @@
+---
+title: Catch-up
+description: Each night, Claude Code or Codex on your computer reads the day's coding sessions and git history and writes what you did, decided and learned into your daily, weekly and topic notes.
+sidebar:
+    order: 19
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+Catch-up writes your notes about your coding work for you. At 23:59 it has Claude Code or Codex on your
+computer go over the day's sessions and the git history of your repositories, and turns what you did,
+decided and learned into entries in your daily, weekly and topic notes. It's for people who do their
+work in Claude Code or Codex.
+
+<PluginFacts id="catchup" />
+
+## What it does
+
+**At 23:59** the plugin runs your agent CLI on this computer, reading only:
+
+- **Claude Code** runs as `claude -p` with only its Read, Glob and Grep tools. It has no shell and
+  can't edit or write files, fetch from the web or start other agents.
+- **Codex** runs as `codex exec` in its read-only sandbox.
+
+The agent reads, for the days since the last run:
+
+- your Claude Code sessions and memories (under `~/.claude/`);
+- your Codex sessions, history and memories (under `~/.codex/`);
+- the commits of the git repositories matching **Repositories** (`~/dev/*`), at most 60 per
+  repository. The plugin collects these itself and puts them in the prompt, so the agent needs no
+  shell.
+
+The agent never writes to your notes. It answers with a list of changes, and the plugin applies them:
+
+- **Appends to the daily note** of the day the work happened, under a **Notes** heading.
+- **Appends to the weekly note**, once that week is over.
+- **Appends to an existing topic note** (`topics/…`), and sets its `updated:` date.
+- **Proposes new topics** in `catchup/candidates/<date>`: a title, a path, a reason, and the finished
+  note in a code block. It never creates a topic itself; copy the ones you want.
+
+It never touches a note's **Tasks** heading or the blocks plugins own, and never adds todos. The same
+text is never written twice.
+
+When it's done, a Feed item says how many notes it updated and how many topics it proposed (for
+example `2026-10-20–2026-10-21: updated 4 notes, 1 new topic candidates`). Nothing is pushed.
+
+**Reliable.** The agent's answer is saved before anything is applied, and each change is marked done
+as it's applied. A crash or a restart carries on where it stopped without asking the agent again. The
+window moves on only when everything is applied. If the agent fails three times in a night, the
+plugin posts **Couldn't catch up** with the reason and tries the same window again the next night.
+
+If the computer was asleep at 23:59, it runs when it wakes, up to 20 hours later. The first run
+looks back a week.
+
+## Before you start
+
+- **A desktop host, or a server's plugin runner, on the computer where you use Claude Code or
+  Codex.** The sessions are files on that computer; the plugin reads them only there
+  ([Host on your desktop](/docs/self-hosting/desktop-host/)).
+- **Claude Code or Codex installed and signed in** on that computer. The run uses your own
+  subscription or API account.
+- **Daily notes**, and weekly and topic notes if you keep them. Catch-up adds to the notes you have;
+  it creates only the daily and weekly notes it writes to.
+
+<Aside type="caution">
+The built-in instructions were written for one way of keeping notes: daily and weekly notes, topics
+at `topics/<category>/<name>.md` with an `updated:` date, and the notes also readable as Markdown
+files in `~/docs`. If your notes live elsewhere, say so in **Your instructions** (for example "My
+notes are Markdown files in `~/notes`; topics are in `~/notes/topics`").
+</Aside>
+
+## Set it up
+
+<Steps>
+
+1. Make sure `claude` (or `codex`) works in a terminal on this computer and is signed in.
+2. In AIDE, open **Settings** and choose **Catch-up** under **On the server** (on Linux, **Settings ›
+   Plugins › Catch-up**).
+3. Pick the **Agent**, and set **Repositories** to the folders your git repositories are in.
+4. Turn on **Enabled**. The first run is at 23:59.
+
+</Steps>
+
+## Settings
+
+<PluginSettings
+    id="catchup"
+    defaults={{
+        at: "23:59",
+        agent: "claude",
+        model: "",
+        budgetMinutes: "30",
+        repos: "~/dev/*",
+        instructions: "",
+    }}
+/>
+
+- **Model**: passed to the CLI as `--model`. Empty uses the CLI's own default.
+- **Time limit (minutes)**: one run of the agent is stopped after this long, and counts as a failure.
+- **Repositories**: globs; only folders that are git repositories count. Commits from all branches
+  are included, newest first, up to 48 KB in all.
+- **Your instructions** are added after the built-in ones: what to look at, what to leave out, how to
+  write. The format the agent answers in stays the same.
+
+The entries are written in the language you chose under **Settings › Language › Plugins write in**.
+
+## Troubleshooting
+
+### Couldn't catch up
+
+The Feed item gives the reason.
+
+- `executable file not found`: the host can't find `claude` or `codex`. It looks on its own `PATH`,
+  which may not include the folder your terminal finds the CLI in.
+- A timeout: raise **Time limit (minutes)**. A run after several nights off has more days to read.
+- A sign-in error: run the CLI in a terminal and sign in again.
+
+The next night retries the same days, so nothing is lost.
+
+### Nothing was written
+
+When the agent finds nothing worth writing, it changes nothing and no Feed item is posted. Check that
+the sessions are on the same computer as the host, and that the work happened since the last run.
+
+### It wrote into the wrong topic or the wrong place
+
+Topics are matched by path. Tell it how your topics are organised in **Your instructions**. Changes it
+can't apply (a note that's gone, a change the server refuses) are skipped rather than retried.
+
+## Privacy
+
+- The agent runs on your computer and reads your Claude Code and Codex transcripts and memories.
+  What it reads goes to that agent's provider (Anthropic for Claude Code, OpenAI for Codex), under
+  your own account, as any session of yours does.
+- Git history goes into the prompt: short commit hashes, dates and subjects.
+- What it writes are your notes, synced like any other.
+- The transcripts never go to the AIDE server; only the entries the plugin writes do.

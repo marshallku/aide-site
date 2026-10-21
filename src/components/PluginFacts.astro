@@ -1,0 +1,107 @@
+---
+// The facts about a plugin a reader checks before turning it on, from its manifest: what kind it
+// is, when it runs, what it may touch and what it posts to the Feed.
+import { findPlugin, toLocale, type Plugin } from "#lib/plugins";
+
+interface Props {
+    id: string;
+    kind?: Plugin["kind"];
+}
+
+const { id, kind = "server" } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const plugin = findPlugin(id, kind, locale);
+
+const LABELS = {
+    en: {
+        kind: { server: "Server plugin", device: "Device plugin" },
+        render: { web: "web page", native: "native controls" },
+        runs: "Runs",
+        access: kind === "server" ? "Token scopes" : "Asks to",
+        feed: "Posts to the Feed",
+        version: "Version",
+    },
+    ko: {
+        kind: { server: "서버 플러그인", device: "기기 플러그인" },
+        render: { web: "웹 페이지", native: "앱 기본 컨트롤" },
+        runs: "실행",
+        access: kind === "server" ? "토큰 권한" : "요청 권한",
+        feed: "피드에 올리는 주제",
+        version: "버전",
+    },
+}[locale];
+
+const render = plugin.render ? LABELS.render[plugin.render as keyof typeof LABELS.render] : undefined;
+---
+
+<dl class="plugin-facts not-content">
+    <div>
+        <dt>{LABELS.kind[plugin.kind]}</dt>
+        <dd>
+            {plugin.name}
+            {render && ` · ${render}`} · {LABELS.version} {plugin.version}
+        </dd>
+    </div>
+    {plugin.schedules.length > 0 && (
+        <div>
+            <dt>{LABELS.runs}</dt>
+            <dd>{plugin.schedules.join(" · ")}</dd>
+        </div>
+    )}
+    {plugin.publishes.length > 0 && (
+        <div>
+            <dt>{LABELS.feed}</dt>
+            <dd>
+                {plugin.publishes.map((topic) => (
+                    <code>{topic}</code>
+                ))}
+            </dd>
+        </div>
+    )}
+    {plugin.access.length > 0 && (
+        <div>
+            <dt>{LABELS.access}</dt>
+            <dd class="access">
+                {plugin.access.map((scope) => (
+                    <code>{scope}</code>
+                ))}
+            </dd>
+        </div>
+    )}
+</dl>
+
+<style>
+    .plugin-facts {
+        display: grid;
+        gap: 0.5rem;
+        margin: 1.5rem 0;
+        padding: 1rem 1.25rem;
+        border: 1px solid var(--sl-color-hairline-light);
+        border-radius: var(--radius-m);
+        background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+        font-size: var(--sl-text-sm);
+    }
+    .plugin-facts div {
+        display: grid;
+        grid-template-columns: 9.5rem 1fr;
+        gap: 1rem;
+    }
+    dt {
+        color: var(--sl-color-gray-3);
+    }
+    dd {
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+    code {
+        font-size: var(--sl-text-xs);
+    }
+    @media (max-width: 40rem) {
+        .plugin-facts div {
+            grid-template-columns: 1fr;
+            gap: 0.15rem;
+        }
+    }
+</style>

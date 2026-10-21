@@ -1,0 +1,117 @@
+---
+title: Backups and restore
+description: Back up a hosted vault into one file with an optional recovery key, restore it on another computer, and get deleted notes back.
+sidebar:
+    order: 3
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+Your notes are Markdown files, so any copy of the vault folder is a backup of them. A hosted vault holds
+more than notes (the Feed, settings, plugin data, stored AI keys), and **Back up…** puts all of it in one
+file you can restore on another computer.
+
+## Back up a hosted vault
+
+<Steps>
+
+1. Open Settings and, in the **Host** group, choose **Back up…**.
+2. Decide about **Save a recovery key too** (see below).
+3. Choose **Back up…** and pick where the backup goes. The file is named `AIDE backup.aidebackup` unless
+   you rename it. If you asked for a recovery key, AIDE then asks where to save it
+   (`AIDE recovery key.txt`).
+
+</Steps>
+
+The host stops while the backup is made and starts again after, so nothing writes to the vault meanwhile.
+If another app keeps changing the notes while they're copied, the backup tries three times and then
+fails, asking you to close the other apps.
+
+The backup file can't be saved inside the vault folder, which it copies.
+
+### What's inside
+
+A backup is one compressed archive with a list of every file and its SHA-256, checked file by file when you
+restore:
+
+- **The vault**: every note, attachment and the vault's own `.aide/` records. Symbolic links and other
+  special files are left out and listed as skipped.
+- **The host's database**: the Feed and its event log, settings, plugin settings and data, paired devices,
+  and the stored AI keys and plugin secrets, still encrypted.
+- **The plugins' own state** and your local plugin configuration (`plugins.json`).
+
+The notes inside are plain text. Keep the backup file somewhere only you can read.
+
+### The recovery key
+
+The AI keys and plugin secrets in the backup are encrypted with the host's sealing key, which stays in your
+keychain or keyring and isn't part of the backup. **Save a recovery key too** writes that key to a separate
+file.
+
+- **With the recovery key**, a restore keeps the stored AI keys.
+- **Without it**, a restore drops them and you enter them again in Settings › AI. Plugin secrets, such as
+  Slack's tokens, need entering again too.
+
+Keep the recovery key apart from the backup. Anyone who has both can read the stored credentials.
+
+## Restore a backup
+
+You restore a backup on the **Get started** screen, the one AIDE shows before it has a vault or a server to
+open. A restored vault is always hosted.
+
+<Steps>
+
+1. On the Mac, under **Without a server**, choose **Restore a backup…**. On Linux, it's under **Keep notes on
+   this computer**.
+2. Choose the backup file.
+3. AIDE asks **Do you have the backup's recovery key?** Choose **Choose the key…** and pick the key file,
+   or **Restore without it**.
+4. Choose where the restored notes go. AIDE makes a new folder there, named after the backup.
+
+</Steps>
+
+AIDE checks the backup, restores the notes and the host's data, and starts hosting the restored vault.
+
+A restore makes the copy this computer's:
+
+- **Every device is signed out** and the host gets a new network identity. Pair your phone and other
+  computers again with **Add a device…** (see [Host on your desktop](/docs/self-hosting/desktop-host/)).
+- **An older backup is brought up to date.** A backup from a newer AIDE is refused: update AIDE first.
+- **The database must match.** A backup's database has to be the same PostgreSQL version this AIDE runs.
+
+A restore never overwrites anything. It refuses when the vault's host data is already on this computer,
+for example on the computer that hosted it, even after **Stop hosting**. Restore on another computer, or
+one that has never hosted that vault. If a restore is cut short, running it again with the same backup
+picks up where it stopped.
+
+<Aside type="note">
+A backup restores on any Mac or Linux computer with AIDE. Plan for the move, though: notes you change on
+the old computer after the backup aren't in it.
+</Aside>
+
+## Copy the vault folder
+
+Because a vault is a folder of Markdown files, your usual backup tools (Time Machine, `rsync`, a cloud
+backup) already protect the notes. The folder's `.aide/` folder holds note ids, archived notes and the
+vault's settings. Copy it along to keep links, drafts and **Recently deleted** working in the copy.
+
+A folder copy has only the notes. The Feed, plugin data and stored keys of a hosted vault are in the host's
+database, which only **Back up…** captures.
+
+Don't keep the same vault open for writing on two computers through a synced folder (Syncthing, iCloud,
+git). Only one program may write to a vault at a time.
+
+## Recently deleted
+
+Deleting a note doesn't remove it. The file moves into the vault's `.aide/archive/` folder, and
+**Settings › Recently deleted** lists it, newest first, with the path it was deleted from. **Restore** puts
+it back where it was, with the same id, so links and drafts find it again. If another note now has that
+path, the restore is refused until you rename or move that note.
+
+Nothing deletes an archived note for good: AIDE doesn't empty **Recently deleted** on its own.
+
+## A dedicated server
+
+A [dedicated server](/docs/self-hosting/own-server/) keeps the same things in a PostgreSQL database and a
+data folder. Back up both together, with the server stopped, plus its environment: losing
+`AIDE_SECRET_KEY` makes the stored AI keys, gateway tokens and plugin secrets unreadable.

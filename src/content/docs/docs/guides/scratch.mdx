@@ -1,0 +1,51 @@
+---
+title: Scratch and Organize
+description: Jot things down in Scratch without deciding where they go, then let Organize propose a home for each in your wiki.
+sidebar:
+    order: 5
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+Scratch is where you write without deciding where something belongs. Each scratch note is an ordinary note kept under `scratch/`; later, **Organize** proposes a place in your wiki for each one, and nothing moves until you approve it.
+
+## Capturing
+
+- **An empty tab** (Mac, Linux): a new tab is already an editor, with the hint "Start typing: it becomes a scratch note." The first text you type makes a scratch note, which shows in Scratch at once, and you keep typing in the same place.
+- **New Scratch Note**: <kbd>⌘</kbd><kbd>N</kbd> on the Mac, <kbd>Ctrl</kbd><kbd>N</kbd> on Linux, or **+** in the Scratch panel. On the iPhone, **+** in the Scratch tab.
+- **Quick capture** (Mac): press <kbd>⌥</kbd><kbd>Space</kbd> from any app. A small window opens with "Jot something down…"; <kbd>Return</kbd> saves it to Scratch ("Saved to Scratch") and closes the window, <kbd>⇧</kbd><kbd>Return</kbd> starts a new line, and <kbd>Esc</kbd> closes it.
+- **The menu bar icon** (Mac): **Quick capture…**, **New note**, **Open today's note**, **Open AIDE** and **Quit AIDE**. While the icon or the shortcut is on, AIDE keeps running after you close its last window.
+- **From a terminal or a launcher**: `aidectl capture "call the bank"` adds a scratch note, the same way the apps do; with `-` or no text it reads standard input. On Linux, bind it to a key in your desktop's keyboard settings for a capture shortcut. See [aidectl](/docs/developers/aidectl/).
+
+**Settings › Quick capture** on the Mac turns **Show AIDE in the menu bar** and **Quick capture shortcut** on or off (both on by default) and records another shortcut: click the field and press the keys, <kbd>Esc</kbd> keeps the old one, and **Reset** goes back to <kbd>⌥</kbd><kbd>Space</kbd>.
+
+If AIDE can't reach your notes when you capture (the server is offline, say), the text is kept under **Not sent** in Scratch and added once it can.
+
+## Organize
+
+<Steps>
+
+1. In the Scratch panel's header, choose **Organize** (on the iPhone, Scratch's **More › Organize**; on the desktop, also **Organize scratch notes…** in the command palette). The sheet says how many scratch notes will get a proposed home in your wiki.
+2. Choose **Propose**. Each scratch note gets one proposal, with a short reason: **New page** at a path, or **Append to** an existing page.
+3. Every proposal starts selected. Click one to leave it out.
+4. Choose **Apply** to file the selected ones. Proposals you left out stay as scratch notes, untouched.
+
+</Steps>
+
+A proposal to a new page creates it with the scratch note's text. One that appends adds the text to the end of that page; a daily note that doesn't exist yet is made from its template first, so the text lands in the day's note as your template shapes it. Applied scratch notes are archived from Scratch, not deleted, and can be brought back from **Settings › Notes › Recently deleted**.
+
+If a note changed between Propose and Apply, Apply stops and asks you to propose again so it works from the latest text. If AIDE was interrupted partway through filing, the sheet shows "An earlier organize needs a look" with the pages involved; check them, and the scratch notes stay until you do.
+
+### With AI or by rules
+
+Organize uses AI when one is set up, and rules otherwise. When AI is available the sheet has a **Use AI** switch.
+
+- **With AI**, the model reads each scratch note and the names of your wiki's pages, then proposes a new page or an existing page to append to. It may tidy the formatting into clean Markdown but keeps your wording. It never files anything under `scratch/`, and AIDE checks every proposal before showing it. In a local vault, add an Anthropic API key in **Settings › AI**. With a server or a desktop host, Organize uses the server's AI. See [AI and models](/docs/guides/ai/).
+- **By rules**, with no model involved:
+    1. A note with a `#tag` goes to `topics/` followed by its first tag (`#investing` → `topics/investing`).
+    2. Otherwise, a note with todos goes to today's daily note.
+    3. Otherwise, it goes to `inbox`.
+
+<Aside title="What Organize sends">
+With AI, Organize sends the scratch notes it organizes, and your wiki's page names, to the model: with your own key, directly to Anthropic. The text of your other notes isn't sent. By rules, nothing leaves your device or server.
+</Aside>

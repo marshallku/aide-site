@@ -1,0 +1,212 @@
+---
+// Why it's yours: the files, the server and the model, with how the pieces connect.
+import Icon from "#components/Icon.astro";
+import { COPY, type Lang } from "#lib/landing-copy";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = COPY[lang].own;
+const ICONS = ["folder", "server", "key"];
+const diagram =
+    lang === "ko"
+        ? { devices: "내 기기", host: "내 데스크톱이나 서버", model: "고른 모델 (선택)", files: "마크다운 파일" }
+        : {
+              devices: "Your devices",
+              host: "Your desktop or server",
+              model: "A model you choose (optional)",
+              files: "Markdown files",
+          };
+---
+
+<section class="own">
+    <div class="wrap">
+        <div class="head" data-reveal>
+            <p class="eyebrow">{copy.eyebrow}</p>
+            <h2 class="display">{copy.title}</h2>
+        </div>
+        <div class="diagram" data-reveal aria-hidden="true">
+            <div class="node devices">
+                <Icon name="devices" size={20} />
+                {diagram.devices}
+            </div>
+            <span class="link tls">TLS</span>
+            <div class="node host">
+                <Icon name="server" size={20} />
+                {diagram.host}
+                <span class="files">
+                    <Icon name="folder" size={14} /> {diagram.files}
+                </span>
+            </div>
+            <span class="link dashed"></span>
+            <div class="node model">
+                <Icon name="assistant" size={20} />
+                {diagram.model}
+            </div>
+        </div>
+        <div class="pillars">
+            {copy.pillars.map((pillar, index) => (
+                <article data-reveal style={`--delay: ${index * 0.08}s`}>
+                    <span class="badge">
+                        <Icon name={ICONS[index]} size={20} />
+                    </span>
+                    <h3>{pillar.title}</h3>
+                    <p>{pillar.text}</p>
+                </article>
+            ))}
+        </div>
+        <ul class="facts" data-reveal>
+            {copy.facts.map((fact) => (
+                <li>{fact}</li>
+            ))}
+        </ul>
+    </div>
+</section>
+
+<style>
+    .own {
+        margin-top: var(--section-gap);
+    }
+    .head {
+        max-width: 44rem;
+    }
+    .diagram {
+        display: grid;
+        grid-template-columns: 1fr 5rem 1.3fr 5rem 1fr;
+        align-items: center;
+        margin: 3rem 0;
+        padding: 2rem;
+        border-radius: 24px;
+        background: radial-gradient(60% 120% at 50% 0%, var(--glow), transparent 70%), var(--page-raised);
+        box-shadow: 0 0 0 1px var(--line);
+    }
+    .node {
+        display: grid;
+        justify-items: center;
+        gap: 0.5rem;
+        padding: 1.1rem 0.75rem;
+        border-radius: 16px;
+        background: var(--card);
+        box-shadow:
+            0 8px 24px -12px rgba(0, 0, 0, 0.2),
+            0 0 0 1px var(--line);
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-align: center;
+    }
+    .host {
+        padding: 1.5rem 1rem;
+        background: linear-gradient(150deg, var(--brand-1), var(--brand-2));
+        color: #fff;
+    }
+    .files {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.15rem 0.6rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    .link {
+        position: relative;
+        height: 2px;
+        background: var(--line-strong);
+    }
+    .tls {
+        background: linear-gradient(90deg, var(--line-strong), var(--brand-2));
+        font-size: 0;
+    }
+    .tls::after {
+        content: "TLS";
+        position: absolute;
+        top: -1.4rem;
+        left: 50%;
+        color: var(--ink-3);
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        transform: translateX(-50%);
+    }
+    .dashed {
+        background: repeating-linear-gradient(90deg, var(--line-strong) 0 6px, transparent 6px 11px);
+    }
+    .model {
+        color: var(--ink-2);
+        font-weight: 500;
+    }
+    .pillars {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    article {
+        padding: 1.5rem;
+        border-radius: 20px;
+        background: var(--page-raised);
+        box-shadow: 0 0 0 1px var(--line);
+    }
+    .badge {
+        display: inline-grid;
+        place-items: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+    }
+    h3 {
+        margin: 1rem 0 0.5rem;
+        font-size: 1.2rem;
+    }
+    article p {
+        margin: 0;
+        color: var(--ink-2);
+    }
+    .facts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin: 1.5rem 0 0;
+        padding: 0;
+        list-style: none;
+    }
+    .facts li {
+        padding: 0.45rem 0.9rem;
+        border-radius: 999px;
+        background: var(--fill);
+        color: var(--ink-2);
+        font-size: 0.85rem;
+    }
+    @media (max-width: 880px) {
+        .pillars {
+            grid-template-columns: 1fr;
+        }
+        .diagram {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 2.5rem auto 2.5rem auto;
+            justify-items: center;
+            padding: 1.5rem;
+        }
+        .node {
+            width: min(100%, 18rem);
+        }
+        .link {
+            width: 2px;
+            height: 100%;
+        }
+        .tls {
+            background: linear-gradient(180deg, var(--line-strong), var(--brand-2));
+        }
+        .tls::after {
+            top: 50%;
+            left: 0.75rem;
+            transform: translateY(-50%);
+        }
+        .dashed {
+            background: repeating-linear-gradient(180deg, var(--line-strong) 0 6px, transparent 6px 11px);
+        }
+    }
+</style>

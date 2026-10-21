@@ -1,0 +1,58 @@
+---
+title: Word count
+description: A device plugin that counts the words of the note you're reading, live in the desktop's right panel or on demand from the editor.
+sidebar:
+    order: 33
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+
+Word count tells you how long a note is. On the Mac and Linux it can sit in the right panel and count
+as you go; on any device you can open it on a note.
+
+<PluginFacts id="word-count" kind="device" />
+
+## What it does
+
+It adds no tab. It adds:
+
+- **A Word count panel** in the desktop's right panel (Mac and Linux). It counts whichever note is on
+  screen, again each time another note comes up or the note is saved. With no note on screen it says
+  **No note on screen**.
+- **A command**, **Show the word count panel**, in the command palette (<kbd>⌘</kbd><kbd>P</kbd> on
+  the Mac, <kbd>Ctrl</kbd><kbd>P</kbd> on Linux), which opens that panel.
+- **A Word count sheet** in a note's **Plugins** menu in the editor (on the iPhone, under the More
+  menu), which counts the note once.
+- **A settings page**, **Counting options**, with one option: **Skip headings**. With it on, lines
+  starting with `#` aren't counted.
+
+A word is anything between spaces or line breaks, so in languages written without spaces between
+words, such as Japanese, the count is of space-separated chunks.
+
+## Set it up
+
+<Steps>
+
+1. Open **Browse plugins** (in **Settings**, under **On this device**; on Linux, **Settings › Device
+   plugins**) and choose **Word count**.
+2. Approve **Read and search all notes** (to read the note it counts) and **Keep its own data on this
+   device** (the option), then **Install**.
+3. On the Mac or Linux, run **Show the word count panel** from the command palette. On the iPhone,
+   open a note's More menu and choose **Word count**.
+
+</Steps>
+
+**Counting options** is on the plugin's screen, in **Settings › On this device › Word count** (on
+Linux, **Settings › Device plugins › Word count**). The option is kept on this device only, so set it
+on each device. More on installing, updating and removing is in [Installing device
+plugins](/docs/plugins/device-plugins/).
+
+<Aside>
+The public index may list an older Word count than the one described here, with the sheet only.
+**Browse plugins** shows **Update** when a newer one is listed.
+</Aside>
+
+## Privacy
+
+The plugin reads the note it counts and writes nothing to your notes. It makes no network requests.

@@ -1,0 +1,209 @@
+---
+title: 설치
+description: Mac에서는 Homebrew나 설치 스크립트로, Linux에서는 설치 스크립트로 AIDE를 설치하고 최신 상태로 유지해요.
+sidebar:
+    order: 2
+---
+
+import { Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
+
+AIDE는 공개 저장소 [aide-releases](https://github.com/marshallku/aide-releases)에서 Mac용과 x86_64
+Linux용으로 배포돼요. 설치하면 명령줄 도구 `aidectl`과 [데스크톱 호스트](/ko/docs/self-hosting/desktop-host/)에
+필요한 모든 것이 함께 들어와요. 그래서 다른 걸 따로 설치하지 않아도 컴퓨터가 휴대폰에 노트를 제공할 수 있어요.
+
+## 설치하기
+
+<Tabs syncKey="os">
+<TabItem label="Mac">
+
+macOS 14 Sonoma 이상이 필요해요. Apple silicon과 Intel 모두 돼요.
+
+**Homebrew로 설치:**
+
+```bash
+brew install --cask marshallku/tap/aide
+```
+
+cask가 `AIDE.app`을 `/Applications`에 설치하고 `aidectl`을 `PATH`에 연결해요.
+
+**설치 스크립트로 설치:**
+
+```bash
+curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash
+```
+
+스크립트가 하는 일은 다음과 같아요.
+
+- `AIDE-X.Y.Z-macos.zip`을 내려받고 릴리스의 `SHA256SUMS`와 대조해요.
+- 서명이 확인되지 않거나 Gatekeeper가 공증된 앱으로 인정하지 않으면 앱을 거부해요.
+- 교체할 AIDE가 실행 중이면 종료한 뒤 새 앱으로 바꿔요. 새 앱이 자리 잡을 때까지 이전 앱은 남겨 둬요.
+- `AIDE.app`을 `~/Applications`에 설치해요.
+- `~/.local/bin/aidectl`을 앱 안의 `aidectl`에 연결해요. 그래서 앱을 업데이트하면 `aidectl`도 함께
+  업데이트돼요.
+
+`~/.local/bin`이 `PATH`에 없으면 스크립트가 알려 줘요. `aidectl`을 이름만으로 실행하려면 `PATH`에
+추가하세요.
+
+</TabItem>
+<TabItem label="Linux">
+
+릴리스는 glibc 2.39 이상(Ubuntu 24.04 기준)의 x86_64용으로 빌드돼요. 다른 아키텍처에서는 설치
+스크립트가 멈춰요.
+
+**1. 라이브러리를 설치해요.** AIDE는 배포판의 GTK 스택을 써요. GTK 4.14 이상, libadwaita 1.5 이상,
+WebKitGTK 6.0, libheif, GTK 4용 VTE, GStreamer good·bad 플러그인이 필요해요.
+
+Arch Linux:
+
+```bash
+sudo pacman -S gtk4 libadwaita webkitgtk-6.0 libheif vte4 gst-plugins-good gst-plugins-bad
+```
+
+Ubuntu:
+
+```bash
+sudo apt install libgtk-4-1 libadwaita-1-0 libwebkitgtk-6.0-4 libheif1 libvte-2.91-gtk4-0 gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
+```
+
+**2. 설치 스크립트를 실행해요.** `sudo`는 필요 없어요. 모든 것이 홈 폴더에 들어가요.
+
+```bash
+curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash
+```
+
+스크립트는 `aide-X.Y.Z-x86_64-linux.tar.gz`를 내려받아 릴리스의 `SHA256SUMS`와 대조하고 다음을
+설치해요.
+
+| 항목 | 위치 |
+| --- | --- |
+| 앱 | `~/.local/bin/aide-desktop` |
+| `aidectl` | `~/.local/bin/aidectl` |
+| 데스크톱 항목 | `~/.local/share/applications/com.marshallku.aide.desktop` |
+| D-Bus 서비스(알림과 링크를 위해 AIDE를 시작) | `~/.local/share/dbus-1/services/com.marshallku.aide.service` |
+| 아이콘 | `~/.local/share/icons/hicolor/scalable/apps/com.marshallku.aide.svg` |
+| `aide://` 링크 처리기 | `~/.config/mimeapps.list`에 `xdg-mime`으로 설정 |
+| 데스크톱 호스트 런타임(서버, 플러그인 러너, Postgres) | `~/.local/lib/aide/host-X.Y.Z` |
+
+라이브러리가 빠져 있으면 스크립트가 그 이름과 위의 명령을 보여 줘요. AIDE는 데스크톱의 앱 실행기에서
+시작하세요. 데스크톱 항목은 `~/.local/bin`이 `PATH`에 있든 없든 동작해요.
+
+</TabItem>
+</Tabs>
+
+### iPhone
+
+iPhone 앱(iOS 17 이상)은 TestFlight 베타이고 아직 공개되지 않았어요. 공개되면
+[데스크톱 호스트나 내 서버](/ko/docs/getting-started/connect-devices/)에 연결하거나, 휴대폰 안에만 노트를
+둘 수 있어요.
+
+## 설치 스크립트 옵션
+
+스크립트를 파이프로 넘길 때는 `bash -s --` 뒤에 옵션을 붙여요.
+
+```bash
+curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash -s -- --version 0.4.16
+```
+
+| 옵션 | 하는 일 |
+| --- | --- |
+| `--version X.Y.Z` | 최신 릴리스 대신 해당 릴리스를 설치해요. 이전 버전으로 돌아갈 때 써요. |
+| `--applications DIR` | Mac 전용: `AIDE.app`을 `~/Applications` 대신 `DIR`에 설치해요. |
+| `--prefix DIR` | `aidectl`(Linux에서는 앱과 호스트 런타임도)을 `~/.local` 대신 `DIR` 아래에 둬요. |
+| `--uninstall` | 스크립트가 설치한 것을 지워요. |
+| `--help` | 옵션 목록을 보여 줘요. |
+
+`AIDE_RELEASE_URL`을 설정하면 스크립트가 GitHub 대신 미러에서 내려받아요. 이때도 모든 파일을
+`SHA256SUMS`와 대조해요.
+
+## 처음 실행하기
+
+AIDE는 **시작하기** 화면으로 열려요. 여기서 노트를 둘 곳을 골라요. 이 기기, 이미 가진 폴더(Obsidian
+보관소는 그 자리에서 열려요), 또는 서버나 데스크톱 호스트 중에서요.
+[AIDE 실행 방식](/ko/docs/getting-started/ways-to-run/)에서 각 선택지를 설명해요.
+
+## 업데이트
+
+설치 스크립트로 설치했다면 AIDE가 스스로 업데이트해요. 시작할 때 GitHub에서 새 릴리스를 확인하고, 그
+뒤로는 마지막 확인이 하루 지났을 때 한 시간마다 확인해요. Mac에서는 **설정 › 업데이트**, Linux에서는
+**설정 › 일반 › 업데이트**에 있어요.
+
+- **자동으로 확인**은 기본으로 켜져 있어요. 끄면 **지금 확인**을 눌렀을 때만 확인해요.
+- 자동 확인으로 찾은 버전은 알림으로 한 번 알려 줘요. 새 버전을 받을 수 있거나 설치하는 동안에는
+  데스크톱의 사이드바 레일에 업데이트 버튼이 나타나요.
+- **이 버전 건너뛰기**를 누르면 그 버전은 더 이상 알려 주지 않아요. **지금 확인**으로는 여전히 찾을 수
+  있어요.
+- **릴리스 노트**를 누르면 GitHub의 릴리스 페이지가 열려요.
+
+**업데이트 후 다시 시작**을 누르면 이렇게 진행돼요.
+
+<Steps>
+
+1. AIDE가 릴리스를 내려받아 체크섬을 확인해요(Mac에서는 서명, 팀, 최소 macOS 버전도, Linux에서는 필요한
+   라이브러리가 모두 있는지도 확인해요).
+2. 열려 있는 노트는 더 이상 편집을 받지 않고 초안으로 저장돼요. 10초 안에 저장하지 못한 노트가 있으면
+   업데이트를 취소하고 아무것도 바꾸지 않아요.
+3. AIDE가 종료되고, 새 버전으로 교체된 뒤, 새 버전이 시작돼요. `aidectl`과 데스크톱 호스트 런타임도 함께
+   업데이트돼요.
+4. 새 버전이 45초 안에 창을 띄우지 않으면 이전 버전을 되돌려 놓고 시작해요. 그리고 "AIDE X.Y.Z이(가)
+   시작되지 않아 이 버전으로 돌아왔어요."라고 알려 줘요.
+
+</Steps>
+
+다음 설치 방식은 앱 안에서 업데이트되지 않아요.
+
+| 설치 방식 | 업데이트 방법 |
+| --- | --- |
+| Homebrew, `/Applications/AIDE.app` | 앱이 명령을 보여 줘요: `brew upgrade --cask aide` |
+| Mac, 내려받은 곳에서 바로 연 경우(macOS가 임시 사본으로 실행해요) | AIDE를 응용 프로그램 폴더로 옮긴 뒤 거기서 업데이트하세요 |
+| Mac, AIDE가 쓸 수 없는 폴더에 있는 경우 | 설치 스크립트를 다시 실행하세요 |
+| iPhone(TestFlight) | TestFlight에서 업데이트해요. **설정 › 업데이트**에 **TestFlight 열기**가 있어요 |
+
+이전 릴리스로 직접 돌아가려면 설치 스크립트를 `--version X.Y.Z`로 실행하세요. 데스크톱 호스트를 쓰고
+있어도 한 릴리스 뒤로 돌아가는 건 안전해요. 릴리스마다 호스트의 데이터베이스를 이전 릴리스에서도 돌아가는
+상태로 남겨 두거든요.
+
+## 제거
+
+<Aside>
+보관소를 **로그인한 동안 계속 실행**을 켠 채로 호스팅하고 있다면, 먼저 호스트 설정에서 이 옵션을 끄세요.
+그러지 않으면 앱을 지운 뒤에도 호스트가 백그라운드에서 계속 실행돼요.
+</Aside>
+
+<Tabs syncKey="os">
+<TabItem label="Mac">
+
+Homebrew로 설치했다면:
+
+```bash
+brew uninstall --cask aide
+```
+
+설치 스크립트로 설치했다면:
+
+```bash
+curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash -s -- --uninstall
+```
+
+스크립트는 AIDE를 종료하고, `~/Applications`(또는 `--applications`로 넘긴 폴더)에서 `AIDE.app`을 지우고,
+`~/.local/bin/aidectl`이 아직 그 앱을 가리키고 있으면 함께 지워요.
+
+노트와 설정은 남아요. AIDE가 대신 보관하는 보관소는 `~/Library/Application Support/com.marshallku.aide`
+아래에, 호스팅한 보관소의 서버 데이터(데이터베이스와 플러그인 상태)는
+`~/Library/Application Support/AIDE/hosts` 아래에 있어요. 직접 연 폴더는 절대 건드리지 않아요.
+
+</TabItem>
+<TabItem label="Linux">
+
+```bash
+curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash -s -- --uninstall
+```
+
+설치할 때 쓴 `--prefix`를 똑같이 넘기세요. 스크립트는 앱, `aidectl`, 데스크톱 항목, D-Bus 서비스, 아이콘,
+`~/.local/lib/aide` 아래의 모든 호스트 런타임을 지우고, `aide://` 처리기가 아직 AIDE를 가리키면 그것도
+지워요.
+
+노트와 설정은 남아요. AIDE가 대신 보관하는 보관소와 호스팅한 보관소의 서버 데이터는 `~/.local/share/aide`
+아래에, 앱 설정은 `~/.config/aide/config.toml`에 있어요. 직접 연 폴더는 절대 건드리지 않아요.
+
+</TabItem>
+</Tabs>

@@ -1,0 +1,159 @@
+---
+title: Todos
+description: Write todos in any note with Obsidian Tasks or Dataview syntax, and plan them on the Todos screen with view presets and a focus timer.
+sidebar:
+    order: 4
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+
+A todo in AIDE is a checkbox line in a note, so there's no separate todo database: `- [ ] Call the bank` in any note is a todo, and the Todos screen gathers every open one from all your notes. Checking it off anywhere changes that line in its note.
+
+## Writing todos
+
+A todo is a list item with a one-character status in brackets: `- [ ]`, `* [ ]` or `+ [ ]`, indented as deep as you like. Lines inside fenced code blocks aren't todos.
+
+| Status | Means | Open |
+| --- | --- | --- |
+| `[ ]` | to do | yes |
+| `[/]` | in progress | yes |
+| `[<]` | scheduled for later | yes |
+| `[x]` `[X]` | done | no |
+| `[-]` | cancelled | no |
+| `[>]` | migrated: moved to another day | no |
+| any other character | as written, counted as to do | yes |
+
+Only done (`[x]`) counts as completed work in [Review](/docs/guides/search-graph-review/).
+
+### Dates, priority and other fields
+
+AIDE reads the fields of the Obsidian Tasks plugin (emoji) and of Dataview (`[key:: value]`, or `(key:: value)`). Both are always read; when a field appears twice, the first wins.
+
+| Field | Tasks emoji | Dataview |
+| --- | --- | --- |
+| due | `📅 2026-10-24` | `[due:: 2026-10-24]` |
+| scheduled | `⏳ 2026-10-23` | `[scheduled:: 2026-10-23]` |
+| start | `🛫 2026-10-20` | `[start:: 2026-10-20]` |
+| created | `➕ 2026-10-18` | `[created:: 2026-10-18]` |
+| done | `✅ 2026-10-22` | `[completion:: 2026-10-22]` |
+| cancelled | `❌ 2026-10-22` | `[cancelled:: 2026-10-22]` |
+| priority | `🔺` highest, `⏫` high, `🔼` medium, `🔽` low, `⏬` lowest | `[priority:: high]` |
+| recurrence | `🔁 every week` | `[repeat:: every week]` |
+| estimate | — | `[estimate:: 25m]`, `1h`, `1h30m` or plain minutes |
+
+The editor highlights these fields as you type. AIDE reads a recurrence rule but doesn't create the next occurrence when you complete the todo.
+
+Also read from a todo's text:
+
+- **Time block**, as the Day Planner plugin writes it: `09:00 - 10:30` or `9:00` at the start of the text. A block whose end is before its start ends the next day.
+- **Tags**: `#tag`, which must contain something other than digits (`#2026` isn't a tag).
+- **Contexts and people**: `@name`.
+
+```markdown
+- [ ] 09:00 - 10:00 Write the quarterly report ⏫ 📅 2026-10-24 #work
+- [/] Review Mina's draft @mina [estimate:: 45m]
+- [ ] Renew the passport [due:: 2026-11-30] [priority:: high]
+- [x] Pay rent ✅ 2026-10-01
+```
+
+### Memos
+
+A todo's memo is a quote indented under it, with no blank line between:
+
+```markdown
+- [ ] Call the bank [estimate:: 15m]
+    > Ask about the transfer fee.
+    >
+    > Account ends in 1234.
+```
+
+The memo shows under the todo's title on the Todos screen, and it moves with the todo when the todo moves to another day.
+
+### Completion dates
+
+When you check a todo off, AIDE appends today's date, ` ✅ 2026-10-22` (or `[completion:: 2026-10-22]` if you write Dataview fields). Unchecking it removes the date again. **Completion date** in **Settings › Todos** decides when this happens; Review counts completed todos by that date.
+
+## The Todos screen
+
+The **Todos** screen shows the number of open todos and switches between **Today** and **All**. Your choice is remembered on the device.
+
+**Today** is the day in order:
+
+- **All day**: today's all-day calendar events.
+- **Schedule**: today's timed calendar events (read-only) together with today's time-blocked todos, by start time.
+- **Overdue**: todos whose due or scheduled date has passed.
+- **No time yet**: today's todos without a time block.
+
+**All** groups every open todo the way your [view preset](#view-presets) says.
+
+A todo counts as today's when it's in today's daily note or its due (or scheduled) date is today.
+
+### Adding todos
+
+**+** (**Add todo**) asks **Add to today** and adds the line under the **Todo** heading of today's daily note, creating the note or the heading if needed. In the Scribble and GTD presets it asks **Add to inbox** and adds it to your inbox note instead. In Time blocking you can type the block first: `09:00 - 10:00 Focus`. The heading and the inbox note are set in **Settings › Todos**.
+
+You can also just type a todo into any note.
+
+### Working with a todo
+
+Click a todo to open its note at that line. Its menu (right-click on the Mac and Linux, touch and hold on the iPhone; on the iPhone, swipe left for **Done** and right for **Start**) has:
+
+- **Done**, **In progress**, **To do**, **Cancel**, and **Migrated** in the Bullet Journal preset.
+- **Move to today** and **Move to tomorrow**: the todo, its memo and its subtasks move to that day's daily note, and the line where it was becomes `[>]`. An earlier day's group has a **Move to today** button for all of its todos.
+- **Add memo…** or **Edit memo…**: the memo under the todo.
+- **Set time…**: how long it should take, as `25m`, `1h` or `1h30m`. AIDE writes it as `[estimate:: …]` and shows it as a timer chip.
+- **Schedule…** (today's todos): a start and an end, such as `09:00` and `10:30`; the end can be left out. AIDE writes it as the todo's time block. **Remove** takes it away.
+- **Focus for 25m**: starts a focus timer for the todo.
+
+### Focus timer
+
+**Focus for** runs a timer for the todo's estimate, else its time block's length, else 25 minutes. A bar on top of the list shows the todo's title and the time left, with **Done**, which checks the todo off, and **Stop**. When the time is up you get a notification, even with AIDE closed. One focus runs at a time per vault, and it survives relaunching the app. Nothing is written to the note until you press **Done**.
+
+For counted work-and-break cycles, see the [Pomodoro plugin](/docs/plugins/pomodoro/).
+
+### The assistant's proposals
+
+The [assistant](/docs/guides/assistant/) can propose changes to your todos: times, estimates, moves, new todos. They wait on the Todos screen under the todo they change, and new todos under **Proposed**, until you take (**✓**) or drop (**✕**) them, or **Take all**.
+
+## View presets
+
+The preset menu in the Todos header, or **View** in **Settings › Todos**, picks how **All** is grouped. It changes only the grouping and where **+** adds a todo; your notes stay the same.
+
+| Preset | Groups | New todos go to |
+| --- | --- | --- |
+| **Simple** | Overdue, Today, Upcoming, then each earlier daily note and each other note | today's daily |
+| **Scribble** | one group per note, nothing else | the inbox note |
+| **Time blocking** | Today's blocks in time order, Today, no time yet, then Everything else | today's daily |
+| **GTD** | Inbox (todos in the inbox note), In progress (`[/]`), Next actions, Waiting for (`#waiting`), Someday / maybe (`#someday`) | the inbox note |
+| **Eisenhower** | Do now — urgent & important, Schedule — important, Delegate — urgent, Later — neither | today's daily |
+| **Bullet Journal** | each day's log, newest first, then other notes as collections; adds **Migrated** to a todo's menu | today's daily |
+
+In Eisenhower, a todo is important when its priority is high or highest, and urgent when it's due or scheduled within two days. The [Eisenhower plugin](/docs/plugins/eisenhower/) draws the same four quadrants as a matrix tab.
+
+## Settings › Todos
+
+| Setting | Choices | Default |
+| --- | --- | --- |
+| **View** | the six presets | Simple |
+| **Write fields as** | **Emoji (📅 2026-10-10)**, **Dataview (\[due:: 2026-10-10\])** | Emoji |
+| **Completion date** | **Always**, **Except on that day's daily**, **Never** | Always |
+| **Carry open todos** | **Off**, **Move, mark source \[>\]**, **Move, strike through (이월)** | Off |
+| **Add under heading** | a heading name; empty adds at the end of the note | `Todo` |
+| **Inbox note** | a note path | `inbox` |
+
+**Except on that day's daily** leaves out the date when you complete a todo in the daily note of that same day, where the note's date already says when.
+
+### Carrying open todos
+
+With **Carry open todos** on, a new daily note gets the previous daily note's open top-level todos (`- [ ] ` lines that aren't indented). The previous note's lines are then marked: **Move, mark source \[>\]** turns them into `- [>]`, migrated, and **Move, strike through (이월)** turns them into `- [x] ~~…~~ (이월)`.
+
+Carrying needs `{{slot todo-carry.open}}` in your daily template, which is where the todos go:
+
+```markdown
+## Todo
+{{slot todo-carry.open}}
+```
+
+In a local vault, AIDE carries the todos itself. With a server or a desktop host, the [Todo carry](/docs/plugins/todo-carry/) plugin does it and needs to be turned on.
+
+<LinkCard title="Daily notes and templates" description="Template variables, slots and the daily note's folder and format." href="/docs/guides/periodic-notes/" />

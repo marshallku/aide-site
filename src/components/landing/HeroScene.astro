@@ -1,0 +1,121 @@
+---
+// Place <HeroScene /> inside a hero section with position: relative and a defined height.
+import mark from "#assets/aide/mark.svg?raw";
+---
+
+<div class="hero-scene" aria-hidden="true">
+    <div class="hero-scene-fallback" set:html={mark} />
+    <canvas class="hero-scene-canvas"></canvas>
+</div>
+
+<script>
+    const initialize = () => {
+        document.querySelectorAll<HTMLElement>(".hero-scene:not([data-initialized])").forEach((wrapper) => {
+            wrapper.dataset.initialized = "true";
+            const canvas = wrapper.querySelector("canvas");
+            const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+            const motion = matchMedia("(prefers-reduced-motion: reduce)");
+            if (!canvas || motion.matches || connection?.saveData || window.innerWidth < 480) return;
+            const probe = document.createElement("canvas");
+            const gl = probe.getContext("webgl2");
+            if (!gl) return;
+            gl.getExtension("WEBGL_lose_context")?.loseContext();
+            let idle = false;
+            let visible = false;
+            let started = false;
+            let removed = false;
+            let scene: { dispose(): void } | undefined;
+            const fail = () => {
+                wrapper.classList.remove("is-ready");
+                scene?.dispose();
+            };
+            const start = async () => {
+                if (!idle || !visible || started || removed) return;
+                started = true;
+                try {
+                    const { mountHeroScene } = await import("#scripts/hero-scene");
+                    if (removed || motion.matches) return;
+                    canvas.addEventListener("hero-scene-ready", () => wrapper.classList.add("is-ready"), {
+                        once: true,
+                    });
+                    scene = mountHeroScene(canvas, { onFail: fail });
+                } catch {
+                    fail();
+                }
+            };
+            const observer = new IntersectionObserver(([entry]) => {
+                visible = entry.isIntersecting;
+                void start();
+            });
+            observer.observe(wrapper);
+            const onIdle = () => {
+                idle = true;
+                void start();
+            };
+            const idleId =
+                typeof window.requestIdleCallback === "function"
+                    ? window.requestIdleCallback(onIdle)
+                    : window.setTimeout(onIdle, 200);
+            const onMotion = () => {
+                if (motion.matches) fail();
+            };
+            motion.addEventListener("change", onMotion);
+            document.addEventListener(
+                "astro:before-swap",
+                () => {
+                    removed = true;
+                    observer.disconnect();
+                    motion.removeEventListener("change", onMotion);
+                    if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idleId);
+                    clearTimeout(idleId);
+                    scene?.dispose();
+                },
+                { once: true },
+            );
+        });
+    };
+    initialize();
+    document.addEventListener("astro:page-load", initialize);
+</script>
+
+<style>
+    .hero-scene {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        background: radial-gradient(ellipse at center, rgb(88 86 214 / 12%), transparent 65%);
+    }
+    .hero-scene-fallback,
+    .hero-scene-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        transition: opacity 600ms;
+    }
+    .hero-scene-fallback {
+        display: grid;
+        place-items: center;
+        color: #5856d6;
+        opacity: 1;
+    }
+    .hero-scene-fallback :global(svg) {
+        width: auto;
+        height: 50%;
+        max-width: 70%;
+    }
+    .hero-scene-canvas,
+    .hero-scene.is-ready .hero-scene-fallback {
+        opacity: 0;
+    }
+    .hero-scene.is-ready .hero-scene-canvas {
+        opacity: 1;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .hero-scene-fallback,
+        .hero-scene-canvas {
+            transition: none;
+        }
+    }
+</style>

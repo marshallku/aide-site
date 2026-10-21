@@ -1,0 +1,318 @@
+---
+title: aidectl
+description: The command-line client for your AIDE notes, its commands and flags, how it finds your vault or server, and how to add your own commands.
+sidebar:
+    order: 1
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+`aidectl` reads and writes your AIDE notes from a terminal, a script, an editor or a status bar. It goes through AIDE's own note rules, so a write never overwrites an edit it didn't see. It knows nothing about any particular workflow: you compose `get`, `put`, `append` and `toggle` yourself.
+
+## Install
+
+`aidectl` ships with the desktop app on macOS and Linux. You don't install it separately:
+
+- The install script links `~/.local/bin/aidectl` to the copy inside `AIDE.app` on macOS, and puts it in `~/.local/bin` on Linux (or `<prefix>/bin` with `--prefix`).
+- The Homebrew cask (`brew install --cask marshallku/tap/aide`) links it onto your `PATH` too.
+- It updates with the app.
+
+Run `aidectl help` for the command list, with any extension commands you've added at the end.
+
+## Pick what it talks to
+
+`aidectl` works on one of two targets:
+
+- **A vault**: a notes folder on this computer. When the AIDE app has that folder open, `aidectl` talks to the app over its [local socket](/docs/developers/local-api/). When a [desktop host](/docs/self-hosting/desktop-host/) serves it, `aidectl` talks to the host, with the whole server behind it. When nothing has it open, `aidectl` opens the folder itself for the length of one command, with the same note rules, and lets it go before it exits.
+- **A server**: an AIDE server URL and a token.
+
+It takes the first of these that names a target:
+
+| Source | Vault | Server |
+| --- | --- | --- |
+| Flags before the command | `--vault DIR` | `--server URL` |
+| Environment | `AIDE_VAULT` | `AIDE_URL` |
+| Config file | `vault=` | `url=` |
+
+Each source names a vault or a server, not both; one that names both stops with a usage error. A server's token comes from `AIDE_TOKEN`, else from `token=` in the config file.
+
+```sh
+aidectl --vault ~/Notes daily
+AIDE_URL=https://aide.example.ts.net AIDE_TOKEN=aide_p_… aidectl todos
+```
+
+<Aside type="caution" title="An open vault that doesn't answer">
+If the app has the vault open but its socket doesn't answer, `aidectl` stops instead of waiting: `… is open in AIDE, but … doesn't answer for it: update or restart the app (or close the vault there)`. A folder that a server keeps its notes in is refused too: talk to that server instead.
+</Aside>
+
+### The config file
+
+`~/.config/aidectl/config`, or the file `AIDECTL_CONFIG` names. One `key=value` per line; lines starting with `#` are skipped. A missing default file is fine; a missing file named by `AIDECTL_CONFIG` is an error.
+
+```ini
+# a notes folder on this computer (absolute, or starting with ~/)
+vault=~/Notes
+
+# or a server
+# url=https://aide.example.ts.net
+# token=aide_p_…
+
+# a token only the extension aidectl-<name> gets
+# token.sync=aide_p_…
+```
+
+`vault=` in the file must be an absolute path (or start with `~/`); `--vault` and `AIDE_VAULT` may be relative to the current folder.
+
+### A token for a server
+
+On your own server, use a plugin token scoped to what the caller may touch, minted with the server's `aide plugin-token` command; [Build a server plugin](/docs/developers/server-plugins/) explains tokens and scopes.
+
+## Notes and paths
+
+`<path>` is a note path (`topics/k8s`) or the file it mirrors (`topics/k8s.md`); the note path wins when both exist. Commands that take an id (`toggle`) use the note id that `--json` output and `todos` print.
+
+## Commands
+
+### get
+
+```sh
+aidectl get <path> [--json]
+```
+
+Prints the note's Markdown body. `--json` prints the whole note instead: `id`, `path`, `kind`, `title`, `body`, `version`, `todos`, `updatedAt`, and `period` / `periodStart` for a journal note.
+
+### put
+
+```sh
+aidectl put <path> --create-only [--file f]
+aidectl put <path> --base-version N [--file f]
+```
+
+Writes a whole body, from `--file` or standard input (`--file -` also reads standard input). You must pass exactly one of:
+
+- `--create-only`: create the note; exit code 3 if the path is already taken. A path ending in `.md` keeps that file name as written.
+- `--base-version N`: replace the body only if the note is still at version `N`. If it moved on, nothing is written, your body is saved to a temporary file whose path is printed, and the exit code is 4.
+
+On success it prints the note as JSON.
+
+```sh
+v=$(aidectl get topics/k8s --json | jq .version)
+aidectl get topics/k8s | sed 's/old/new/' | aidectl put topics/k8s --base-version "$v"
+```
+
+### append
+
+```sh
+aidectl append <path> [--heading H] [--create-heading] [--if-absent] [--text T] [--json]
+```
+
+Adds text (from `--text`, else standard input) at the end of a heading's section, or at the end of the note without `--heading`. It needs no version: if someone edits the note at the same moment, AIDE reads it again and retries.
+
+| Flag | Effect |
+| --- | --- |
+| `--heading H` | Append under the heading whose text is `H`. Without `--create-heading`, a missing heading is "not found" (exit 5). |
+| `--create-heading` | Add `## H` at the end of the note when the heading is missing. |
+| `--if-absent` | Skip the append when the same lines already stand together in that section; prints `already there`. |
+| `--json` | Print `id`, `path`, `version` and `appended` (true or false). |
+
+```sh
+aidectl append daily/2026-10-22 --heading Log --create-heading --text "- 14:10 deployed v2"
+```
+
+### edit
+
+```sh
+aidectl edit <path>
+```
+
+Opens the note in `$VISUAL`, else `$EDITOR`, else `vi`, and saves it back under the version it was read at. While your editor is open, `aidectl` lets go of the vault, so the app can open it. If the note changed meanwhile, nothing is written, your text stays in the temporary file it names, and the exit code is 4. Closing without changes writes nothing.
+
+### daily and periodic
+
+```sh
+aidectl daily [YYYY-MM-DD] [--json | --edit]
+aidectl periodic <period> <date> [--json | --edit]
+```
+
+`daily` prints today's daily note (or that day's), creating it from your daily template if it doesn't exist. `periodic` does the same for the note of `daily`, `weekly`, `monthly`, `quarterly` or `yearly` that contains `<date>`. The date is `YYYY-MM-DD`, or `today`; `weekly` also takes an ISO week (`2026-W43`) and `monthly` a month (`2026-10`). A new note goes where your journal settings put that period. `--edit` opens it in your editor instead of printing it.
+
+### todos
+
+```sh
+aidectl todos [--json]
+```
+
+Every open todo across your notes, one per line, tab-separated: note id, line (0-based), note version, note path, text. `--json` adds `noteTitle`, `indent`, `due`, `scheduled` and `noteDate` (the day of the daily note it's in).
+
+### toggle
+
+```sh
+aidectl toggle <noteId> --line L --version V --text T
+```
+
+Checks off (or unchecks) the todo on line `L`, as read at version `V`, if that line still reads `T`. All three flags are required. If the note changed since, it tries again only when the same line still holds that same open todo; a todo with the same text on another line is a different task, so it never searches for it. Otherwise the exit code is 4: list the todos again.
+
+```sh
+aidectl todos | grep "call Mina" | head -1 | while IFS=$'\t' read -r id line version path text; do
+    aidectl toggle "$id" --line "$line" --version "$version" --text "$text"
+done
+```
+
+### search
+
+```sh
+aidectl search <query…> [--limit N] [--json]
+```
+
+Full-text search. Prints path and title, tab-separated, for each match. `--limit` defaults to 20; the most the server returns is 50.
+
+### capture
+
+```sh
+aidectl capture [text… | -]
+```
+
+Adds a scratch note, as the apps' quick capture does. The text comes from the arguments, or from standard input with `-` or no arguments; it's trimmed, and empty text is a usage error. Prints the new note's path (`--json`: the note).
+
+```sh
+pbpaste | aidectl capture
+```
+
+### status
+
+```sh
+aidectl status [--json | --waybar] [--format T]
+```
+
+One look at your day: open todos, overdue ones, ones due today, scratch notes, today's daily note, and the next calendar event. It never creates the daily note.
+
+- Overdue means due (else scheduled) before today; due today includes undated todos in today's daily note, as the Todos tab counts them. "Today" is in the time zone of your settings.
+- The next event is the first timed event from the Google Calendar plugin in a calendar you show. It appears only when `aidectl` talks to a server as its owner; through a vault or with a plugin token it's left out.
+
+Without flags it prints a short summary:
+
+```text
+12 open todos · 2 overdue · 3 due today
+4 scratch notes
+Today: daily/2026-10-22
+Next: 15:00 Design review
+```
+
+`--format` sets your own line with these placeholders; an unknown one is a usage error:
+
+| Placeholder | Value |
+| --- | --- |
+| `{open}` | Open todos |
+| `{overdue}` | Overdue todos |
+| `{today}` | Todos due today |
+| `{scratch}` | Scratch notes |
+| `{date}` | Today, `YYYY-MM-DD` |
+| `{daily}` | Today's daily note's title, empty if it doesn't exist |
+| `{next}` | `15:04 Title` today, `Mon 15:04 Title` on a later day, empty without one |
+
+`--json` prints `date`, `open`, `overdue`, `today`, `scratch`, `daily` (`id`, `path`, `title`, or `null`) and `next` (`title`, `start`, `end`, when there is one). `--json` doesn't combine with `--waybar` or `--format`.
+
+`--waybar` prints one line of JSON for a [Waybar](https://github.com/Alexays/Waybar) custom module: `text` (your `--format`, default `{open}`), `tooltip` (the summary above), and `class` / `alt` set to `overdue` when anything is overdue, else `ok`. On any failure it still prints a line, with `text` `!`, the error in `tooltip` and class `error`, and exits 0, because Waybar hides a module whose command fails.
+
+### watch
+
+```sh
+aidectl watch (--waybar | --json | --format T) [--interval 30s]
+```
+
+Prints the status again whenever it changes, one line per change, checking every `--interval` (default `30s`, at least `1s`). It needs one of the three output flags. Each check opens the vault or server and lets it go, so a vault is never held between checks. A failed check prints the error line with `--waybar`, or tells standard error once, and watching goes on.
+
+A Waybar module that updates by itself:
+
+```json
+"custom/aide": {
+    "exec": "aidectl watch --waybar --format '{today} today · {overdue} late'",
+    "return-type": "json",
+    "on-click": "aidectl open todos"
+}
+```
+
+### open
+
+```sh
+aidectl open [today | scratch | wiki | todos | <period> | YYYY-MM-DD | <path> | aide://…] [--print]
+```
+
+Opens the AIDE app at that place, through `open` on macOS or `xdg-open` on Linux. Without an argument it opens today's daily note. A period (`weekly`, …) opens the current note of that period; a date opens that day's daily note; a note path opens that note (only this form needs the vault or server, to look up the note's id). An `aide://` link is checked against the links the apps accept: `aide://note/<id>`, `aide://today`, `aide://periodic/<period>[/YYYY-MM-DD]`, `aide://scratch`, `aide://wiki`, `aide://todos`.
+
+`--print` prints the link instead of opening it.
+
+### mcp
+
+```sh
+aidectl mcp
+```
+
+An MCP server on standard input and output, for Claude Code and other MCP clients. See [MCP and the Claude app](/docs/developers/mcp/). A vault needs its desktop host running.
+
+### plugins list
+
+```sh
+aidectl plugins list [--json]
+```
+
+The extension commands found (see below): name, description, path, tab-separated, or why one can't run.
+
+## Exit codes
+
+| Code | Meaning |
+| --- | --- |
+| 0 | Done |
+| 1 | Error |
+| 2 | Usage: a wrong flag or argument, or no vault or server configured |
+| 3 | Path taken (`put --create-only`) |
+| 4 | Conflict: the note moved on; nothing was written |
+| 5 | Not found: the note, or the heading for `append` |
+
+An extension command exits with its own code (128 plus the signal number when a signal ended it).
+
+## Extensions
+
+Like `git` and `kubectl`, any other command `foo` runs an executable named `aidectl-foo`. Built-in commands always win, and `help` and `plugins` are reserved.
+
+- **Where**: `~/.config/aidectl/plugins/` (or `AIDECTL_PLUGINS_DIR`) first, then each folder on `PATH`. The first file found with that name is the one used. Names are lowercase letters, digits, `-` and `_`, up to 64 characters.
+- **Trust**: an extension runs only if the file and every folder on its way (links resolved) belong to you or root and can't be written by others (sticky folders such as `/tmp` excepted). An unsafe file found first is refused, never skipped for a later one. Nothing ever runs from the vault.
+- **Environment**: the extension gets your environment without `AIDE_URL`, `AIDE_TOKEN`, `AIDE_VAULT` and `AIDECTL_*`, plus:
+
+| Variable | Value |
+| --- | --- |
+| `AIDECTL_BIN` | The `aidectl` that ran it, to call back |
+| `AIDECTL_PLUGIN_NAME` | Its name (`foo`) |
+| `AIDECTL_VERSION` | `aidectl`'s version |
+| `AIDECTL_CONFIG` | Only when you named a config file |
+| `AIDE_VAULT` | The resolved vault, when the target is one |
+| `AIDE_URL`, `AIDE_TOKEN` | The resolved server; the token only when it came from `AIDE_TOKEN` or from `token.foo=` in the config file, never from the general `token=` |
+
+With nothing configured the extension still runs, without a target. A wrong configuration (a vault and a server in one source, a bad path, a missing named config file) stops it, so it never runs against a target you didn't ask for. Ctrl-C at a terminal reaches the extension alone.
+
+- **Metadata**: `aidectl help` and `plugins list` run `aidectl-foo --aidectl-metadata` and expect, within 2 seconds and 64 KiB, `{"schemaVersion": 1, "name": "…", "description": "…", "version": "…"}`.
+
+A minimal extension that prints today's open todo count:
+
+```sh
+#!/bin/sh
+# ~/.config/aidectl/plugins/aidectl-count  (chmod 755)
+if [ "$1" = "--aidectl-metadata" ]; then
+    echo '{"schemaVersion": 1, "name": "count", "description": "Count open todos", "version": "1.0.0"}'
+    exit 0
+fi
+exec "$AIDECTL_BIN" status --format '{open} open, {today} today'
+```
+
+```sh
+aidectl count
+```
+
+## Example
+
+Append a line to today's daily note from a git hook:
+
+```sh
+aidectl append "$(aidectl daily --json | jq -r .path)" --heading Log --create-heading \
+    --text "- $(date +%H:%M) committed $(git log -1 --format=%s)"
+```

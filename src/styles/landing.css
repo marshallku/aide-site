@@ -1,0 +1,287 @@
+/* The landing page's surfaces and type, on top of AIDE's tokens (tokens.css). */
+
+:root {
+    --page: #fbfbfd;
+    --page-raised: #ffffff;
+    --ink: var(--text);
+    --ink-2: var(--text-secondary);
+    --ink-3: var(--text-tertiary);
+    --line: rgba(60, 60, 67, 0.12);
+    --line-strong: rgba(60, 60, 67, 0.2);
+    --brand-1: #2b2d52;
+    --brand-2: #5856d6;
+    --glow: rgba(88, 86, 214, 0.22);
+    --shadow-window:
+        0 1px 1px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(30, 30, 60, 0.08), 0 40px 80px -20px rgba(30, 30, 60, 0.22);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --section-gap: clamp(6rem, 12vw, 10rem);
+    --gutter: clamp(1rem, 4vw, 2.5rem);
+    --max: 76rem;
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    --page: #0c0c0f;
+    --page-raised: #16161a;
+    --line: rgba(235, 235, 245, 0.1);
+    --line-strong: rgba(235, 235, 245, 0.18);
+    --glow: rgba(110, 108, 240, 0.28);
+    --shadow-window:
+        0 1px 1px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35), 0 50px 100px -20px rgba(0, 0, 0, 0.6);
+    color-scheme: dark;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+}
+
+:lang(ko) body {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    line-height: 1.7;
+}
+
+a {
+    color: inherit;
+}
+
+img,
+svg,
+canvas {
+    display: block;
+}
+
+.wrap {
+    width: min(100% - 2 * var(--gutter), var(--max));
+    margin-inline: auto;
+}
+
+.eyebrow {
+    display: inline-block;
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--brand-2);
+}
+
+:root[data-theme="dark"] .eyebrow {
+    color: #a5a3ff;
+}
+
+.display {
+    margin: 0;
+    font-size: clamp(2rem, 3.6vw, 3rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+}
+
+:lang(ko) .display {
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+}
+
+.lede {
+    margin: 1.25rem 0 0;
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    color: var(--ink-2);
+    text-wrap: pretty;
+    max-width: 40rem;
+}
+
+.points {
+    display: grid;
+    gap: 0.75rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink-2);
+}
+
+.points li {
+    display: grid;
+    grid-template-columns: 1.25rem 1fr;
+    gap: 0.6rem;
+    align-items: start;
+}
+
+.points li::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: 0.55em;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--brand-2), var(--accent));
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding: 0 1.25rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+        transform 0.2s var(--ease-out),
+        background 0.2s,
+        box-shadow 0.2s;
+}
+
+.button:active {
+    transform: scale(0.98);
+}
+
+.button-primary {
+    background: var(--ink);
+    color: var(--page);
+}
+
+.button-primary:hover {
+    box-shadow: 0 6px 20px -6px var(--glow);
+}
+
+.button-ghost {
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.button-ghost:hover {
+    background: var(--fill);
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* Reveal on scroll: [data-reveal] fades up once it is on screen (scripts/reveal.ts adds .is-in). */
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+        opacity 0.7s var(--ease-out),
+        transform 0.7s var(--ease-out);
+    transition-delay: var(--delay, 0s);
+}
+
+[data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+}
+
+.no-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+/* A product picture's frame: a card like AIDE's main card, lifted off the page. */
+.surface {
+    position: relative;
+    border-radius: 18px;
+    background: var(--card);
+    box-shadow:
+        var(--shadow-window),
+        0 0 0 1px var(--line);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow: hidden;
+}
+
+.surface-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.5rem;
+    padding: 0 1rem;
+    border-bottom: 1px solid var(--separator);
+    color: var(--text-secondary);
+    font-size: 12.5px;
+}
+
+.surface-bar .lights {
+    display: flex;
+    gap: 5px;
+    margin-right: 0.5rem;
+}
+
+.surface-bar .lights i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--separator);
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: var(--chip-inset-y, 2px) 0.55rem;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Without JavaScript nothing plays: the product pictures show their finished state. */
+.no-js .line,
+.no-js .event,
+.no-js .phone,
+.no-js .proposal,
+.no-js .home,
+.no-js .window {
+    opacity: 1;
+    transform: none;
+}

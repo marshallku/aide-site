@@ -1,0 +1,113 @@
+---
+title: Morning briefing
+description: Every morning at 07:00, the weather, your schedule, up to three suggested todos, your health data and yesterday, written by your AI into the day note.
+sidebar:
+    order: 13
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+The morning briefing gathers what your day looks like and has your AI write it up as one short page, waiting for you when you wake up.
+
+<PluginFacts id="briefing" />
+
+## What it does
+
+At 07:00 (or the time you set) the plugin:
+
+1. Creates today's daily note if it doesn't exist yet, so the plugins that fill a new daily, such as [Todo carry](/docs/plugins/todo-carry/) and [Google Calendar](/docs/plugins/gcal/)'s agenda, have run by the time you look.
+2. Gathers the day's material:
+    - **Weather**: the Korea Meteorological Administration (KMA) forecast for your neighborhood, or any forecast URL you give it.
+    - **Schedule**: today's events and the next two days', from your Google calendars.
+    - **Open todos**: your open top-level todos, for the AI to pick from.
+    - **Yesterday**: yesterday's daily note.
+    - **Health**: the three newest files in a folder of health exports, if you name one.
+3. Asks your AI to write the briefing from that material only: the weather (morning and afternoon, low and high, chance of rain, what to wear), today's schedule in detail with a preview of the next two days, up to three todos that are realistic today (each as "[note] todo", offered as suggestions, never as pressure), yesterday's steps, sleep and exercise with the three-day trend, what stood out yesterday and what's unresolved, and one gentle line for the day. Anything without material is left out.
+4. Writes it under `## ☀️ Morning briefing` in its own section of the day note, `briefings/{date}` (for example `briefings/2026-10-22`, titled "2026-10-22 (Thu) briefing"). Running again the same day replaces that section, and only that section.
+5. Posts "☀️ Today's briefing" to the Feed, with the briefing as its text, and notifies you.
+
+Material that can't be read is skipped: without weather settings there's no weather paragraph; without Google files there's no schedule. If the AI call fails, the plugin tries again every 10 minutes until it succeeds or the next morning comes. A morning missed while the computer was off or asleep is made up if it wakes within 3 hours.
+
+## Before you start
+
+- A [desktop host](/docs/self-hosting/desktop-host/) or your own server.
+- An AI in **Settings › AI**: **Anthropic API key** or **My gateway**. The briefing has no AI-free form.
+- Optional, for the schedule: the same Google files as the [Google Calendar](/docs/plugins/gcal/#before-you-start) plugin. The briefing reads them on its own, so it works without the Google Calendar plugin turned on.
+- Optional, for the weather: a neighborhood in Korea (KMA covers Korea only), or a forecast URL anywhere else.
+
+## Set it up
+
+<Steps>
+
+1. If you want weather or health data, add them to `plugins.json` in your host's data folder ([where that is](/docs/plugins/overview/#local-settings)) and restart the host. See [Local keys](#local-keys).
+2. Turn the plugin on: **Morning briefing** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+3. Set **Time** if 07:00 doesn't suit you.
+4. To read the briefing from your daily note, link the day note from your daily template, or set **Write into** to `daily`.
+
+</Steps>
+
+## Settings
+
+<PluginSettings id="briefing" defaults={{ at: "07:00", push: "force (always notify)", note: "briefings/{date}", prompt: "" }} />
+
+**Notification.** Until you choose, the briefing notifies you every morning, as `force` does, although the picker shows **Default**. Choose `never` to read it in the Feed only. Choosing **Default** yourself lets the Feed's sorting decide whether it's worth a notification.
+
+**Write into.** `daily` puts the briefing into today's daily note, in its own section at the end (or where your template puts `{{slot briefing.morning}}`). Any other value is a note path, with `{date}` replaced by the day in `YYYY-MM-DD`.
+
+**Prompt.** Your own instructions replace the built-in ones entirely. The plugin still adds the date and all the gathered material after them, so write what you want done with it, for example "Three bullet points: weather, the first meeting, one todo."
+
+### Local keys
+
+Under `"briefing"` in `plugins.json`:
+
+| Key           | What it does                                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `weather`     | The KMA forecast location: `code`, the ten-digit administrative code of your neighborhood (동), and `lat` and `lon`, its coordinates. Korea only. |
+| `weatherUrl`  | Instead of `weather`: any URL that returns a forecast as text or JSON. The plugin hands the first 6 KiB of the answer to the AI as it is. |
+| `healthDir`   | A folder of health exports (steps, sleep, workouts), one file per day with the date in its name. The three newest by name are used. |
+| `credentials` | The Google OAuth client file. Default `~/.config/life-assistant/credentials.json`.                                  |
+| `tokenFile`   | The Google token file. Default `~/.config/life-assistant/google-token.json`.                                        |
+
+```json
+{
+    "timezone": "Asia/Seoul",
+    "plugins": {
+        "briefing": {
+            "weather": { "code": "1111056000", "lat": "37.613", "lon": "126.9623" },
+            "healthDir": "~/Health/daily"
+        }
+    }
+}
+```
+
+The location above is a neighborhood of Jongno-gu, Seoul. The KMA forecast is read without an API key.
+
+<Aside>
+The schedule comes from the calendars ticked in Google Calendar's own list, not from the **Show** switches in AIDE's **Calendars…** sheet.
+</Aside>
+
+## Troubleshooting
+
+### The briefing didn't arrive
+
+- Check that the plugin is on and that **Settings › AI** isn't **Rules (no AI)**.
+- The host must be running at the briefing time, or wake within 3 hours of it. A Mac that stays asleep all morning skips that day.
+- Look in the host log (its path is under **Log** in Settings › Host) for `daily task failed`, followed by the reason.
+
+### The weather paragraph is missing or says the forecast failed
+
+Without `weather` or `weatherUrl` there's no weather. If the KMA page didn't answer, the AI is told the lookup failed and leaves the weather out. Check `code`, `lat` and `lon`.
+
+### There's no schedule
+
+The plugin couldn't read the Google files; the host log says `calendar unavailable; briefing without it` with the reason.
+
+### It's in the wrong language
+
+Plugins write in the language of **Settings › Language** (Korean, or English for anything else). The briefing written today keeps its language; tomorrow's follows the change.
+
+## Privacy
+
+The weather request goes from the machine that runs the plugins to the KMA website (or your `weatherUrl`), carrying only the location. Google is read with read-only calendar access. The gathered material (forecast, three days of events, your open todos, yesterday's daily note, your three newest health files) goes to the AI you set in **Settings › AI**, cut to 6 KiB per part. The briefing is stored as a note on your host or server.

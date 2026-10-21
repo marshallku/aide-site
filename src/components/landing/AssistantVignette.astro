@@ -1,0 +1,161 @@
+---
+// The assistant: a planning chat whose answer is proposals to take or drop, with the desktop
+// character beside it saying what Radar noticed.
+import Character from "#components/Character.astro";
+import Icon from "#components/Icon.astro";
+import { COPY, type Lang } from "#lib/landing-copy";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const chat = COPY[lang].assistant.chat;
+const title = lang === "ko" ? "어시스턴트" : "Assistant";
+---
+
+<div class="assistant" data-play>
+    <div class="surface chat" aria-hidden="true">
+        <div class="surface-bar">
+            <Icon name="assistant" size={15} />
+            <span>{title}</span>
+            <span class="mic">
+                <Icon name="mic" size={14} />
+            </span>
+        </div>
+        <div class="messages">
+            <p class="you">{chat.you}</p>
+            <p class="them">{chat.them}</p>
+            {chat.proposals.map((proposal, index) => (
+                <div class="proposal" style={`--i: ${index}`}>
+                    <Icon name={proposal.kind === "schedule" ? "calendar" : "today"} size={16} />
+                    <span class="text">{proposal.text}</span>
+                    <span class="actions">
+                        <span class="chip take">✓ {chat.take}</span>
+                        <span class="chip drop">✕ {chat.drop}</span>
+                    </span>
+                </div>
+            ))}
+        </div>
+    </div>
+    <Character class="buddy" size={112} bubble={chat.bubble} scene="assistant" />
+</div>
+
+<style>
+    .assistant {
+        position: relative;
+        padding-top: 4.5rem;
+    }
+    .chat {
+        margin-right: 3rem;
+    }
+    .mic {
+        margin-left: auto;
+    }
+    .messages {
+        display: grid;
+        gap: 0.75rem;
+        padding: 1.25rem;
+    }
+    .you,
+    .them {
+        max-width: 85%;
+        margin: 0;
+        padding: 0.65rem 0.9rem;
+        border-radius: 16px;
+    }
+    .you {
+        justify-self: end;
+        border-bottom-right-radius: 6px;
+        background: var(--accent);
+        color: var(--on-accent);
+    }
+    .them {
+        border-bottom-left-radius: 6px;
+        background: var(--fill);
+    }
+    .proposal {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.65rem 0.75rem;
+        border-radius: 12px;
+        box-shadow: 0 0 0 1px var(--separator);
+        font-size: 13px;
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    .proposal :global(.icon) {
+        color: var(--accent);
+    }
+    .actions {
+        display: flex;
+        gap: 0.35rem;
+        margin-left: auto;
+    }
+    .take {
+        background: color-mix(in srgb, var(--success) 15%, transparent);
+        color: var(--success);
+    }
+    .drop {
+        background: var(--fill);
+        color: var(--text-secondary);
+    }
+    .is-in .proposal {
+        animation: rise 0.6s var(--ease-out) forwards;
+        animation-delay: calc(0.6s + var(--i) * 0.25s);
+    }
+    .is-playing .proposal:first-of-type .take {
+        animation: take 8s infinite 2s;
+    }
+    @keyframes rise {
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    @keyframes take {
+        0%,
+        20% {
+            background: color-mix(in srgb, var(--success) 15%, transparent);
+            color: var(--success);
+        }
+        26%,
+        60% {
+            background: var(--success);
+            color: #fff;
+        }
+        70%,
+        100% {
+            background: color-mix(in srgb, var(--success) 15%, transparent);
+            color: var(--success);
+        }
+    }
+    .buddy {
+        position: absolute;
+        top: 0;
+        right: -0.5rem;
+    }
+    .buddy :global(.bubble) {
+        left: auto;
+        right: 70%;
+        transform-origin: 100% 100%;
+    }
+    @media (max-width: 560px) {
+        .chat {
+            margin-right: 0;
+        }
+        .text {
+            font-size: 12px;
+        }
+        .actions .drop {
+            display: none;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .proposal {
+            opacity: 1;
+            transform: none;
+        }
+    }
+</style>

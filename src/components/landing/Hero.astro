@@ -1,0 +1,178 @@
+---
+import HeroScene from "#components/landing/HeroScene.astro";
+import { BREW, COPY, docsHref, type Lang } from "#lib/landing-copy";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = COPY[lang].hero;
+---
+
+<section class="hero">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="wrap layout">
+        <div class="text">
+            <p class="eyebrow" data-reveal>
+                {copy.eyebrow}
+            </p>
+            <h1 class="title" data-reveal style="--delay: 0.05s">
+                <span>{copy.title[0]}</span>
+                <span class="gradient">{copy.title[1]}</span>
+            </h1>
+            <p class="lede" data-reveal style="--delay: 0.12s">
+                {copy.lede}
+            </p>
+            <div class="actions" data-reveal style="--delay: 0.18s">
+                <a class="button button-primary" href="#download">
+                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                        <path
+                            fill="currentColor"
+                            d="M16.4 12.6c0-2.4 2-3.5 2-3.6-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8s-1.9-.8-3.1-.8c-1.6 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6s-2.4-.9-2.4-3.6ZM14.2 5.5c.6-.8 1.1-1.8 1-2.9-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-1 2.8 1 .1 2-.5 2.7-1.3Z"
+                        ></path>
+                    </svg>
+                    {copy.primary}
+                </a>
+                <a class="button button-ghost" href={docsHref(lang, "getting-started/introduction")}>
+                    {copy.secondary} →
+                </a>
+            </div>
+            <button
+                class="command"
+                type="button"
+                data-copy={BREW}
+                data-copied={copy.copied}
+                data-reveal
+                style="--delay: 0.24s"
+            >
+                <span class="prompt" aria-hidden="true">
+                    $
+                </span>
+                <code>{BREW}</code>
+                <span class="copy" data-copy-label>
+                    {copy.copy}
+                </span>
+            </button>
+            <p class="requirements" data-reveal style="--delay: 0.28s">
+                {copy.requirements}
+            </p>
+        </div>
+        <div class="visual">
+            <HeroScene />
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(3rem, 8vw, 6.5rem) 0 clamp(2rem, 6vw, 4rem);
+    }
+    .glow {
+        position: absolute;
+        inset: -30% -10% auto 35%;
+        height: 120%;
+        background: radial-gradient(closest-side, var(--glow), transparent 70%);
+        filter: blur(20px);
+        pointer-events: none;
+    }
+    .layout {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        align-items: center;
+        gap: 2rem;
+    }
+    .text {
+        min-width: 0;
+    }
+    .title {
+        margin: 0;
+        font-size: clamp(2.5rem, 5.4vw, 4.4rem);
+        font-weight: 750;
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+    }
+    .title span {
+        display: block;
+    }
+    :lang(ko) .title {
+        font-size: clamp(2.3rem, 5.4vw, 4.4rem);
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+    }
+    .gradient {
+        background: linear-gradient(100deg, var(--brand-2) 0%, var(--accent) 55%, #64d2ff 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 2rem;
+    }
+    .command {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        max-width: 100%;
+        margin-top: 1.5rem;
+        padding: 0.6rem 0.75rem 0.6rem 1rem;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--page-raised);
+        color: var(--ink);
+        font: inherit;
+        cursor: pointer;
+        text-align: left;
+    }
+    .command code {
+        overflow: hidden;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .prompt {
+        color: var(--ink-3);
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+    }
+    .copy {
+        flex: none;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        background: var(--fill);
+        color: var(--ink-2);
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .command:hover .copy {
+        color: var(--ink);
+    }
+    .requirements {
+        margin: 0.9rem 0 0;
+        color: var(--ink-3);
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+    }
+    .visual {
+        position: relative;
+        aspect-ratio: 1;
+        width: 100%;
+    }
+    @media (max-width: 880px) {
+        .layout {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .visual {
+            order: -1;
+            width: min(100%, 22rem);
+            margin: -1rem auto -2rem;
+        }
+    }
+</style>

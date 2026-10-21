@@ -1,0 +1,105 @@
+---
+title: The Feed
+description: How events from plugins and outside services reach you, how AIDE sorts them, and which ones notify you.
+sidebar:
+    order: 7
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+The Feed is one list of everything your plugins and connected services want to tell you, sorted by
+how much it needs you. It is a server feature: it works when your notes are on a desktop host or your
+own server, and is hidden when AIDE keeps notes on a device without a server.
+
+## What an event is
+
+An event is a short message with a title, an optional body (Markdown) and an optional link. Every
+event belongs to a **topic**, such as the briefing's or Gmail's, and AIDE keeps events in a log per
+topic. You have a read position in each topic, so the Feed shows what came after the last thing you
+marked seen.
+
+Events come from two places:
+
+- **Server plugins** running beside your server. For example, the [morning briefing](/docs/plugins/briefing/)
+  posts "☀️ Today's briefing", [Gmail](/docs/plugins/gmail/) posts urgent mail, the
+  [Calendar plugin](/docs/plugins/gcal/) posts reminders before events, and
+  [Recall](/docs/plugins/recall/) says how many cards are due.
+- **Outside publishers**: a script or service of yours that posts to your server with a publish
+  token. See [Publish events to the Feed](/docs/developers/events/).
+
+## How the Feed is sorted
+
+Each event lands in one of four groups, shown in this order:
+
+| Group | What goes there |
+|---|---|
+| **Act on** | Something you have to do: a deadline, an application, a payment. |
+| **Need to know** | Important even if there is nothing to do. |
+| **Might interest you** | It matches what you write about. |
+| **Everything else** | The rest, folded away with its count, for example **Everything else (12)**. Events that haven't been sorted yet wait here too. |
+
+Within a group, the newest event is on top. Under each event you see its topic and, when there is
+one, the reason it was put in that group.
+
+### Who decides
+
+AIDE sorts each event once and keeps the verdict, so every device shows the same groups.
+
+- **With AI** (a model set in **Settings › AI** on the server; see [AI and models](/docs/guides/ai/)):
+  the model reads each event's title and the start of its body (about 2 KB), along with up to 200
+  words taken from the titles and folder names of your wiki pages, which stand for your interests.
+  It picks a group and writes a one-sentence reason in the event's language. A reply that doesn't
+  fit the expected format is thrown away, and the rules sort the events instead.
+- **With rules** (no AI, or when the model fails):
+  - **Act on** when the title or body mentions a deadline word: `deadline`, `due`,
+    `action required`, `expires`, `apply by`, `register by`, or the Korean `마감`, `신청`, `납부`,
+    `시행`, `만료`, `기한`. The reason reads, for example, `mentions "due"`.
+  - **Need to know** when the publisher marked the event's severity high.
+  - **Might interest you** when it mentions a word from your wiki's page titles or folder names.
+    The reason names the word.
+  - **Everything else** otherwise.
+
+## Use the Feed
+
+- **Read an event.** A short event is complete in its row; tap its title to open its link. A
+  longer one, like a briefing or a recap, opens in full: its body rendered as Markdown, with the
+  group, topic, time and reason under the title, and **Open link** in the toolbar when it has one.
+- **Mark all seen.** The check button in the header marks everything the Feed is showing as seen,
+  in every topic at once. You never mark a single event, so nothing unseen gets skipped by
+  accident. The Feed shows up to 50 new events per topic at a time; after you mark them seen, the
+  next ones appear.
+- **Topics.** The Topics button lists every topic with how many events you haven't seen
+  (**3 unseen**). Turn a topic off to stop seeing it in the Feed; turn it back on and you pick up
+  where you left off. A new topic is turned on the first time it shows up.
+- **Refresh.** Pull down on the iPhone, or use the refresh button on Linux.
+
+When nothing is new, the Feed says **You're caught up**.
+
+## Notifications
+
+Your server decides which events notify you, right after it sorts them:
+
+- **Act on** events always notify you.
+- **Need to know** events notify you too, unless you turn that off.
+- **Might interest you** and **Everything else** never notify. They wait in the Feed.
+- A publisher can override this for one event: always notify, or never.
+- An event that is more than an hour old by the time it's sorted doesn't notify, so a backlog
+  never arrives as a burst of alerts.
+- Only topics you have turned on in **Topics** notify, and only for events published after you
+  turned them on.
+
+To stop "need to know" notifications, turn off **Also push "need to know"** in the **Notifications**
+section of Settings on the Mac or iPhone, or **Also notify "need to know"** in
+**Settings › General › Notifications** on Linux. It is on by default, and the setting belongs to
+your account, so it applies to all your devices.
+
+Clicking a notification opens that event, even after you've marked the Feed seen.
+
+<Aside type="note" title="Where notifications arrive">
+The Mac and Linux apps fetch notifications from your server themselves while they run. The iPhone
+needs Apple's push service, which reaches the app through a push relay. No public relay is running
+yet, so the iPhone doesn't get Feed notifications for now.
+</Aside>
+
+The assistant's own reminders (its morning plan, meeting checks and nudges) are separate. They have
+their own schedule and quiet hours, described in [The assistant](/docs/guides/assistant/#speaking-first).

@@ -1,0 +1,182 @@
+---
+title: Recall
+description: Spaced repetition over cards you write in your notes and cards your AI makes from what you wrote, with a morning reminder of what's due.
+sidebar:
+    order: 17
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+Recall helps you remember what you write. You review cards on a forgetting curve in a **Recall** tab,
+every night your AI turns what you newly wrote into cards for you to accept or discard, and every
+morning you're told how many cards are due.
+
+Recall has two halves with the same name. The **device plugin** is the review screen; it works on its
+own, on any device. The **server plugin** makes cards overnight and sends the reminder; it needs a
+server or a [desktop host](/docs/self-hosting/desktop-host/).
+
+<PluginFacts id="recall" kind="device" />
+
+<PluginFacts id="recall" />
+
+## What it does
+
+### Cards you write
+
+Write cards in any note under a card folder (`cards` by default, so `cards/biology`,
+`cards/spanish/verbs`…). There are three forms.
+
+A line with `::` between the front and the back. A list marker in front is fine:
+
+```markdown
+photosynthesis :: how plants make food from light
+- mitochondria :: where a cell makes most of its energy
+```
+
+A line with `:::` makes two cards, one in each direction:
+
+```markdown
+der Hund ::: the dog
+```
+
+A block whose front and back are separated by a line holding only `?`. Use `??` for both directions:
+
+```markdown
+What are the three stages of cellular respiration?
+?
+Glycolysis, the Krebs cycle,
+and the electron transport chain.
+```
+
+A blank line or a heading ends a block. Frontmatter, fenced code, HTML comments, todo lines and lines
+of only tags are never cards. To write `::` in a card without splitting it, put it in a code span or
+write `\::`.
+
+### Reviewing
+
+The **Recall** tab shows how many cards are **Due now**, how many are **New today** and how many are
+**Not yet seen**. Choose **Start review**:
+
+- Each card shows its front. **Show answer** (or <kbd>Space</kbd>) shows the back.
+- Grade it **Again**, **Hard**, **Good** or **Easy** (<kbd>1</kbd> to <kbd>4</kbd>). Each grade shows
+  when you'll see the card next.
+- **Again** brings the card back in 10 minutes. Any other grade schedules it days to years ahead,
+  using FSRS-5 aimed at 90% retention.
+- The most overdue card comes first. Once nothing is due, new cards come, up to **New cards a day**
+  (20) across all your devices.
+
+Each review is one line in a note of this device's own, `recall/log/<device>/<month>`. Every device
+reads all the logs, so your iPhone and your Mac agree on what's due, and no two devices ever edit the
+same note.
+
+### Cards made from your notes
+
+At 22:30 the server plugin gathers the paragraphs you wrote since the last run in `topics` and
+`daily`, and asks your AI for cards. It leaves out frontmatter, code, blocks that plugins wrote (such
+as the briefing), todos and anything that is already a card. It writes at most 10 cards a night into
+`recall/cards/<date>`, each marked as waiting.
+
+- Each passage is sent once. A long one goes in pieces of 4 KB; what doesn't fit tonight waits for
+  the next night, oldest first.
+- On the first night, only notes changed in the last 24 hours count.
+- If the run is retried, the AI isn't asked twice for the same night.
+
+The cards wait in the **Recall** tab under **Made from your notes**. Choose **Accept** or **Discard**
+on each, or **Accept all**. An accepted card joins your reviews; a discarded one is deleted from the
+note. Nothing the AI writes becomes a card until you accept it.
+
+### The morning reminder
+
+At 08:00 the server plugin counts the cards due by the end of the day in your card folders and in
+`recall/cards`, from every device's review log, plus the new cards and those waiting in the inbox. It
+posts one Feed item, "N cards to review today", with what's waiting, and pushes it to your devices.
+When there's nothing at all, it posts nothing.
+
+## Before you start
+
+- **For reviews:** AIDE on an iPhone, Mac or Linux computer. Nothing else.
+- **For cards made from your notes and the reminder:** a server or a desktop host running the
+  server plugins, and an AI set up for it ([AI and models](/docs/guides/ai/)).
+
+## Set it up
+
+<Steps>
+
+1. Install the device plugin: open **Browse plugins** (in **Settings**, under **On this device**;
+   on Linux, **Settings › Device plugins**) and choose **Recall**. Approve **Read and search all
+   notes** and **Read, change and archive notes in recall**, then **Install**. Details are in
+   [Installing device plugins](/docs/plugins/device-plugins/).
+2. Write a few cards in a note under `cards/`, then open the **Recall** tab.
+3. On a server or desktop host, open **Settings** and choose **Recall** under **On the server**
+   (on Linux, **Settings › Plugins › Recall**). Turn on **Enabled**. The plugin starts within a
+   minute.
+4. Install the device plugin on each device you review on. The review log keeps them in step.
+
+</Steps>
+
+## Settings
+
+### Device plugin
+
+In **Settings › On this device › Recall** (on Linux, **Settings › Device plugins › Recall**).
+
+<PluginSettings id="recall" kind="device" defaults={{ prefixes: "cards", newPerDay: "20" }} />
+
+### Server plugin
+
+<PluginSettings
+    id="recall"
+    defaults={{
+        at: "08:00",
+        prefixes: "cards",
+        push: "force",
+        sources: "topics, daily",
+        generateAt: "22:30",
+        maxCards: "10",
+    }}
+/>
+
+<Aside>
+Keep the server plugin's **Card folders** the same as the device plugin's. Otherwise the reminder
+counts different cards from the ones you review.
+</Aside>
+
+- **Notification**: `force` always pushes the reminder, `never` only puts it in the Feed, and the
+  empty choice (**Default**) lets the Feed's triage decide.
+- **Cards a night at most**: up to 50. Set it to `0` to stop making cards while keeping the reminder.
+- A missed run (the host asleep) still happens if the computer is back within 3 hours of its time.
+
+## Troubleshooting
+
+### The Recall tab says No cards yet
+
+Cards are read only from notes under the card folders. Check the note's path starts with `cards/` (or
+your own folder), and that each card is on one line with `::`, or a block with a `?` line between
+front and back.
+
+### No cards came from my notes
+
+- Check the server plugin is **Enabled** and that an AI is set up.
+- Only paragraphs under `topics` and `daily` (or your **Make cards from** folders) written since the
+  last run count. Todos, code and plugin-written blocks are skipped.
+- **Cards a night at most** set to `0` turns card making off.
+
+### The reminder didn't arrive
+
+It's posted only when something is due, new or waiting. With **Notification** set to `never` it's
+in the Feed but not pushed.
+
+### Some reviews look missing
+
+The tab warns when a review log line can't be read, or when there are more notes or logs than it
+reads at once. Logs are kept per month; a month's log can fill up, and the tab says so.
+
+## Privacy
+
+- Your cards and review logs are notes in your vault, synced like any other note.
+- The device plugin reads notes and writes only under `recall/`. It makes no network requests.
+- Card making sends the new passages from your source folders to the AI you set up (a provider such
+  as Anthropic, or your own CLI). Each passage is sent once.
+- The reminder is a Feed item with the day's counts.

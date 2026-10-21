@@ -1,0 +1,140 @@
+---
+title: 로컬 API
+description: 같은 컴퓨터의 어떤 프로그램에서든 비공개 Unix 소켓 위의 HTTP로 AIDE 앱이 연 보관소를 읽고 써요.
+sidebar:
+    order: 3
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Mac이나 Linux의 AIDE 앱은 보관소를 열어 두는 동안 그 보관소의 노트를 Unix 소켓으로 제공해요. 같은 컴퓨터에서 실행하는 프로그램이라면 서버도 토큰도 없이 평범한 HTTP로 노트를 읽고 쓸 수 있고, 서버가 주는 것과 같은 응답을 받아요. [`aidectl`](/ko/docs/developers/aidectl/)도 이 위에서 만들어졌어요. 이 페이지는 직접 호출하고 싶을 때를 위한 거예요.
+
+## 누가 연결할 수 있나요
+
+- 같은 컴퓨터에서 **내 사용자 계정**으로 실행되는 프로그램만요. 앱은 연결마다 사용자를 확인하고 다른 사용자의 연결은 닫아요.
+- 소켓 폴더는 `0700` 모드로 만들어지고, 링크가 아닌 실제 폴더여야 하며, 내 소유이고 다른 누구도 접근할 수 없어야 해요. 그렇지 않으면 앱은 제공을 거부하고 `aidectl`은 연결을 거부해요.
+- 그 밖의 인증은 없어요. 소켓에 닿는 사람은 누구든 보관소 소유자로 동작해요.
+
+iPhone에는 로컬 API가 없어요.
+
+## 소켓 위치
+
+`XDG_RUNTIME_DIR`이 설정돼 있으면(대부분의 Linux 데스크톱) 폴더는 `$XDG_RUNTIME_DIR/aide/`이고, 아니면 `/tmp/aide-<uid>/aide/`예요(macOS에는 런타임 폴더가 없어요). 열린 보관소마다 소켓이 하나씩 있고, 이름은 `<32 hex digits>.sock`이에요. 보관소 폴더의 실제 경로와 장치 번호, inode 번호로 정해져요. 다른 폴더에 있는 보관소 사본은 자기 소켓을 따로 가져요.
+
+맞는 소켓을 찾는 가장 쉬운 방법은 소켓마다 어느 폴더를 제공하는지 물어보는 거예요.
+
+```sh
+dir="${XDG_RUNTIME_DIR:-/tmp/aide-$(id -u)}/aide"
+for s in "$dir"/*.sock; do
+    printf '%s  ' "$s"
+    curl -s --unix-socket "$s" http://aide/me
+    echo
+done
+```
+
+```json
+{"mode": "local", "vaultId": "8c4e…", "root": "/Users/you/Notes", "dev": 16777232, "ino": 2918843}
+```
+
+URL의 호스트 이름은 상관없어요. 이 페이지에서는 `http://aide/`를 써요. `root`가 내 보관소 폴더(링크를 따라간 경로)인 소켓을 쓰세요.
+
+소켓은 앱이 보관소를 열어 두는 동안에만 있어요. 보관소를 닫거나 앱을 종료하면 사라져요.
+
+## 데스크톱 호스트의 소켓
+
+[데스크톱 호스트](/ko/docs/self-hosting/desktop-host/)가 보관소를 제공하면, 그 소켓은 같은 폴더에 `host-<same name>.sock`이라는 이름으로 있어요. 이 소켓은 아래 경로 대신 서버 API 전체를 제공하고, 역시 토큰 없이 나로 동작하며, `GET /me`는 제공하는 폴더를 `"host"` 아래에 알려 줘요. `aidectl`은 호스트의 소켓을 먼저 시도하고, 그다음 앱의 소켓, 마지막으로 폴더를 직접 열어요.
+
+## 경로
+
+AIDE 서버의 노트 경로와 입력, JSON 형태, 상태 코드, 오류가 같아요.
+
+| 경로 | 하는 일 |
+| --- | --- |
+| `GET /me` | 이 소켓이 제공하는 보관소: `mode`(`local`), `vaultId`, `root`, `dev`, `ino` |
+| `GET /notes?kind=&prefix=` | `{"notes": [Note]}`, 최근에 바뀐 순서. `kind=scratch`는 스크래치 노트를 나열해요 |
+| `GET /notes/lookup?path=` | 경로나 미러링하는 파일(`topics/x.md`)로 찾은 노트. 노트 경로가 우선해요 |
+| `GET /notes/{id}` | 살아 있는 노트 하나 |
+| `POST /notes` | `{path?, body?, title?, sourcePath?, template?, vars?}` → `201` Note, `409 path_taken` |
+| `PUT /notes/{id}` | `{version, body}` → Note. 그사이 노트가 바뀌었으면 `409 version_conflict`. 여기서는 `path`, `title`, `sourcePath`를 바꿀 수 없어요(`422 unsupported`) |
+| `DELETE /notes/{id}` | `{version}` → `204`. 노트는 삭제되지 않고 보관돼요 |
+| `POST /notes/{id}/append` | `{text, heading?, createHeading?, ifAbsent?}` → Note와 `appended`, `404 heading_not_found` |
+| `POST /notes/{id}/todos/{line}/toggle` | `{version}` → Note. 그 줄이 할 일이 아니면 `422` |
+| `GET /todos` | `{"todos": [OpenTodo]}`: 열린 할 일 전부 |
+| `GET /daily/{date}` | `YYYY-MM-DD`의 일일 노트. 없으면 템플릿으로 만들어요 |
+| `GET /periodic/{period}/{key}` | `key`(`YYYY-MM-DD`, `today`, `2026-W43`, `2026-10`)를 포함하는 `daily`, `weekly`, `monthly`, `quarterly`, `yearly` 노트. 없으면 만들어요. `?create=false`면 대신 `404`로 답해요 |
+| `GET /periodic/{period}/{key}/prev` | `key`의 기간보다 앞서는, 그 주기의 가장 최근 노트 |
+| `GET /search?q=&limit=` | `{"notes": [{id, path, kind, title, summary?, snippet?}]}`, `limit`는 최대 50 |
+| `GET /notes/{id}/sections/{name}` | 플러그인이 관리하는 이름 있는 섹션. 없으면 `404`, `409 section_ambiguous` |
+| `PUT /notes/{id}/sections/{name}` | `{content, version?}` → Note |
+| `GET /settings` | 실제로 적용되는 설정과 `serverTimezone` |
+
+Note는 `{id, path, kind, title, body, version, todos, updatedAt}`이고, 다른 이름의 파일을 미러링하는 노트에는 `sourcePath`가, 저널 노트에는 `period` / `periodStart`가 붙어요. 줄 번호는 0부터 세요.
+
+서버가 제공하는 나머지(이벤트, 플러그인, 정리, 첨부 파일, 설정 변경)는 로컬 API에 없어요. 모르는 경로는 `404`, 아는 경로에 다른 메서드를 쓰면 `405`로 답해요.
+
+### 오류
+
+오류는 `{"error": {"code": "…", "message": "…"}}` 형태예요. `version_conflict`에는 지금 상태의 노트인 `"current"`도 들어 있어요.
+
+### 쓰기는 무작정 덮어쓰지 않아요
+
+- `version`을 담은 요청(수정, 보관, 토글, `version`을 담은 섹션 교체)은 그 버전 이후 노트가 바뀌었다면 현재 노트와 함께 `409 version_conflict`를 받아요. 앱은 대신 재시도하지 않아요. 다시 읽고 판단하세요.
+- 덧붙이기와 `version` 없는 섹션 교체는 읽기와 쓰기 사이에 외부 편집이 끼어들면 다시 읽고 재시도해요. 최대 3번까지요.
+
+## 제한
+
+- HTTP/1.1이고, 연결 하나에 요청 하나면 충분해요(`Connection: close`).
+- 요청 줄과 헤더는 최대 16KiB, 본문은 최대 2MiB, 요청을 보내는 데 10초, 동시 연결은 8개까지예요.
+- 본문에는 `Content-Length`가 있어야 해요. chunked `Transfer-Encoding`은 거부돼요. `curl --data`가 알아서 넣어 줘요.
+
+## 예시
+
+```sh
+s="${XDG_RUNTIME_DIR:-/tmp/aide-$(id -u)}/aide/3f9a….sock"   # 위의 반복문에서 찾은 소켓
+```
+
+오늘의 일일 노트(없으면 만들어요):
+
+```sh
+curl -s --unix-socket "$s" http://aide/periodic/daily/today | jq -r .body
+```
+
+노트를 찾아 제목 아래에 덧붙이기:
+
+```sh
+id=$(curl -s --unix-socket "$s" "http://aide/notes/lookup?path=topics/k8s" | jq -r .id)
+curl -s --unix-socket "$s" -X POST "http://aide/notes/$id/append" \
+    -H 'Content-Type: application/json' \
+    -d '{"text": "- read the 1.31 changelog", "heading": "Reading", "createHeading": true}' | jq .appended
+```
+
+읽은 뒤 아무도 바꾸지 않았을 때만 본문 바꾸기:
+
+```sh
+note=$(curl -s --unix-socket "$s" "http://aide/notes/$id")
+version=$(echo "$note" | jq .version)
+body=$(echo "$note" | jq -r .body | sed 's/TODO/DONE/')
+jq -n --argjson v "$version" --arg b "$body" '{version: $v, body: $b}' |
+    curl -s --unix-socket "$s" -X PUT "http://aide/notes/$id" -H 'Content-Type: application/json' -d @-
+```
+
+노트의 첫 번째 열린 할 일 체크하기:
+
+```sh
+curl -s --unix-socket "$s" http://aide/todos |
+    jq -r --arg id "$id" '[.todos[] | select(.noteId == $id)][0] | "\(.line) \(.version)"' |
+    while read -r line version; do
+        curl -s --unix-socket "$s" -X POST "http://aide/notes/$id/todos/$line/toggle" \
+            -H 'Content-Type: application/json' -d "{\"version\": $version}"
+    done
+```
+
+검색:
+
+```sh
+curl -s --unix-socket "$s" "http://aide/search?q=postgres&limit=5" | jq -r '.notes[] | "\(.path)\t\(.title)"'
+```
+
+<Aside title="열린 앱이 없나요?">
+보관소를 연 앱이 없으면 소켓도 없어요. 그때 `aidectl`은 명령 하나를 위해 폴더를 직접 열고, 규칙과 응답은 똑같아요. 그래서 `aidectl`을 쓰는 스크립트는 어느 쪽이든 동작해요. 앱이 보관소를 열었는데 응답하는 소켓이 없다면 앱을 업데이트하거나 다시 시작하세요.
+</Aside>

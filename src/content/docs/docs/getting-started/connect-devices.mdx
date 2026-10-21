@@ -1,0 +1,153 @@
+---
+title: Connect your devices
+description: Pair your phone or another computer with a desktop host or your own server, manage paired devices and get notifications.
+sidebar:
+    order: 4
+---
+
+import { Aside, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Once one computer hosts your vault, or you run your own server, every other device you use pairs with
+it and works on the same notes. Pairing is a one-time step per device; afterwards the device connects
+on its own.
+
+## Pair with a desktop host
+
+A desktop host takes devices only over the network you choose, and only devices you approve on the
+hosting computer. Each device makes its own key when it pairs and is known by its certificate from
+then on; there is no password or token to copy around.
+
+### Before you start
+
+- The vault is hosted on your Mac or Linux computer ([Ways to run AIDE](/docs/getting-started/ways-to-run/#host-a-local-vault)).
+- The host's key is kept in the system's secure store: the keychain on the Mac, an unlocked keyring
+  (GNOME Keyring, KeePassXC…) on Linux. Without one, **Devices over the network** says "This needs the
+  host's key in the keychain" and stays off, because a key kept in a file could be copied along with
+  the host's data. On Linux, start a keyring and open AIDE again.
+- The other device can reach the hosting computer. With [Tailscale](https://tailscale.com/) on both,
+  that works from anywhere; on the same Wi-Fi or LAN, a local address works at home.
+
+### Let devices in
+
+<Steps>
+
+1. On the hosting computer, open the host's settings: **Settings › Host** on the Mac, **Settings ›
+   General** (the **Host** group) on Linux. Choose **Devices over the network…**.
+2. Under **Where devices reach this Mac** (on Linux, **Where devices reach this computer**), pick an
+   **Address**. The list has this computer's Tailscale addresses first, then its LAN addresses; the
+   host listens on port 8443 by default.
+3. Choose **Let devices in**. The host restarts, and **Now** shows **Taking devices** with each
+   address's state and the host key's fingerprint.
+
+</Steps>
+
+**Turn off** stops taking devices over the network. If the computer has no Tailscale or LAN address,
+the page says so and there's nothing to pick.
+
+### Add a device
+
+<Steps>
+
+1. On the hosting computer, in **Devices over the network**, choose **Add a device…**. AIDE shows a
+   **Link** that starts with `aide://pair-host?`. It works for 5 minutes, for one device.
+2. On the other device, open AIDE's **Get started** screen and paste the link into **Pairing link**
+   under **Connect to a host**, then choose **Connect to the host**. On an iPhone you can open the link
+   instead, and it fills the field.
+3. The device shows its name and its key's fingerprint, and the host lists it under **Asking to
+   pair** with a fingerprint too. Check that they match.
+4. Choose **Approve** on the host ("Approved: it's connecting"), or **Deny**.
+
+</Steps>
+
+Every connection after that checks the host's key, so a device never talks to another machine posing
+as your host. A device's certificate lasts two years and renews itself when it connects in its last
+60 days; one that has expired has to pair again.
+
+<Aside>
+The link is shown as text, not a QR code. Send it to the other device the way you like (AirDrop, a
+note in another app, a message to yourself); it is useless after 5 minutes or once a device has
+used it.
+</Aside>
+
+### What a paired device can do
+
+A device connected to a host works with the notes, todos, daily notes, search, the Feed, plugin tabs,
+AI and Organize, and receives its own notifications. Everything that changes the host itself stays on
+the hosting computer: pairing, the device list, AI keys, plugin settings, Feed subscriptions and MCP.
+
+To disconnect a device, choose **Sign out** in its **Settings › Devices**. That forgets the host on
+this device; the device's certificate stays valid until it is removed on the host.
+
+## Pair with your own server
+
+A server pairs devices with a single-use code. Pairing needs the server's address, and anything but
+a server on your own computer must be HTTPS.
+
+<Steps>
+
+1. Get a pairing code:
+    - on the server, run `aide pair`, or
+    - on a device that's already connected, open **Settings › Devices** and choose
+      **Pair another device**.
+2. On the new device, in **Get started › Your AIDE server** (on Linux, **Connect to a server**), enter
+   the **Server** address, such as `https://aide.my-tailnet.ts.net`, and the **Pairing code**.
+3. Choose **Connect**.
+
+</Steps>
+
+A code looks like `XXXXX-XXXXX`, works once and expires after 10 minutes. At most five unused codes
+exist at a time. After 10 wrong codes from one address within 10 minutes, the server refuses further
+attempts from it for a while.
+
+When the server knows its public address (`AIDE_PUBLIC_URL`), `aide pair` also prints a link,
+`aide://pair?server=…&code=…`. Opening it on a device fills in both fields.
+
+[Run your own server](/docs/self-hosting/own-server/) covers putting HTTPS in front of the server
+with Tailscale, Cloudflare Tunnel or Caddy.
+
+## Manage devices
+
+### On your own server
+
+On a device connected to a server, **Settings › Devices** lists every paired device with when it was
+last seen; this one is marked **This device**.
+
+- **Revoke** next to another device cuts it off. Its next request fails and it signs out.
+- **Sign out** revokes this device first, then forgets the server. Drafts stay on the device for when
+  you reconnect. If the server can't be reached, **Sign out without revoking** appears: the device
+  forgets the server but stays authorized until you revoke it from another device.
+
+### On a desktop host
+
+Devices are managed on the hosting computer, never from a paired device: a paired device's
+**Settings › Devices** shows the list, but revoking happens on the host.
+
+- **Linux host:** **Settings › Devices** lists the devices paired with the host, with **Revoke** for
+  each. A revoked device is cut off at once, its open connections closed.
+- **Mac host:** this release has no device list on the hosting Mac. To shut every paired device out,
+  choose **Turn off** in **Devices over the network**; the host then takes no device over the
+  network.
+
+Restoring a host from a backup revokes every device; they pair again with the restored host.
+
+### A lost device
+
+- **With your own server:** revoke it in **Settings › Devices** on any other connected device. If you
+  have lost every device, run `aide pair` on the server and pair a new device with that code. Access
+  to the server machine is the proof that you own it.
+- **With a desktop host:** revoke it on the hosting computer as described above.
+
+## Notifications on your phone
+
+The server sends a notification for every Feed event triaged **Act on**, and for **Need to know**
+events unless you turn that off: **Settings › Notifications › Also push "need to know"** (on Linux,
+**Also notify "need to know"**). Everything else waits in the Feed. Plugins can also mark a single
+event to always or never notify.
+
+- **Mac and Linux** fetch their notifications from the server or host themselves; nothing else is
+  needed.
+- **iPhone** notifications go through Apple's push service, which the server reaches through a push
+  relay (or its own APNs key when you build the app yourself). There is no public push relay yet, so an
+  iPhone gets no push notifications today; the events are in its Feed when you open it.
+
+See [The Feed](/docs/guides/feed/) for how events are triaged.

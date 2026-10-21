@@ -1,0 +1,140 @@
+---
+import { Image } from "astro:assets";
+
+import appIcon from "#assets/aide/app-icon.png";
+import { COPY, docsHref, type Lang } from "#lib/landing-copy";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = COPY[lang];
+const home = lang === "en" ? "/" : "/ko/";
+const other =
+    lang === "en" ? { href: "/ko/", label: "한국어", lang: "ko" } : { href: "/", label: "English", lang: "en" };
+---
+
+<header class="site-header">
+    <div class="wrap bar">
+        <a class="brand" href={home} aria-label="AIDE">
+            <Image src={appIcon} alt="" width={28} height={28} loading="eager" />
+            <span>AIDE</span>
+        </a>
+        <nav aria-label="Main">
+            <a href="#features">{copy.nav.features}</a>
+            <a href="#plugins">{copy.nav.plugins}</a>
+            <a href={docsHref(lang, "getting-started/introduction")}>{copy.nav.docs}</a>
+        </nav>
+        <div class="tools">
+            <a class="lang" href={other.href} hreflang={other.lang} lang={other.lang}>
+                {other.label}
+            </a>
+            <button class="theme" type="button" data-theme-switch aria-label={copy.nav.theme}>
+                <svg class="sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4.2" fill="currentColor"></circle>
+                    <path
+                        d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                    ></path>
+                </svg>
+                <svg class="moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                    <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z" fill="currentColor"></path>
+                </svg>
+            </button>
+            <a class="button button-primary download" href="#download">
+                {copy.nav.download}
+            </a>
+        </div>
+    </div>
+</header>
+
+<style>
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: color-mix(in srgb, var(--page) 78%, transparent);
+        backdrop-filter: saturate(180%) blur(18px);
+        -webkit-backdrop-filter: saturate(180%) blur(18px);
+        border-bottom: 1px solid var(--line);
+    }
+    .bar {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        height: 3.5rem;
+    }
+    .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        text-decoration: none;
+    }
+    .brand :global(img) {
+        border-radius: 7px;
+    }
+    nav {
+        display: flex;
+        gap: 1.5rem;
+        font-size: 0.9rem;
+    }
+    nav a,
+    .lang {
+        color: var(--ink-2);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    nav a:hover,
+    .lang:hover {
+        color: var(--ink);
+    }
+    .tools {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-left: auto;
+        font-size: 0.9rem;
+    }
+    .theme {
+        display: grid;
+        place-items: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: var(--ink-2);
+        cursor: pointer;
+    }
+    .theme:hover {
+        background: var(--fill);
+        color: var(--ink);
+    }
+    .moon,
+    :root[data-theme="dark"] .sun {
+        display: none;
+    }
+    :root[data-theme="dark"] .moon {
+        display: block;
+    }
+    .download {
+        height: 2.1rem;
+        padding: 0 0.95rem;
+        font-size: 0.85rem;
+    }
+    @media (max-width: 720px) {
+        nav {
+            display: none;
+        }
+    }
+    @media (max-width: 400px) {
+        .download {
+            display: none;
+        }
+    }
+</style>

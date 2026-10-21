@@ -1,0 +1,119 @@
+---
+title: MCP and the Claude app
+description: Let Claude Code, the Claude app or another MCP client search, read and change your AIDE notes and plan your day with your todos.
+sidebar:
+    order: 2
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+AIDE speaks the Model Context Protocol, so Claude (or any MCP client) can search and read your notes, add todos, check them off and propose a plan for your day. There are two ways in: `aidectl mcp` for a client on the computer that hosts your vault, and a remote endpoint for the Claude app on your own server.
+
+| | Local: `aidectl mcp` | Remote: `POST /mcp` |
+| --- | --- | --- |
+| For | Claude Code and other MCP clients on the hosting computer | claude.ai custom connectors, Claude Code anywhere |
+| Needs | A [desktop host](/docs/self-hosting/desktop-host/) running for the vault, or a server | A server reachable over HTTPS at its public URL |
+| Acts as | You, with every tool (desktop host) | A token from **Settings › Claude app** |
+
+Both reach the same tools, described [below](#tools).
+
+## Local: `aidectl mcp`
+
+[`aidectl`](/docs/developers/aidectl/) turns its standard input and output into an MCP server and passes every message to your AIDE. For a vault, it talks to the desktop host serving that folder, over the host's socket, as you. A vault in plain local mode (the app open, no hosting) isn't enough: `aidectl mcp` stops with `MCP on … needs its AIDE host running`.
+
+<Steps>
+
+1. Host the vault: on the Mac, **Settings › Notes › Host this vault…**, then **Start hosting** (on Linux the Notes group is under **General**). See [Host on your desktop](/docs/self-hosting/desktop-host/).
+2. Tell `aidectl` which folder it is, with `--vault`, `AIDE_VAULT` or `vault=` in `~/.config/aidectl/config`.
+3. Add it to Claude Code:
+
+    ```sh
+    claude mcp add aide -- aidectl --vault ~/Notes mcp
+    ```
+
+    or, with the vault set in `aidectl`'s config file:
+
+    ```sh
+    claude mcp add aide -- aidectl mcp
+    ```
+
+</Steps>
+
+Over the host's socket there is no token: whoever can reach the socket is you, the same trust as `aidectl` itself, so every tool is offered, the write tools included.
+
+`aidectl mcp` also works against a server (`--server` or `AIDE_URL`). Then `AIDE_TOKEN` (or `token=`) must be a token from **Settings › Claude app**; any other token is refused with `use a token of the claude plugin`. An expired or revoked token stops `aidectl mcp` with the server's `401` instead of returning a reply your client can't match.
+
+## Remote: the Claude app
+
+On your own server, AIDE serves MCP over Streamable HTTP at `POST /mcp` under the server's public URL (`AIDE_PUBLIC_URL`). claude.ai calls it from Anthropic's side, so the URL must be reachable from the internet over HTTPS.
+
+<Steps>
+
+1. On the Mac or iPhone, open **Settings › Claude app** (on Linux, the **Claude** page of Settings).
+2. Turn on **Allow changes to notes** if Claude should be able to write. Off, it can only read.
+3. Choose **Connect**. The app shows the **URL** and a token under **Add to Claude**. Copy both with **Copy URL** and **Copy token**: the token is shown only now.
+4. In Claude: **Settings › Connectors › Add custom connector**. Use the URL, and under authentication add the header `Authorization: Bearer <token>`.
+
+</Steps>
+
+- **Status** reads **Connected** while a token is live and the connection is on.
+- **Make a new token** replaces the old token; the old one stops working at once. Use it to switch **Allow changes to notes** on or off too.
+- **Disconnect** revokes the token.
+- If the **URL** row reads **Set AIDE_PUBLIC_URL on the server**, the server doesn't know its public address; set `AIDE_PUBLIC_URL` and restart it. A desktop host has no public URL, so this page has no URL to give there: use `aidectl mcp` on that computer instead.
+
+With Claude Code, add the same URL and token as an HTTP server:
+
+```sh
+claude mcp add --transport http aide https://aide.example.com/mcp \
+    --header "Authorization: Bearer aide_p_…"
+```
+
+### What the token can do
+
+The token belongs to a built-in connection named Claude. It reads every note (`notes:read:*`). With **Allow changes to notes** it can also write any note (`notes:write:*`). Without it, the write tools aren't even listed. Every tool runs as a request through the server's own routes with that token, so the same checks apply as for any other client.
+
+The endpoint answers only `POST`; there are no server-initiated messages (`GET /mcp` is `405`). A request from a web page whose `Origin` isn't the server's own public URL is refused with `403`, so a browser page can't drive it. Batches aren't supported. Protocol versions `2025-11-25`, `2025-06-18` and `2025-03-26` are accepted.
+
+<Aside title="Notes stay yours">
+Through MCP, Claude sees what the tools return and nothing else: notes it searches for or reads, your open todos, and for planning, your assistant memory and goals. It never gets your calendar this way.
+</Aside>
+
+## Tools
+
+Read tools are always offered. Write tools need a token with changes allowed, or the desktop host's socket.
+
+| Tool | Kind | What it does | Arguments |
+| --- | --- | --- | --- |
+| `search_notes` | read | Full-text search; id, path, title and a snippet per hit | `query` (required), `limit` (default 20, max 50) |
+| `list_notes` | read | Notes whose path starts with a prefix, metadata only | `prefix` (empty lists every note) |
+| `read_note` | read | A note's Markdown body, version and todos | `id` or `path` |
+| `find_periodic_note` | read | The journal note containing a date, if it exists | `period` (`daily` … `yearly`), `date` (default today) |
+| `open_todos` | read | Open todos across notes, with note id, line, version, due, priority, tags | none |
+| `plan_context` | read | What to plan the day from, as AIDE's assistant sees it: today and now in your time zone, open todos with their refs, how many were left out, todos done this week, your assistant memory and goals | none |
+| `create_note` | write | Create a note at a path | `path` (required), `body` |
+| `append_to_note` | write | Append under a heading (created if missing), or at the end; needs no version | `id`, `text` (required), `heading` |
+| `set_todo_status` | write | Set a todo's status: `" "` open, `x` done, `/` doing, `-` cancelled, `>` moved, `<` scheduled | `noteId`, `line` (0-based), `version`, `status`, `text` (all required) |
+| `add_todo` | write | Add one open todo to today's daily note (under your task heading) or the inbox note, creating it if needed; fields go inline (`call Mina 📅 2026-10-30`) | `text` (required), `target` (`today` or `inbox`), `date` |
+| `open_periodic_note` | write | The journal note containing a date, created from your template if missing | `period`, `date` |
+| `update_note` | write | Rewrite a note's body and/or move it to another path, with the version from the latest read | `id`, `version` (required), `body`, `path` |
+| `propose_plan` | write | Propose changes to your todos; nothing is applied until you take it | `reply`, `operations` (required), `id`, `message` |
+
+A write that carries a version fails when the note changed since that read; the client reads again and retries. `set_todo_status` also checks that the line still reads `text`, so it never changes a different todo that moved onto that line.
+
+### Planning with `propose_plan`
+
+`propose_plan` lets Claude plan your day the way AIDE's own [assistant](/docs/guides/assistant/) does. Each proposal waits on your **Todos** in AIDE (Mac, iPhone, Linux) until you take it or drop it, and the plan is kept in today's assistant conversation. A plan has at most 20 operations:
+
+| Operation | Fields |
+| --- | --- |
+| `schedule` | `todo`, `start` (`HH:MM`), `end` |
+| `unschedule` | `todo` |
+| `estimate` | `todo`, `minutes` (5–720) |
+| `status` | `todo`, `status` (`" "`, `/`, `x`, `-`) |
+| `move` | `todo`, `date`: move it to that day's daily note |
+| `add` | `text`, `date`, `start`, `end`, `minutes` |
+| `remember` | `text`: a line for the assistant's memory |
+
+`todo` is the ref from `plan_context` or `open_todos` (`noteId`, `line`, `text`); a todo that reads differently now is refused. Each operation can carry a `why`, shown on its card. Pass your own `id` so a retry is never kept twice. Because it writes to today's assistant conversation, it needs a token with changes allowed.
+
+Once connected, ask Claude something like "Plan my afternoon around the review at 3" and check the cards on **Todos**.

@@ -1,0 +1,93 @@
+---
+title: Evening recap
+description: Every evening at 21:30, your AI reads today's daily note and writes what moved, what slipped and what carries over to tomorrow into the day note.
+sidebar:
+    order: 14
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+The evening recap closes the day: your AI reads what you wrote today and sums up what moved forward, what didn't, and what to pick up tomorrow.
+
+<PluginFacts id="recap" />
+
+## What it does
+
+At 21:30 (or the time you set) the plugin:
+
+1. Reads today's daily note (creating it from your template if it doesn't exist yet).
+2. Reads your open-loops note too, if you name one in `plugins.json` (see [Local keys](#local-keys)). Open loops are given to the AI as hints that may be out of date; when they disagree with today's note, today's note wins.
+3. Asks your AI for a recap in four short bullet groups, each left out when there's nothing to say:
+    - **What moved**
+    - **What slipped**
+    - **What carries over to tomorrow**
+    - **Newly opened issues**
+
+    The AI is told not to invent pressure ("untouched for N days") without evidence.
+4. Writes it under `## 🌙 Evening recap` in its own section of the day note, `briefings/{date}`, the same note the [morning briefing](/docs/plugins/briefing/) uses.
+5. Posts "🌙 Evening recap ready" to the Feed, without a notification.
+
+If the AI call fails, the plugin tries again every 10 minutes until the next evening. An evening missed while the computer was off or asleep is made up if it wakes within 3 hours.
+
+## Before you start
+
+- A [desktop host](/docs/self-hosting/desktop-host/) or your own server.
+- An AI in **Settings › AI**: **Anthropic API key** or **My gateway**.
+- A daily note for the day with something in it. The recap only knows what today's daily says.
+
+## Set it up
+
+<Steps>
+
+1. Turn the plugin on: **Evening recap** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+2. Set **Time** if 21:30 doesn't suit you. If you also use [Open loops](/docs/plugins/loops/), keep the recap after it (open loops runs at 21:15), so the recap reads the updated note.
+3. Optional: to give the recap your open loops, add `loopsNote` to `plugins.json` and restart the host (below).
+
+</Steps>
+
+## Settings
+
+<PluginSettings id="recap" defaults={{ at: "21:30", push: "never (no notification)", note: "briefings/{date}", prompt: "" }} />
+
+**Notification.** Until you choose, the recap never notifies you, as `never` does, although the picker shows **Default**. Choose `force` to be notified every evening, or **Default** to let the Feed's sorting decide.
+
+**Write into.** `daily` puts the recap into today's daily note itself, in its own section (at the end, or where your template puts `{{slot recap.evening}}`). The recap then leaves its own earlier text out of what it reads, so it doesn't recap itself. If you edit the daily at the exact moment it reads it, it tries again 10 minutes later.
+
+**Prompt.** Your own instructions replace the built-in ones; the date, today's daily and the open loops still follow them.
+
+### Local keys
+
+Under `"recap"` in `plugins.json` on a desktop host ([where that is](/docs/plugins/overview/#local-settings)):
+
+| Key         | What it does                                                                         |
+| ----------- | ------------------------------------------------------------------------------------ |
+| `loopsNote` | A note to read as your open loops, by its path, for example `loops/open`. Read only. |
+| `openLoops` | Instead of `loopsNote`: a file on the machine that runs the plugins. Read only.      |
+
+```json
+{
+    "plugins": {
+        "recap": { "loopsNote": "loops/open" }
+    }
+}
+```
+
+Without either key, the recap reads today's daily alone.
+
+## Troubleshooting
+
+### The recap didn't arrive
+
+- Check that the plugin is on and that **Settings › AI** isn't **Rules (no AI)**.
+- The recap doesn't notify you by default. Look in the Feed or in the day note.
+- The host must be running at 21:30, or wake within 3 hours of it.
+
+### The recap doesn't mention my open loops
+
+The recap reads them only when `loopsNote` (or `openLoops`) is set in `plugins.json`; turning on the Open loops plugin alone isn't enough.
+
+## Privacy
+
+Today's daily note and, if you set one, your open-loops note (each cut to 6 KiB) go to the AI you set in **Settings › AI**. The recap is stored as a note on your host or server. Nothing else leaves the machine.

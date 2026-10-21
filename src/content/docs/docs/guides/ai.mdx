@@ -1,0 +1,125 @@
+---
+title: AI and models
+description: What in AIDE uses a model, where each one gets it from, what is sent, and what keeps working with no AI at all.
+sidebar:
+    order: 11
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+AIDE brings no model of its own. You choose where models run: the Claude Code or Codex you already
+use on your computer, your own Anthropic API key, or the AI set on your server. You can also run
+AIDE with no AI at all; the parts that need one say so, and the rest work by rules.
+
+Model output is never trusted as is: every answer is checked against a strict format before AIDE
+acts on it, and changes to your notes are either proposals you take or limited to the plugin's own
+section of a note.
+
+## What uses a model, and from where
+
+There are two settings, because some AI runs in the app on your device and some runs on the server.
+
+| Feature | Model comes from | Without a model |
+|---|---|---|
+| [The assistant](/docs/guides/assistant/) (chat, speaking first) | **Settings › Assistant › Model from** (this device) | Not available. |
+| [Meeting](/docs/guides/meetings/) summaries and action items | **Settings › Assistant › Model from** (the recording device) | Recorded and written down, not summed up. |
+| [Organize](/docs/guides/scratch/) with a server | **Settings › AI** (the server) | Files by rules. |
+| Organize without a server | Your Anthropic key in **Settings › AI** on the device | Files by rules. |
+| [Feed](/docs/guides/feed/) sorting | **Settings › AI** (the server) | Sorted by rules. |
+| Server plugins that write for you: [briefing](/docs/plugins/briefing/), [recap](/docs/plugins/recap/), [open loops](/docs/plugins/loops/), [calendar prep](/docs/plugins/gcal/), [Gmail](/docs/plugins/gmail/), [Slack](/docs/plugins/slack/) summaries, [Recall](/docs/plugins/recall/) cards, [benefits](/docs/plugins/benefits/) | **Settings › AI** (the server), for each plugin you allow it | Each plugin page says. Gmail still lists mail to check; the briefing and recap need a model. |
+| [Radar](/docs/plugins/radar/) | Its own **Model** setting: Claude Code, then Codex, else the server | Needs one. |
+| [Catch-up](/docs/plugins/catchup/) | Claude Code or Codex on the computer running the plugins | Needs one. |
+
+Voice input and meeting transcription use no model service at all: they are written down on the
+device.
+
+## Settings › Assistant › Model from
+
+This picks the model for the assistant and for meeting summaries on this device. Each device has
+its own choice.
+
+| Choice | Where it runs | Default model |
+|---|---|---|
+| **Automatic** | The first that works: Claude Code, Codex, your Anthropic key, then the server. | — |
+| **Claude Code** | The `claude` program on this Mac or Linux computer, with your own login. | `sonnet` |
+| **Codex** | The `codex` program on this Mac or Linux computer, with your own login. | Codex's own |
+| **Anthropic API key** | Anthropic's API, with the key saved on this device. | `sonnet` |
+| **Server** | Your server's AI (below), counting toward its daily limit. | `sonnet` |
+
+- The **Model** field takes a tier, `sonnet`, `opus` or `haiku`, or a full model id.
+- **Test** sends a tiny request and shows **Works** with the time it took, or why it didn't.
+- AIDE finds `claude` and `codex` on your `PATH` and in the usual install folders (such as
+  `~/.local/bin`, `/opt/homebrew/bin`, `/usr/local/bin`, `~/.bun/bin`, `~/.npm-global/bin`,
+  `~/.cargo/bin`), then asks your login shell. When it can't find one, type the program's path in
+  its field.
+- Claude Code and Codex run with no tools, in an empty temporary folder, with only a few
+  environment variables passed on: the prompt goes in and the answer comes out. A run is stopped
+  after 2 minutes. On the Mac and Linux, **Use my Claude Code setup** can run Claude Code with your
+  own tools instead; see [the assistant](/docs/guides/assistant/#use-my-claude-code-setup).
+- On the iPhone the choices are **Automatic**, **Anthropic API key** and **Server**.
+- **Server** appears only when you use a server.
+
+The device's Anthropic key is saved under **Settings › AI** when AIDE keeps notes without a
+server, in the device's keychain (on Linux, the system keyring when one answers, else a file only
+you can read). The model it uses for Organize can be changed there too.
+
+## Settings › AI on a server
+
+With a desktop host or your own server, **Settings › AI** sets the server's AI for your account:
+Feed sorting, Organize, the plugins' requests, and the assistant's **Server** choice.
+
+| Backend | What it is |
+|---|---|
+| **Rules (no AI)** | No model calls: `#tag` → `topics/tag`, todos → today's daily note, events by keywords. |
+| **Anthropic API key** | Your own key, billed to your Anthropic account. |
+| **My gateway** | An `aide-gateway` you run yourself on your own machine with your own Claude login, reached at its URL with a gateway token. It isn't part of AIDE's release downloads, and it isn't for sharing a subscription. |
+
+For the key and the gateway you can also set a **Model** (empty means the server's default).
+
+- **In use** shows what applies now and whether it's yours or the server's default. **Use server
+  default** clears your choice.
+- **Calls today** shows the calls made today against the daily limit, for example `12 / 200`. The
+  limit is 200 calls a day by default, counted per UTC day; past it, requests fail until the next
+  day.
+- **Test** makes one call and shows **OK** with the provider and the time, or why it failed.
+
+<Aside type="note" title="Keys are write-only">
+The key and the gateway token are stored encrypted (AES-256-GCM) on the server and never shown
+again: the field just says **Saved — type to replace**. Leave it empty to keep what's saved, or
+choose **Remove saved key**. A desktop host always sets up the encryption key; a server without one
+says **This server can't store keys**.
+</Aside>
+
+A plugin can use the server's AI only when it was given that permission. The server answers a
+plugin's request as plain text; the plugin writes it only into its own section of a note.
+
+## With no AI at all
+
+Without any model, AIDE is still a complete notes and todos app:
+
+- **Organize** files scratch notes by rules: the first `#tag` goes to `topics/<tag>`, notes with
+  todos go to today's daily note, the rest to the inbox. You still check each proposal before
+  **Apply**.
+- **The Feed** sorts by keywords, the publisher's severity, and words from your wiki (see
+  [how the Feed is sorted](/docs/guides/feed/#who-decides)).
+- Calendar reminders, the todo carry, docs sync, recording and transcribing meetings, and voice
+  input all work.
+- The assistant, meeting summaries, Radar, catch-up and the plugins that write with a model don't.
+
+## What is sent to the model
+
+Each feature sends only what it needs, framed as data the model must not take instructions from:
+
+- **The assistant:** your open todos (up to 120) with their dates, blocks and estimates; today's
+  events and free time; your memory and goals notes (2 KB each); the last 12 messages; and any note
+  it read, cut to 4 KB. Never anything under **Never read**. At most 48 KB a request.
+- **Meeting summaries:** the title, start and attendees, the word list, the start of each linked
+  note (4 KB each, 16 KB in all), the calendar's context and the transcript.
+- **Organize:** the scratch notes you selected and your wiki's page names.
+- **Feed sorting:** each event's title and the first 2 KB of its body, with up to 200 words from
+  your wiki's titles and folder names.
+- **Plugins:** their own prompt, plus the notes they name or find by search (up to 16 KB each).
+
+Where it goes depends on the choice: Anthropic for an API key, your own login's provider for Claude
+Code or Codex, your gateway's machine for a gateway. See
+[Privacy and security](/docs/self-hosting/privacy/) for the whole picture.

@@ -1,0 +1,108 @@
+---
+title: Terminal and SSH
+description: A terminal with tabs inside AIDE on the Mac and Linux, and SSH to your servers from the iPhone.
+sidebar:
+    order: 14
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+On the Mac and Linux, AIDE has a terminal of its own, so you can keep a shell next to your notes. On
+the iPhone, which has no local shell, the SSH section opens terminals to your servers instead.
+
+## Terminal on the Mac and Linux
+
+The **Terminal** section in the sidebar is a row of tabs over a shell, filling the main area.
+
+- **+** or **New tab** opens a shell in a new tab (<kbd>⌘</kbd><kbd>T</kbd> on the Mac,
+  <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>T</kbd> on Linux), in the folder of the tab you're in, or your
+  home folder. It starts as a login shell, so your profile runs.
+- Each tab is titled by what the shell sets, else the program's name. **Rename…** in a tab's menu
+  gives it your own name; **Close** or its × ends the shell.
+- With no tab open, the section says **No shells open**.
+- The shells keep running while you're elsewhere in AIDE. Coming back finds them as you left them.
+
+### Beside your notes
+
+The right panel (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>\\</kbd>, <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>\\</kbd> on
+Linux) has a **Terminal** view: the same tabs and the same shells, next to whatever the main area
+shows, such as a note. While the main area is the Terminal section, the shells are there and the
+panel says so.
+
+For the tab, find and text-size keys, see [Keyboard shortcuts](/docs/guides/shortcuts/#terminal).
+
+### Settings › Terminal
+
+| Setting | Default | What it does |
+|---|---|---|
+| **Show Terminal in the sidebar** | On | Turns the Terminal section (and the panel view) on or off. |
+| **Shell** | Your login shell | The program a new tab starts. |
+| **Close a tab when its shell exits** | On | Off keeps an ended tab open so you can read what it printed. |
+| **Theme** | **System (light and dark)** | System uses Catppuccin Latte in light mode and Catppuccin Mocha in dark. Others: Catppuccin Frappé, Catppuccin Macchiato, Dracula, Nord, Tokyo Night, Gruvbox Dark, One Dark, Solarized Dark. |
+| **Font** | A Nerd Font if one is installed, else the system's monospace | Any installed font by name. |
+| **Size** | 13 | 8 to 32. |
+| **Cursor** | **Block** | **Block**, **Bar** or **Underline**. |
+| **Blinking cursor** | On | |
+| **Use Option as Meta** (Mac) | On | <kbd>⌥</kbd> works as Meta/Alt in the shell instead of typing special characters. |
+| **Scrollback** | 10,000 lines | 1,000 to 100,000. |
+
+Changes reach open tabs at once. On Linux the same settings are also kept in `config.toml` under
+`[terminal]`.
+
+The terminal sets `TERM=xterm-256color`, `COLORTERM=truecolor` and `TERM_PROGRAM=AIDE`, and
+otherwise passes on the environment AIDE was started with. A program in the terminal can copy to
+your clipboard but can't read it.
+
+<Aside type="note">
+The Terminal is part of the Mac app on the release page. A build for the Mac App Store, where the
+sandbox doesn't allow starting a shell, would leave it out.
+</Aside>
+
+## SSH on the iPhone
+
+<Aside type="caution">
+The iPhone app is in a TestFlight beta and isn't public yet.
+</Aside>
+
+SSH is a built-in feature you turn on in **Settings › Plugins › Built in › SSH** ("Saved hosts,
+keys and passwords, terminals to your servers."). It adds an **SSH** section: open sessions on top,
+then your saved hosts by group, with a search field.
+
+### Add a host
+
+Choose **+** (**Add host**) and fill in:
+
+- **Label**: what the list shows, such as "My server".
+- **Host** (`example.com` or `192.168.0.2`), **Port** (22 by default) and **User**.
+- **Group**, to sort hosts in the list (optional).
+- **Sign in with**: **A password, asked each time**, or a key or saved password from your keychain.
+  **Manage keychain…** opens the keychain.
+- **Startup command**, such as `tmux attach`: offered in the session's menu as **Run startup
+  command**, never run on its own.
+
+Tap a host to connect. The session has its own terminal with the keyboard's accessory row, and a
+menu with **Run startup command**, **Disconnect** and **Reconnect**. Sessions stay open while you
+move around the app, and switching between notes on the device and a server doesn't close them;
+turning SSH off does.
+
+### Keys and passwords
+
+**Keychain** (in the section's menu) holds what you sign in with. Choose **Add**, then:
+
+- **Password…**: a password saved under a name.
+- **New ED25519 key…**: AIDE makes a key; its private half never leaves the iPhone's keychain. Open
+  the key to **Copy public key** or **Share public key**, and add that line to
+  `~/.ssh/authorized_keys` on the server.
+- **Import a key…**: an ED25519 private key in OpenSSH format (`BEGIN OPENSSH PRIVATE KEY`),
+  unencrypted or with a passphrase.
+
+Keys and passwords are kept in the iPhone's keychain, never in the host list.
+
+### Known hosts
+
+The first time you connect to a host, AIDE shows its key type and fingerprint. Check it with the
+server's owner (`ssh-keygen -lf` on the server's host key) before **Trust and connect**. If a
+host's key later changes, AIDE stops and shows both: someone may be intercepting the connection,
+so choose **Replace the key and connect** only if you know the server was set up again.
+
+**Known hosts** (in the section's menu) lists every key you've trusted; **Forget** removes one.

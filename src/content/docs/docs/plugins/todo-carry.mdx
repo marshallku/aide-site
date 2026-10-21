@@ -1,0 +1,77 @@
+---
+title: Todo carry
+description: Moves the open todos of your last daily note into a new daily note, and marks them as carried where they came from.
+sidebar:
+    order: 10
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+
+Todo carry takes the todos you didn't finish in your last daily note and puts them into the new one, so nothing is left behind in yesterday's page.
+
+<PluginFacts id="todo-carry" />
+
+## What it does
+
+When AIDE creates a daily note that contains the `todo-carry.open` slot, the plugin:
+
+1. Finds the latest daily note before it (yesterday's, or the last day you have a daily for).
+2. Takes that note's open top-level todos: lines that start with `- [ ] ` and aren't indented. Done, cancelled, in-progress and nested todos stay where they are.
+3. Adds each one as `- [ ] <text>` inside the new note's carry section. A todo already there isn't added twice, and anything you wrote in the section stays.
+4. Marks each carried todo in the old note, the way **Carry open todos** says:
+
+| Setting                         | The old line becomes   |
+| ------------------------------- | ---------------------- |
+| **Move, mark source [>]**       | `- [>] Call the bank`  |
+| **Move, strike through (이월)** | `- [x] ~~Call the bank~~ (이월)` |
+| **Off**                         | Nothing is carried     |
+
+The old line is marked only after the todo is in the new note, so a todo is never lost between the two. If the plugin stops halfway, it finishes the move when it starts again.
+
+It only carries into today's or tomorrow's daily. Opening an old daily, or one far ahead, never pulls todos into it.
+
+If [the assistant](/docs/guides/assistant/) moved a todo out of the old note in the meantime, the plugin doesn't carry it too, and takes back a copy it already made.
+
+## Before you start
+
+- A [desktop host](/docs/self-hosting/desktop-host/) or your own server. On a single device in local mode you don't need this plugin: the app carries todos itself when you open the new daily.
+- A daily template with the slot. Carrying only happens in dailies made from a template that has `{{slot todo-carry.open}}` in it.
+
+## Set it up
+
+<Steps>
+
+1. Add the slot to your daily template where carried todos should go (see [Daily notes and templates](/docs/guides/periodic-notes/)):
+
+    ```markdown
+    ## Todo
+    {{slot todo-carry.open}}
+    ```
+
+2. Open **Settings › Todos** and set **Carry open todos** to **Move, mark source [>]** or **Move, strike through (이월)**. It's **Off** until you choose.
+3. Turn the plugin on: **Todo carry** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+4. The next time a daily is created from the template (when you open today, or when the morning briefing creates it at 07:00), the open todos arrive.
+
+</Steps>
+
+## Settings
+
+The plugin has no settings of its own. The one choice it reads is **Carry open todos** in **Settings › Todos**, described above.
+
+## Troubleshooting
+
+### Today's daily didn't get yesterday's todos
+
+- Check that **Carry open todos** isn't **Off**.
+- Check that today's daily has the slot. A daily created before you added `{{slot todo-carry.open}}` to the template doesn't get one; the plugin only acts when a daily is created.
+- The todos must be top-level and open: `- [ ] text` at the start of the line. An indented todo stays in the old note.
+- The plugin must be on when the daily is created. It reacts to the note being created, so turning it on later doesn't fill a daily that already exists.
+
+### A todo shows up in a daily I made weeks ahead
+
+It can't: the plugin only carries into today's and tomorrow's daily.
+
+## Privacy
+
+Todo carry reads and writes daily notes on your host or server and nothing else. It doesn't use AI and sends nothing anywhere.

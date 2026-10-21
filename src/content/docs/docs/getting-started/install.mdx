@@ -1,0 +1,212 @@
+---
+title: Install
+description: Install AIDE on the Mac with Homebrew or the install script, or on Linux with the install script, and keep it up to date.
+sidebar:
+    order: 2
+---
+
+import { Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
+
+AIDE is released for the Mac and for Linux on x86_64 from the public
+[aide-releases](https://github.com/marshallku/aide-releases) repository. Each install also gives you
+`aidectl`, the command-line tool, and everything the [desktop host](/docs/self-hosting/desktop-host/)
+needs, so a computer can serve your notes to your phone without installing anything else.
+
+## Install
+
+<Tabs syncKey="os">
+<TabItem label="Mac">
+
+You need macOS 14 Sonoma or later, on Apple silicon or Intel.
+
+**With Homebrew:**
+
+```bash
+brew install --cask marshallku/tap/aide
+```
+
+The cask installs `AIDE.app` into `/Applications` and links `aidectl` onto your `PATH`.
+
+**With the install script:**
+
+```bash
+curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash
+```
+
+The script:
+
+- downloads `AIDE-X.Y.Z-macos.zip` and checks it against the release's `SHA256SUMS`;
+- refuses the app unless its signature verifies and Gatekeeper accepts it as notarized;
+- quits a running AIDE that it is about to replace, then swaps the new app in, keeping the old one
+  until the new one is in place;
+- installs `AIDE.app` into `~/Applications`;
+- links `~/.local/bin/aidectl` to the `aidectl` inside the app, so the app's updates bring it along.
+
+If `~/.local/bin` isn't on your `PATH`, the script says so. Add it to run `aidectl` by name.
+
+</TabItem>
+<TabItem label="Linux">
+
+Releases are built for x86_64 with glibc 2.39 or later (the baseline of Ubuntu 24.04). On other
+architectures, the install script stops.
+
+**1. Install the libraries.** AIDE uses your distribution's GTK stack: GTK 4.14 or later,
+libadwaita 1.5 or later, WebKitGTK 6.0, libheif, VTE for GTK 4 and the GStreamer good and bad
+plugins.
+
+On Arch Linux:
+
+```bash
+sudo pacman -S gtk4 libadwaita webkitgtk-6.0 libheif vte4 gst-plugins-good gst-plugins-bad
+```
+
+On Ubuntu:
+
+```bash
+sudo apt install libgtk-4-1 libadwaita-1-0 libwebkitgtk-6.0-4 libheif1 libvte-2.91-gtk4-0 gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
+```
+
+**2. Run the install script.** It needs no `sudo`; everything goes into your home folder.
+
+```bash
+curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash
+```
+
+The script downloads `aide-X.Y.Z-x86_64-linux.tar.gz`, checks it against the release's
+`SHA256SUMS` and installs:
+
+| What | Where |
+| --- | --- |
+| The app | `~/.local/bin/aide-desktop` |
+| `aidectl` | `~/.local/bin/aidectl` |
+| Desktop entry | `~/.local/share/applications/com.marshallku.aide.desktop` |
+| D-Bus service (starts AIDE for notifications and links) | `~/.local/share/dbus-1/services/com.marshallku.aide.service` |
+| Icon | `~/.local/share/icons/hicolor/scalable/apps/com.marshallku.aide.svg` |
+| `aide://` link handler | set with `xdg-mime` in `~/.config/mimeapps.list` |
+| The desktop host's runtime (server, plugin runner, Postgres) | `~/.local/lib/aide/host-X.Y.Z` |
+
+If a library is missing, the script names it and prints the commands above. Start AIDE from your
+desktop's app launcher; the desktop entry works whether or not `~/.local/bin` is on your `PATH`.
+
+</TabItem>
+</Tabs>
+
+### iPhone
+
+The iPhone app (iOS 17 or later) is in a TestFlight beta and isn't publicly available yet. When it
+is, it connects to a [desktop host or your own server](/docs/getting-started/connect-devices/), or
+keeps notes on the phone by itself.
+
+## Install script options
+
+Pass options after `bash -s --` when you pipe the script:
+
+```bash
+curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash -s -- --version 0.4.16
+```
+
+| Option | What it does |
+| --- | --- |
+| `--version X.Y.Z` | Installs that release instead of the latest. Use it to go back to an earlier version. |
+| `--applications DIR` | Mac only: installs `AIDE.app` into `DIR` instead of `~/Applications`. |
+| `--prefix DIR` | Puts `aidectl` (and on Linux the app and the host runtime) under `DIR` instead of `~/.local`. |
+| `--uninstall` | Removes what the script installed. |
+| `--help` | Lists the options. |
+
+Setting `AIDE_RELEASE_URL` makes the script download from a mirror instead of GitHub; every file is
+still checked against `SHA256SUMS`.
+
+## First launch
+
+AIDE opens on **Get started**, where you choose where your notes live: on this device, in a folder
+you already have (an Obsidian vault opens in place), or on a server or desktop host.
+[Ways to run AIDE](/docs/getting-started/ways-to-run/) explains each choice.
+
+## Updates
+
+AIDE updates itself when it was installed by the install script. It checks GitHub for a newer
+release when it starts and then every hour once the last check is a day old. You find it in
+**Settings › Updates** on the Mac and **Settings › General › Updates** on Linux.
+
+- **Check automatically** is on by default. Turned off, AIDE checks only when you choose
+  **Check now**.
+- A version found by an automatic check is announced once with a notification, and an update button
+  appears on the desktop's sidebar rail while the new version is available or installing.
+- **Skip this version** stops the announcements for that version; **Check now** still finds it.
+- **Release notes** opens the release on GitHub.
+
+When you choose **Update and restart**:
+
+<Steps>
+
+1. AIDE downloads the release and checks its checksum (on the Mac also its signature, team and
+   minimum macOS version; on Linux that every library it needs is present).
+2. Your open notes stop taking edits and are saved as drafts. If one can't be saved within
+   10 seconds, the update is cancelled and nothing changes.
+3. AIDE quits, the new version replaces it, and the new version starts. `aidectl` and the desktop
+   host's runtime are updated along with it.
+4. If the new version doesn't show its window within 45 seconds, the previous version is put back
+   and started, and it tells you: "AIDE X.Y.Z didn't start, so this version is back."
+
+</Steps>
+
+Some installs don't update from inside the app:
+
+| Install | How to update |
+| --- | --- |
+| Homebrew, at `/Applications/AIDE.app` | The app shows the command: `brew upgrade --cask aide` |
+| Mac, opened straight from the download (macOS runs it from a temporary copy) | Move AIDE to your Applications folder, then update from there |
+| Mac, in a folder AIDE can't write to | Run the install script again |
+| iPhone (TestFlight) | Through TestFlight; **Settings › Updates** has **Open TestFlight** |
+
+To go back to an earlier release by hand, run the install script with `--version X.Y.Z`. If you use a
+desktop host, going back one release is safe: each release leaves the host's database in a state the
+previous release still runs on.
+
+## Uninstall
+
+<Aside>
+If a vault is hosted with **Keep running while I'm logged in** on, turn that off first in the host's
+settings. Otherwise the host keeps running in the background after the app is gone.
+</Aside>
+
+<Tabs syncKey="os">
+<TabItem label="Mac">
+
+With Homebrew:
+
+```bash
+brew uninstall --cask aide
+```
+
+With the install script:
+
+```bash
+curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash -s -- --uninstall
+```
+
+The script quits AIDE, removes `AIDE.app` from `~/Applications` (or the folder you pass with
+`--applications`), and removes `~/.local/bin/aidectl` if it still points into that app.
+
+Your notes and settings stay. A vault AIDE keeps for you is under
+`~/Library/Application Support/com.marshallku.aide`, and a hosted vault's server data (its database
+and plugin state) is under `~/Library/Application Support/AIDE/hosts`. Folders you opened yourself
+are never touched.
+
+</TabItem>
+<TabItem label="Linux">
+
+```bash
+curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash -s -- --uninstall
+```
+
+Pass the same `--prefix` you installed with. The script removes the app, `aidectl`, the desktop
+entry, the D-Bus service, the icon, every host runtime under `~/.local/lib/aide`, and the `aide://`
+handler if it still names AIDE.
+
+Your notes and settings stay: vaults AIDE keeps for you and hosted vaults' server data are under
+`~/.local/share/aide`, and the app's settings are in `~/.config/aide/config.toml`. Folders you opened
+yourself are never touched.
+
+</TabItem>
+</Tabs>

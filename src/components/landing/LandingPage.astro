@@ -1,0 +1,46 @@
+---
+// The whole landing page in one language; src/pages/index.astro and ko/index.astro render it.
+import AssistantVignette from "#components/landing/AssistantVignette.astro";
+import Chapter from "#components/landing/Chapter.astro";
+import Closing from "#components/landing/Closing.astro";
+import DaySection from "#components/landing/DaySection.astro";
+import FeedVignette from "#components/landing/FeedVignette.astro";
+import Hero from "#components/landing/Hero.astro";
+import OrganizeVignette from "#components/landing/OrganizeVignette.astro";
+import OwnIt from "#components/landing/OwnIt.astro";
+import Platforms from "#components/landing/Platforms.astro";
+import PluginGrid from "#components/landing/PluginGrid.astro";
+import ProductStage from "#components/landing/ProductStage.astro";
+import WriteVignette from "#components/landing/WriteVignette.astro";
+import Landing from "#layouts/Landing.astro";
+import { COPY, type Lang } from "#lib/landing-copy";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = COPY[lang];
+---
+
+<Landing lang={lang}>
+    <Hero lang={lang} />
+    <ProductStage lang={lang} />
+    <Chapter id="features" {...copy.write}>
+        <WriteVignette lang={lang} />
+    </Chapter>
+    <Chapter {...copy.capture} flip>
+        <OrganizeVignette lang={lang} />
+    </Chapter>
+    <Chapter {...copy.feed}>
+        <FeedVignette lang={lang} />
+    </Chapter>
+    <DaySection lang={lang} />
+    <Chapter {...copy.assistant} flip>
+        <AssistantVignette lang={lang} />
+    </Chapter>
+    <PluginGrid lang={lang} />
+    <OwnIt lang={lang} />
+    <Platforms lang={lang} />
+    <Closing lang={lang} />
+</Landing>

@@ -1,0 +1,68 @@
+---
+title: Excalidraw
+description: A device plugin for drawing in your notes with Excalidraw; each drawing is an SVG that every note reader shows, with the plugin or without.
+sidebar:
+    order: 31
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+
+Excalidraw lets you sketch a diagram right in a note and edit it again later. The drawing is saved as
+an image in your vault, so it shows everywhere your notes do.
+
+<PluginFacts id="excalidraw" kind="device" />
+
+## What it does
+
+It adds no tab. It adds a **Drawing** sheet to the note editor, and an **Edit** button on the drawings
+in your notes.
+
+- **New drawing.** In a saved note, open the editor's **Plugins** menu (on the iPhone, under the More
+  menu) and choose **Drawing**. Draw, then choose **Save**. The drawing is saved as
+  `drawings/drawing-<date>-<time>-<tag>.excalidraw.svg` and a line `![drawing](…)` is added at the end
+  of the note.
+- **Edit a drawing.** Every drawing in a note has an **Edit** button, in the editor and when reading.
+  It opens the drawing as you left it. **Save** writes a new file next to the old one and points the
+  note's reference to it.
+- **Without the plugin**, the drawing is still an ordinary SVG image: AIDE on every device, other
+  Markdown apps and a browser all show it. The Excalidraw scene is kept inside the SVG, so the drawing
+  stays editable.
+
+An attachment in AIDE never changes once saved, so every save of a drawing is a new file. The earlier
+versions stay in `drawings/`.
+
+If the note changed while you were drawing, the plugin reads it again before saving. If the drawing's
+reference was removed from the note meanwhile, it says **the note no longer shows this drawing** and
+saves nothing.
+
+## Set it up
+
+<Aside>
+Excalidraw isn't listed in the public plugin index yet, so it doesn't appear in **Browse plugins**.
+Once it is, install it from there as below.
+</Aside>
+
+<Steps>
+
+1. Open **Browse plugins** (in **Settings**, under **On this device**; on Linux, **Settings › Device
+   plugins**) and choose **Excalidraw**.
+2. Approve **Read, change and archive all notes** (to add and update the drawing's reference) and
+   **Add images and documents to your notes** (to save the drawing), then **Install**.
+3. Open a note and choose **Drawing** from its **Plugins** menu.
+
+</Steps>
+
+It has no settings. More on installing, updating and removing is in [Installing device
+plugins](/docs/plugins/device-plugins/).
+
+## Limits
+
+- A drawing opens on a saved note: type something in a new note first.
+- Fonts can't load inside a plugin, so text in drawings uses the system's font rather than
+  Excalidraw's hand-drawn one.
+
+## Privacy
+
+The plugin writes drawings into `drawings/` and changes only the drawing references in the notes you
+draw in. It makes no network requests; drawings are attachments in your vault, synced like any other.

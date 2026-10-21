@@ -1,0 +1,62 @@
+---
+title: Search, graph and review
+description: Find notes by title or text, pin the ones you use, see how your notes link in the graph, and look back at what you finished.
+sidebar:
+    order: 6
+---
+
+AIDE has three ways to look across your notes: search finds one, the graph shows how they connect, and Review shows what you got done in a week, month, quarter or year.
+
+## Searching notes
+
+On the Mac and Linux, **Open Quickly…** (<kbd>⌘</kbd><kbd>O</kbd> or <kbd>⇧</kbd><kbd>⌘</kbd><kbd>F</kbd>; <kbd>Ctrl</kbd><kbd>O</kbd> or <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> on Linux) searches every note:
+
+1. First, notes whose title or path matches what you type.
+2. Then, under **In text**, notes whose text matches, each with a snippet of where.
+
+Arrow keys move through the list and <kbd>Return</kbd> opens a note; a text match opens with the find bar on the words it found. <kbd>⌘</kbd><kbd>Return</kbd> (<kbd>Ctrl</kbd><kbd>Enter</kbd> on Linux) opens it in a new tab.
+
+The search field at the top of the Wiki does the same on every device, the iPhone included: title and path matches under **Notes**, text matches under **In text**.
+
+Inside one note, **Find in Note…** (<kbd>⌘</kbd><kbd>F</kbd>, <kbd>Ctrl</kbd><kbd>F</kbd>, or **Find** in the note's bar on the iPhone) opens the editor's find bar.
+
+## Pinned
+
+Pin the notes you come back to and they're listed under **Pinned** at the top of the Wiki, above the folders. Choose **Pin** in a Wiki row's menu, or **Pin this note** in the command palette while the note is open; **Unpin** takes it off. Pins belong to the device, so each device keeps its own.
+
+## The graph
+
+The graph draws your wiki and periodic notes as dots, sized by how many links they have, with a line for each link between them. Links are resolved the same way as clicking them in a note.
+
+- On the Mac and Linux it's the **Graph** section of the sidebar: <kbd>⌘</kbd><kbd>4</kbd> on the Mac, <kbd>Alt</kbd><kbd>4</kbd> on Linux.
+- On the iPhone, open it from the Wiki's **More › Graph**.
+
+Drag the background to move around and drag a dot to move it. Pinch, or scroll with <kbd>⌘</kbd> held on the Mac, to zoom. Click a dot to open its note; <kbd>⌘</kbd>-click opens it in a new tab.
+
+The bar across the top has:
+
+- **Search** ("Find notes, paths, #tags"): marks the notes whose title, path or tags contain every word you type. <kbd>Return</kbd> opens the note titled exactly that, else the first match.
+- **Tags**: adds each tag as a dot of its own, linked to the notes that carry it.
+- **This note**: shown while a note is open; narrows the graph to that note and the notes up to two links away.
+- The number of notes and links shown.
+
+## Review
+
+Review lists the todos you completed in a period: the record to look back on at the end of a week, or to copy into a performance review. Open it with **Review** in the Wiki's header (on the iPhone, **More › Review**), or from the command palette.
+
+- Choose **Week**, **Month**, **Quarter** or **Year**, and move to the previous or next one with the arrows. Weeks start on the day set in **Settings › Wiki**.
+- Three counts sit at the top: todos **done**, the **notes** they were in, and **active days**.
+- When that period's note exists, its `## Summary` section shows as the period's summary. While the period is turned on in **Settings › Wiki**, a button opens its note (creating it if needed).
+- **By day** groups the todos by the day they were completed; **By note** groups them by the note they're in, the note with the most first.
+
+A todo counts on the day of its completion date (` ✅ 2026-10-22`). One without a date counts for the day of the daily note it's in, marked "recorded". Only done todos (`[x]`) count; cancelled and migrated ones don't. See [Todos](/docs/guides/todos/) for how completion dates are written.
+
+**Share** (Mac and iPhone) or **Copy as Markdown** (Linux) gives the period as Markdown, grouped the way the screen is:
+
+```markdown
+## 2026-W43 — 12 done
+
+### 2026-10-20
+- [x] Ship the release notes — Release v0.5
+- [x] Call the bank — 2026-10-20
+```

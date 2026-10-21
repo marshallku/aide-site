@@ -1,0 +1,115 @@
+---
+title: Run your own server
+description: What a dedicated AIDE server adds over a desktop host, what it is made of, and what you configure to run one.
+sidebar:
+    order: 2
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+A dedicated server is the same AIDE server a [desktop host](/docs/self-hosting/desktop-host/) runs, on a
+machine that stays on. Your notes, the Feed and the server plugins are there whether or not your desktop
+is awake, and an iPhone can use AIDE without any desktop at all.
+
+<Aside type="caution" title="Not available to download yet">
+The server's container image isn't published publicly yet, so you can't run your own server from the
+public release today. Use [a desktop host](/docs/self-hosting/desktop-host/) instead: it runs the same
+server, database and plugins on your Mac or Linux computer. This page describes what a server needs, for
+when the image is out.
+</Aside>
+
+## What it adds over a desktop host
+
+- **Always on.** Scheduled plugins run at their times, and the Feed takes events, while your computers
+  are off.
+- **An iPhone on its own.** The phone pairs with the server directly, with no desktop in between.
+- **Push to the iPhone**, once the server has a way to reach Apple's push service (see
+  [Push](#push-notifications)). A desktop host can't push to an iPhone.
+- **Remote MCP for the Claude app.** A server reachable over HTTPS can serve the Claude app's custom
+  connector. See [MCP and the Claude app](/docs/developers/mcp/).
+
+## Its parts
+
+| Part                  | What it does                                                                 |
+| --------------------- | ---------------------------------------------------------------------------- |
+| AIDE server (Go)      | Devices, notes, todos, the Feed and its triage, AI calls, Organize, push, MCP |
+| PostgreSQL 17         | The event log, settings, paired devices and plugin data                       |
+| Notes folder          | Your notes as Markdown files, in the same format as a vault on your computer  |
+| Plugin runner         | The built-in server plugins, each with its own scoped token                   |
+
+The server keeps notes as files in `<AIDE_DATA_DIR>/notes` unless you set `AIDE_NOTES_DIR`, so the folder
+is a vault you could open in AIDE or another Markdown editor. Only one program may write to it at a time.
+
+The plugin runner runs beside the server and talks to it over HTTP, each plugin with a token minted by
+`aide plugin-token`. See [Build a server plugin](/docs/developers/server-plugins/).
+
+## Reach it over HTTPS
+
+The server listens on plain HTTP (port 8080) and expects something in front of it for HTTPS. The apps ask
+for HTTPS for anything but a server on the same computer. Any of these works:
+
+- **Tailscale** (private, simplest): `tailscale serve --bg 8080` gives you
+  `https://<machine>.<tailnet>.ts.net`, reachable only from your tailnet.
+- **Cloudflare Tunnel**: `cloudflared tunnel --url http://127.0.0.1:8080`, or a named tunnel.
+- **Caddy** on a public machine: `reverse_proxy 127.0.0.1:8080`.
+
+Set `AIDE_PUBLIC_URL` to the HTTPS address, so pairing can print a link that fills in the app. If the
+proxy runs on another machine and forwards client addresses, list it in `AIDE_TRUSTED_PROXIES`: pairing
+limits failed attempts per client address.
+
+## Pair your devices
+
+On the server, run `aide pair`. It prints a single-use pairing code (`XXXXX-XXXXX`) that expires after 10
+minutes. With `AIDE_PUBLIC_URL` set, it also prints an `aide://pair?server=…&code=…` link.
+
+In the app, on the **Get started** screen under **Your AIDE server**, enter the **Server** address and the
+**Pairing code**, then choose **Connect**. Opening the link fills both in. You still choose **Connect**.
+
+A device that's already connected can make the next code: **Settings › Devices › Pair another device**.
+The same screen lists every device with **Revoke**.
+
+At most 5 codes are open at once, and a client address that fails 10 times is blocked for 10 minutes. If
+you've lost every device, run `aide pair` on the server again: access to the server is the proof that
+you own it.
+
+## Push notifications
+
+The server pushes the events that need you: everything triaged as **Act on**, and **Need to know** unless
+you turn that off. The Mac and Linux apps fetch notifications from the server themselves, so they need
+nothing extra. The iPhone needs Apple's push service, which the server reaches one of two ways:
+
+- **An APNs key** (`AIDE_APNS_KEY_FILE`, `AIDE_APNS_KEY_ID`, `AIDE_APNS_TEAM_ID`). A key only works for the
+  Apple developer team that signs the app, so this is for an iPhone app you build under your own team.
+- **A push relay** (`AIDE_PUSH_RELAY_URL`) that holds the key for the published app. The relay sees each
+  notification's title and body over TLS and keeps neither. There is no public relay yet, so iPhone pushes
+  from your own server aren't available with the published app today.
+
+`AIDE_PUSH_RELAY_URL=off`, or leaving it empty, turns iPhone pushes off. Everything else, desktop
+notifications included, keeps working.
+
+## Environment variables
+
+These are the variables you'd set. The server refuses to start when one is malformed and says which.
+
+| Variable                      | Default                     | What it does                                                                 |
+| ----------------------------- | --------------------------- | ---------------------------------------------------------------------------- |
+| `AIDE_DATABASE_URL`           | a local development database | The PostgreSQL connection URL                                               |
+| `AIDE_DATA_DIR`               | (none)                      | Absolute folder for notes (in `notes/`) and attachments. Required for a new server |
+| `AIDE_NOTES_DIR`              | `<AIDE_DATA_DIR>/notes`     | Keep notes in another absolute folder. Needs `AIDE_DATA_DIR` and `AIDE_USER_ID` |
+| `AIDE_SECRET_KEY`             | (none)                      | 32 random bytes, base64. Seals stored AI keys, gateway tokens and plugin secrets. Without it, the server can't store them |
+| `AIDE_PUBLISH_TOKEN`          | (required)                  | The token outside publishers send to `POST /events`. See [Publish events to the Feed](/docs/developers/events/) |
+| `AIDE_PUBLIC_URL`             | (none)                      | The HTTPS address devices use. Makes `aide pair` print a link               |
+| `AIDE_TRUSTED_PROXIES`        | (none)                      | Comma-separated IPs or CIDRs allowed to set `X-Forwarded-For`               |
+| `AIDE_ADDR`                   | `:8080`                     | The address the server listens on                                           |
+| `AIDE_TIMEZONE`               | the machine's               | Your time zone as an IANA name, like `Asia/Seoul`, for "today" in templates and schedules |
+| `ANTHROPIC_API_KEY`           | (none)                      | A server-wide Anthropic key, used when you haven't set your own in Settings › AI |
+| `AIDE_AI_MODEL`               | `claude-opus-5-5`           | The model for the server-wide key                                           |
+| `AIDE_AI_DAILY_LIMIT`         | `200`                       | AI calls allowed per day                                                    |
+| `AIDE_ALLOW_PRIVATE_GATEWAYS` | `false`                     | Allow a gateway on `http://`, a LAN or a Tailscale address. Safe when you're the only user |
+| `AIDE_GATEWAY_TIMEOUT`        | `150s`                      | How long a gateway call may take                                            |
+| `AIDE_APNS_KEY_FILE`, `AIDE_APNS_KEY_ID`, `AIDE_APNS_TEAM_ID` | (none) | An APNs auth key (`.p8`) and its ids, for iPhone pushes          |
+| `AIDE_PUSH_RELAY_URL`         | (none)                      | A push relay to use without an APNs key; `off` turns iPhone pushes off      |
+
+Keep `AIDE_SECRET_KEY` with your backups. Losing it makes the stored AI keys, gateway tokens and plugin
+secrets (Slack's tokens, for example) unreadable, and you type them in again. See
+[Backups and restore](/docs/self-hosting/backups/).

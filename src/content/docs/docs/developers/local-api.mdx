@@ -1,0 +1,140 @@
+---
+title: Local API
+description: Read and write the vault the AIDE app has open from any program on the same computer, over HTTP on a private Unix socket.
+sidebar:
+    order: 3
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+While the AIDE app on the Mac or Linux has a vault open, it serves that vault's notes on a Unix socket. Any program you run on the same computer can read and write notes there with plain HTTP, with no server and no token, and gets the same answers a server would give. [`aidectl`](/docs/developers/aidectl/) is built on it; this page is for when you want to call it yourself.
+
+## Who can connect
+
+- Only programs running as **your user** on the same computer. The app checks the user of every connection and closes any other.
+- The socket's folder is created with mode `0700` and must be a real folder (not a link) that belongs to you with no access for anyone else; the app refuses to serve, and `aidectl` refuses to connect, otherwise.
+- There's no authentication beyond that: whoever reaches the socket acts as the vault's owner.
+
+The iPhone has no local API.
+
+## Where the socket is
+
+The folder is `$XDG_RUNTIME_DIR/aide/` when `XDG_RUNTIME_DIR` is set (most Linux desktops), else `/tmp/aide-<uid>/aide/` (macOS has no runtime folder). There is one socket per open vault, named `<32 hex digits>.sock`, derived from the vault folder's real path and its device and inode numbers. A copy of a vault in another folder gets its own socket.
+
+The easy way to find the right one is to ask each socket which folder it serves:
+
+```sh
+dir="${XDG_RUNTIME_DIR:-/tmp/aide-$(id -u)}/aide"
+for s in "$dir"/*.sock; do
+    printf '%s  ' "$s"
+    curl -s --unix-socket "$s" http://aide/me
+    echo
+done
+```
+
+```json
+{"mode": "local", "vaultId": "8c4e…", "root": "/Users/you/Notes", "dev": 16777232, "ino": 2918843}
+```
+
+The host name in the URL doesn't matter; this page uses `http://aide/`. Use the socket whose `root` is your vault folder (links resolved).
+
+The socket exists only while the app holds the vault open. It disappears when you close the vault or quit the app.
+
+## A desktop host's socket
+
+When a [desktop host](/docs/self-hosting/desktop-host/) serves the vault, its socket sits in the same folder, named `host-<same name>.sock`. It serves the whole server API instead of the routes below, also as you without a token, and its `GET /me` names the folder it serves under `"host"`. `aidectl` tries the host's socket first, then the app's, then opens the folder itself.
+
+## Routes
+
+The same inputs, JSON shapes, status codes and errors as the note routes of an AIDE server.
+
+| Route | What it does |
+| --- | --- |
+| `GET /me` | Which vault this socket serves: `mode` (`local`), `vaultId`, `root`, `dev`, `ino` |
+| `GET /notes?kind=&prefix=` | `{"notes": [Note]}`, newest change first; `kind=scratch` lists scratch notes |
+| `GET /notes/lookup?path=` | A note by its path or by the file it mirrors (`topics/x.md`); the note path wins |
+| `GET /notes/{id}` | One live note |
+| `POST /notes` | `{path?, body?, title?, sourcePath?, template?, vars?}` → `201` Note; `409 path_taken` |
+| `PUT /notes/{id}` | `{version, body}` → Note; `409 version_conflict` when the note moved on. Changing `path`, `title` or `sourcePath` isn't supported here (`422 unsupported`) |
+| `DELETE /notes/{id}` | `{version}` → `204`; the note is archived, not deleted |
+| `POST /notes/{id}/append` | `{text, heading?, createHeading?, ifAbsent?}` → Note plus `appended`; `404 heading_not_found` |
+| `POST /notes/{id}/todos/{line}/toggle` | `{version}` → Note; `422` when the line isn't a todo |
+| `GET /todos` | `{"todos": [OpenTodo]}`: every open todo |
+| `GET /daily/{date}` | The daily note for `YYYY-MM-DD`, created from your template if missing |
+| `GET /periodic/{period}/{key}` | The note of `daily`, `weekly`, `monthly`, `quarterly` or `yearly` containing `key` (`YYYY-MM-DD`, `today`, `2026-W43`, `2026-10`), created if missing; `?create=false` answers `404` instead |
+| `GET /periodic/{period}/{key}/prev` | The latest existing note of that period before `key`'s |
+| `GET /search?q=&limit=` | `{"notes": [{id, path, kind, title, summary?, snippet?}]}`, `limit` up to 50 |
+| `GET /notes/{id}/sections/{name}` | A named section a plugin owns; `404` none, `409 section_ambiguous` |
+| `PUT /notes/{id}/sections/{name}` | `{content, version?}` → Note |
+| `GET /settings` | Your effective settings, plus `serverTimezone` |
+
+A Note is `{id, path, kind, title, body, version, todos, updatedAt}`, with `sourcePath` for a note that mirrors a file under another name and `period` / `periodStart` for a journal note. Line numbers are 0-based.
+
+Everything else a server offers (events, plugins, organize, attachments, changing settings) isn't part of the local API: an unknown route answers `404`, a known path with another method `405`.
+
+### Errors
+
+Errors are `{"error": {"code": "…", "message": "…"}}`. A `version_conflict` also carries `"current"`: the note as it is now.
+
+### Writes never overwrite blindly
+
+- A request that carries a `version` (update, archive, toggle, a section replace with `version`) gets `409 version_conflict` with the current note when the note changed since that version. The app never retries it for you: read again and decide.
+- Append and a section replace without `version` re-read and retry when an outside edit lands between their read and their write, up to 3 times.
+
+## Limits
+
+- HTTP/1.1, one request per connection is enough (`Connection: close`).
+- Request line and headers up to 16 KiB, body up to 2 MiB, 10 seconds to send a request, 8 connections at once.
+- A body needs `Content-Length`; chunked `Transfer-Encoding` is refused. `curl --data` sets it for you.
+
+## Examples
+
+```sh
+s="${XDG_RUNTIME_DIR:-/tmp/aide-$(id -u)}/aide/3f9a….sock"   # from the loop above
+```
+
+Today's daily note (created if missing):
+
+```sh
+curl -s --unix-socket "$s" http://aide/periodic/daily/today | jq -r .body
+```
+
+Look up a note and append under a heading:
+
+```sh
+id=$(curl -s --unix-socket "$s" "http://aide/notes/lookup?path=topics/k8s" | jq -r .id)
+curl -s --unix-socket "$s" -X POST "http://aide/notes/$id/append" \
+    -H 'Content-Type: application/json' \
+    -d '{"text": "- read the 1.31 changelog", "heading": "Reading", "createHeading": true}' | jq .appended
+```
+
+Replace a body only if nobody changed it since you read it:
+
+```sh
+note=$(curl -s --unix-socket "$s" "http://aide/notes/$id")
+version=$(echo "$note" | jq .version)
+body=$(echo "$note" | jq -r .body | sed 's/TODO/DONE/')
+jq -n --argjson v "$version" --arg b "$body" '{version: $v, body: $b}' |
+    curl -s --unix-socket "$s" -X PUT "http://aide/notes/$id" -H 'Content-Type: application/json' -d @-
+```
+
+Check off the first open todo in a note:
+
+```sh
+curl -s --unix-socket "$s" http://aide/todos |
+    jq -r --arg id "$id" '[.todos[] | select(.noteId == $id)][0] | "\(.line) \(.version)"' |
+    while read -r line version; do
+        curl -s --unix-socket "$s" -X POST "http://aide/notes/$id/todos/$line/toggle" \
+            -H 'Content-Type: application/json' -d "{\"version\": $version}"
+    done
+```
+
+Search:
+
+```sh
+curl -s --unix-socket "$s" "http://aide/search?q=postgres&limit=5" | jq -r '.notes[] | "\(.path)\t\(.title)"'
+```
+
+<Aside title="No app open?">
+When no app has the vault open, there is no socket. `aidectl` then opens the folder itself for one command, with the same rules and answers, so scripts that use `aidectl` work either way. If the app has the vault open but no socket answers, update or restart the app.
+</Aside>

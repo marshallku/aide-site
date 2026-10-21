@@ -1,0 +1,119 @@
+---
+title: MCP와 Claude 앱
+description: Claude Code, Claude 앱, 그 밖의 MCP 클라이언트가 AIDE 노트를 검색하고 읽고 바꾸며, 할 일로 하루 계획을 세우게 해요.
+sidebar:
+    order: 2
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+AIDE는 Model Context Protocol을 지원해서, Claude(또는 어떤 MCP 클라이언트든)가 노트를 검색하고 읽고, 할 일을 추가하고 체크하고, 하루 계획을 제안할 수 있어요. 들어오는 길은 두 가지예요. 보관소를 호스팅하는 컴퓨터의 클라이언트를 위한 `aidectl mcp`, 그리고 직접 운영하는 서버에서 Claude 앱을 위한 원격 엔드포인트예요.
+
+| | 로컬: `aidectl mcp` | 원격: `POST /mcp` |
+| --- | --- | --- |
+| 대상 | 호스팅하는 컴퓨터의 Claude Code와 다른 MCP 클라이언트 | claude.ai 맞춤 커넥터, 어디서든 Claude Code |
+| 필요한 것 | 보관소를 위해 실행 중인 [데스크톱 호스트](/ko/docs/self-hosting/desktop-host/)나 서버 | 공개 URL로 HTTPS 접근이 되는 서버 |
+| 동작 주체 | 나, 모든 도구 사용(데스크톱 호스트) | **설정 › Claude 앱**의 토큰 |
+
+둘 다 같은 도구를 쓰고, 도구는 [아래](#도구)에 설명해요.
+
+## 로컬: `aidectl mcp`
+
+[`aidectl`](/ko/docs/developers/aidectl/)은 표준 입력과 출력을 MCP 서버로 바꾸고 모든 메시지를 AIDE로 넘겨요. 보관소라면 그 폴더를 제공하는 데스크톱 호스트와 호스트의 소켓으로, 나로서 대화해요. 호스팅 없이 앱만 연 일반 로컬 모드의 보관소로는 부족해요. 이때 `aidectl mcp`는 `MCP on … needs its AIDE host running`으로 멈춰요.
+
+<Steps>
+
+1. 보관소를 호스팅하세요. Mac에서 <strong>설정 › 노트 › 이 보관소 호스팅…</strong>을 고른 뒤 **호스팅 시작**을 누르세요(Linux에서는 노트 그룹이 **일반** 아래에 있어요). [데스크톱에서 호스팅하기](/ko/docs/self-hosting/desktop-host/)를 보세요.
+2. `--vault`, `AIDE_VAULT`, 또는 `~/.config/aidectl/config`의 `vault=`로 `aidectl`에 어느 폴더인지 알려 주세요.
+3. Claude Code에 추가하세요.
+
+    ```sh
+    claude mcp add aide -- aidectl --vault ~/Notes mcp
+    ```
+
+    `aidectl` 설정 파일에 보관소를 정해 두었다면 이렇게요.
+
+    ```sh
+    claude mcp add aide -- aidectl mcp
+    ```
+
+</Steps>
+
+호스트의 소켓으로는 토큰이 없어요. 소켓에 닿는 사람은 곧 나이고, `aidectl` 자체와 같은 신뢰 수준이라 쓰기 도구까지 모든 도구가 제공돼요.
+
+`aidectl mcp`는 서버(`--server` 또는 `AIDE_URL`)와도 동작해요. 이때 `AIDE_TOKEN`(또는 `token=`)은 **설정 › Claude 앱**의 토큰이어야 하고, 다른 토큰은 `use a token of the claude plugin`으로 거부돼요. 만료되거나 폐기된 토큰이면 `aidectl mcp`는 클라이언트가 맞춰 볼 수 없는 응답을 돌려주는 대신 서버의 `401`로 멈춰요.
+
+## 원격: Claude 앱
+
+직접 운영하는 서버에서 AIDE는 서버의 공개 URL(`AIDE_PUBLIC_URL`) 아래 `POST /mcp`로 Streamable HTTP MCP를 제공해요. claude.ai는 Anthropic 쪽에서 호출하므로, URL은 인터넷에서 HTTPS로 접근할 수 있어야 해요.
+
+<Steps>
+
+1. Mac이나 iPhone에서 **설정 › Claude 앱**을 여세요(Linux에서는 설정의 **Claude** 페이지).
+2. Claude가 쓸 수 있어야 한다면 **노트 변경 허용**을 켜세요. 끄면 읽기만 할 수 있어요.
+3. **연결**을 고르세요. 앱이 **Claude에 추가** 아래에 **URL**과 토큰을 보여 줘요. **URL 복사**와 **토큰 복사**로 둘 다 복사하세요. 토큰은 지금만 보여요.
+4. Claude에서 **Settings › Connectors › Add custom connector**로 가세요. URL을 넣고, 인증에 `Authorization: Bearer <token>` 헤더를 추가하세요.
+
+</Steps>
+
+- 토큰이 살아 있고 연결이 켜져 있으면 **상태**가 **연결됨**으로 보여요.
+- **새 토큰 만들기**는 이전 토큰을 바꾸고, 이전 토큰은 바로 쓸 수 없게 돼요. **노트 변경 허용**을 켜거나 끌 때도 이걸 쓰세요.
+- **연결 해제**는 토큰을 폐기해요.
+- **URL** 줄에 **서버에서 AIDE_PUBLIC_URL 설정**이 보이면 서버가 자기 공개 주소를 모르는 거예요. `AIDE_PUBLIC_URL`을 설정하고 서버를 다시 시작하세요. 데스크톱 호스트에는 공개 URL이 없어서 이 페이지가 줄 URL이 없어요. 그 컴퓨터에서 `aidectl mcp`를 쓰세요.
+
+Claude Code에서는 같은 URL과 토큰을 HTTP 서버로 추가해요.
+
+```sh
+claude mcp add --transport http aide https://aide.example.com/mcp \
+    --header "Authorization: Bearer aide_p_…"
+```
+
+### 토큰으로 할 수 있는 일
+
+토큰은 Claude라는 이름의 기본 연결에 속해요. 모든 노트를 읽을 수 있고(`notes:read:*`), **노트 변경 허용**이 켜져 있으면 모든 노트에 쓸 수도 있어요(`notes:write:*`). 꺼져 있으면 쓰기 도구는 목록에도 나오지 않아요. 모든 도구는 그 토큰으로 서버의 경로를 거치는 요청으로 실행되므로, 다른 클라이언트와 같은 검사를 받아요.
+
+엔드포인트는 `POST`에만 답하고, 서버가 먼저 보내는 메시지는 없어요(`GET /mcp`는 `405`). `Origin`이 서버의 공개 URL이 아닌 웹 페이지의 요청은 `403`으로 거부되므로, 브라우저 페이지가 조종할 수 없어요. 배치는 지원하지 않아요. 프로토콜 버전 `2025-11-25`, `2025-06-18`, `2025-03-26`을 받아요.
+
+<Aside title="노트는 여전히 내 것">
+MCP로 Claude가 보는 건 도구가 돌려준 것뿐이에요. 검색하거나 읽은 노트, 열린 할 일, 그리고 계획할 때는 어시스턴트 메모리와 목표예요. 이 경로로는 캘린더를 받지 않아요.
+</Aside>
+
+## 도구
+
+읽기 도구는 항상 제공돼요. 쓰기 도구에는 변경이 허용된 토큰이나 데스크톱 호스트의 소켓이 필요해요.
+
+| 도구 | 종류 | 하는 일 | 인자 |
+| --- | --- | --- | --- |
+| `search_notes` | 읽기 | 전문 검색. 결과마다 id, 경로, 제목, 발췌문 | `query`(필수), `limit`(기본 20, 최대 50) |
+| `list_notes` | 읽기 | 경로가 접두사로 시작하는 노트, 메타데이터만 | `prefix`(비우면 모든 노트) |
+| `read_note` | 읽기 | 노트의 Markdown 본문, 버전, 할 일 | `id` 또는 `path` |
+| `find_periodic_note` | 읽기 | 날짜를 포함하는 저널 노트(있다면) | `period`(`daily` … `yearly`), `date`(기본 오늘) |
+| `open_todos` | 읽기 | 노트 전체의 열린 할 일과 노트 id, 줄, 버전, 마감, 우선순위, 태그 | 없음 |
+| `plan_context` | 읽기 | AIDE 어시스턴트가 보는 하루 계획의 바탕: 내 시간대의 오늘과 지금, 참조가 붙은 열린 할 일, 빠진 개수, 이번 주에 끝낸 할 일, 어시스턴트 메모리와 목표 | 없음 |
+| `create_note` | 쓰기 | 경로에 노트 만들기 | `path`(필수), `body` |
+| `append_to_note` | 쓰기 | 제목 아래(없으면 만들어요)나 끝에 덧붙이기. 버전이 필요 없어요 | `id`, `text`(필수), `heading` |
+| `set_todo_status` | 쓰기 | 할 일 상태 정하기: `" "` 열림, `x` 완료, `/` 진행 중, `-` 취소, `>` 옮김, `<` 예약 | `noteId`, `line`(0부터), `version`, `status`, `text`(모두 필수) |
+| `add_todo` | 쓰기 | 오늘의 일일 노트(할 일 제목 아래)나 인박스 노트에 열린 할 일 하나 추가. 필요하면 노트를 만들어요. 필드는 줄 안에 써요(`call Mina 📅 2026-10-30`) | `text`(필수), `target`(`today` 또는 `inbox`), `date` |
+| `open_periodic_note` | 쓰기 | 날짜를 포함하는 저널 노트. 없으면 템플릿으로 만들어요 | `period`, `date` |
+| `update_note` | 쓰기 | 마지막으로 읽은 버전으로 노트 본문을 다시 쓰거나 다른 경로로 옮기기 | `id`, `version`(필수), `body`, `path` |
+| `propose_plan` | 쓰기 | 할 일 변경 제안하기. 받아들이기 전에는 아무것도 적용되지 않아요 | `reply`, `operations`(필수), `id`, `message` |
+
+버전을 담은 쓰기는 읽은 뒤 노트가 바뀌었으면 실패해요. 클라이언트가 다시 읽고 재시도해요. `set_todo_status`는 그 줄이 아직 `text`인지도 확인해서, 다른 할 일이 그 줄로 옮겨 왔을 때 엉뚱한 할 일을 바꾸지 않아요.
+
+### `propose_plan`으로 계획하기
+
+`propose_plan`을 쓰면 Claude가 AIDE의 [어시스턴트](/ko/docs/guides/assistant/)처럼 하루를 계획해요. 제안은 AIDE(Mac, iPhone, Linux)의 **할 일**에서 받아들이거나 버릴 때까지 기다리고, 계획은 오늘의 어시스턴트 대화에 남아요. 계획 하나에 작업은 최대 20개예요.
+
+| 작업 | 필드 |
+| --- | --- |
+| `schedule` | `todo`, `start`(`HH:MM`), `end` |
+| `unschedule` | `todo` |
+| `estimate` | `todo`, `minutes`(5–720) |
+| `status` | `todo`, `status`(`" "`, `/`, `x`, `-`) |
+| `move` | `todo`, `date`: 그날의 일일 노트로 옮겨요 |
+| `add` | `text`, `date`, `start`, `end`, `minutes` |
+| `remember` | `text`: 어시스턴트 메모리에 남길 한 줄 |
+
+`todo`는 `plan_context`나 `open_todos`의 참조(`noteId`, `line`, `text`)예요. 지금 내용이 달라진 할 일은 거부돼요. 작업마다 `why`를 붙일 수 있고, 카드에 보여요. 재시도해도 두 번 남지 않도록 직접 `id`를 넘기세요. 오늘의 어시스턴트 대화에 쓰기 때문에 변경이 허용된 토큰이 필요해요.
+
+연결한 뒤 Claude에게 "3시 리뷰에 맞춰 오후 계획 세워 줘"처럼 물어보고 **할 일**에서 카드를 확인하세요.

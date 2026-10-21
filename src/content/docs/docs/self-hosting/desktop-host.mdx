@@ -1,0 +1,219 @@
+---
+title: Host on your desktop
+description: Run AIDE's server on your Mac or Linux computer for one vault, so server plugins, the Feed and AI work and your other devices can connect.
+sidebar:
+    order: 1
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+Hosting turns a vault on your Mac or Linux computer into a server of its own. You get what local mode
+leaves out (server plugins, the Feed, AI with your own key, Claude through `aidectl mcp`), your notes stay
+Markdown files in the same folder, and you don't run a separate server.
+
+## What hosting runs
+
+When you host a vault, AIDE starts three things on your computer, all from inside the app you installed:
+
+- **AIDE's server**, the same program a self-hosted server runs, in host mode. It serves the vault over
+  a Unix socket that only your user account can open. Nothing listens on the network until you let
+  devices in.
+- **Its own PostgreSQL** (PostgreSQL 18, shipped with AIDE). It listens on a private socket only, never on
+  a TCP port, and keeps the event log, settings, paired devices and plugin data. It isn't the copy of
+  PostgreSQL your system might have.
+- **The plugin runner**, which runs every built-in server plugin. If it stops, the host starts it again
+  after 30 seconds.
+
+The notes themselves stay where they were: files in your vault's folder. While the vault is hosted, the
+host is the only program that writes to it, and the app, `aidectl` and the plugins all go through the
+host.
+
+## Start hosting
+
+You can host a vault that lives on this computer (local mode). The iPhone can't host. It connects to a
+host instead.
+
+<Steps>
+
+1. Open the vault you want to host.
+2. Open Settings. On the Mac, go to **Settings › Notes › Host this vault…**. On Linux, go to
+   **Settings › General › Notes › Host this vault…**.
+3. Choose **Start hosting**. The window shows **Starting the host…** while the server and its database
+   start. The first start takes the longest.
+
+</Steps>
+
+Once it's running, a **Host** group takes the place of **Notes** in Settings. It shows:
+
+- **Vault**: the folder being served.
+- **Running**: the socket the host answers on.
+- **Log**: the host's log file. Open it when something goes wrong.
+- **Devices over the network…**, **Keep running while I'm logged in**, **Back up…** and **Stop
+  hosting…**, which this page covers below.
+- **Vaults**, **Recently deleted** and **Leave out of notes**, as in local mode.
+
+If an Organize of the vault hasn't finished, hosting refuses to start: finish the Organize first.
+
+### When the host can't run
+
+If the host fails to start, the window shows **The host can't run** with the reason. Choose **Try again**,
+or **Give the vault back as it is…** to stop hosting and open the folder as a plain local vault again.
+Giving it back keeps the notes as they are. Anything the host hadn't finished, such as an Organize waiting
+for you, is dropped.
+
+## Where the host keeps its data
+
+The vault's notes stay in the vault's folder. Everything else the host keeps lives in a folder per vault,
+named after the vault's id:
+
+| System | Folder                                                  |
+| ------ | ------------------------------------------------------- |
+| macOS  | `~/Library/Application Support/AIDE/hosts/<vault id>/`  |
+| Linux  | `~/.local/share/aide/hosts/<vault id>/` (or `$XDG_DATA_HOME/aide/hosts/<vault id>/`) |
+
+The **Log** row in Settings points into this folder (`host.log`). Inside it are the database (`pg/`), the
+plugins' own state (`plugins/`), attachment state (`files/`) and, if you make one, the local plugin
+configuration (`plugins.json`).
+
+The host's sealing key is kept apart from this folder. It is the key that encrypts the AI keys and plugin
+secrets the host stores. On the Mac it lives in the keychain. On Linux it lives in your keyring (GNOME
+Keyring, KeePassXC and the like), or in a private file when no unlocked keyring is found. AIDE never makes
+a new key for a vault that was hosted before: without the old key, the stored credentials can't be read.
+
+## Keep running while I'm logged in
+
+By default the host runs while AIDE is open and stops when you quit. Turn on **Keep running while I'm
+logged in** in the Host group to keep it running without the app:
+
+- **macOS**: a LaunchAgent (`com.marshallku.aide.host.<vault id>`) runs the host from login and restarts it
+  if it crashes.
+- **Linux**: a systemd user service (`aide-host-<vault id>.service`) does the same. Its output goes to
+  `journalctl --user -u aide-host-<vault id>.service`.
+
+The host restarts once when you change this setting. The app then attaches to the running host when you
+open it. With it on, scheduled plugins (the morning briefing, the evening recap, the nightly catch-up)
+still run when AIDE is closed, as long as you're logged in and the computer is awake.
+
+## Let other devices in
+
+Your phone and your other computers can use a hosted vault over the network. Network access is off until
+you turn it on, and only devices you approve on the host get in.
+
+<Aside type="note">
+Network access needs the host's key in the keychain (Mac) or an unlocked keyring (Linux). Kept in a file,
+the key could be copied along with the host's data, so AIDE refuses. On Linux, start a keyring and open
+AIDE again.
+</Aside>
+
+<Steps>
+
+1. In the Host group, open **Devices over the network…**.
+2. Under **Address**, pick where devices reach this computer. AIDE lists this computer's Tailscale
+   addresses first, then its local network (LAN) addresses, on port 8443. Pick a Tailscale address to
+   reach the host from anywhere, or a LAN address for your home network only.
+3. Choose **Let devices in**. The host restarts and listens on that one address. **Now** then shows each
+   address's state and the host key's fingerprint.
+4. Choose **Add a device…**. AIDE shows a pairing link (`aide://pair-host?…`). It works for 5 minutes and
+   for one device.
+5. On the other device, on the **Get started** screen (what AIDE shows before it has a vault or a server
+   to open), find **Connect to a host**, paste the
+   link into **Pairing link** and choose **Connect to the host**. On an iPhone you can open the link
+   instead. The device then shows its name and its key's fingerprint.
+6. Back on the host, the device appears under **Asking to pair**. Check that the fingerprint matches what
+   the device shows, then choose **Approve**. **Deny** turns it away.
+
+</Steps>
+
+The host listens only on the address you picked. It never opens a port on your router and never falls
+back to every interface. If the address goes away (Tailscale disconnects, the Wi-Fi changes), the host
+waits until it comes back. To stop taking devices, open **Devices over the network…** and choose **Turn
+off**.
+
+### How the connection is secured
+
+- **TLS 1.3 both ways.** The host has a P-256 key, derived from its sealing key. The pairing link carries
+  that key's fingerprint, and the device pins it: a host that shows another key is refused.
+- **Each device has its own key.** The device makes it when it pairs (on an iPhone, in the Secure Enclave
+  when there is one) and shows a certificate the host issued to it on every connection. A connection
+  without an approved certificate is dropped during the TLS handshake, before it reaches the server.
+- **Pairing is separate.** While **Add a device…** is open, a few connections without a certificate may
+  reach the pairing routes and nothing else.
+- **Revoking is immediate.** A revoked device's open connections close at once.
+
+A device connected over the network can read and change notes and todos, read the Feed, use plugin tabs,
+run AI and Organize, and get its own notifications. It can't pair devices, change settings or AI keys,
+turn plugins on or off, or reach MCP. Those stay with you on the host.
+
+### Remove a device
+
+On Linux, **Settings › Devices** on the host lists the paired devices, with **Revoke** beside each. The
+Mac app doesn't list them while it hosts. To shut every device out there, choose **Turn off** under
+**Devices over the network…**.
+
+On the device itself, **Settings › Devices › Sign out** forgets the host on that device only. Remove the
+device on the host to stop it for good.
+
+## Plugins on a host
+
+The host registers every built-in server plugin, each switched off until you turn it on. See
+[How plugins work](/docs/plugins/overview/) for what each one does.
+
+<Steps>
+
+1. Open Settings. On the Mac, the plugins are listed under **On the server**. On Linux, they're on the
+   **Plugins** page under **On the server**.
+2. Open a plugin and turn on **Enabled** (on Linux, the switch on its row).
+3. Fill in its settings. Settings save as you change them, and a plugin picks them up within a minute.
+
+</Steps>
+
+Each plugin talks to the host with its own token, limited to the notes and topics it needs. The host
+trusts its built-in plugins the way it trusts you, because they run as your user on your computer: the
+token limits what a mistake can touch, not what hostile code could do.
+
+### The local plugin configuration file
+
+A few plugin settings never come from the app: credentials and paths on this computer, such as
+docs-sync's git `remote` and `clone`, or a Google `credentials` and `tokenFile`. Put those in
+`plugins.json` in the host's data folder (beside `host.log`):
+
+```json
+{
+    "timezone": "Asia/Seoul",
+    "plugins": {
+        "docs-sync": { "remote": "git@github.com:you/notes.git", "branch": "main" }
+    }
+}
+```
+
+- `timezone` is optional. Without it, plugins use this computer's time zone.
+- Each key under `plugins` is a plugin id, and its value is that plugin's local block. The plugin's page
+  in this manual lists the keys it reads.
+- Settings you change in the app win over the file for the keys the plugin's settings declare. The file
+  keeps everything else. `token`, `remote`, `clone`, `credentials`, `tokenFile`, `healthDir` and
+  `stateDir` only ever come from the file.
+- The host reads the file when it starts. After changing it, restart the host: quit AIDE and open it again
+  (with **Keep running while I'm logged in** off), or turn that setting off and on.
+
+## Stop hosting
+
+Open **Stop hosting…** in the Host group and choose **Stop hosting**. AIDE saves what you're writing,
+stops the host and opens the vault as notes on this computer only. Server plugins, the Feed and Claude stop
+until you host it again. The host keeps its data and settings for then.
+
+If the host still has unfinished work for the vault (an Organize waiting for you, changes it hasn't
+passed on yet), Stop hosting refuses and says why. **Stop anyway** stops it and drops that work.
+
+## Limits
+
+- **Mac and Linux only.** The iPhone connects to a host but can't be one.
+- **The computer must be on.** The host runs only while you're logged in and the computer is awake.
+  Devices away from it can't reach your notes while it sleeps.
+- **No iPhone push notifications.** A host has no Apple push key, so an iPhone connected to it gets no
+  pushes. The Mac and Linux apps fetch their notifications themselves.
+- **One host per vault.** Another AIDE, or a server pointed at the same folder, finds the vault taken.
+- **Don't sync a hosted vault between computers** with Syncthing, iCloud or git: only one program may
+  write to a vault at a time. Use the network access above, or the [docs-sync](/docs/plugins/docs-sync/)
+  plugin for a git copy.
+- **A new host key means pairing again.** If the host's key is lost, or you restore the vault from a
+  backup, every device pairs again.

@@ -1,0 +1,198 @@
+---
+title: Publish events to the Feed
+description: Post events to your AIDE server's Feed from a script, a cron job or another service, and control how they are sorted and pushed.
+sidebar:
+    order: 6
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Anything that can make an HTTP request can post to your [Feed](/docs/guides/feed/): a cron job watching a price, a
+CI pipeline, a home automation hub, a scraper for notices you'd otherwise miss. Each event lands in a topic, AIDE
+sorts it into **Act on**, **Need to know**, **Might interest you** or **Everything else**, and pushes the ones that
+need you.
+
+<Aside type="caution" title="Your own server only">
+Posting from outside needs a token the server issues: the publish token set when the server is deployed, or a plugin
+token minted with `aide plugin-token` on the server's host. Both come from [your own server](/docs/self-hosting/own-server/).
+A [desktop host](/docs/self-hosting/desktop-host/) has neither in this release; there, only the plugins it runs post to
+the Feed.
+</Aside>
+
+## Post an event
+
+```sh
+curl -X POST https://aide.example.com/events \
+    -H "Authorization: Bearer $AIDE_PUBLISH_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "topic": "finance.rates",
+        "key": "rates:2026-10-22",
+        "title": "Base rate held at 2.50%",
+        "body": "The central bank kept the base rate unchanged.",
+        "url": "https://example.com/rates/2026-10-22"
+    }'
+```
+
+The answer is the event as stored. `201 Created` means it's new; `200 OK` means an event with the same `topic` and
+`key` already existed, and you get that original back unchanged.
+
+### Tokens
+
+| Token                                  | Where it comes from                                         | May post to                                    |
+| -------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------- |
+| The publish token (`AIDE_PUBLISH_TOKEN`) | The server's environment, set at deploy time              | Any topic except the reserved `aide.*` ones    |
+| A plugin token (`aide_p_…`)            | `aide plugin-token <id> --scope events:publish:<prefix>`    | The topics its `events:publish` scopes cover   |
+
+The publish token is one shared secret that can only post events. A plugin token is better for anything new: each
+publisher gets its own, limited to its own topics, revocable on its own with `aide plugin-token <id> --revoke`, and
+each event records which plugin posted it. The owner can also switch a plugin's publishing off by turning the plugin
+off in the app (it then gets `403 plugin_disabled`). See [Build a server plugin](/docs/developers/server-plugins/) for
+minting tokens.
+
+```sh
+aide plugin-token rates --scope events:publish:finance
+```
+
+A scope prefix matches whole dot-separated segments: `events:publish:finance` covers `finance` and `finance.rates`,
+not `financial`.
+
+## Fields
+
+| Field     | Required | Value                                                                                                                      |
+| --------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `topic`   | yes      | A lowercase letter or digit, then up to 63 of `a-z 0-9 . _ -`. Topics starting with `aide.` are reserved (`403 reserved`)   |
+| `title`   | yes      | Up to 500 bytes. What the Feed and the notification show                                                                   |
+| `body`    | no       | Up to 64 KiB of text                                                                                                       |
+| `url`     | no       | A link; the event's detail offers it as **Open link**                                                                      |
+| `key`     | no       | 1–200 bytes. Makes the post idempotent within its topic (below)                                                            |
+| `payload` | no       | A JSON object (`{}` by default) for structured data and the hints below                                                    |
+
+Any other field is `400 bad_request`; a value that breaks a rule is `422 invalid` with the reason.
+
+A topic is created by its first event, and everyone on the server is subscribed to it from that first event on, so
+the very first post already shows and can push. The owner can unsubscribe from a topic in the Feed's **Topics**.
+
+### Keys: post once, retry safely
+
+A `key` is unique within its topic, for good. Posting again with a key that topic has already seen stores nothing,
+returns the original event with `200`, and never shows or pushes a second time. Build the key from what makes the
+event the same event, and retry a failed request freely:
+
+- one notice per item: `notice:<the source's id>`
+- one summary a day: `daily-summary:2026-10-22`
+- one alert per threshold crossing: `disk-90:<host>:2026-10-22`
+
+Without a key, every post is a new event.
+
+## How the Feed sorts it
+
+Every event gets a bucket once, for each person, the first time it's delivered to them. Sorting never hides
+anything: an event in **Everything else** is still there, folded away.
+
+When the owner has an AI model set up (**Settings › AI**), the model sorts the event from its topic, title and the
+first 2 KB of its body, using the titles in the owner's wiki as their interests:
+
+| Bucket                 | For                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------- |
+| **Act on**             | Something the owner has to do: a deadline, an application, a payment, a required step |
+| **Need to know**       | Important without an action: news that moves something they care about, a rule change |
+| **Might interest you** | Matches their interests                                                               |
+| **Everything else**    | The rest                                                                              |
+
+It writes a one-sentence reason in the event's language, shown in the event's detail. The event's text is given to
+the model as data, never as instructions.
+
+Without an AI model, or when the model fails, rules decide, in this order:
+
+1. The title or body mentions `deadline`, `due`, `action required`, `expires`, `apply by`, `register by`, `마감`,
+   `신청`, `납부`, `시행`, `만료` or `기한`: **Act on**.
+2. `payload.severity` is `"high"`: **Need to know**.
+3. The title or body contains a word from the titles or paths of the owner's wiki pages (whole words for English):
+   **Might interest you**.
+4. Otherwise: **Everything else**.
+
+So a publisher that knows an event matters can say so with `"payload": {"severity": "high"}`, and a deadline in the
+title lands in **Act on** whether or not there's a model.
+
+## Push
+
+AIDE checks for new events every few seconds and decides per event:
+
+| `payload.push` | Pushes                                                                                       |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| `"force"`      | Always                                                                                       |
+| `"never"`      | Never; it waits in the Feed                                                                  |
+| left out       | **Act on** always; **Need to know** unless the owner turned that off; nothing else           |
+
+An event is pushed only while it's fresh: one more than an hour old when its turn comes (a backlog after the server
+was down, say) shows in the Feed but never pushes. A repeat of a notification replaces the earlier one on the
+device instead of stacking. The Mac and Linux apps fetch their notifications from the server themselves; an iPhone
+needs the server to be set up for Apple push (see [Run your own server](/docs/self-hosting/own-server/)).
+
+```sh
+curl -X POST https://aide.example.com/events \
+    -H "Authorization: Bearer $AIDE_PLUGIN_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "topic": "home.alerts",
+        "key": "door-open:2026-10-22T23:10",
+        "title": "The front door has been open for 10 minutes",
+        "payload": {"push": "force", "sensor": "front-door"}
+    }'
+```
+
+Use `force` sparingly: it skips the sorting the owner relies on to keep the phone quiet.
+
+## Examples
+
+A cron line that posts the day's disk usage once a day, without pushing:
+
+```sh
+0 8 * * * curl -fsS -X POST https://aide.example.com/events \
+    -H "Authorization: Bearer $AIDE_PLUGIN_TOKEN" -H "Content-Type: application/json" \
+    -d "{\"topic\": \"server.disk\", \"key\": \"disk:$(date +\%F)\", \"title\": \"Disk $(df --output=pcent / | tail -1 | tr -d ' ') full\", \"payload\": {\"push\": \"never\"}}"
+```
+
+A GitHub Actions step that posts when a deploy fails:
+
+```yaml
+- name: Tell AIDE
+  if: failure()
+  run: |
+      curl -fsS -X POST "$AIDE_URL/events" \
+        -H "Authorization: Bearer $AIDE_TOKEN" -H "Content-Type: application/json" \
+        -d "{\"topic\": \"ci.deploy\", \"key\": \"deploy:${GITHUB_RUN_ID}\", \"title\": \"Deploy of ${GITHUB_REPOSITORY} failed\", \"url\": \"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\", \"payload\": {\"severity\": \"high\"}}"
+  env:
+      AIDE_URL: ${{ secrets.AIDE_URL }}
+      AIDE_TOKEN: ${{ secrets.AIDE_PLUGIN_TOKEN }}
+```
+
+Python, with a key so a retry after a timeout can't post twice:
+
+```python
+import json, urllib.request
+
+def publish(topic, title, key, body="", url="", payload=None):
+    request = urllib.request.Request(
+        "https://aide.example.com/events",
+        data=json.dumps({"topic": topic, "key": key, "title": title, "body": body,
+                         "url": url, "payload": payload or {}}).encode(),
+        headers={"Authorization": "Bearer aide_p_…", "Content-Type": "application/json"},
+        method="POST")
+    with urllib.request.urlopen(request, timeout=10) as response:
+        return response.status == 201  # False: this key was already posted
+
+publish("finance.rates", "Base rate held at 2.50%", key="rates:2026-10-22")
+```
+
+## Errors
+
+| Status | Code              | When                                                                 |
+| ------ | ----------------- | -------------------------------------------------------------------- |
+| 400    | `bad_request`     | Not JSON, or a field `/events` doesn't take                          |
+| 401    | `unauthorized`    | No token, or one that is unknown or revoked                          |
+| 403    | `scope`           | The plugin token has no `events:publish` scope for this topic        |
+| 403    | `plugin_disabled` | The owner turned that plugin off                                     |
+| 403    | `reserved`        | The topic starts with `aide.`                                        |
+| 422    | `invalid`         | A bad topic, a missing or long title, a long body or key, a payload that isn't an object |

@@ -1,17 +1,42 @@
 // Copies what the site shares with AIDE from a checkout of the (private) AIDE repo, so the build
-// itself never needs it: the design tokens as CSS, the app mark, the icon set and the assistant's
-// characters. Run it when AIDE's design changes: `AIDE_REPO=~/dev/aide node scripts/sync-from-aide.mjs`.
+// itself never needs it: the design tokens as CSS, the app mark, the icon set, the assistant's
+// characters and the plugins' manifests the manual documents. Run it when AIDE changes:
+// `AIDE_REPO=~/dev/aide node scripts/sync-from-aide.mjs`.
+//
+// `--check` copies nothing: it exits 1 when the plugins' manifests differ from src/data/plugins.json,
+// so a plugin change in AIDE can't land without the manual (AIDE's scripts/docs-check.sh runs it).
 import { execFileSync } from "node:child_process";
-import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 
 import { faviconSvg } from "./lib/favicon.mjs";
+import { changedPlugins, pluginsJson } from "./lib/plugins.mjs";
 import { tokensCss } from "./lib/tokens.mjs";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const AIDE = resolve(process.env.AIDE_REPO ?? join(homedir(), "dev/aide"));
 const ASSETS = join(ROOT, "src/assets/aide");
+
+const PLUGINS = join(ROOT, "src/data/plugins.json");
+
+if (process.argv.includes("--check")) {
+    const current = existsSync(PLUGINS) ? readFileSync(PLUGINS, "utf8") : "{}";
+    let now;
+    try {
+        now = pluginsJson(AIDE);
+    } catch (error) {
+        console.error(`docs check: couldn't read AIDE's plugins at ${AIDE} (is Go installed?): ${error.message}`);
+        process.exit(2);
+    }
+    const changed = changedPlugins(JSON.parse(current), JSON.parse(now));
+    if (changed.length === 0) process.exit(0);
+    console.error(
+        `AIDE's plugins changed since the manual was written (${changed.join(", ")}): in aide-site, run ` +
+            `\`AIDE_REPO=${AIDE} node scripts/sync-from-aide.mjs\`, update those plugins' pages and commit both.`,
+    );
+    process.exit(1);
+}
 
 const read = (path) => readFileSync(join(AIDE, path), "utf8");
 const git = (...args) => execFileSync("git", ["-C", AIDE, ...args], { encoding: "utf8" }).trim();
@@ -19,10 +44,13 @@ const git = (...args) => execFileSync("git", ["-C", AIDE, ...args], { encoding: 
 // The icons the site draws, from AIDE's set (Phosphor, MIT); the names are design/icons.json's.
 const ICONS = [
     "assistant",
+    "bell",
     "calendar",
     "devices",
     "feed",
+    "folder",
     "graph",
+    "grid",
     "inbox",
     "key",
     "mic",
@@ -31,11 +59,14 @@ const ICONS = [
     "plugin",
     "review",
     "scratch",
+    "scribble",
     "search",
     "server",
     "settings",
     "terminal",
+    "text-size",
     "timer",
+    "today",
     "todos",
     "wiki",
 ];
@@ -63,6 +94,8 @@ for (const id of ["mochi", "piyo"]) {
     copyFileSync(join(AIDE, `design/characters/${id}.json`), join(ASSETS, `${id}.json`));
 }
 copyFileSync(join(AIDE, "design/characters/rig.mjs"), join(ROOT, "src/scripts/rig.mjs"));
+
+writeFileSync(PLUGINS, pluginsJson(AIDE));
 
 const source = {
     note: "The AIDE checkout these files were copied from (scripts/sync-from-aide.mjs).",

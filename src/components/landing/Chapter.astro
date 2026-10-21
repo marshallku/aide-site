@@ -1,0 +1,61 @@
+---
+// One feature of the landing page: words on one side, its picture (the slot) on the other.
+interface Props {
+    id?: string;
+    eyebrow: string;
+    title: string;
+    body: string;
+    points?: string[];
+    flip?: boolean;
+}
+
+const { id, eyebrow, title, body, points = [], flip = false } = Astro.props;
+---
+
+<section class:list={["chapter", { flip }]} id={id}>
+    <div class="wrap layout">
+        <div class="words" data-reveal>
+            <p class="eyebrow">{eyebrow}</p>
+            <h2 class="display">{title}</h2>
+            <p class="lede">{body}</p>
+            {points.length > 0 && (
+                <ul class="points">
+                    {points.map((point) => (
+                        <li>{point}</li>
+                    ))}
+                </ul>
+            )}
+        </div>
+        <div class="picture" data-reveal style="--delay: 0.1s">
+            <slot />
+        </div>
+    </div>
+</section>
+
+<style>
+    .chapter {
+        margin-top: var(--section-gap);
+        scroll-margin-top: 5rem;
+    }
+    .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        align-items: center;
+        gap: clamp(2rem, 6vw, 5rem);
+    }
+    .flip .words {
+        order: 2;
+    }
+    .picture {
+        position: relative;
+        min-width: 0;
+    }
+    @media (max-width: 880px) {
+        .layout {
+            grid-template-columns: 1fr;
+        }
+        .flip .words {
+            order: 0;
+        }
+    }
+</style>

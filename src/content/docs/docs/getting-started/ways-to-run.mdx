@@ -1,0 +1,138 @@
+---
+title: Ways to run AIDE
+description: Keep notes on one device, host them on your Mac or Linux computer, or connect to your own server, and switch between them later.
+sidebar:
+    order: 3
+---
+
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+
+AIDE runs in one of three ways, and you can change your mind later without losing notes. In every
+case your notes are Markdown files in a folder; what changes is whether AIDE's server runs beside
+them, which is what the Feed, notifications, AI for the Feed and server plugins need.
+
+| | Local mode | Desktop host | Your own server |
+| --- | --- | --- | --- |
+| Where the notes are | A folder on this device | A folder on your Mac or Linux computer | A folder on the server |
+| What runs | Only the app | The app, plus AIDE's server, a database and the plugin runner, all on your computer | AIDE's server and database on a machine that is always on |
+| Other devices | None: the vault belongs to this device | Phones and computers you pair, over Tailscale or your local network | Any device you pair, over HTTPS |
+| Available on | Mac, iPhone, Linux | Mac, Linux (an iPhone connects to one) | Any device connects to one |
+
+## What works where
+
+| Feature | Local mode | Desktop host | Your own server |
+| --- | --- | --- | --- |
+| Editor, wiki, daily notes, search, graph, review | Yes | Yes | Yes |
+| Todos and the todo view presets | Yes | Yes | Yes |
+| Scratch and Organize | Yes: with your Anthropic API key, or by rules | Yes | Yes |
+| The assistant | Yes: Claude Code or Codex on the Mac and Linux, or your API key | Yes, plus the server's AI | Yes, plus the server's AI |
+| Meetings (recording, transcription) | Yes | Yes | Yes |
+| Calendar | This device's calendars, read-only (on Linux, calendars you add by web address or file) | Google Calendar, through its plugin | Google Calendar, through its plugin |
+| Device plugins | Yes | Yes | Yes |
+| `aidectl` | Yes | Yes | Yes |
+| The Feed and its triage | No | Yes | Yes |
+| Notifications | No | Yes | Yes |
+| Server plugins (briefing, recap, Slack, Radar…) | No | Yes | Yes |
+| **Settings › AI** for the server (Rules, Anthropic API key, My gateway) | No | Yes | Yes |
+| Claude through MCP | No | Claude Code on the hosting computer (`aidectl mcp`) | Claude Code, and the Claude app through **Settings › Claude app** |
+| Backups from the app | No (copy the folder) | **Back up…** in the host's settings | Your server's own backups |
+
+In local mode the settings say so: "Feed, notifications, AI and server plugins need a server." The
+Feed and the server plugins' tabs (such as Radar) don't appear, and **Settings** has no **Devices**
+page and no server plugins.
+
+<Badge text="Next release" /> Local mode will list the server plugins under **Settings › Plugins**,
+with **Host this vault…** beside them on the Mac and Linux.
+
+## How to choose
+
+- **You only want notes and todos on one computer, or you're trying AIDE out:** local mode. Nothing
+  else runs, and you can host the same folder later.
+- **You want the Feed, the morning briefing, Slack or Radar, or your phone on the same notes:**
+  a desktop host. It needs no server, no Docker and no domain. The host runs while AIDE is open, or
+  all the time you're logged in with **Keep running while I'm logged in**. Devices reach it while
+  that computer is awake.
+- **You want plugins to run while your computer sleeps, or the Claude app on claude.ai to reach
+  your notes:** your own server. AIDE's server isn't distributed publicly yet, so for now a desktop
+  host is the way to get server features. See [Run your own server](/docs/self-hosting/own-server/).
+
+## Get started
+
+The first time you open AIDE, the **Get started** screen asks where your notes live. It also lists
+**Your vaults** when you have used AIDE on this device before.
+
+**On the Mac and iPhone:**
+
+- **Without a server**
+    - **Keep notes on this device**: Markdown files in AIDE's own folder (on an iPhone, in
+      **Files › On My iPhone › AIDE**).
+    - **Open a folder…**: one you already have, like an Obsidian vault. AIDE edits it in place and
+      keeps other apps' edits. On an iPhone, a folder in Files or iCloud Drive.
+    - **Restore a backup…** (Mac): a backup of a hosted vault, restored into a new folder and hosted on
+      this Mac.
+- **Your AIDE server**: **Server** (its address) and **Pairing code**, then **Connect**.
+- **Connect to a host**: **Pairing link**, then **Connect to the host**.
+
+**On Linux:**
+
+- **Keep notes on this computer**
+    - **New vault**: a folder AIDE keeps for you.
+    - **Open folder…**: a folder of Markdown notes you already have, like an Obsidian vault.
+    - **Restore a backup…**: a backup of a hosted vault, into a new folder, hosted on this computer.
+- **Connect to a server**: **Server** and **Pairing code**, then **Connect**.
+- **Connect to a host**: **Pairing link**, then **Connect to the host**.
+
+**Advanced: static token (dev)** at the bottom is for development servers; you won't need it.
+
+To use a desktop host, start in local mode on the computer that will host, then host that vault (below).
+[Connect your devices](/docs/getting-started/connect-devices/) covers pairing.
+
+## Switch later
+
+### Host a local vault
+
+<Steps>
+
+1. On the Mac, open **Settings › Notes › Host this vault…**. On Linux, open **Settings › General**
+   and choose **Host this vault…** under **Notes**.
+2. Choose **Start hosting**. The window shows "Starting the host…" while it starts.
+
+</Steps>
+
+The notes stay Markdown files in the same folder. At first only you on this computer can reach the
+host; nothing listens on the network until you turn on **Devices over the network…**. The settings'
+**Notes** section becomes **Host**, with the host's log, **Back up…**, **Keep running while I'm
+logged in** and **Stop hosting…**. [Host on your desktop](/docs/self-hosting/desktop-host/) has the
+details.
+
+### Stop hosting
+
+**Stop hosting…** then **Stop hosting** saves what you're writing, stops the host and opens the vault
+as notes on this computer only. Server plugins, the Feed and Claude stop until you host it again; the
+host keeps its settings for then. If the host still has unfinished work for the vault (an Organize
+waiting for you, changes it hasn't passed on yet), **Stop hosting** refuses and **Stop anyway** drops
+that work.
+
+### Move notes to a server
+
+In local mode, **Settings › Notes › Move notes to a server** (on Linux, **Settings › General ›
+Move notes to a server…**) moves every note on this device to an empty account on the server, then
+uses the server from then on. The device keeps a backup copy.
+
+### Move notes back to this device
+
+Connected to a server, **Settings › Notes › Keep notes on this device only** (on Linux,
+**Settings › General › Keep notes on this device only…**) copies every note from the server into AIDE's own folder, or into
+an empty folder you choose. A folder you choose can then be opened by other apps too, such as
+Obsidian.
+
+### Several vaults
+
+You can keep more than one vault and switch between them in **Settings › Vaults**, or from the
+vault menu at the bottom of the desktop's panel (on an iPhone, in Scratch's toolbar menu). A server
+you're signed in to is listed there too. See [Vaults and your files](/docs/guides/vaults/).
+
+<Aside>
+A vault has one writer at a time. While AIDE (or a host) has a folder open, another copy of AIDE
+can't open the same folder. Other editors such as Obsidian can, and AIDE keeps their changes.
+</Aside>

@@ -1,0 +1,178 @@
+---
+title: Radar
+description: Radar follows your Slack channels and your Claude Code and Codex sessions, tells you what you'd miss, reminds you at the right time, keeps notes on the people you work with and proposes todos.
+sidebar:
+    order: 21
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+Radar keeps up with your work without being asked. It follows the Slack channels you're in and what
+you're doing in Claude Code and Codex on your computer. Every few minutes, when something is new, your
+model decides whether any of it deserves your attention, and if so, tells you.
+
+<PluginFacts id="radar" />
+
+## An example
+
+Kim writes in #random that he's leaving at 19:00. Meanwhile you're in Claude Code, drafting the
+questions you need to ask Kim. At 17:00 Radar tells you: ask Kim now, he leaves at 19:00. It also
+notes on Kim's page that he leaves at 19:00 today, until 19:00.
+
+Neither the Slack message nor your session said "remind me". Radar connected them.
+
+## What it reads
+
+- **Slack**: the messages the [Slack plugin](/docs/plugins/slack/) keeps on this computer with
+  **Follow my channels**: new ones since the last look (at most 120) and the rest of the last 6 hours
+  (at most 150), as they read now (edited text, deleted ones left out).
+- **Your sessions**: the Claude Code and Codex sessions you typed in during the last 3 hours on this
+  computer. For each (up to 8): its folder, branch and title, the last 8 things you typed and the
+  agent's last words. Sessions started by programs (reviews, scripts, AIDE's own runs) are left out.
+  Turn off **Read my sessions** to read Slack only.
+- **People**: the people notes of whoever speaks, is mentioned or is named (up to 40), with the facts
+  still true about them.
+- **Your todos**: open todo titles (up to 60), so it doesn't propose one you have.
+- **Note names**: the notes under **May add to** (`topics`), so it can add a line to the right one.
+- Its own pending reminders and what it already told you today.
+
+Folders in **Never read** are kept out of all of it.
+
+## What it can do
+
+Each look, your model can do any of these, or nothing:
+
+| Action    | What happens                                                                                                  | At most          |
+| --------- | ------------------------------------------------------------------------------------------------------------- | ---------------- |
+| **Tell**  | Pushed to your devices now, and said in the desktop character's speech bubble                                 | 3 a look, 8 a day |
+| **Remind**| Kept until the time it helps (within 24 hours), then pushed. Dropped if the message it came from is edited or deleted | 5 a look, 12 a day |
+| **Fact**  | A line about a person in their note, `people/<name>`, with when it stops being true                           | 10 a look        |
+| **Todo**  | A proposal waiting among your todos, which you accept or dismiss. Never added on its own                       | 5 a look         |
+| **Note**  | A line under `## Radar` in a note under **May add to**                                                         | 3 a look         |
+| **Now**   | A short picture of what's going on, in `radar/now`, which [the assistant](/docs/guides/assistant/) reads       | —                |
+
+Every item must cite the Slack message or session it came from in that look; anything that cites
+nothing is dropped. Radar adds the Slack links itself, so a link is never made up. A message that's
+corrected later gives new items, and what was based on the old text is withdrawn: its reminders are
+dropped and its facts are taken out of the person's note.
+
+**Where it shows up:**
+
+- On the Mac and Linux, tells and reminders come out in the desktop character's bubble, titled
+  **Radar** or **Reminder**, whether or not notifications are allowed. They're also pushed.
+- On the iPhone, they arrive as notifications and in the Feed.
+- Everything it did today is a line in `radar/<date>`: what it told, set, missed or dropped, what it
+  noted, proposed or added.
+- `radar/status` says where Radar runs, when Slack last said something on this computer, how many
+  sessions were active, the last look and the last problem.
+
+## When it looks
+
+Every minute, Radar takes in new Slack messages and delivers reminders that are due. It **looks**
+(asks your model) only when all of these are true:
+
+- it's between **From** and **Until** (08:00–20:00);
+- at least **Look every** minutes (10) have passed since the last look;
+- something is new: a Slack message, or something you typed in a session.
+
+A reminder that falls outside From–Until waits until From. One that's past its deadline is marked
+missed in the day's note instead of being told late.
+
+## Before you start
+
+- **A desktop host or a server's plugin runner on the computer where you work**, because your
+  sessions and the Slack feed are files on that computer
+  ([Host on your desktop](/docs/self-hosting/desktop-host/)).
+- **For Slack:** the [Slack plugin](/docs/plugins/slack/) connected, with **Follow my channels** on,
+  running on the same computer.
+- **A model:** Claude Code or Codex installed and signed in on this computer, or an AI set up on the
+  server ([AI and models](/docs/guides/ai/)).
+
+Radar runs in one place at a time. If two computers run it, one holds the turn and the other waits;
+the other takes over if the first stops for 15 minutes.
+
+## Set it up
+
+<Steps>
+
+1. Set up the [Slack plugin](/docs/plugins/slack/) and turn on **Follow my channels**. (Skip this to
+   follow only your sessions.)
+2. Open **Settings** and choose **Radar** under **On the server** (on Linux, **Settings › Plugins ›
+   Radar**).
+3. Check **From** and **Until** match your working hours, and add folders you want it never to see to
+   **Never read**.
+4. Optionally, in **Your instructions**, say what matters to you and what to leave alone (for example
+   "Tell me about anything in #incidents. Ignore #random unless someone mentions me.").
+5. Turn on **Enabled**. Radar starts within a minute and looks once something new comes in.
+
+</Steps>
+
+## Settings
+
+<PluginSettings
+    id="radar"
+    defaults={{
+        agent: "auto",
+        model: "",
+        every: "10",
+        from: "08:00",
+        until: "20:00",
+        sessions: "On",
+        notePrefixes: "topics",
+        neverRead: "",
+        people: "people",
+        maxTells: "8",
+        language: "",
+        instructions: "",
+    }}
+/>
+
+- **Model**: `auto` uses Claude Code if it's installed, else Codex, else the server's AI. `claude` and
+  `codex` run those CLIs on this computer with no tools at all: they can only answer. `server` uses
+  the AI set up on the server. Each run is stopped after 3 minutes.
+- **Model name**: passed to the CLI. Empty uses the CLI's own default (`sonnet` for Claude Code).
+- **Look every (minutes)**: never less than 5.
+- **Tell at most (a day)**: reminders you get are counted apart from this.
+- **People folder**: where people notes live. Radar fills in a new note's frontmatter (`name`, `slack`,
+  `aliases`, `role`, `team`, `relation`); after that the frontmatter is yours. Add aliases so Radar
+  recognises someone by a nickname. Radar writes only the **facts** section, keeps at most 30 facts
+  and drops those that ended more than two days ago. You can edit or delete any fact line.
+- **Never read**: with the people folder in it, Radar writes no facts and makes no people notes.
+
+## Troubleshooting
+
+### Radar never says anything
+
+- Look at `radar/status`. "nothing in the feed here in the last day" means no Slack messages reached
+  this computer: turn on **Follow my channels** in the Slack plugin on this computer.
+- It only looks between **From** and **Until**, and only when something is new.
+- Radar tells you only what your model judges worth it. Say what matters in **Your instructions**.
+- If another computer also runs Radar, it may hold the turn; `radar/status` says where it runs.
+
+### It tells me too much
+
+Lower **Tell at most (a day)**, add the noisy channels to Slack's **Never these channels**, or say what
+to ignore in **Your instructions**.
+
+### A fact about someone is wrong
+
+Edit or delete the line in their note. If the Slack message it came from is edited or deleted, Radar
+takes the fact out itself.
+
+### The last problem in radar/status
+
+It's the latest error, such as a model that couldn't run or an answer that didn't fit. An answer that
+doesn't match what Radar expects is ignored whole, and Radar looks again next time.
+
+## Privacy
+
+- Radar runs on your computer. The Slack feed and your session transcripts stay there.
+- Each look sends its input (the Slack messages, session excerpts, people, todo titles and note
+  names) to your model's provider: Anthropic for Claude Code, OpenAI for Codex, or, with **Model** set
+  to `server`, the server and its AI provider.
+- What it writes are notes and therefore go to the server and your other devices: facts in people
+  notes, the day's lines with their links, `radar/now`, todo proposals and lines added to notes.
+- What it tells you goes out as push notifications.
+- **Never read** folders are neither read nor written.

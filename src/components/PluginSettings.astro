@@ -1,0 +1,135 @@
+---
+// A plugin's settings as the app shows them (Settings › Plugins › <plugin>), from its manifest in
+// src/data/plugins.json, in the page's language. `defaults` gives every setting's default as the
+// page describes it ("" for none); a setting the manifest has and the page doesn't fails the build,
+// so a new setting in AIDE can't go undocumented.
+import { findPlugin, toLocale, type Plugin } from "#lib/plugins";
+
+interface Props {
+    id: string;
+    kind?: Plugin["kind"];
+    defaults: Record<string, string>;
+}
+
+const { id, kind = "server", defaults } = Astro.props;
+const locale = toLocale(Astro.currentLocale);
+const plugin = findPlugin(id, kind, locale);
+
+const missing = plugin.settings.filter((field) => !(field.key in defaults)).map((field) => field.key);
+const extra = Object.keys(defaults).filter((key) => !plugin.settings.some((field) => field.key === key));
+if (missing.length > 0 || extra.length > 0) {
+    throw new Error(
+        `${Astro.url.pathname}: ${id}'s settings table is out of date (no default for: ${missing.join(", ") || "-"}; ` +
+            `not in the manifest: ${extra.join(", ") || "-"})`,
+    );
+}
+
+const LABELS = {
+    en: {
+        setting: "Setting",
+        type: "Type",
+        default: "Default",
+        about: "What it does",
+        none: "—",
+        types: {
+            string: "Text",
+            text: "Long text",
+            number: "Number",
+            bool: "On/off",
+            enum: "Choice",
+            time: "Time",
+            list: "List",
+            secret: "Secret",
+        },
+    },
+    ko: {
+        setting: "설정",
+        type: "종류",
+        default: "기본값",
+        about: "설명",
+        none: "—",
+        types: {
+            string: "텍스트",
+            text: "긴 텍스트",
+            number: "숫자",
+            bool: "켜기/끄기",
+            enum: "선택",
+            time: "시간",
+            list: "목록",
+            secret: "비밀 값",
+        },
+    },
+}[locale];
+
+const typeLabel = (type: string) => LABELS.types[type as keyof typeof LABELS.types] ?? type;
+---
+
+{plugin.settings.length > 0 && (
+    <table class="plugin-settings">
+        <thead>
+            <tr>
+                <th>{LABELS.setting}</th>
+                <th>{LABELS.type}</th>
+                <th>{LABELS.default}</th>
+                <th>{LABELS.about}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {plugin.settings.map((field) => (
+                <tr>
+                    <td>
+                        <strong>{field.title}</strong>
+                        <br />
+                        <code>{field.key}</code>
+                    </td>
+                    <td>
+                        <span class:list={["type", { secret: field.type === "secret" }]}>{typeLabel(field.type)}</span>
+                    </td>
+                    <td>{defaults[field.key] || LABELS.none}</td>
+                    <td>
+                        {field.help}
+                        {field.options && (
+                            <ul class="options">
+                                {field.options.map((option) => (
+                                    <li>{option || LABELS.none}</li>
+                                ))}
+                            </ul>
+                        )}
+                        {field.link && (
+                            <p class="link">
+                                <a href={field.link.url} rel="noopener">
+                                    {field.link.title} ↗
+                                </a>
+                            </p>
+                        )}
+                    </td>
+                </tr>
+            ))}
+        </tbody>
+    </table>
+)}
+
+<style>
+    .plugin-settings td:first-child {
+        white-space: nowrap;
+    }
+    .type {
+        font-size: var(--sl-text-xs);
+        padding: 0.1em 0.5em;
+        border-radius: 999px;
+        background: var(--sl-color-gray-6);
+        white-space: nowrap;
+    }
+    .type.secret {
+        background: var(--sl-color-accent-low);
+        color: var(--sl-color-text-accent);
+    }
+    .options {
+        margin: 0.25rem 0 0;
+        padding-inline-start: 1.1rem;
+        font-size: var(--sl-text-xs);
+    }
+    .link {
+        margin: 0.25rem 0 0;
+    }
+</style>

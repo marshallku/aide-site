@@ -1,0 +1,53 @@
+---
+title: Eisenhower matrix
+description: A device plugin that sorts your open todos into Do, Schedule, Delegate and Later by their priority and dates.
+sidebar:
+    order: 30
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+
+The Eisenhower matrix shows all your open todos in four boxes, by how important and how urgent they
+are, so you can see what to do first.
+
+<PluginFacts id="eisenhower" kind="device" />
+
+## What it does
+
+It adds a **Matrix** tab with four boxes:
+
+| Box          | Holds                       |
+| ------------ | --------------------------- |
+| **Do**       | Urgent · important          |
+| **Schedule** | Important, not urgent       |
+| **Delegate** | Urgent, not important       |
+| **Later**    | Neither                     |
+
+- **Important** means the todo's priority is high or highest (`⏫` or `🔺`, or `[priority:: high]`).
+- **Urgent** means it's due or scheduled within two days, or overdue (`📅 2026-10-22`, `⏳ …`).
+
+Each todo shows its date. Tap the button in front of one to check it off; the todo's line in its note
+is marked done, and nothing else in the note changes. The matrix reloads each time you come back to
+the tab. The writing of priorities and dates is in [Todos](/docs/guides/todos/).
+
+## Set it up
+
+<Steps>
+
+1. Open **Browse plugins** (in **Settings**, under **On this device**; on Linux, **Settings › Device
+   plugins**) and choose **Eisenhower matrix**.
+2. Approve **Read your todos, open and done, in any note** and **Check off and add todos, in any
+   note**, then **Install**.
+3. Open the **Matrix** tab. To hide the tab without removing the plugin, turn off **Show as tab** in
+   its settings.
+
+</Steps>
+
+It has no settings. More on installing, updating and removing is in [Installing device
+plugins](/docs/plugins/device-plugins/).
+
+## Privacy
+
+The plugin reads your todos (their text and fields, not the rest of your notes) and changes only the
+lines of todos you check off. It makes no network requests and keeps no data of its own.

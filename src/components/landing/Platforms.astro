@@ -1,0 +1,150 @@
+---
+import Icon from "#components/Icon.astro";
+import { BREW, COPY, INSTALLER, RELEASES, docsHref, type Lang } from "#lib/landing-copy";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = COPY[lang].platforms;
+const hero = COPY[lang].hero;
+const commands = [
+    { platform: copy.mac, command: BREW, note: "Homebrew" },
+    { platform: copy.linux, command: INSTALLER, note: copy.installer },
+];
+---
+
+<section class="platforms" id="download">
+    <div class="wrap">
+        <div class="head" data-reveal>
+            <p class="eyebrow">{copy.eyebrow}</p>
+            <h2 class="display">{copy.title}</h2>
+        </div>
+        <div class="cards">
+            {commands.map(({ platform, command, note }, index) => (
+                <article data-reveal style={`--delay: ${index * 0.08}s`}>
+                    <h3>{platform.name}</h3>
+                    <p class="req">{platform.req}</p>
+                    <p class="note">{note}</p>
+                    <button class="command" type="button" data-copy={command} data-copied={hero.copied}>
+                        <code>{command}</code>
+                        <span class="copy" data-copy-label>
+                            {hero.copy}
+                        </span>
+                    </button>
+                </article>
+            ))}
+            <article class="soon" data-reveal style="--delay: 0.16s">
+                <h3>{copy.iphone.name}</h3>
+                <p class="req">{copy.iphone.req}</p>
+                <p class="status">
+                    <Icon name="bell" size={14} />
+                    {copy.iphone.status}
+                </p>
+            </article>
+        </div>
+        <p class="links" data-reveal>
+            <a href={docsHref(lang, "getting-started/install")}>{hero.secondary} →</a>
+            <a href={RELEASES}>{copy.releases} ↗</a>
+        </p>
+    </div>
+</section>
+
+<style>
+    .platforms {
+        margin-top: var(--section-gap);
+        scroll-margin-top: 5rem;
+    }
+    .head {
+        max-width: 44rem;
+    }
+    .cards {
+        display: grid;
+        grid-template-columns: 1.15fr 1.15fr 0.7fr;
+        gap: 1rem;
+        margin-top: 2.5rem;
+    }
+    article {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        padding: 1.5rem;
+        border-radius: 20px;
+        background: var(--page-raised);
+        box-shadow: 0 0 0 1px var(--line);
+    }
+    h3 {
+        margin: 0;
+        font-size: 1.35rem;
+    }
+    .req {
+        margin: 0.35rem 0 0;
+        color: var(--ink-2);
+        font-size: 0.9rem;
+    }
+    .note {
+        margin: 1.5rem 0 0.5rem;
+        color: var(--ink-3);
+        font-size: 0.8rem;
+    }
+    .command {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: auto;
+        padding: 0.7rem 0.75rem 0.7rem 0.9rem;
+        border: 0;
+        border-radius: 12px;
+        background: #16161a;
+        color: #f2f2f7;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+    }
+    .command code {
+        flex: 1;
+        min-width: 0;
+        overflow-x: auto;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        white-space: nowrap;
+        scrollbar-width: none;
+    }
+    .copy {
+        flex: none;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+    .soon {
+        background: transparent;
+        box-shadow: inset 0 0 0 1px var(--line-strong);
+    }
+    .status {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin: auto 0 0;
+        padding-top: 1.5rem;
+        color: var(--ink-2);
+        font-size: 0.85rem;
+    }
+    .links {
+        display: flex;
+        gap: 1.5rem;
+        margin: 1.5rem 0 0;
+        font-weight: 600;
+    }
+    .links a {
+        color: var(--accent);
+        text-decoration: none;
+    }
+    @media (max-width: 960px) {
+        .cards {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

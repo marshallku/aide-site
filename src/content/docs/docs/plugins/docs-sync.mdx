@@ -1,0 +1,117 @@
+---
+title: Docs sync
+description: Keeps your notes and a git repository of Markdown files in step, both ways, with a 3-way merge and safeguards against mass deletes.
+sidebar:
+    order: 12
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+Docs sync mirrors your notes into a git repository and brings back the edits made there, so you can keep a plain-Markdown copy on GitHub or another git server, and edit it with any editor or script.
+
+<PluginFacts id="docs-sync" />
+
+## What it does
+
+The plugin keeps its own clone of your repository on the machine that runs the plugins. Every minute, and 5 seconds after you change a note, it:
+
+1. Fetches the branch and resets its clone to it, so it always starts from what's on the remote.
+2. Compares each file with its note, using the last commit where both were the same as the base.
+3. Writes the result both ways: changed notes into files, changed files into notes.
+4. Commits the files it changed as `journal: aide sync (N files)` and pushes.
+
+It syncs the notes under these top-level folders, as `.md` files at the same paths in the repository: `daily`, `weekly`, `monthly`, `topics`, `brainstorm`, `missions` and `templates`. Other notes stay out of the repository.
+
+**When both sides changed.** Edits to different parts of a note merge, as `git merge` would. When the same lines changed on both sides, AIDE's version wins, the file's version is kept as a separate note under `conflicts/`, and a Feed event names it. Two daily notes for the same day created on both sides (one in AIDE, one in the repository) are combined: AIDE's text first, then whatever the file has that AIDE's doesn't, section by section; a todo on both sides is kept once, checked if either side checked it.
+
+**New and deleted notes.** A note you create in AIDE gets a file; a file added to the repository becomes a note. A file deleted from the repository archives its note, which you can bring back from **Recently deleted**; a note you delete in AIDE is removed from the repository. If the other side was edited since the last sync, the edit wins over the delete.
+
+**Safeguards.**
+
+- More than 20 deletes or archives in one sync, which usually means a wrong branch or a bulk change, stops the sync and posts a Feed event, "Sync stopped: more than 20 … operations at once. Please check." Nothing is changed until the cause is gone.
+- Symbolic links are never followed, and files over 1 MiB are left out. Each is reported in the Feed and left alone, never treated as deleted.
+
+### Export only
+
+With **Direction** set to `export`, AIDE is the only writer: nothing is imported from the repository. A file someone edited there is kept as a note under `conflicts/` and then written over with AIDE's version. Switching to `export` runs one more two-way sync first, so edits made before the switch aren't lost. In export mode, more than 20 files to replace at once also stops the sync.
+
+## Before you start
+
+- A [desktop host](/docs/self-hosting/desktop-host/) or your own server.
+- `git` installed on the machine that runs the plugins.
+- A git repository, with its branch already created (the plugin clones that branch; it doesn't create it).
+- Access that works without a prompt. The plugin runs `git` as you, with your git credentials (an SSH key with an agent, or a credential helper for HTTPS), and never asks for a password: a remote that needs one fails.
+
+## Set it up
+
+<Steps>
+
+1. Add the repository to `plugins.json` in your host's data folder ([where that is](/docs/plugins/overview/#local-settings)):
+
+    ```json
+    {
+        "plugins": {
+            "docs-sync": {
+                "remote": "git@github.com:you/notes.git",
+                "branch": "main"
+            }
+        }
+    }
+    ```
+
+2. Restart the host so it reads the file: quit AIDE and open it again (with **Keep running while I'm logged in** on, turn it off and on again).
+3. Turn the plugin on: **Docs sync** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+4. Within a minute the plugin clones the repository and runs its first sync. Notes that exist on both sides by the same path are paired and merged; the rest are created on the other side.
+
+</Steps>
+
+<Aside type="tip">
+Point the first sync at an empty repository, or at one that holds a copy of the same notes. The first sync pairs files and notes by path and adds everything that exists on only one side.
+</Aside>
+
+## Settings
+
+<PluginSettings id="docs-sync" defaults={{ paused: "Off", interval: "1m", mode: "Default (two-way)" }} />
+
+**Paused** stops everything: no reads, no writes, no pushes. Turn it on before you move many notes to new paths (changing your daily note format, for example), so the old files don't look deleted halfway through, then turn it off again.
+
+**Direction** offers **Default** (two-way, as described above) and `export`.
+
+### Local keys
+
+Under `"docs-sync"` in `plugins.json`:
+
+| Key        | What it does                                                                                     | Default |
+| ---------- | ------------------------------------------------------------------------------------------------ | ------- |
+| `remote`   | The repository to clone and push to. Required: without it the plugin doesn't start.              | none |
+| `branch`   | The branch to sync.                                                                              | `master` |
+| `prefixes` | The top-level folders to sync, as a list. Replaces the default list.                             | `["daily", "weekly", "monthly", "topics", "brainstorm", "missions", "templates"]` |
+| `clone`    | Where the plugin keeps its clone.                                                                | `plugins/docs-sync/clone` in the host's data folder |
+| `author`   | The commit author's name.                                                                        | `aide docs-sync` |
+| `email`    | The commit author's email.                                                                       | `aide@localhost` |
+
+The clone belongs to the plugin: it's reset to the remote at every sync, so don't edit files there. Edit a separate clone of your own and push.
+
+## Troubleshooting
+
+### Nothing syncs
+
+Look in the host log (its path is under **Log** in Settings › Host). Without `remote` the plugin stops at once with `docs-sync: remote is required`. A `git clone`, `fetch` or `push` failure shows git's own message: usually a branch that doesn't exist, or credentials that need a prompt.
+
+### A Feed event says "Sync stopped"
+
+More than 20 notes or files would be deleted, archived or replaced in one go. Check that `remote` and `branch` point where you meant, and whether someone deleted a folder in the repository. Once fewer than 21 remain, the next sync goes through.
+
+### A note appeared under conflicts/
+
+The same lines were edited in AIDE and in the repository between two syncs. AIDE's version is in the note; the file's version is in the `conflicts/` note the event names. Copy what you need from it, then delete it. Notes under `conflicts/` are never synced.
+
+### A file was skipped
+
+It's a symbolic link, or bigger than 1 MiB. Make it a regular file under 1 MiB to sync it.
+
+## Privacy
+
+Your notes under the synced folders go to the git remote you configured, over git's own transport, with your credentials. Nothing else leaves the machine. The plugin doesn't use AI.

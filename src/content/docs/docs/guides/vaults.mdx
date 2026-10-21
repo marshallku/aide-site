@@ -1,0 +1,114 @@
+---
+title: Vaults and your files
+description: What a vault is on disk, how to open an Obsidian vault, keep several vaults, leave files out, and get deleted notes back.
+sidebar:
+    order: 3
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+A vault is a folder of Markdown files. AIDE reads and writes the files themselves, so the same folder opens in Obsidian, a text editor, git or a sync tool, and nothing about your notes is locked inside AIDE.
+
+## What's in the folder
+
+- **Notes** are the `.md` files, at any depth. A note's path is its file's path without `.md`.
+- **Attachments** (images, drawings, HTML documents) live under `attachments/`.
+- **`.aide/`** holds AIDE's own records: the vault's id, each note's id and version, deleted notes, unfinished operations kept for crash recovery, and the vault's settings (periodic-note formats, todo settings, timezone, what to leave out). Folders whose names start with `.`, `.aide/` and `.obsidian/` included, are never notes.
+
+A note made in AIDE is written under the name you typed when that's a safe file name, so `My Idea` is `My Idea.md`. A file whose name isn't a usable note path (`???.md`) or that clashes with another (`C++.md` and `C.md` both read as `c`) stays in the folder untouched and is listed under **Files that need attention**.
+
+### Where AIDE keeps a vault it made
+
+| Device | Folder |
+| --- | --- |
+| Mac | `~/Library/Application Support/com.marshallku.aide/Documents/Vault` |
+| iPhone | Files › On My iPhone › AIDE › Vault |
+| Linux | `~/.local/share/aide/vault` |
+
+A folder you chose yourself stays wherever it is.
+
+## One writer at a time
+
+Only one AIDE process writes to a vault on a computer: the app takes a lock on `.aide/lock`, and a second AIDE, or a server pointed at the same folder, finds it taken. Programs on the same computer, such as [aidectl](/docs/developers/aidectl/), go through the open app; when no app has the vault open, aidectl opens it itself.
+
+Other apps may edit the files while AIDE has them open. AIDE picks up their changes and never overwrites one it didn't see: if another app writes a note at the moment AIDE saves it, the other app's text is kept as `conflicts/<note>-external-<id>.md`.
+
+<Aside type="caution" title="Syncing between computers">
+Nothing coordinates two computers. A folder you sync with Syncthing, iCloud Drive or git must not be open in AIDE on two of them at the same time: AIDE's records in `.aide/` are one file every writer rewrites. Open it on one computer at a time, or use a [desktop host](/docs/self-hosting/desktop-host/) and connect the other devices to it.
+</Aside>
+
+In iCloud Drive, a file whose content isn't downloaded yet is waited for, not treated as deleted: its note stays listed, and AIDE asks for the download.
+
+## Opening an Obsidian vault
+
+<Steps>
+
+1. On the first screen, choose **Open a folder…**, or later go to **Settings › Notes › Vault** and choose **Open folder…**. On the iPhone, the folder is picked through the Files app, so it can be in Files or iCloud Drive.
+2. Pick the vault's folder. AIDE writes its `.aide/` folder next to `.obsidian/` and leaves your files as they are.
+3. AIDE scans the notes and opens the vault.
+
+</Steps>
+
+What carries over from Obsidian:
+
+- `[[wikilinks]]`, with `|text`, `#Heading`, `#^block`, and frontmatter `aliases`.
+- `![[embeds]]` of images and `.excalidraw.svg` drawings, and Markdown image links.
+- File and folder names with spaces, capitals and punctuation.
+- Callouts (`> [!note]`), tags, and frontmatter.
+- Todos written for the Tasks and Dataview plugins, and Day Planner time blocks (see [Todos](/docs/guides/todos/)).
+- Daily notes: the folder, format and template from Obsidian's Daily notes settings, and Obsidian's template variables (see [Daily notes and templates](/docs/guides/periodic-notes/)).
+
+Obsidian's plugins don't run in AIDE, and an `![[Note]]` embed of another note shows as a link rather than the note's text.
+
+## Several vaults
+
+A device keeps a list of the vaults it knows. The list is a setting of that device: it doesn't sync, and taking a vault off it never touches its files.
+
+**Settings › Notes › Vault** opens the list (**Settings › Notes › Vaults** when you're signed in to a server; on Linux, **Vaults** under **Settings › General › Notes**, where **Recently deleted** and **Leave out of notes** are too). Each row says **Kept by AIDE** for a folder AIDE made, or **A folder you chose** with its path, and the open one has a check mark.
+
+- **New vault…** makes an empty vault in a new folder named after it, then switches to it. A name is at most 64 characters and can't start with `.` or hold `/`, `\` or `:`.
+- **Open folder…** adds a folder you pick and switches to it. Adding a folder that's already listed updates its row.
+- **Switch to** a vault opens it. The open note's unsaved text is kept in a draft for that vault and comes back when you return. Switching is refused while notes are being moved to or from a server ("Finish or cancel moving your notes first").
+- **Rename…** changes the name shown in the list, never the folder.
+- **Choose again…** appears when a folder you chose has moved or its disk isn't plugged in. Pick it again; it must be the same vault, or a folder with no vault yet.
+- **Remove from list** takes a vault off the list. Its files stay where they are. The open vault can't be removed.
+
+AIDE never creates a missing vault folder when you switch: a moved folder or an unplugged disk shows "Can't open" and the reason, rather than an empty vault.
+
+On the Mac and Linux, the footer under Scratch and the Wiki shows the open vault; its menu lists the others, **New vault…**, **Open folder…** and **Manage vaults…**. On the iPhone the same menu is in Scratch's toolbar. A server you're signed in to is listed after the vaults, and switching to a vault keeps you signed in so you can switch back.
+
+## Leave out of notes
+
+**Settings › Notes › Leave out of notes** (**Settings › General › Notes** on Linux) takes a list of patterns, one per line, for folders and files that aren't notes:
+
+```text
+node_modules
+archive/
+scripts/tools
+*.draft.md
+```
+
+- A pattern without a `/` matches a name at any depth; `node_modules` leaves out every folder of that name.
+- A trailing `/` matches folders only.
+- A pattern with a `/` elsewhere (or starting with one) is anchored at the vault's top: `scripts/tools`.
+- `*` is any run of characters except `/`, `?` is one character, and `**` as a whole segment is any number of folders.
+- Matching is case-sensitive and uses names as they are on disk, `.md` included. Blank lines and lines starting with `#` are ignored. Up to 100 patterns.
+
+Saving takes the matching notes out of AIDE as if they had been moved out of the folder: they leave the lists, search and links, and lose their pins. The files themselves stay on disk. Removing the pattern brings them back as new notes. AIDE refuses to create or move a note onto a path that's left out, so nothing you write disappears.
+
+## Files that need attention
+
+When a vault holds files AIDE couldn't take in as they are, Settings shows **N files need attention**. The page lists each file with the reason, such as a name that isn't a usable note path, two files that read as the same note, a folder that differs from another only by case or punctuation, or Obsidian settings that couldn't be imported. AIDE doesn't change these files; rename or move them yourself and they're picked up.
+
+## Recently deleted
+
+Deleting a note moves it into the vault's archive (`.aide/archive/`); nothing is deleted for good. **Settings › Notes › Recently deleted** lists deleted notes, newest first, each with the path it was deleted from and when. **Restore** puts a note back at its path with its old id, so links and drafts find it again. If another note holds that path now, AIDE says so and leaves both as they are.
+
+Scratch notes filed by [Organize](/docs/guides/scratch/) are archived the same way.
+
+## Moving notes between a device and a server
+
+- **Settings › Notes › Move notes to a server** copies every note on this device to an empty account on a server, then uses the server from then on. You need the server's address and a pairing code from it; the device keeps a backup copy of the vault. See [Run your own server](/docs/self-hosting/own-server/).
+- **Settings › Notes › Keep notes on this device only** (when signed in to a server) copies every note from the server into Markdown files on this device and uses them instead. The server keeps its notes. On the Mac you can pick an empty folder for them, so other apps can open them too. The Feed, notifications, server AI and server plugins stop on that device.
+
+Both show progress and can be resumed if interrupted. To keep a vault on your own computer and still reach it from your phone, [host it on your desktop](/docs/self-hosting/desktop-host/) instead: the notes stay in the same folder.

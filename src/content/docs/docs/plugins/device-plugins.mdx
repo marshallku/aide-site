@@ -1,0 +1,172 @@
+---
+title: Installing device plugins
+description: Add, update, roll back and remove the plugins that run inside AIDE on your iPhone, Mac or Linux computer, with only the access you approve.
+sidebar:
+    order: 2
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+A device plugin adds something to the AIDE app itself: a tab, a sheet you open on a note, a view in the
+desktop's right panel, a command, or a job that runs at a set time. It runs on the device, inside a
+sandbox, and can touch only what you allowed when you installed it. No app update and no server are
+needed.
+
+## Where to find them
+
+| Device         | Where                                                                        |
+| -------------- | ---------------------------------------------------------------------------- |
+| iPhone and Mac | **Settings**, the **On this device** section                                 |
+| Linux          | **Settings › Device plugins**, the **On this device** group                  |
+
+The list shows each installed plugin with its state: **On**, **Off**, **Update available**,
+**Withdrawn** or **Needs reinstall**. Below it are **Browse plugins** and **Add from a URL**.
+
+On the Mac you can also open **Browse Plugins** from the toolbar or the command palette
+(<kbd>⇧</kbd><kbd>⌘</kbd><kbd>P</kbd>); on Linux from the ribbon or with
+<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>P</kbd>.
+
+## Install from the index
+
+<Steps>
+
+1. Open **Browse plugins**. It lists the plugins in the index with what each one asks for. A plugin
+   you already have says **Installed**, or **Update** when the index has a newer version.
+2. Choose a plugin. AIDE downloads it and checks every file against the index before showing it.
+3. Under **It asks to**, turn on each permission you agree to. Only what you turn on is allowed.
+4. Choose **Install**. The plugin is on right away.
+
+</Steps>
+
+## Install from a URL
+
+A plugin is a folder on a web server holding `manifest.json` and `main.js` (and, for most, `index.html`
+and `styles.css`).
+
+<Steps>
+
+1. Open **Add from a URL**.
+2. Type the folder's address, for example `https://example.com/my-plugin/`, and choose **Fetch**. The
+   address must be `https://` (`http://` works only for this computer itself).
+3. Check the name, version and author. The screen says **Not from an index: unverified**: nobody
+   checked these files for you, so install only what you trust.
+4. Turn on the permissions you agree to and choose **Install**.
+
+</Steps>
+
+## What a plugin can ask for
+
+The install screen lists each permission in plain words. A call outside what you approved fails
+with `not allowed: …`.
+
+| Permission         | What you see                                              | What it allows                                                       |
+| ------------------ | --------------------------------------------------------- | -------------------------------------------------------------------- |
+| `notes:read:*`     | Read and search all notes                                 | Reading, searching and watching every note                           |
+| `notes:read:cards` | Read and search notes in cards                            | The same, for notes at `cards` or under `cards/`                     |
+| `notes:write:…`    | Read, change and archive all notes (or notes in a folder) | Creating, changing, appending to and archiving those notes           |
+| `todos:read`       | Read your todos, open and done, in any note               | The todos' text and fields, not the rest of the note                 |
+| `todos:write`      | Check off and add todos, in any note                      | Changing only the todo line                                          |
+| `storage`          | Keep its own data on this device                          | 512 KB of its own data, on this device only                          |
+| `net:<host>`       | Connect to `<host>`                                       | HTTPS requests to that one host                                      |
+| `schedule`         | Run at set times while AIDE is open on this computer      | Its scheduled jobs, on the Mac and Linux                             |
+| `attachments:read` | Read the images and documents your notes show             | Reading embedded images and documents                                |
+| `attachments:write`| Add images and documents to your notes                    | Adding new ones; an existing attachment is never changed             |
+
+What a plugin can never do:
+
+- **Reach the internet on its own.** Its page can load nothing from the network. The only way out is
+  a request to a host it declared as `net:<host>` and you approved.
+- **Leave its sandbox.** It can't read your files, other apps or other plugins' data, and it can't
+  navigate away from its own page.
+- **Write outside its folders.** With `notes:write:recall`, for example, it can change notes under
+  `recall/` and nowhere else.
+
+## Where plugins run
+
+- **iPhone, Mac and Linux** run device plugins the same way. A plugin installed on one device isn't
+  installed on the others: add it on each.
+- **Per workspace.** What you install, approve and turn on is kept for the server account or vault
+  you are in. Switching to another vault doesn't bring a plugin's access along.
+- **Scheduled jobs** run only on the Mac and Linux, and only while AIDE is open there. The app checks
+  once a minute, at launch and when the computer wakes. A job missed while the app was closed is
+  skipped, unless the plugin asked to catch up: then it runs once at launch or wake, if it's at
+  most 12 hours late. An iPhone lists a plugin's schedules but never runs them. Work that has to
+  happen whether or not an app is open belongs in a [server plugin](/docs/plugins/overview/).
+- **Commands** appear in the command palette (<kbd>⌘</kbd><kbd>P</kbd> on the Mac,
+  <kbd>Ctrl</kbd><kbd>P</kbd> on Linux, the Commands button in an iPhone's Scratch).
+- **Sheets** appear in a note's **Plugins** menu in the editor toolbar (on the iPhone, under the
+  More menu).
+- **Panels** are views of the desktop's right panel; an iPhone has none.
+
+## A plugin's screen
+
+Choose an installed plugin in the list to see:
+
+- **Enabled**, to turn it off without removing it, and **Show as tab** for a plugin with tabs.
+- Its description, **Version** and **Author**.
+- Its settings, saved as you change them. Changing one restarts the plugin's open pages.
+- **Schedules**, with the next and last run of each and **Run now**. On the Mac and Linux,
+  **Run on schedule** turns all of them off and on; turning it back on doesn't catch up what was
+  skipped.
+- **Access you approved**, and **Source**, the address it came from.
+- **Go back to the previous version** and **Remove**.
+
+## Update, roll back, remove
+
+- **Update.** When the index has a newer version, the plugin's row says **Update available** and
+  **Browse plugins** says **Update**. Install it the same way; you approve its permissions again.
+  A package with the same id as an installed one always replaces it.
+- **Go back to the previous version.** An update keeps the version before it, and a copy of the data
+  that version had. Going back restores both, with the permissions you approved for it then.
+- **Remove** deletes the plugin, its settings, its schedules and its data on this device. Notes it
+  wrote stay: they are your notes.
+
+All plugins on a device can use at most 50 MB together.
+
+## The plugin index
+
+The public index lives at `https://marshallku.github.io/aide-plugins/plugins.json`, and **Browse
+plugins** uses it unless you set another. Every version in it is reviewed, and the index records a
+hash of each file, so what installs is exactly what was approved.
+
+The index can also withdraw a version. A withdrawn plugin is turned off and shows **Withdrawn** with
+the reason. It stays off until you choose **Turn on anyway**; remove it if you don't trust it.
+
+<Aside>
+The index can list an older version of a plugin than the one these pages describe. **Browse
+plugins** shows the version it offers, and **Update** appears when a newer one is listed.
+</Aside>
+
+### A private index
+
+On a notes folder on this device, **Browse plugins** has an **Index** field at the top. Type the
+address of your own index (`https://…/plugins.json`) to browse it instead; leave it empty for the
+public one. With a server, **Browse plugins** shows the server's copy of the index it is set to.
+To make an index for your own plugins, see [Build a device plugin](/docs/developers/device-plugins/).
+
+## Troubleshooting
+
+### A plugin says Needs reinstall
+
+One of its files on this device changed after you installed it, so AIDE won't run it. Install it
+again from **Browse plugins** or its URL.
+
+### Plugin stopped, with Start again
+
+A plugin that doesn't answer for 5 seconds is stopped. Choose **Start again**. If it keeps
+happening, turn it off and tell its author.
+
+### Plugins on this device would use over 50 MB
+
+Remove a plugin you no longer use, then install again.
+
+### Can't reach the plugin index
+
+Check the connection, or the address in **Index**. When the index can't be refreshed, AIDE shows the
+last copy it fetched and says so.
+
+### A scheduled job didn't run
+
+Schedules run only while AIDE is open on a Mac or Linux computer. Check the plugin's **Schedules**:
+if it says you didn't allow it to run at set times, install it again and turn on **Run at set
+times while AIDE is open on this computer**. **Run now** works either way.

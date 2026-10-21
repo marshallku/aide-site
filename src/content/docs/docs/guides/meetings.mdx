@@ -1,0 +1,142 @@
+---
+title: Meetings
+description: Make a meeting note, record it, have it written down on your device, and turn it into a summary and approved action items.
+sidebar:
+    order: 10
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+A meeting in AIDE is a note. You make it from a calendar event or on the spot, record the meeting
+into it, and AIDE writes down what was said on your device, sums it up with your assistant's model,
+and proposes action items that become todos once you approve them. The meeting also gets a line in
+that day's daily note.
+
+## Make a meeting note
+
+- **From an event:** open the event in [Calendar](/docs/guides/calendar/) and choose **Meeting
+  note**. The note gets the event's title, time and attendees, links to related notes, and a word
+  list for transcription. Choosing it again opens the same note.
+- **On the spot:** **File › New Meeting** on the Mac (<kbd>⇧</kbd><kbd>⌘</kbd><kbd>R</kbd>),
+  **New meeting** in the Wiki's **More** menu on the iPhone, or **New meeting** in the command
+  palette on Linux. This makes a meeting starting now, opens it and starts recording.
+
+Meeting notes live under `meetings/`, named after the day and the title, for example
+`meetings/2026-10-17-design-review`. You can rename or move the note: AIDE finds a meeting by an id
+in its frontmatter, not by its path.
+
+A meeting note has these sections:
+
+| Section | What's in it |
+|---|---|
+| **Context** | Links to the notes the meeting is about; for a Google event, what the calendar knows. |
+| **Notes** | Yours. Write anything here (or anywhere outside the generated parts). |
+| **Summary** | The summary and decisions, once it's summed up. |
+| **Actions** | The action items you approved, as todos. |
+| **Transcript** | What was said, as written down, with its corrections. |
+
+The generated parts are kept in their own blocks, and AIDE rewrites only those, so your own writing
+is never touched. Text that came from elsewhere (the transcript, an event's description) sits in a
+code block, so nothing in it turns into a todo.
+
+## Record
+
+On a meeting note, choose **Record**. A bar over the note shows the elapsed time, the sources and a
+level meter, with **Pause**/**Resume** and **Stop**. While a meeting records, every window shows a
+small pill with its title and time that opens the note.
+
+- **Sources:** the microphone, and on the Mac and Linux also what the computer plays, so the other
+  side of a call is recorded too. That's **Settings › Meetings › Record what this Mac plays**
+  (**Record what this computer plays** on Linux), on by default; the Mac asks for permission once.
+  Recording starts with whichever sources work and says which.
+- **Record again** after Stop adds to the same recording; the timeline keeps counting.
+- One meeting records at a time. While it does, the assistant's mic is off.
+- Losing the microphone pauses the recording. If the disk fills up or writing falls behind, it
+  stops and keeps what it has. After a crash, AIDE recovers the recording at the next launch.
+
+## Import a recording
+
+To take in audio recorded elsewhere (Voice Memos, a recorder, a call recording, anything the device
+can play, up to 6 hours):
+
+- On a meeting note, **Import recording…** adds the file to that meeting.
+- **File › Import Recording…** on the Mac, **Import recording** in the Wiki's **More** menu on the
+  iPhone, or the command palette on Linux asks which meeting first: AIDE guesses when the file was
+  recorded (**Recorded around**, which you can change) and lists the events around then, or **A new
+  meeting** named after the file.
+
+An imported file is written down and summed up like a live recording.
+
+## Written down on your device
+
+What was said is written down on the device that holds the recording, in 30-second pieces as the
+recording goes, by the same engines as the assistant's voice: Apple's on-device speech recognition
+on the Mac and iPhone, whisper.cpp on Linux. Nothing is sent anywhere for this. The language is the
+one in **Settings › Assistant › Voice › Language**.
+
+Each meeting has a word list (`meeting-glossary` in its frontmatter): attendees, titles of the linked
+notes, and names from the event's title and description. The recognizer is told to expect those
+words. Add your own to the list to help with names and jargon.
+
+When it can't write a meeting down (no engine for the language, permission refused, on Linux the
+speech model not downloaded), the note says **Not written down yet** with the reason and
+**Retry**. On Linux, get the speech model under **Settings › Assistant › Voice**.
+
+## Summed up
+
+Once the recording has stopped and is fully written down, AIDE sums it up on its own with the
+assistant's model (**Settings › Assistant › Model from**; see [AI and models](/docs/guides/ai/)).
+The model gets the title, start and attendees, the word list, the start of each linked note, the
+calendar's context and the transcript; a long meeting is summed up in parts.
+
+The note then gets:
+
+- **Summary**: a few bullets, where it was summed up ("Summed up with Claude Code (sonnet)"), and
+  **Decisions**, each with the time it came up.
+- **Corrections**: words the model thinks were misheard, based on the attendees and your notes,
+  shown in the transcript as the corrected word with what was heard.
+- **Proposed action items**, waiting for you.
+
+If the transcript or the context changes afterwards, the note says **Changed since it was summed
+up.** with **Process again**. A failure says **Not summed up** with the reason and **Process
+again**.
+
+## Approve action items
+
+Under a summed-up meeting, each proposed action item shows its text, who it's for and when it came
+up, with **Approve** and **Dismiss**, and **Approve all** when there are several.
+
+- **Approve** adds a todo to the **Actions** section, such as `- [ ] Send the report [meeting:: a1]`,
+  so it shows in [Todos](/docs/guides/todos/) like any other.
+- **Dismiss** drops it.
+- AIDE remembers every item it ever proposed, so an item you dismissed or edited isn't proposed
+  again.
+- With the assistant set to **Apply right away (yolo)**, new items are approved as soon as they're
+  written.
+
+**Transcript** opens the whole transcript with the corrections applied; **Undo** beside a correction
+takes it back.
+
+## Keep recordings
+
+**Settings › Meetings › Keep recordings** decides how long the audio stays on the device:
+
+- **7 days after processing** (the default)
+- **Right after processing**
+- **Until deleted**
+
+Audio is deleted only after the meeting is summed up and the time has passed. The transcript in the
+note stays either way.
+
+## Privacy
+
+<Aside type="note">
+A meeting's audio never leaves the device that recorded it. It is kept in AIDE's own data folder on
+that device (Application Support on the Mac and iPhone, `$XDG_DATA_HOME/aide` on Linux), and only
+the text goes into the note.
+</Aside>
+
+Summing up does send meeting content to a model: the transcript, the attendees, the word list and
+the start of the linked notes go to the backend in **Settings › Assistant › Model from**. Notes
+under the assistant's **Never read** folders are never sent. Without a model, recording and the
+transcript still work; the meeting just isn't summed up.

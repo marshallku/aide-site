@@ -11,6 +11,10 @@ const group = (label, ko, directory) => ({
 export default defineConfig({
     site: "https://aide.marshallku.dev",
     trailingSlash: "ignore",
+    redirects: {
+        "/docs": "/docs/getting-started/introduction/",
+        "/ko/docs": "/ko/docs/getting-started/introduction/",
+    },
     integrations: [
         starlight({
             title: "AIDE",

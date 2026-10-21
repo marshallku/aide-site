@@ -1,0 +1,124 @@
+---
+title: Google Calendar
+description: Your Google calendars in AIDE's Calendar, today's agenda in your daily note, a reminder and AI prep notes before each event, and event details in meeting notes.
+sidebar:
+    order: 11
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+
+The Google Calendar plugin brings your Google calendars into AIDE: they show in the Calendar section, today's events go into your daily note, and a few minutes before each meeting you get a reminder and notes on what to prepare.
+
+<PluginFacts id="gcal" />
+
+<Aside type="caution" title="Sign-in isn't guided yet">
+The plugin reads Google with an OAuth token file that you have to provide yourself (see [Before you start](#before-you-start)). AIDE can't create that file for Google Calendar yet: its built-in Google sign-in (`aide-plugins google-auth`) only covers Gmail, and a Gmail token can't read calendars. If you don't already have a Google Calendar token, this plugin isn't usable for now.
+</Aside>
+
+## What it does
+
+**Keeps your calendars in AIDE.** Every 5 minutes it reads your calendar list and the events from 7 days ago to 6 weeks ahead (at most 300 events per calendar), and the [Calendar](/docs/guides/calendar/) section shows them. If one calendar can't be read, its last good events stay and the calendar shows **Sync failed** with the reason.
+
+**Writes today's agenda.** In a daily note made from a template with `{{slot gcal.today}}`, it lists the day's events from the calendars you show, all-day events first:
+
+```markdown
+- All day Team offsite
+- 09:30–10:00 Standup (Room 4)
+- 14:00–15:00 Design review
+```
+
+A day with nothing reads `- No events`. The list is written when the daily is created and kept current on every sync, so an event added or moved during the day shows up within 5 minutes.
+
+**Reminds you before events.** Every minute it checks the calendars that have reminders on. When a timed event starts within your reminder time (10 minutes by default), it posts a reminder to the Feed, titled like "In 10 minutes: Design review", with the time, the place, a link to the event and its video-call link. Reminders always notify you. All-day events get no reminder. Each event is reminded once.
+
+**Writes prep notes.** Right after a reminder, it asks your AI what to prepare: the AI gets the event and the notes that match its title, and answers with what the meeting is about, related open todos or decisions, and one to three things to do. The answer goes into the day note (`briefings/{date}`) under a heading like `#### 14:00 Prep for Design review`. With **Tell me when there's something to prepare** on, the AI also decides whether it found something concrete (a document to read, a pending decision, something to bring), and only then sends it to you as a notification, "14:00 Prep for Design review". Prep runs one event at a time, up to 90 seconds each; when more than 8 are waiting, the extra ones are skipped.
+
+**Fills in meeting notes.** In a [meeting note](/docs/guides/meetings/) made from one of its events, it keeps a section with what the calendar knows: when, where, the video link, the other attendees, the event link and its description, and marks it cancelled if the event is.
+
+## Before you start
+
+- A [desktop host](/docs/self-hosting/desktop-host/) or your own server. The plugin runs there and reads Google from that machine.
+- For prep notes: an AI set in **Settings › AI** (**Anthropic API key** or **My gateway**).
+- Two files on the machine that runs the plugins:
+    - `credentials.json`: the OAuth client you create as a **Desktop app** in the Google Cloud console for your own project, with the Google Calendar API turned on.
+    - A token file for that client, granted the read-only calendar scope (`https://www.googleapis.com/auth/calendar.readonly`), in JSON with `access_token`, `token_type`, `refresh_token` and `expiry`.
+
+By default the plugin looks for them at `~/.config/life-assistant/credentials.json` and `~/.config/life-assistant/google-token.json`. To keep them elsewhere, name them in `plugins.json` (below).
+
+## Set it up
+
+<Steps>
+
+1. Put `credentials.json` and the token file in place, at the default paths or at the paths you set in `plugins.json`.
+2. Turn the plugin on: **Calendar** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+3. Within a minute or two your calendars appear in the Calendar section.
+4. Choose **Calendars…** under the plugin to pick which calendars show and remind you, and their colors.
+5. For the agenda in your daily, add `{{slot gcal.today}}` to your daily template (see [Daily notes and templates](/docs/guides/periodic-notes/)).
+
+</Steps>
+
+## Settings
+
+The plugin has no settings table. Its choices are in the **Calendars…** sheet, under the plugin in Settings (on Linux, the **Calendars…** row in its expanded row):
+
+| In the sheet                                         | What it does                                                                                      | Default |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------- |
+| Each calendar's switch                               | Shows the calendar in AIDE and in the daily agenda                                                 | What Google's own calendar list shows |
+| Each calendar's bell                                 | Reminders for that calendar's events                                                               | On for every calendar |
+| Each calendar's color dot                            | Its color in AIDE: Google's palette, a custom color, or **Use Google's color**                     | Google's color |
+| **Remind before events**                             | Turns reminders on or off for all calendars                                                        | On |
+| **When**                                             | How long before: 5, 10, 15, 30 or 60 **min before**                                                | 10 min before |
+| **AI prep notes in the daily note**                  | Writes prep notes after each reminder                                                              | On |
+| **Tell me when there's something to prepare**        | Also notifies you when the AI finds something concrete to prepare                                  | Off |
+
+Calendars are grouped as **My calendars** and **Other calendars**, like Google Calendar.
+
+### Local keys
+
+In `plugins.json` on a desktop host (see [Local settings](/docs/plugins/overview/#local-settings)), under `"gcal"`:
+
+| Key               | What it does                                                                                             |
+| ----------------- | -------------------------------------------------------------------------------------------------------- |
+| `credentials`     | Path to the OAuth client file. Default `~/.config/life-assistant/credentials.json`.                      |
+| `tokenFile`       | Path to the token file. Default `~/.config/life-assistant/google-token.json`.                            |
+| `note`            | Where prep notes go: a note path with `{date}`, or `daily` for the daily note. Default `briefings/{date}`. |
+| `reminderMinutes` | Reminder time used until you choose one in the sheet. Default `10`.                                      |
+| `prep`            | Prep notes on or off until you choose in the sheet. Default `true`.                                      |
+| `prepNotify`      | **Tell me…** on or off until you choose in the sheet. Default `false`.                                   |
+
+```json
+{
+    "plugins": {
+        "gcal": {
+            "credentials": "~/secrets/google/credentials.json",
+            "tokenFile": "~/secrets/google/calendar-token.json",
+            "note": "daily"
+        }
+    }
+}
+```
+
+When Google refreshes the token, the plugin saves the new one in its own state folder and never writes into your token file. If you replace your token file later (after signing in again), the newer file wins.
+
+## Troubleshooting
+
+### No calendars show up
+
+The plugin can't start without both Google files. It tries again every 30 seconds, and the host log (its path is under **Log** in Settings › Host) says which file it couldn't read. Check the paths, and that the token was issued for the same OAuth client as `credentials.json`.
+
+### Prep notes aren't in my daily note
+
+They go into the day note, `briefings/{date}`, unless `note` in `plugins.json` says `daily`. Prep also needs an AI in **Settings › AI**.
+
+### A reminder never came for an event during sleep
+
+A reminder that came due while the computer slept is skipped on waking: it would arrive after the event started.
+
+### The daily agenda says "Some calendars could not be read"
+
+One calendar failed for that day while the others worked. It's usually a calendar you lost access to; turn its switch off in **Calendars…**.
+
+## Privacy
+
+The plugin talks to Google's Calendar API from the machine that runs the plugins, with read-only access; it never changes your calendars. The events of the last week and next six weeks are stored on your host or server as the plugin's state (descriptions cut to 300 characters), for the apps to show. For prep notes, the event's title, time and place, and the notes that match its title, go to the AI you set in **Settings › AI**.

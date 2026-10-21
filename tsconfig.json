@@ -9,6 +9,7 @@
             "#scripts/*": ["./src/scripts/*"],
             "#styles/*": ["./src/styles/*"],
             "#data/*": ["./src/data/*"],
+            "#lib/*": ["./src/lib/*"],
             "#assets/*": ["./src/assets/*"]
         }
     }

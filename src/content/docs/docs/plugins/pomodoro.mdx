@@ -1,0 +1,77 @@
+---
+title: Pomodoro
+description: A device plugin with a focus timer (25 minutes of focus, 5 of break) that counts your sessions and logs each day's count to a note.
+sidebar:
+    order: 32
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+Pomodoro is a focus timer in its own tab. Work for 25 minutes, rest for 5, and AIDE keeps count of the
+sessions you finish.
+
+<PluginFacts id="pomodoro" kind="device" />
+
+## What it does
+
+It adds a **Focus** tab, drawn with the app's own controls:
+
+- The timer shows **Focus** or **Break** and the time left. **Start**, **Pause**, **Reset** and
+  **Skip** control it.
+- When a focus session runs out, it counts as finished and the break begins; when the break runs
+  out, the next focus session is ready. **Skip** ends the current part early (a skipped focus session
+  still counts).
+- **Sessions today** shows how many focus sessions you finished today, by this device's calendar day.
+
+**The evening log.** At 21:00 the plugin adds the day's count to the note `pomodoro/log` (made if
+missing), one line a day:
+
+```markdown
+- 2026-10-21: 6 focus sessions
+```
+
+This runs on the Mac and Linux while AIDE is open. If AIDE was closed at 21:00, it runs when AIDE
+next opens, up to 12 hours late. An iPhone never runs it.
+
+## Set it up
+
+<Steps>
+
+1. Open **Browse plugins** (in **Settings**, under **On this device**; on Linux, **Settings › Device
+   plugins**) and choose **Pomodoro**.
+2. Approve **Keep its own data on this device** (the counts), **Read, change and archive notes in
+   pomodoro** (the log) and **Run at set times while AIDE is open on this computer** (the 21:00
+   log), then **Install**.
+3. Open the **Focus** tab and choose **Start**.
+
+</Steps>
+
+More on installing, updating and removing is in [Installing device
+plugins](/docs/plugins/device-plugins/).
+
+## Settings
+
+In **Settings › On this device › Pomodoro** (on Linux, **Settings › Device plugins › Pomodoro**).
+
+<PluginSettings id="pomodoro" kind="device" defaults={{ focusMinutes: "25", breakMinutes: "5" }} />
+
+Both take whole minutes from 1 to 240.
+
+## Limits
+
+- The timer runs while the **Focus** tab's page is running in the app.
+- Counts are kept per device. The log is written from the desktop's own count, so sessions finished
+  on an iPhone aren't in it.
+
+<Aside>
+The public index may list an older Pomodoro than the one described here. A version that asks only
+to **Keep its own data on this device** has no evening log. **Browse plugins** shows **Update** when
+a newer one is listed.
+</Aside>
+
+## Privacy
+
+The counts stay in the plugin's storage on this device. The log is a note under `pomodoro/`, synced
+like any other. The plugin makes no network requests.
