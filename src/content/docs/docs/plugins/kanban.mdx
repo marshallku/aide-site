@@ -1,0 +1,80 @@
+---
+title: Kanban
+description: A device plugin that keeps boards of cards in lanes in notes, in the same format as Obsidian's Kanban plugin.
+sidebar:
+    order: 34
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+
+Kanban shows a note as a board: lanes side by side, cards in them, moved by dragging. The board is an
+ordinary note under `boards/`, written the way Obsidian's Kanban plugin writes it, so the same board
+opens in both apps.
+
+<PluginFacts id="kanban" kind="device" />
+
+## What it does
+
+It adds a **Kanban** tab. The tab lists your boards (the notes under `boards/`) and makes new ones: a
+new board gets the lanes **To do**, **Doing** and **Done**.
+
+On a board you can:
+
+- add a card: type in **Add a card** at the foot of a lane and press <kbd>Return</kbd>;
+- move a card: drag it with the mouse, or with your finger on an iPhone, to another place or lane;
+- tick a card off with its checkbox, or remove it with **×**;
+- add a lane: type its name in **Add a lane** and press <kbd>Return</kbd>.
+
+Each change is saved to the note at once. If the note changed meanwhile, on another device or in
+Obsidian, the board is read again and shows what the note says now.
+
+## The note
+
+A board looks like this:
+
+```markdown
+---
+
+kanban-plugin: board
+
+---
+
+## To do
+
+- [ ] Write the brief
+
+## Done
+
+- [x] Set up the repo
+```
+
+A lane is a `##` heading and a card is a list item under it, `- [x]` when it's done. Lines indented
+under a card belong to it and move with it. Anything else in a lane, and Obsidian's
+`%% kanban:settings` block at the end, stays as it is.
+
+## Set it up
+
+<Steps>
+
+1. Open **Browse plugins** (in **Settings**, under **On this device**; on Linux, **Settings › Device
+   plugins**) and choose **Kanban**.
+2. Approve **Read, change and archive notes in boards**, then **Install**.
+3. Open the **Kanban** tab and name your first board.
+
+</Steps>
+
+It has no settings. More on installing, updating and removing is in [Installing device
+plugins](/docs/plugins/device-plugins/).
+
+## Troubleshooting
+
+### A board from Obsidian isn't listed
+
+The plugin can read only notes under `boards/`. Move the board's file into a `boards` folder at the top
+of your vault.
+
+## Privacy
+
+The plugin reads and changes only the notes under `boards/`. It makes no network requests and keeps no
+data of its own.
