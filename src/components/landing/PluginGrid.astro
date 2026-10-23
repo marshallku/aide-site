@@ -1,7 +1,7 @@
 ---
 // Every plugin the manual documents, in the page's language, from their manifests.
 import Icon from "#components/Icon.astro";
-import { COPY, PLUGIN_BLURBS, docsHref, type Lang } from "#lib/landing-copy";
+import { COPY, NEXT_RELEASE, PLUGIN_BLURBS, docsHref, type Lang } from "#lib/landing-copy";
 import { devicePluginIds, findPlugin, serverPluginIds } from "#lib/plugins";
 
 interface Props {
@@ -25,6 +25,9 @@ const ICONS: Record<string, string> = {
     excalidraw: "scribble",
     pomodoro: "timer",
     "word-count": "text-size",
+    github: "terminal",
+    linear: "todos",
+    jira: "todos",
 };
 
 const { lang } = Astro.props;
@@ -55,7 +58,10 @@ const groups = [
                                 <span class="badge">
                                     <Icon name={ICONS[plugin.id] ?? "plugin"} size={18} />
                                 </span>
-                                <span class="name">{plugin.name}</span>
+                                <span class="name">
+                                    {plugin.name}
+                                    {NEXT_RELEASE.has(plugin.id) && <span class="next">{copy.next}</span>}
+                                </span>
                                 <span class="about">{PLUGIN_BLURBS[lang][plugin.id] ?? plugin.description}</span>
                             </a>
                         </li>
@@ -129,6 +135,16 @@ const groups = [
     .name {
         align-self: center;
         font-weight: 650;
+    }
+    .next {
+        margin-left: 0.4rem;
+        padding: 0.05rem 0.45rem;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--brand-2) 16%, transparent);
+        color: var(--ink-2);
+        font-size: 0.72rem;
+        font-weight: 600;
+        vertical-align: 0.1em;
     }
     .about {
         display: -webkit-box;

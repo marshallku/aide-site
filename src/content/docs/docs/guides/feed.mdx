@@ -5,7 +5,7 @@ sidebar:
     order: 7
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 The Feed is one list of everything your plugins and connected services want to tell you, sorted by
 how much it needs you. It is a server feature: it works when your notes are on a desktop host or your
@@ -48,12 +48,15 @@ AIDE sorts each event once and keeps the verdict, so every device shows the same
 - **With AI** (a model set in **Settings › AI** on the server; see [AI and models](/docs/guides/ai/)):
   the model reads each event's title and the start of its body (about 2 KB), along with up to 200
   words taken from the titles and folder names of your wiki pages, which stand for your interests.
-  It picks a group and writes a one-sentence reason in the event's language. A reply that doesn't
+  It picks a group and writes a one-sentence reason in the event's language
+  (<Badge text="Next release" /> in the language plugins write in, **Settings › Language › Plugins write in**). A reply that doesn't
   fit the expected format is thrown away, and the rules sort the events instead.
 - **With rules** (no AI, or when the model fails):
   - **Act on** when the title or body mentions a deadline word: `deadline`, `due`,
     `action required`, `expires`, `apply by`, `register by`, or the Korean `마감`, `신청`, `납부`,
     `시행`, `만료`, `기한`. The reason reads, for example, `mentions "due"`.
+    <Badge text="Next release" /> The rules' reasons are in the language plugins write in too:
+    `"due" 언급` in Korean.
   - **Need to know** when the publisher marked the event's severity high.
   - **Might interest you** when it mentions a word from your wiki's page titles or folder names.
     The reason names the word.

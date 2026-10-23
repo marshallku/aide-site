@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { Aside, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
 
 Once one computer hosts your vault, or you run your own server, every other device you use pairs with
 it and works on the same notes. Pairing is a one-time step per device; afterwards the device connects
@@ -120,7 +120,9 @@ last seen; this one is marked **This device**.
 ### On a desktop host
 
 Devices are managed on the hosting computer, never from a paired device: a paired device's
-**Settings › Devices** shows the list, but revoking happens on the host.
+**Settings › Devices** shows the list, but revoking happens on the host. <Badge text="Next release" />
+A paired device's list has no **Revoke** buttons; its footer (on Linux, each row's tooltip) says
+"Devices are revoked on the computer that hosts your notes."
 
 - **Linux host:** **Settings › Devices** lists the devices paired with the host, with **Revoke** for
   each. A revoked device is cut off at once, its open connections closed.

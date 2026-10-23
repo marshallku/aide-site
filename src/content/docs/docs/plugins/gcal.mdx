@@ -7,14 +7,11 @@ sidebar:
 
 import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
 
 The Google Calendar plugin brings your Google calendars into AIDE: they show in the Calendar section, today's events go into your daily note, and a few minutes before each meeting you get a reminder and notes on what to prepare.
 
 <PluginFacts id="gcal" />
-
-<Aside type="caution" title="Sign-in isn't guided yet">
-The plugin reads Google with an OAuth token file that you have to provide yourself (see [Before you start](#before-you-start)). AIDE can't create that file for Google Calendar yet: its built-in Google sign-in (`aide-plugins google-auth`) only covers Gmail, and a Gmail token can't read calendars. If you don't already have a Google Calendar token, this plugin isn't usable for now.
-</Aside>
 
 ## What it does
 
@@ -41,28 +38,38 @@ A day with nothing reads `- No events`. The list is written when the daily is cr
 ## Before you start
 
 - A [desktop host](/docs/self-hosting/desktop-host/) or your own server. The plugin runs there and reads Google from that machine.
+- A Google account. <Badge text="Next release" /> You sign in from the plugin's settings in the app; you don't need an OAuth client of your own. Until this release, the plugin needed `credentials.json` and a token file you made yourself (see [Your own OAuth files](#your-own-oauth-files)).
 - For prep notes: an AI set in **Settings › AI** (**Anthropic API key** or **My gateway**).
-- Two files on the machine that runs the plugins:
-    - `credentials.json`: the OAuth client you create as a **Desktop app** in the Google Cloud console for your own project, with the Google Calendar API turned on.
-    - A token file for that client, granted the read-only calendar scope (`https://www.googleapis.com/auth/calendar.readonly`), in JSON with `access_token`, `token_type`, `refresh_token` and `expiry`.
-
-By default the plugin looks for them at `~/.config/life-assistant/credentials.json` and `~/.config/life-assistant/google-token.json`. To keep them elsewhere, name them in `plugins.json` (below).
 
 ## Set it up
 
 <Steps>
 
-1. Put `credentials.json` and the token file in place, at the default paths or at the paths you set in `plugins.json`.
-2. Turn the plugin on: **Calendar** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+1. Turn the plugin on: **Calendar** under **Settings › Core plugins**, then **Enabled** (on Linux, the switch on its row on the **Core plugins** page of Settings). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+2. <Badge text="Next release" /> Within a minute the plugin's status, under its settings, reads "Sign in to read your calendars…" with a **Sign in with Google** button. Choose it, pick your Google account and allow AIDE to see your calendars.
+    - **On the computer that runs the plugins** (the desktop host's own app): the browser comes back to AIDE by itself and says "AIDE is signed in to Google. You can close this tab."
+    - **From a phone or another computer**: the browser ends on a page that doesn't load, at an address starting with `http://127.0.0.1`. Copy that whole address, paste it into the plugin's **Sign-in link** setting and save. The plugin picks it up within a few seconds.
+
+    The status then reads "Connected to Google Calendar". A sign-in link works once, for 10 minutes; after that the button opens a new one.
 3. Within a minute or two your calendars appear in the Calendar section.
 4. Choose **Calendars…** under the plugin to pick which calendars show and remind you, and their colors.
 5. For the agenda in your daily, add `{{slot gcal.today}}` to your daily template (see [Daily notes and templates](/docs/guides/periodic-notes/)).
 
 </Steps>
 
+<Aside type="caution" title="Google may warn that it hasn't verified AIDE">
+Until Google finishes reviewing AIDE's sign-in, the consent page can say **Google hasn't verified this app**. To go on, choose **Advanced**, then **Go to AIDE (unsafe)**. AIDE asks only to read, and the token stays on the computer that runs the plugins. While the review is pending, Google also limits how many people can sign in with AIDE's client; if it turns you away, use [your own OAuth files](#your-own-oauth-files).
+</Aside>
+
+The token stays in the plugin's state folder on the computer that runs the plugins. The [morning briefing](/docs/plugins/briefing/) reads your calendar through this same sign-in.
+
 ## Settings
 
-The plugin has no settings table. Its choices are in the **Calendars…** sheet, under the plugin in Settings (on Linux, the **Calendars…** row in its expanded row):
+<PluginSettings id="gcal" defaults={{ signInLink: "" }} />
+
+**Sign-in link** <Badge text="Next release" /> is only for signing in from a phone or another computer (see [Set it up](#set-it-up)).
+
+The rest of the plugin's choices are in the **Calendars…** sheet, under the plugin in Settings (on Linux, the **Calendars…** row in its expanded row):
 
 | In the sheet                                         | What it does                                                                                      | Default |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------- |
@@ -82,8 +89,8 @@ In `plugins.json` on a desktop host (see [Local settings](/docs/plugins/overview
 
 | Key               | What it does                                                                                             |
 | ----------------- | -------------------------------------------------------------------------------------------------------- |
-| `credentials`     | Path to the OAuth client file. Default `~/.config/life-assistant/credentials.json`.                      |
-| `tokenFile`       | Path to the token file. Default `~/.config/life-assistant/google-token.json`.                            |
+| `credentials`     | Path to your own OAuth client file (see below). Empty: AIDE's.                                           |
+| `tokenFile`       | Path to your own token file (see below). Empty: the account you signed in with from the app.             |
 | `note`            | Where prep notes go: a note path with `{date}`, or `daily` for the daily note. Default `briefings/{date}`. |
 | `reminderMinutes` | Reminder time used until you choose one in the sheet. Default `10`.                                      |
 | `prep`            | Prep notes on or off until you choose in the sheet. Default `true`.                                      |
@@ -101,13 +108,32 @@ In `plugins.json` on a desktop host (see [Local settings](/docs/plugins/overview
 }
 ```
 
-When Google refreshes the token, the plugin saves the new one in its own state folder and never writes into your token file. If you replace your token file later (after signing in again), the newer file wins.
+### Your own OAuth files
+
+Setups from before Sign in with Google keep working. The plugin uses, in this order:
+
+1. The token file named by `tokenFile`, with the client named by `credentials`.
+2. <Badge text="Next release" /> The account you signed in with from the app.
+3. The files it read before this release, when they exist: `~/.config/life-assistant/google-token.json`, with the client at `~/.config/life-assistant/credentials.json`.
+
+A token file must be granted the read-only calendar scope (`https://www.googleapis.com/auth/calendar.readonly`) for that same client. When Google refreshes it, the plugin saves the new one in its own state folder and never writes into your token file. If you replace your token file later (after signing in again), the newer file wins. While one of these files is in use, the plugin doesn't offer **Sign in with Google**, unless Google refuses the old files' token (see [Calendar asks me to sign in again](#calendar-asks-me-to-sign-in-again)).
 
 ## Troubleshooting
 
 ### No calendars show up
 
-The plugin can't start without both Google files. It tries again every 30 seconds, and the host log (its path is under **Log** in Settings › Host) says which file it couldn't read. Check the paths, and that the token was issued for the same OAuth client as `credentials.json`.
+- <Badge text="Next release" /> Look at the plugin's status under its settings. "Sign in to read your calendars…" means it's still waiting for you to sign in.
+- "That sign-in link is old or already used; sign in again": the pasted address came from an earlier attempt. Choose **Sign in with Google** again and paste the new address.
+- "This build can't sign in to Google; set credentials in the plugins' config file": this copy of AIDE has no Google client built in. Use [your own OAuth files](#your-own-oauth-files).
+- With your own files, the plugin can't start until it can read them. It tries again every 30 seconds, and the host log (its path is under **Log** in Settings › Host) says which file it couldn't read. Check the paths, and that the token was issued for the same OAuth client as `credentials.json`.
+
+### Calendar asks me to sign in again
+
+<Badge text="Next release" /> Google stopped taking the plugin's access (you removed it at [myaccount.google.com/permissions](https://myaccount.google.com/permissions) or changed your password). The plugin sets the refused token aside and shows **Sign in with Google** again. That holds for the app's sign-in and for the files it read before this release (`~/.config/life-assistant/google-token.json`): such a file is skipped until it changes, and never deleted. A token file you named with `tokenFile` isn't set aside; sign in again with your own tooling and replace the file.
+
+### google: no refresh token came back
+
+Google didn't give a lasting token, usually because AIDE was allowed before. Remove AIDE's access at [myaccount.google.com/permissions](https://myaccount.google.com/permissions) and sign in again.
 
 ### Prep notes aren't in my daily note
 
@@ -123,4 +149,4 @@ One calendar failed for that day while the others worked. It's usually a calenda
 
 ## Privacy
 
-The plugin talks to Google's Calendar API from the machine that runs the plugins, with read-only access; it never changes your calendars. The events of the last week and next six weeks are stored on your host or server as the plugin's state (descriptions cut to 300 characters), for the apps to show. For prep notes, the event's title, time and place, and the notes that match its title, go to the AI you set in **Settings › AI**.
+The plugin talks to Google's Calendar API from the machine that runs the plugins, with read-only access; it never changes your calendars. The Google token stays in the plugin's state folder on that machine. The events of the last week and next six weeks are stored on your host or server as the plugin's state (descriptions cut to 300 characters), for the apps to show. For prep notes, the event's title, time and place, and the notes that match its title, go to the AI you set in **Settings › AI**.

@@ -1,0 +1,138 @@
+---
+title: Linear
+description: The Linear issues assigned to you and the mentions and comments on your issues, in your Feed and in the work/now note.
+sidebar:
+    order: 23
+---
+
+import { Badge, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+<Badge text="Next release" />
+
+The Linear plugin keeps your open Linear issues in one place. The issues assigned to you are listed in
+the `work/now` note, and new assignments, mentions and comments come to your Feed.
+
+<PluginFacts id="linear" />
+
+## What it does
+
+**Open work.** Every 5 minutes the plugin reads the issues assigned to you that aren't completed or
+canceled, and writes them into its own section of the `work/now` note (titled "Work — now"), at most
+50: those with the nearest due date first, then by priority, then the most recently updated.
+
+```markdown
+Linear — 2 open
+- [ENG-12](https://linear.app/acme/issue/ENG-12) Ship the export · due 2026-10-28 · P3 · assigned
+- [ENG-9](https://linear.app/acme/issue/ENG-9) Clean up the logs · P1 · assigned
+```
+
+Linear's priorities show as `P4` (Urgent), `P3` (High), `P2` (Medium) and `P1` (Low). Issues that are
+done, canceled or no longer yours drop out of the list. The section is the plugin's own; the rest of
+the note, and the [GitHub](/docs/plugins/github/) and [Jira](/docs/plugins/jira/) sections beside it,
+are left alone.
+
+**Mentions and comments.** At the same time it reads your Linear notifications and keeps mentions,
+mentions in comments, and comments on issues.
+
+**In the Feed.** Each change posts one item to the Feed, under the topic `linear`, linking to the issue:
+
+| Feed title                 | When                                                   | Notification               |
+| -------------------------- | ------------------------------------------------------ | -------------------------- |
+| "Assigned to you: &lt;title&gt;" | An issue is newly assigned to you                      | Always                     |
+| "Mentioned you: &lt;title&gt;"   | Someone mentions you, in an issue or in a comment      | The Feed's sorting decides |
+| "New comment: &lt;title&gt;"     | A new comment on an issue you subscribe to             | The Feed's sorting decides |
+| "Due in 2 days: &lt;title&gt;"   | An open issue's due date is 2 days away or less        | The Feed's sorting decides |
+| "Overdue: &lt;title&gt;"         | The due date has passed                                | The Feed's sorting decides |
+
+Each one is posted once: a due date warns once when it comes within 2 days and once when it passes,
+counted in your time zone. An assignment that ends and comes back later is posted again. The first
+look after you add a key, or after you switch to another Linear account, posts nothing: the issues
+already open are only listed in `work/now`.
+
+The plugin only reads. It never comments on or changes anything in Linear.
+
+## Before you start
+
+- A [desktop host](/docs/self-hosting/desktop-host/) or your own server. The plugin runs there and
+  reads Linear from that machine.
+- A Linear personal API key.
+
+## Set it up
+
+<Steps>
+
+1. Open **Settings** and choose **Linear** under **Core plugins** (on Linux, the **Linear** row on the
+   **Core plugins** page of Settings).
+2. Next to **API key**, choose **Create an API key**. Linear's security settings open; create a
+   personal API key and copy it.
+3. Paste it into **API key** and choose **Save**.
+4. Turn on **Enabled**. Within a few minutes the status under the settings reads
+   "Connected as &lt;your name&gt; · N open · checked HH:MM", and `work/now` lists your open issues.
+
+</Steps>
+
+## Settings
+
+<PluginSettings id="linear" defaults={{ apiKey: "", teams: "" }} />
+
+**Teams** limits the plugin to some teams, by their keys (`ENG`, `OPS`). Empty means every team. It
+applies to the issues and to the notifications.
+
+### Local keys
+
+Under `"linear"` in `plugins.json` on a desktop host ([where that is](/docs/plugins/overview/#local-settings)):
+
+| Key       | What it does                                                                                              |
+| --------- | --------------------------------------------------------------------------------------------------------- |
+| `apiBase` | The API address the plugin talks to. Default `https://api.linear.app/graphql`. You don't normally set it. |
+
+## Status
+
+The status under the plugin's settings says how it's doing:
+
+- "Connected as &lt;name&gt; · N open · checked HH:MM" after each successful look, with " · first N shown"
+  when there was more work than it reads (300 issues).
+- "Add the API token" while there's no key. Removing the key also clears the plugin's section of
+  `work/now` to "Linear — Disconnected".
+- "Token refused, next try HH:MM", "Rate limited, next try HH:MM" or "Can't reach Linear, retrying,
+  next try HH:MM" when a look fails. The list in `work/now` stays as it was, its first line marked
+  "stale since &lt;time&gt;: &lt;reason&gt;".
+
+## Troubleshooting
+
+### Token refused
+
+Linear didn't accept the key, for example because it was revoked. The plugin keeps the
+last list and tries again every 30 minutes. Create a new key and save it in **API key**.
+
+### Rate limited
+
+Linear asked the plugin to slow down. It waits as long as Linear says (at most an hour) and then
+looks again. Other failures, such as no network, are retried after 2 minutes, then less and less
+often, up to every 30 minutes.
+
+### What the work/now header and the status say
+
+The first line of the plugin's section in `work/now` reads like "Linear — 3 open". It adds
+" · first 50 shown" when there was more work than it lists, " · stale since &lt;date time&gt;: &lt;why&gt;"
+after a look failed (the list below is the last one that worked), or " · not synced yet: &lt;why&gt;"
+when the first look hasn't worked yet. The section names no time; the status under the plugin's
+settings says when it last checked.
+
+### Feed items arrive late
+
+If AIDE's server doesn't take the plugin's Feed items (it's restarting, for example), they wait and
+are sent later, in order, none lost or doubled. Meanwhile the status adds
+" · N events waiting for AIDE's server".
+
+## Privacy
+
+The plugin talks to Linear's API from the machine that runs the plugins, with your key, and only
+reads. It keeps each open issue's identifier, title (cut to 200 characters), link, state, priority,
+due date and last update, never descriptions or comments. The key is stored sealed on your host or
+server, and only this plugin can read it. The `work/now` note, and the Feed items, sync to your
+devices like any note; the [assistant](/docs/guides/assistant/) and the
+[morning briefing](/docs/plugins/briefing/) read `work/now` as data from your tools, never as
+instructions.

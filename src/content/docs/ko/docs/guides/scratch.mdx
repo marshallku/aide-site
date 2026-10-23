@@ -5,7 +5,7 @@ sidebar:
     order: 5
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 스크래치는 어디에 둘지 정하지 않고 쓰는 곳이에요. 스크래치 노트는 `scratch/` 아래에 있는 평범한 노트예요. 나중에 **정리**가 노트마다 위키 안의 자리를 제안하고, 승인하기 전에는 아무것도 옮기지 않아요.
 
@@ -45,6 +45,8 @@ Mac의 **설정 › 빠른 메모**에서 **메뉴 막대에 AIDE 표시**와 **
     1. `#tag`가 있는 노트는 `topics/` 뒤에 첫 태그가 붙은 곳으로 가요(`#investing` → `topics/investing`).
     2. 아니면, 할 일이 있는 노트는 오늘의 일일 노트로 가요.
     3. 아니면, `inbox`로 가요.
+
+<Badge text="다음 릴리스" /> 이유는 AI로 하든 규칙으로 하든 플러그인 작성 언어(**설정 › 언어 › 플러그인 작성 언어**)로 써요. 한국어라면 "#investing 태그가 있어요", 영어라면 "tagged #investing"이에요.
 
 <Aside title="정리가 보내는 것">
 AI로 정리할 때는 정리하는 스크래치 노트와 위키 페이지 이름을 모델로 보내요. 내 키를 쓰면 Anthropic으로 바로 가요. 다른 노트의 텍스트는 보내지 않아요. 규칙으로 정리할 때는 아무것도 기기나 서버를 떠나지 않아요.

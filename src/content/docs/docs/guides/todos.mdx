@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { LinkCard } from "@astrojs/starlight/components";
+import { Badge, LinkCard } from "@astrojs/starlight/components";
 
 A todo in AIDE is a checkbox line in a note, so there's no separate todo database: `- [ ] Call the bank` in any note is a todo, and the Todos screen gathers every open one from all your notes. Checking it off anywhere changes that line in its note.
 
@@ -41,7 +41,7 @@ AIDE reads the fields of the Obsidian Tasks plugin (emoji) and of Dataview (`[ke
 | recurrence | `🔁 every week` | `[repeat:: every week]` |
 | estimate | — | `[estimate:: 25m]`, `1h`, `1h30m` or plain minutes |
 
-The editor highlights these fields as you type. AIDE reads a recurrence rule but doesn't create the next occurrence when you complete the todo.
+The editor highlights these fields as you type. AIDE reads a recurrence rule but doesn't create the next occurrence when you complete the todo. <Badge text="Next release" /> It does: see [Recurring todos](#recurring-todos).
 
 Also read from a todo's text:
 
@@ -55,6 +55,38 @@ Also read from a todo's text:
 - [ ] Renew the passport [due:: 2026-11-30] [priority:: high]
 - [x] Pay rent ✅ 2026-10-01
 ```
+
+### Recurring todos
+
+<Badge text="Next release" /> A todo with a recurrence rule (`🔁 every week` or `[repeat:: every week]`)
+and a date comes back. When you complete it, by its checkbox in a note, on the Todos screen or through
+the assistant, AIDE adds the next one, unchecked, on the line below it, after its memo if it has one:
+
+```markdown
+- [x] Water the plants 🔁 every week 📅 2026-10-24 ✅ 2026-10-24
+- [ ] Water the plants 🔁 every week 📅 2026-10-31
+```
+
+- **The rule.** `every day`, `every 3 days`, `every week`, `every 2 weeks`, `every month`,
+  `every year`, `every weekday` (Monday to Friday), or days by their full names, such as
+  `every Monday, Thursday`. The number goes from 1 to 1000, and upper or lower case doesn't matter.
+  A rule AIDE doesn't know adds nothing.
+- **The dates.** The next date counts from the due date, or the scheduled date when there's no due
+  date, or the start date. The due, scheduled and start dates all move by the same number of days, so
+  the gaps between them stay. A month or a year that has no such day ends on its last day: January 31
+  plus a month is February 28 (29 in a leap year).
+- **`when done`** at the end of the rule (`every 2 weeks when done`) counts from the day you complete
+  the todo instead.
+- **No date, no next one.** A todo with a rule but no due, scheduled or start date gets no next
+  occurrence.
+- **What the new one keeps.** Its text, indent, rule and tags. A created date becomes today; the done
+  and cancelled dates are left off. The memo stays with the completed todo.
+- **One at a time.** Without `when done`, completing a todo that's long overdue adds one next
+  occurrence, which may be overdue too.
+
+Undoing the completion never deletes the next occurrence: it stays, edited or not. Completing the
+same todo again adds nothing when the line below is already that exact occurrence. Typing `[x]`
+yourself in the text doesn't add one; tick the checkbox instead.
 
 ### Memos
 

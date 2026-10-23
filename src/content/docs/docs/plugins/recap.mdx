@@ -18,7 +18,7 @@ The evening recap closes the day: your AI reads what you wrote today and sums up
 At 21:30 (or the time you set) the plugin:
 
 1. Reads today's daily note (creating it from your template if it doesn't exist yet).
-2. Reads your open-loops note too, if you name one in `plugins.json` (see [Local keys](#local-keys)). Open loops are given to the AI as hints that may be out of date; when they disagree with today's note, today's note wins.
+2. Reads your open loops too: <Badge text="Next release" /> by default the [Open loops](/docs/plugins/loops/) plugin's note, `loops/open`, or the note or file you name in `plugins.json` (see [Local keys](#local-keys)). Before this release it read open loops only when you named them. Open loops are given to the AI as hints that may be out of date; when they disagree with today's note, today's note wins.
 3. Asks your AI for a recap in four short bullet groups, each left out when there's nothing to say:
     - **What moved**
     - **What slipped**
@@ -41,17 +41,17 @@ If the AI call fails, the plugin tries again every 10 minutes until the next eve
 
 <Steps>
 
-1. Turn the plugin on: **Evening recap** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+1. Turn the plugin on: **Evening recap** under **Settings › Core plugins**, then **Enabled** (on Linux, the switch on its row on the **Core plugins** page of Settings). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
 2. Set **Time** if 21:30 doesn't suit you. If you also use [Open loops](/docs/plugins/loops/), keep the recap after it (open loops runs at 21:15), so the recap reads the updated note.
-3. Optional: to give the recap your open loops, add `loopsNote` to `plugins.json` and restart the host (below).
+3. Optional: to give the recap open loops kept somewhere other than `loops/open`, add `loopsNote` to `plugins.json` (below).
 
 </Steps>
 
 ## Settings
 
-<PluginSettings id="recap" defaults={{ at: "21:30", push: "never (no notification)", note: "briefings/{date}" }} />
+<PluginSettings id="recap" defaults={{ at: "21:30", push: "Never (never)", note: "briefings/{date}" }} />
 
-**Notification.** Until you choose, the recap never notifies you, as `never` does, although the picker shows **Default**. Choose `force` to be notified every evening, or **Default** to let the Feed's sorting decide.
+**Notification.** Until you choose, the recap never notifies you, as `never` does. <Badge text="Next release" /> The choices read **Automatic**, **Always** and **Never**, and the picker shows the default, **Never**. Choose **Always** (`force`) to be notified every evening, or **Automatic** to let the Feed's sorting decide.
 
 **Write into.** `daily` puts the recap into today's daily note itself, in its own section (at the end, or where your template puts `{{slot recap.evening}}`). The recap then leaves its own earlier text out of what it reads, so it doesn't recap itself. If you edit the daily at the exact moment it reads it, it tries again 10 minutes later.
 
@@ -65,7 +65,7 @@ Under `"recap"` in `plugins.json` on a desktop host ([where that is](/docs/plugi
 
 | Key         | What it does                                                                         |
 | ----------- | ------------------------------------------------------------------------------------ |
-| `loopsNote` | A note to read as your open loops, by its path, for example `loops/open`. Read only. |
+| `loopsNote` | A note to read as your open loops, by its path. Read only. <Badge text="Next release" /> Default `loops/open`. |
 | `openLoops` | Instead of `loopsNote`: a file on the machine that runs the plugins. Read only.      |
 
 ```json
@@ -76,7 +76,7 @@ Under `"recap"` in `plugins.json` on a desktop host ([where that is](/docs/plugi
 }
 ```
 
-Without either key, the recap reads today's daily alone.
+<Badge text="Next release" /> Without either key, the recap reads `loops/open`, and today's daily alone when that note doesn't exist. (Until this release, without either key it read today's daily alone.)
 
 ## Troubleshooting
 
@@ -88,8 +88,8 @@ Without either key, the recap reads today's daily alone.
 
 ### The recap doesn't mention my open loops
 
-The recap reads them only when `loopsNote` (or `openLoops`) is set in `plugins.json`; turning on the Open loops plugin alone isn't enough.
+<Badge text="Next release" /> The recap reads the Open loops plugin's note, `loops/open`, unless `loopsNote` (or `openLoops`) in `plugins.json` names another. If your Open loops plugin writes elsewhere (its own `note` setting), set `loopsNote` to the same note. Until this release, the recap read open loops only when `loopsNote` or `openLoops` was set.
 
 ## Privacy
 
-Today's daily note and, if you set one, your open-loops note (each cut to 6 KiB) go to the AI you set in **Settings › AI**. The recap is stored as a note on your host or server. Nothing else leaves the machine.
+Today's daily note and your open-loops note (each cut to 6 KiB) go to the AI you set in **Settings › AI**. The recap is stored as a note on your host or server. Nothing else leaves the machine.

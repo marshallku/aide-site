@@ -1,0 +1,154 @@
+---
+title: Jira
+description: Your open Jira Cloud work and its deadlines, from a JQL query you can change, in your Feed and in the work/now note.
+sidebar:
+    order: 24
+---
+
+import { Badge, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+<Badge text="Next release" />
+
+The Jira plugin keeps your open Jira Cloud work in one place. The issues its query finds are listed in
+the `work/now` note, and new ones and coming deadlines come to your Feed.
+
+<PluginFacts id="jira" />
+
+## What it does
+
+**Open work.** Every 5 minutes the plugin runs its **JQL** query, by default your open assignments:
+
+```text
+assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC
+```
+
+It writes the issues that aren't done into its own section of the `work/now` note (titled
+"Work — now"), at most 50: those with the nearest due date first, then by priority, then the most
+recently updated.
+
+```markdown
+Jira — 2 open
+- [OPS-31](https://acme.atlassian.net/browse/OPS-31) Rotate the certificates · due 2026-10-27 · P3 · assigned
+- [OPS-28](https://acme.atlassian.net/browse/OPS-28) Review the alert rules · P2 · filter
+```
+
+An issue assigned to you is marked `assigned`; one your query finds that isn't assigned to you is
+marked `filter`. Priorities are read from Jira's default priority scheme: `P4` (Highest), `P3` (High),
+`P2` (Medium) and `P1` (Low and Lowest). A site with its own priority scheme may show no P-level, or a
+different one. Issues that are done or no longer match drop out of the list. The section is the
+plugin's own; the rest of the note, and the [GitHub](/docs/plugins/github/) and
+[Linear](/docs/plugins/linear/) sections beside it, are left alone.
+
+**In the Feed.** Each change posts one item to the Feed, under the topic `jira`, linking to the issue:
+
+| Feed title                     | When                                                      | Notification               |
+| ------------------------------ | --------------------------------------------------------- | -------------------------- |
+| "Assigned to you: &lt;title&gt;"     | An issue assigned to you newly matches                    | Always                     |
+| "In your Jira filter: &lt;title&gt;" | An issue not assigned to you newly matches your query     | The Feed's sorting decides |
+| "Due in 2 days: &lt;title&gt;"       | An open issue's due date is 2 days away or less           | The Feed's sorting decides |
+| "Overdue: &lt;title&gt;"             | The due date has passed                                   | The Feed's sorting decides |
+
+Each one is posted once: a due date warns once when it comes within 2 days and once when it passes,
+counted in your time zone. An issue that leaves the query and comes back later is posted again. The
+first look after you connect, or after you switch to another Jira account or site, posts nothing: the
+issues already open are only listed in `work/now`. Jira mentions and comments aren't read.
+
+The plugin only reads. It never comments on or changes anything in Jira.
+
+## Before you start
+
+- A [desktop host](/docs/self-hosting/desktop-host/) or your own server. The plugin runs there and
+  reads Jira from that machine.
+- A Jira Cloud site (`acme.atlassian.net`), the email of your Atlassian account, and an Atlassian API
+  token.
+
+## Set it up
+
+<Steps>
+
+1. Open **Settings** and choose **Jira** under **Core plugins** (on Linux, the **Jira** row on the
+   **Core plugins** page of Settings).
+2. Set **Site** to your Jira Cloud host, such as `acme.atlassian.net` (without a path), and **Email**
+   to your Atlassian account's email.
+3. Next to **API token**, choose **Create an API token**. Atlassian's API token page opens; create a
+   token and copy it. Paste it into **API token** and choose **Save**.
+4. Turn on **Enabled**. Within a few minutes the status under the settings reads
+   "Connected as &lt;your name&gt; · N open · checked HH:MM", and `work/now` lists your open work.
+
+</Steps>
+
+## Settings
+
+<PluginSettings
+    id="jira"
+    defaults={{ site: "", email: "", apiToken: "", jql: "Your open assignments (above)" }}
+/>
+
+**JQL** can be any query. The plugin leaves out issues in Jira's Done category whatever the query
+says. Clearing it goes back to the default.
+
+### Local keys
+
+Under `"jira"` in `plugins.json` on a desktop host ([where that is](/docs/plugins/overview/#local-settings)):
+
+| Key       | What it does                                                                                         |
+| --------- | ---------------------------------------------------------------------------------------------------- |
+| `apiBase` | The API address the plugin talks to. Default `https://` followed by **Site**. You don't normally set it. |
+
+## Status
+
+The status under the plugin's settings says how it's doing:
+
+- "Connected as &lt;name&gt; · N open · checked HH:MM" after each successful look, with " · first N shown"
+  when the query found more than it reads (500 issues).
+- "Add the API token" until **Site**, **Email** and **API token** are all set. Removing one also
+  clears the plugin's section of `work/now` to "Jira — Disconnected".
+- "Token refused, next try HH:MM", "Rate limited, next try HH:MM" or "Can't reach Jira, retrying,
+  next try HH:MM" when a look fails. The list in `work/now` stays as it was, its first line marked
+  "stale since &lt;time&gt;: &lt;reason&gt;".
+
+## Troubleshooting
+
+### Token refused
+
+Jira didn't accept the email and token together, for example because the token was revoked or the
+email isn't the account's. The plugin keeps the last list and tries again every 30 minutes. Check **Email**, or
+create a new token and save it in **API token**.
+
+### The plugin doesn't start
+
+**Site** must be a host name alone, such as `acme.atlassian.net`. With a path or anything else in it,
+the plugin fails to start and tries again every 30 seconds; the host log says
+`Jira site must be a hostname`.
+
+### Rate limited
+
+Jira asked the plugin to slow down. It waits as long as Jira says (at most an hour) and then looks
+again. Other failures, such as no network or an invalid query, are retried after 2 minutes, then less
+and less often, up to every 30 minutes.
+
+### What the work/now header and the status say
+
+The first line of the plugin's section in `work/now` reads like "Jira — 3 open". It adds
+" · first 50 shown" when there was more work than it lists, " · stale since &lt;date time&gt;: &lt;why&gt;"
+after a look failed (the list below is the last one that worked), or " · not synced yet: &lt;why&gt;"
+when the first look hasn't worked yet. The section names no time; the status under the plugin's
+settings says when it last checked.
+
+### Feed items arrive late
+
+If AIDE's server doesn't take the plugin's Feed items (it's restarting, for example), they wait and
+are sent later, in order, none lost or doubled. Meanwhile the status adds
+" · N events waiting for AIDE's server".
+
+## Privacy
+
+The plugin talks to your Jira site's API from the machine that runs the plugins, with your email and
+token, and only reads. It keeps each open issue's key, summary (cut to 200 characters), link, status,
+priority, due date and last update, never descriptions or comments. The token is stored sealed on
+your host or server, and only this plugin can read it. The `work/now` note, and the Feed items, sync to
+your devices like any note; the [assistant](/docs/guides/assistant/) and the
+[morning briefing](/docs/plugins/briefing/) read `work/now` as data from your tools, never as
+instructions.

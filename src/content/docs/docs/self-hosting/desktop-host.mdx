@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 Hosting turns a vault on your Mac or Linux computer into a server of its own. You get what local mode
 leaves out (server plugins, the Feed, AI with your own key, Claude through `aidectl mcp`), your notes stay
@@ -160,8 +160,8 @@ The host registers every built-in server plugin, each switched off until you tur
 
 <Steps>
 
-1. Open Settings. On the Mac, the plugins are listed under **On the server**. On Linux, they're on the
-   **Plugins** page under **On the server**.
+1. Open Settings. On the Mac, the plugins are listed under **Core plugins**. On Linux, they're on the
+   **Core plugins** page under **Server plugins**.
 2. Open a plugin and turn on **Enabled** (on Linux, the switch on its row).
 3. Fill in its settings. Settings save as you change them, and a plugin picks them up within a minute.
 
@@ -194,6 +194,11 @@ docs-sync's git `remote` and `clone`, or a Google `credentials` and `tokenFile`.
   `stateDir` only ever come from the file.
 - The host reads the file when it starts. After changing it, restart the host: quit AIDE and open it again
   (with **Keep running while I'm logged in** off), or turn that setting off and on.
+  <Badge text="Next release" /> The host picks the file up while it runs: creating, changing or removing
+  it restarts the plugins with it within about a minute, without restarting the host.
+- <Badge text="Next release" /> A file that doesn't parse, or one plugin's block that doesn't, is left
+  out with a warning in `host.log`; the other plugins keep running. Until this release, either stopped
+  every plugin.
 
 ## Stop hosting
 

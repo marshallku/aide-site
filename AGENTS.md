@@ -41,7 +41,7 @@ must make sense to someone who can't see that repository.
 2. `<PluginFacts id="<id>" />` (add `kind="device"` for a device plugin).
 3. **What it does** — the behaviour, concretely: when it runs, what it writes where, what it pushes.
 4. **Before you start** — what it needs (accounts, tokens, a desktop host, other plugins).
-5. **Set it up** — numbered `<Steps>`, starting from where the reader is (the plugin in Settings: under **On the server** on the Mac and iPhone, **Settings › Plugins** on Linux).
+5. **Set it up** — numbered `<Steps>`, starting from where the reader is (the plugin in Settings: under **Core plugins** on the Mac and iPhone, the **Core plugins** page on Linux).
 6. **Settings** — `<PluginSettings id="<id>" defaults={{ … }} />`, then any setting that needs more
    than its one-line help.
 7. **Troubleshooting** — headings that are the symptom ("The briefing didn't arrive"), then the fix.

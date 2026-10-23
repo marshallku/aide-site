@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem, Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 AIDE is released for the Mac and for Linux on x86_64 from the public
 [aide-releases](https://github.com/marshallku/aide-releases) repository. Each install also gives you
@@ -191,7 +191,19 @@ The script quits AIDE, removes `AIDE.app` from `~/Applications` (or the folder y
 Your notes and settings stay. A vault AIDE keeps for you is under
 `~/Library/Application Support/com.marshallku.aide`, and a hosted vault's server data (its database
 and plugin state) is under `~/Library/Application Support/AIDE/hosts`. Folders you opened yourself
-are never touched.
+are never touched. <Badge text="Next release" /> The script's last line says where they stay:
+`AIDE removed from … (notes and settings stay in ~/Library/Application Support/com.marshallku.aide,
+a hosted vault's server data in ~/Library/Application Support/AIDE)`.
+
+<Badge text="Next release" /> To remove those too with Homebrew, add `--zap`:
+
+```bash
+brew uninstall --zap --cask aide
+```
+
+It also trashes `~/Library/Application Support/com.marshallku.aide` (the vault AIDE keeps for you),
+`~/Library/Application Support/AIDE` (hosted vaults' server data), AIDE's caches and its preferences.
+Folders you opened yourself are still never touched.
 
 </TabItem>
 <TabItem label="Linux">

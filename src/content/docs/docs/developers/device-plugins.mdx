@@ -523,8 +523,7 @@ from a local web server on the Mac or Linux. Anywhere else, the package must be 
     python3 -m http.server 8000 --bind 127.0.0.1
     ```
 
-2. In AIDE, open **Settings › On this device › Add from a URL** (on Linux, **Settings › Device plugins › Add from a
-   URL**).
+2. In AIDE, open **Settings › Community plugins › Add from a URL**.
 
 3. Type `http://127.0.0.1:8000/` (the folder that holds `manifest.json` and `main.js`) and choose **Fetch**.
 
@@ -548,7 +547,7 @@ can install it with **Add from a URL**.
 ### A private index
 
 An index is a JSON file listing packages with the SHA-256 of every file, so what gets installed is exactly what was
-listed. The app shows an index's plugins under **Browse plugins** and checks every file against it before
+listed. The app shows an index's plugins under **Browse community plugins** and checks every file against it before
 installing. Its shape:
 
 ```json
@@ -607,7 +606,7 @@ Path("plugins.json").write_text(json.dumps({"plugins": plugins, "revoked": []}, 
 
 Host `plugins.json` with the folders, then point AIDE at it:
 
-- **Without a server**, type the index's URL into **Settings › On this device › Browse plugins › Index**. Leaving
+- **Without a server**, type the index's URL into **Settings › Community plugins › Browse community plugins › Index**. Leaving
   it empty goes back to the public index.
 - **With a server**, the server fetches the index for every device, from its `plugins.indexURL` setting.
 

@@ -5,7 +5,7 @@ sidebar:
     order: 9
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 The assistant plans your day with you. You tell it what you want ("Plan my day", "I lost the
 afternoon, what can move?"), and it answers with a short reply and concrete changes to your todos:
@@ -91,10 +91,15 @@ Two notes are yours to edit and are sent with every message (the first 2 KB of e
   something, that's a card too; taken, it adds a line to this note.
 - `assistant/goals`: what you're working toward.
 
+<Badge text="Next release" /> Your open work is sent too: the [GitHub](/docs/plugins/github/),
+[Linear](/docs/plugins/linear/) and [Jira](/docs/plugins/jira/) sections of the `work/now` note, up to
+4 KiB in all, shared between them. The assistant reads it as data from your tools, never as
+instructions. It's left out when `work/` is under **Never read** (below).
+
 ## Reading your notes
 
 The assistant can ask to read up to three notes before answering. Some it reads without asking:
-notes under `assistant/`, `radar/` and `people/`, the note of any todo it was given, today's daily
+notes under `assistant/`, `radar/` and `people/` (<Badge text="Next release" /> and `work/`), the note of any todo it was given, today's daily
 note and this week's weekly note. For anything else it shows a card, **The assistant wants to read:
 …**, with **Allow** and **Deny**. Each note it reads is sent cut to 4 KB.
 
@@ -186,6 +191,10 @@ device can't write your language down on its own, there's no mic.
 and what is sent.
 
 On the iPhone the choices are **Automatic**, **Anthropic API key** and **Server**.
+
+<Badge text="Next release" /> With a server, **Anthropic key on this device** sits under **Model from**
+when it's **Anthropic API key** (on Linux, a page of Settings with that title): it saves the key the
+assistant uses on this device, which the server's **Settings › AI** doesn't hold.
 
 ### Use my Claude Code setup
 

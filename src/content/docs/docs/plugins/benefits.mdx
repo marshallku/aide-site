@@ -64,7 +64,7 @@ The catalog's amounts, conditions and deadlines are approximate figures written 
     Free-form notes about your situation. The scout reads only the frontmatter.
     ```
 
-2. Turn the plugin on: **Benefit scout** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+2. Turn the plugin on: **Benefit scout** under **Settings › Core plugins**, then **Enabled** (on Linux, the switch on its row on the **Core plugins** page of Settings). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
 3. Wait for Monday 09:00. To try it right away, see `run-now` under [Local keys](#local-keys).
 
 </Steps>
@@ -116,7 +116,7 @@ A week already done isn't run twice, even with `run-now`. Remove `run-now` once 
 
 - A week with nothing matching and nothing worth telling has no event. That's the usual reason.
 - Without the profile note, the week is skipped. Check the path in **Profile note**.
-- A profile note without a frontmatter block (`---` lines at the top) can't be read: the plugin retries every 10 minutes all week, and the host log says `life profile has no YAML frontmatter`.
+- A profile note without a frontmatter block (`---` lines at the top) can't be read: the plugin retries every 10 minutes all week, and the host log says `life profile has no YAML frontmatter`. <Badge text="Next release" /> Instead, it says so once that week in the Feed, "The life profile note can't be read", without a notification, and skips the week until the note has its frontmatter.
 - Check that **Settings › AI** isn't **Rules (no AI)**.
 
 ### A link in the briefing isn't clickable

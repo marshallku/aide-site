@@ -19,40 +19,46 @@ At 07:00 (or the time you set) the plugin:
 
 1. Creates today's daily note if it doesn't exist yet, so the plugins that fill a new daily, such as [Todo carry](/docs/plugins/todo-carry/) and [Google Calendar](/docs/plugins/gcal/)'s agenda, have run by the time you look.
 2. Gathers the day's material:
-    - **Weather**: the Korea Meteorological Administration (KMA) forecast for your neighborhood, or any forecast URL you give it.
+    - **Weather**: <Badge text="Next release" /> the next three days' forecast from Open-Meteo for the **Weather location** you set, anywhere, without an API key. A Korea Meteorological Administration (KMA) neighborhood or a forecast URL set in `plugins.json` still works instead (see [Local keys](#local-keys)).
     - **Schedule**: today's events and the next two days', from your Google calendars.
     - **Open todos**: your open top-level todos, for the AI to pick from.
     - **Yesterday**: yesterday's daily note.
     - **Health**: the three newest files in a folder of health exports, if you name one.
+    - **Work items**: <Badge text="Next release" /> the GitHub, Linear and Jira sections of the `work/now` note, where [GitHub](/docs/plugins/github/), [Linear](/docs/plugins/linear/) and [Jira](/docs/plugins/jira/) list your open work, given to the AI as data from your tools, never as instructions. **Work items** (below) turns it off.
 3. Asks your AI to write the briefing from that material only: the weather (morning and afternoon, low and high, chance of rain, what to wear), today's schedule in detail with a preview of the next two days, up to three todos that are realistic today (each as "[note] todo", offered as suggestions, never as pressure), yesterday's steps, sleep and exercise with the three-day trend, what stood out yesterday and what's unresolved, and one gentle line for the day. Anything without material is left out.
 4. Writes it under `## ☀️ Morning briefing` in its own section of the day note, `briefings/{date}` (for example `briefings/2026-10-22`, titled "2026-10-22 (Thu) briefing"). Running again the same day replaces that section, and only that section.
 5. Posts "☀️ Today's briefing" to the Feed, with the briefing as its text, and notifies you.
 
-Material that can't be read is skipped: without weather settings there's no weather paragraph; without Google files there's no schedule. If the AI call fails, the plugin tries again every 10 minutes until it succeeds or the next morning comes. A morning missed while the computer was off or asleep is made up if it wakes within 3 hours.
+Material that can't be read is skipped: without a weather location there's no weather paragraph; without a Google sign-in there's no schedule. If the AI call fails, the plugin tries again every 10 minutes until it succeeds or the next morning comes. A morning missed while the computer was off or asleep is made up if it wakes within 3 hours.
 
 ## Before you start
 
 - A [desktop host](/docs/self-hosting/desktop-host/) or your own server.
 - An AI in **Settings › AI**: **Anthropic API key** or **My gateway**. The briefing has no AI-free form.
-- Optional, for the schedule: the same Google files as the [Google Calendar](/docs/plugins/gcal/#before-you-start) plugin. The briefing reads them on its own, so it works without the Google Calendar plugin turned on.
-- Optional, for the weather: a neighborhood in Korea (KMA covers Korea only), or a forecast URL anywhere else.
+- Optional, for the schedule: <Badge text="Next release" /> the [Google Calendar](/docs/plugins/gcal/#set-it-up) plugin signed in to Google. The briefing reads the calendar through that plugin's sign-in, and never refreshes or saves its token. Setups with their own Google files (the `credentials` and `tokenFile` keys below, or the files Google Calendar read before this release) keep working.
+- Optional, for the weather: the place's latitude and longitude. <Badge text="Next release" /> Open-Meteo covers anywhere; before this release, the weather needed a KMA neighborhood (Korea only) or a forecast URL in `plugins.json`.
 
 ## Set it up
 
 <Steps>
 
-1. If you want weather or health data, add them to `plugins.json` in your host's data folder ([where that is](/docs/plugins/overview/#local-settings)) and restart the host. See [Local keys](#local-keys).
-2. Turn the plugin on: **Morning briefing** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+1. Turn the plugin on: **Morning briefing** under **Settings › Core plugins**, then **Enabled** (on Linux, the switch on its row on the **Core plugins** page of Settings). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+2. <Badge text="Next release" /> For the weather, set **Weather location** to your place's latitude and longitude, for example `51.51, -0.13`.
 3. Set **Time** if 07:00 doesn't suit you.
-4. To read the briefing from your daily note, link the day note from your daily template, or set **Write into** to `daily`.
+4. If you want health data, add `healthDir` to `plugins.json` in your host's data folder ([where that is](/docs/plugins/overview/#local-settings)). See [Local keys](#local-keys).
+5. To read the briefing from your daily note, link the day note from your daily template, or set **Write into** to `daily`.
 
 </Steps>
 
 ## Settings
 
-<PluginSettings id="briefing" defaults={{ at: "07:00", push: "force (always notify)", note: "briefings/{date}" }} />
+<PluginSettings id="briefing" defaults={{ at: "07:00", push: "Always (force)", note: "briefings/{date}", location: "" }} />
 
-**Notification.** Until you choose, the briefing notifies you every morning, as `force` does, although the picker shows **Default**. Choose `never` to read it in the Feed only. Choosing **Default** yourself lets the Feed's sorting decide whether it's worth a notification.
+**Notification.** Until you choose, the briefing notifies you every morning, as `force` does. <Badge text="Next release" /> The choices read **Automatic**, **Always** and **Never**, and the picker shows the default, **Always**. Choose **Never** (`never`) to read it in the Feed only. **Automatic** lets the Feed's sorting decide whether it's worth a notification.
+
+**Weather location** <Badge text="Next release" /> is `latitude, longitude` in decimal degrees, for example `51.51, -0.13` or `37.57, 126.98`. Anything else leaves the weather out, and the host log says `weather location isn't 'lat, lon'`. A KMA `weather` key in `plugins.json` wins over it.
+
+**Work items** <Badge text="Next release" /> (on by default) adds the GitHub, Linear and Jira sections of the `work/now` note to the material, cut to 6 KiB. What you wrote in the note around them isn't included. The briefing runs on the server, so a device's **Never read** setting in **Settings › Assistant** doesn't apply to it: turn **Work items** off to keep `work/now` out of the briefing.
 
 **Write into.** `daily` puts the briefing into today's daily note, in its own section at the end (or where your template puts `{{slot briefing.morning}}`). Any other value is a note path, with `{date}` replaced by the day in `YYYY-MM-DD`.
 
@@ -66,11 +72,11 @@ Under `"briefing"` in `plugins.json`:
 
 | Key           | What it does                                                                                                        |
 | ------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `weather`     | The KMA forecast location: `code`, the ten-digit administrative code of your neighborhood (동), and `lat` and `lon`, its coordinates. Korea only. |
-| `weatherUrl`  | Instead of `weather`: any URL that returns a forecast as text or JSON. The plugin hands the first 6 KiB of the answer to the AI as it is. |
+| `weather`     | The KMA forecast location: `code`, the ten-digit administrative code of your neighborhood (동), and `lat` and `lon`, its coordinates. Korea only. When set, it's used instead of **Weather location**. |
+| `weatherUrl`  | Without `weather` or **Weather location**: any URL that returns a forecast as text or JSON. The plugin hands the first 6 KiB of the answer to the AI as it is. |
 | `healthDir`   | A folder of health exports (steps, sleep, workouts), one file per day with the date in its name. The three newest by name are used. |
-| `credentials` | The Google OAuth client file. Default `~/.config/life-assistant/credentials.json`.                                  |
-| `tokenFile`   | The Google token file. Default `~/.config/life-assistant/google-token.json`.                                        |
+| `credentials` | Your own Google OAuth client file, for `tokenFile`. Empty: as Google Calendar does (see [its own OAuth files](/docs/plugins/gcal/#your-own-oauth-files)). |
+| `tokenFile`   | Your own Google token file. Empty: Google Calendar's sign-in from the app, else `~/.config/life-assistant/google-token.json` when it exists. |
 
 ```json
 {
@@ -86,6 +92,8 @@ Under `"briefing"` in `plugins.json`:
 
 The location above is a neighborhood of Jongno-gu, Seoul. The KMA forecast is read without an API key.
 
+The briefing doesn't follow a `tokenFile` set for Google Calendar: with your own token file, name it here too.
+
 <Aside>
 The schedule comes from the calendars ticked in Google Calendar's own list, not from the **Show** switches in AIDE's **Calendars…** sheet.
 </Aside>
@@ -100,11 +108,11 @@ The schedule comes from the calendars ticked in Google Calendar's own list, not 
 
 ### The weather paragraph is missing or says the forecast failed
 
-Without `weather` or `weatherUrl` there's no weather. If the KMA page didn't answer, the AI is told the lookup failed and leaves the weather out. Check `code`, `lat` and `lon`.
+Without **Weather location**, `weather` or `weatherUrl` there's no weather. If the forecast didn't answer, or **Weather location** isn't `latitude, longitude`, the AI is told the lookup failed and leaves the weather out. Check the location (or, for KMA, `code`, `lat` and `lon`).
 
 ### There's no schedule
 
-The plugin couldn't read the Google files; the host log says `calendar unavailable; briefing without it` with the reason.
+The plugin couldn't read the calendar; the host log says `calendar unavailable; briefing without it` with the reason. <Badge text="Next release" /> Sign in under [Google Calendar](/docs/plugins/gcal/#set-it-up)'s settings. The briefing looks it up at each briefing, so a sign-in counts from the next one.
 
 ### It's in the wrong language
 
@@ -112,4 +120,4 @@ Plugins write in the language of **Settings › Language** (Korean, or English f
 
 ## Privacy
 
-The weather request goes from the machine that runs the plugins to the KMA website (or your `weatherUrl`), carrying only the location. Google is read with read-only calendar access. The gathered material (forecast, three days of events, your open todos, yesterday's daily note, your three newest health files) goes to the AI you set in **Settings › AI**, cut to 6 KiB per part. The briefing is stored as a note on your host or server.
+The weather request goes from the machine that runs the plugins to Open-Meteo (or the KMA website, or your `weatherUrl`), carrying only the location. Google is read with read-only calendar access. The gathered material (forecast, three days of events, your open todos, yesterday's daily note, your three newest health files) goes to the AI you set in **Settings › AI**, cut to 6 KiB per part. The briefing is stored as a note on your host or server.

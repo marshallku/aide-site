@@ -12,7 +12,7 @@ Periodic notes are one note per day, week, month, quarter or year, made from a t
 ## Opening them
 
 - **Today** opens today's daily note: <kbd>⌘</kbd><kbd>T</kbd> on the Mac, <kbd>Ctrl</kbd><kbd>T</kbd> on Linux, or the **Today** tile in the Wiki.
-- The Wiki's **Journal** section has a tile for each period you've turned on: **Today**, **This week**, **This month**, **Quarter** and **This year**. **Calendar** beside the heading shows a month calendar with week numbers; click a day, a week or the month to open its note. <Badge text="Next release" /> Today has a ring around it, and the day or week of the note you have open is filled in, so you can see where a click took you. On the Mac and Linux that's the note in the selected tab; on the iPhone, the one you last opened from the Wiki.
+- The Wiki's **Journal** section has a tile for each period you've turned on: **Today**, **This week**, **This month**, **Quarter** (<Badge text="Next release" /> **This quarter**) and **This year**. **Calendar** beside the heading shows a month calendar with week numbers; click a day, a week or the month to open its note. Today has a ring around it, and the day or week of the note you have open is filled in, so you can see where a click took you. On the Mac and Linux that's the note in the selected tab; on the iPhone, the one you last opened from the Wiki.
 - The command palette lists this week's, month's, quarter's and year's notes.
 - A link to a periodic note that doesn't exist yet, such as `[[2026-10-23]]`, creates it when you follow it.
 - `aide://today` opens today's note from outside the app, and `aidectl daily` prints or creates it from the command line (see [aidectl](/docs/developers/aidectl/)).
@@ -92,12 +92,12 @@ Variable names match in any case and may have spaces inside the braces (`{{ Date
 | `{{parent}}` | a relative link to the longer period's note that contains this one (a day's week, a week's month) |
 | `{{mon-link}}` … `{{sun-link}}` | relative links to that week's daily notes |
 | `{{children}}` | a list of links to the shorter period's notes inside this one |
-| `{{day}}` | the weekday as a one-letter Korean name (`월`, `화` …) |
+| `{{day}}` | the weekday as a one-letter Korean name (`월`, `화` …). <Badge text="Next release" /> The short weekday in the language plugins write in (**Settings › Language › Plugins write in**): `Mon`, `Tue` … in English, `월`, `화` … in Korean; English until you choose one |
 
 The link variables give only the path, for a Markdown link such as `[Last week]({{prev}})`. A link variable is empty when the period it points to is turned off.
 
 <Aside type="tip">
-For an English weekday name, use `{{date:dddd}}` rather than `{{day}}`.
+For the full English weekday name (`Monday`), use `{{date:dddd}}` rather than `{{day}}`.
 </Aside>
 
 Months, quarters and years keep the day within the month (January 31 plus one month is February 28). The whole template uses one moment, in your timezone.

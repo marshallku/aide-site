@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { Aside, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
 
 컴퓨터 한 대가 보관소를 호스팅하거나 내 서버를 운영하고 있다면, 쓰고 있는 다른 기기들을 거기에 페어링해서
 같은 노트로 작업할 수 있어요. 페어링은 기기마다 한 번만 하면 돼요. 그다음부터는 기기가 알아서 연결해요.
@@ -115,7 +115,8 @@ import { Aside, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
 ### 데스크톱 호스트에서
 
 기기는 페어링한 기기가 아니라 호스팅하는 컴퓨터에서 관리해요. 페어링한 기기의 **설정 › 기기**에서도 목록은
-보이지만, 접근 권한 해제는 호스트에서 해요.
+보이지만, 접근 권한 해제는 호스트에서 해요. <Badge text="다음 릴리스" /> 페어링한 기기의 목록에는 해제 버튼이
+없고, 목록 아래(Linux에서는 각 행의 도움말)에 "기기 권한은 노트를 호스팅하는 컴퓨터에서 해제해요."라고 나와요.
 
 - **Linux 호스트:** **설정 › 기기**에 호스트와 페어링한 기기가 나오고, 기기마다 **접근 권한 해제**가 있어요.
   해제한 기기는 바로 차단되고 열려 있던 연결도 닫혀요.

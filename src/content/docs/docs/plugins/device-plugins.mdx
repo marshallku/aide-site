@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 A device plugin adds something to the AIDE app itself: a tab, a sheet you open on a note, a view in the
 desktop's right panel, a command, or a job that runs at a set time. It runs on the device, inside a
@@ -16,17 +16,17 @@ needed.
 
 | Device         | Where                                                                        |
 | -------------- | ---------------------------------------------------------------------------- |
-| iPhone and Mac | **Settings**, the **On this device** section                                 |
-| Linux          | **Settings › Device plugins**, the **On this device** group                  |
+| iPhone and Mac | **Settings**, the **Community plugins** section                                 |
+| Linux          | **Settings › Community plugins**, the **Installed** group                  |
 
 The list shows each installed plugin with its state: **On**, **Off**, **Update available**,
-**Withdrawn** or **Needs reinstall**. Below it are **Browse plugins** and **Add from a URL**.
+**Withdrawn** or **Needs reinstall**. Below it are **Browse community plugins** and **Add from a URL**.
 
-On the Mac you can also open **Browse Plugins** from the toolbar or the command palette
+On the Mac you can also open **Browse Community Plugins** from the toolbar or the command palette
 (<kbd>⇧</kbd><kbd>⌘</kbd><kbd>P</kbd>); on Linux from the ribbon or with
 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>P</kbd>.
 
-### Core and community plugins <Badge text="Next release" />
+### Core and community plugins
 
 Settings splits plugins the way Obsidian does:
 
@@ -53,7 +53,7 @@ published, and the install screen links its source code. The index can be browse
 
 <Steps>
 
-1. Open **Browse plugins**. It lists the plugins in the index with what each one asks for. A plugin
+1. Open **Browse community plugins**. It lists the plugins in the index with what each one asks for. A plugin
    you already have says **Installed**, or **Update** when the index has a newer version.
 2. Choose a plugin. AIDE downloads it and checks every file against the index before showing it.
 3. Under **It asks to**, turn on each permission you agree to. Only what you turn on is allowed.
@@ -137,7 +137,7 @@ Choose an installed plugin in the list to see:
 ## Update, roll back, remove
 
 - **Update.** When the index has a newer version, the plugin's row says **Update available** and
-  **Browse plugins** says **Update**. Install it the same way; you approve its permissions again.
+  **Browse community plugins** says **Update**. Install it the same way; you approve its permissions again.
   A package with the same id as an installed one always replaces it.
 - **Go back to the previous version.** An update keeps the version before it, and a copy of the data
   that version had. Going back restores both, with the permissions you approved for it then.
@@ -162,9 +162,9 @@ plugins** shows the version it offers, and **Update** appears when a newer one i
 
 ### A private index
 
-On a notes folder on this device, **Browse plugins** has an **Index** field at the top. Type the
+On a notes folder on this device, **Browse community plugins** has an **Index** field at the top. Type the
 address of your own index (`https://…/plugins.json`) to browse it instead; leave it empty for the
-public one. With a server, **Browse plugins** shows the server's copy of the index it is set to.
+public one. With a server, **Browse community plugins** shows the server's copy of the index it is set to.
 To make an index for your own plugins, see [Build a device plugin](/docs/developers/device-plugins/).
 
 ## Troubleshooting
@@ -172,7 +172,7 @@ To make an index for your own plugins, see [Build a device plugin](/docs/develop
 ### A plugin says Needs reinstall
 
 One of its files on this device changed after you installed it, so AIDE won't run it. Install it
-again from **Browse plugins** or its URL.
+again from **Browse community plugins** or its URL.
 
 ### Plugin stopped, with Start again
 

@@ -139,6 +139,7 @@ const en = {
         server: "Server plugins",
         device: "Device plugins",
         more: "How plugins work",
+        next: "Next release",
     },
     own: {
         eyebrow: "Yours",
@@ -329,6 +330,7 @@ const ko: Copy = {
         server: "서버 플러그인",
         device: "기기 플러그인",
         more: "플러그인 동작 방식",
+        next: "다음 릴리스",
     },
     own: {
         eyebrow: "내 것",
@@ -396,6 +398,9 @@ export const RELEASES = "https://github.com/marshallku/aide-releases/releases";
 export const docsHref = (lang: Lang, path: string) => `${lang === "ko" ? "/ko" : ""}/docs/${path}/`;
 
 /// One line per plugin for the landing page's grid (the manifests' descriptions are for Settings).
+// Plugins in AIDE's main branch that no release carries yet: the grid marks them.
+export const NEXT_RELEASE = new Set(["github", "linear", "jira"]);
+
 export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
     en: {
         "todo-carry": "Carries yesterday's open todos into today's daily note.",
@@ -410,6 +415,9 @@ export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
         catchup: "Each night, your Claude Code and Codex sessions written into your notes.",
         slack: "Save to AIDE: a whole Slack thread into a note, with a summary.",
         radar: "Watches your Slack and coding sessions and tells you what matters.",
+        github: "Your assignments, review requests and mentions in one place.",
+        linear: "Your Linear issues, mentions and deadlines in one place.",
+        jira: "Your open Jira work and deadlines in one place.",
         eisenhower: "Your open todos in a do / schedule / delegate / later grid.",
         kanban: "Boards of cards in lanes, kept in notes the way Obsidian's Kanban writes them.",
         excalidraw: "Draw in your notes; drawings stay plain SVG files.",
@@ -429,6 +437,9 @@ export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
         catchup: "밤마다 Claude Code와 Codex 세션을 노트에 정리해요.",
         slack: "AIDE에 저장: Slack 스레드 전체를 요약과 함께 노트로.",
         radar: "Slack과 코딩 세션을 살피고 중요한 걸 알려 줘요.",
+        github: "할당된 작업, 리뷰 요청, 멘션을 한곳에.",
+        linear: "Linear 이슈, 멘션, 마감일을 한곳에.",
+        jira: "진행 중인 Jira 작업과 마감일을 한곳에.",
         eisenhower: "열린 할 일을 지금 하기·일정 잡기·위임·나중에로 나눠요.",
         kanban: "레인과 카드로 된 보드를 Obsidian Kanban과 같은 형식의 노트에 보관해요.",
         excalidraw: "노트 안에 그림을 그리고, 그림은 평범한 SVG로 남아요.",

@@ -1,0 +1,164 @@
+---
+title: GitHub
+description: The issues and pull requests assigned to you, your review requests and the mentions and comments you take part in, in your Feed and in the work/now note.
+sidebar:
+    order: 22
+---
+
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+<Badge text="Next release" />
+
+The GitHub plugin keeps your open GitHub work in one place. The issues and pull requests assigned to
+you and the reviews asked of you are listed in the `work/now` note, and new ones, along with mentions
+and comments, come to your Feed.
+
+<PluginFacts id="github" />
+
+## What it does
+
+**Open work.** Every 10 minutes the plugin searches GitHub for the open issues and pull requests
+assigned to you and the open pull requests that request your review, leaving out archived
+repositories. It writes them into its own section of the `work/now` note (titled "Work — now"),
+sorted by when they were last updated, at most 50:
+
+```markdown
+GitHub — 3 open
+- [acme/web\#42](https://github.com/acme/web/pull/42) Fix the login redirect · review
+- [acme/web\#40](https://github.com/acme/web/issues/40) Flaky upload test · assigned
+- [acme/api\#7](https://github.com/acme/api/pull/7) Rate limit headers · assigned, review
+```
+
+Work that's no longer open, or no longer yours, drops out of the list. The section is the plugin's
+own; the rest of the note, and the [Linear](/docs/plugins/linear/) and [Jira](/docs/plugins/jira/)
+sections beside it, are left alone.
+
+**Mentions and comments.** Every 2 minutes (or less often when GitHub asks for a longer interval) it
+reads your notifications about threads you take part in, read or unread, and keeps the mentions,
+team mentions and comments.
+
+**In the Feed.** Each change posts one item to the Feed, under the topic `github`, linking to it on
+GitHub:
+
+| Feed title                   | When                                                     | Notification              |
+| ---------------------------- | -------------------------------------------------------- | ------------------------- |
+| "Assigned to you: &lt;title&gt;"   | An issue or pull request is newly assigned to you        | Always                    |
+| "Review requested: &lt;title&gt;"  | A pull request newly asks for your review                | Always                    |
+| "Mentioned you: &lt;title&gt;"     | Someone mentions you or your team                        | The Feed's sorting decides |
+| "New comment: &lt;title&gt;"       | A new comment on a thread you take part in               | The Feed's sorting decides |
+
+Each one is posted once. If an assignment or a review request ends and comes back later, it's posted
+again. The first look after you add a token, or after you switch to another GitHub account, posts
+nothing: the work that's already open is only listed in `work/now`.
+
+The plugin only reads. It never comments, closes or changes anything on GitHub.
+
+## Before you start
+
+- A [desktop host](/docs/self-hosting/desktop-host/) or your own server. The plugin runs there and
+  reads GitHub from that machine.
+- A GitHub **classic** personal access token with the `repo` and `notifications` scopes. GitHub
+  refuses notifications to a fine-grained token: with one, the plugin still lists your assignments and
+  review requests, but reads no mentions or comments, and its status adds
+  " · mentions need a classic token".
+
+## Set it up
+
+<Steps>
+
+1. Open **Settings** and choose **GitHub** under **Core plugins** (on Linux, the **GitHub** row on the
+   **Core plugins** page of Settings).
+2. Next to **API token**, choose **Create a token**. GitHub's **New personal access token (classic)**
+   page opens with `repo` and `notifications` ticked and the note `AIDE`. Pick an expiration and
+   choose **Generate token**, then copy it.
+3. Paste it into **API token** and choose **Save**.
+4. Turn on **Enabled**. Within a few minutes the status under the settings reads
+   "Connected as &lt;your login&gt; · N open · checked HH:MM", and `work/now` lists your open work.
+
+</Steps>
+
+## Settings
+
+<PluginSettings id="github" defaults={{ apiToken: "", repos: "", mentions: "On" }} />
+
+- **Repositories** limits the plugin to some repositories: `owner/repo` for one, `owner/*` for all of
+  an owner's. Empty means every repository the token can see. It applies to the open work and to the
+  notifications.
+- **Mentions** off stops reading notifications: no mentions and no comments in the Feed. Assignments
+  and review requests still come.
+
+### Local keys
+
+Under `"github"` in `plugins.json` on a desktop host ([where that is](/docs/plugins/overview/#local-settings)):
+
+| Key       | What it does                                                                                      |
+| --------- | ------------------------------------------------------------------------------------------------- |
+| `apiBase` | The API address the plugin talks to. Default `https://api.github.com`. You don't normally set it. |
+
+## Status
+
+The status under the plugin's settings says how it's doing:
+
+- "Connected as &lt;login&gt; · N open · checked HH:MM" after each successful look, with " · first N shown"
+  when there was more work than it reads.
+- "Add the API token" while there's no token. Removing the token also clears the plugin's section of
+  `work/now` to "GitHub — Disconnected".
+- "Token refused, next try HH:MM", "Rate limited, next try HH:MM" or "Can't reach GitHub, retrying,
+  next try HH:MM" when a look fails. The list in `work/now` stays as it was, its first line marked
+  "stale since &lt;time&gt;: &lt;reason&gt;".
+
+## Troubleshooting
+
+### Token refused
+
+GitHub didn't accept the token, for example because it expired or was deleted. The plugin keeps the last
+list and tries again every 30 minutes. Create a new classic token with **Create a token** and save it
+in **API token**.
+
+### Rate limited
+
+GitHub asked the plugin to slow down. It waits as long as GitHub says (at most an hour) and then
+looks again. Other failures, such as no network, are retried after 2 minutes, then less and less
+often, up to every 30 minutes.
+
+### The list says "first 50 shown"
+
+The section lists at most 50 items, and each search reads at most 250. When there's more, the plugin
+keeps work it can't see right now instead of dropping it. **Repositories** narrows what it reads.
+
+### No mentions in the Feed
+
+Check that **Mentions** is on and the token is a classic one with the `notifications` scope. With a
+fine-grained token the status says " · mentions need a classic token"; create a classic one with
+**Create a token**. Only notifications about
+threads you take part in count, and with **Repositories** set, only those repositories'.
+
+### What the work/now header and the status say
+
+The first line of the plugin's section in `work/now` reads like "GitHub — 3 open". It adds
+" · first 50 shown" when there was more work than it lists, " · stale since &lt;date time&gt;: &lt;why&gt;"
+after a look failed (the list below is the last one that worked), or " · not synced yet: &lt;why&gt;"
+when the first look hasn't worked yet. The section names no time; the status under the plugin's
+settings says when it last checked.
+
+### Feed items arrive late
+
+If AIDE's server doesn't take the plugin's Feed items (it's restarting, for example), they wait and
+are sent later, in order, none lost or doubled. Meanwhile the status adds
+" · N events waiting for AIDE's server".
+
+## Privacy
+
+The plugin talks to GitHub's API from the machine that runs the plugins, with your token, and only
+reads. It keeps each open item's repository, number, title (cut to 200 characters), link, state and
+last update, never issue bodies or comments. The token is stored sealed on your host or server, and
+only this plugin can read it. The `work/now` note, and the Feed items, sync to your devices like any
+note; the [assistant](/docs/guides/assistant/) and the [morning briefing](/docs/plugins/briefing/)
+read `work/now` as data from your tools, never as instructions.
+
+<Aside>
+Titles come from GitHub as other people wrote them. AIDE escapes them before writing them into the
+note, so a title can't turn into a link or formatting.
+</Aside>

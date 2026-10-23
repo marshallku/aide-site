@@ -5,7 +5,7 @@ sidebar:
     order: 5
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 Scratch is where you write without deciding where something belongs. Each scratch note is an ordinary note kept under `scratch/`; later, **Organize** proposes a place in your wiki for each one, and nothing moves until you approve it.
 
@@ -45,6 +45,8 @@ Organize uses AI when one is set up, and rules otherwise. When AI is available t
     1. A note with a `#tag` goes to `topics/` followed by its first tag (`#investing` → `topics/investing`).
     2. Otherwise, a note with todos goes to today's daily note.
     3. Otherwise, it goes to `inbox`.
+
+<Badge text="Next release" /> The reasons are written in the language plugins write in (**Settings › Language › Plugins write in**), with AI and by rules: "tagged #investing" in English, "#investing 태그가 있어요" in Korean.
 
 <Aside title="What Organize sends">
 With AI, Organize sends the scratch notes it organizes, and your wiki's page names, to the model: with your own key, directly to Anthropic. The text of your other notes isn't sent. By rules, nothing leaves your device or server.

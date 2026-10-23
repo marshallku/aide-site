@@ -37,12 +37,16 @@ them, which is what the Feed, notifications, AI for the Feed and server plugins 
 | Claude through MCP | No | Claude Code on the hosting computer (`aidectl mcp`) | Claude Code, and the Claude app through **Settings › Claude app** |
 | Backups from the app | No (copy the folder) | **Back up…** in the host's settings | Your server's own backups |
 
-In local mode the settings say so: "Feed, notifications, AI and server plugins need a server." The
-Feed and the server plugins' tabs (such as Radar) don't appear, and **Settings** has no **Devices**
-page and no server plugins.
+In local mode the settings say so: "Feed, notifications, AI and server plugins need a server."
+<Badge text="Next release" /> On the Mac and Linux the line reads "The Feed, notifications and server
+plugins run once this Mac hosts the vault (Host this vault…) or on a server." ("this computer" on
+Linux); on the iPhone, "The Feed, notifications and server plugins need a Mac or Linux computer
+hosting your notes, or a server."
 
-<Badge text="Next release" /> Local mode will list the server plugins under **Settings › Plugins**,
-with **Host this vault…** beside them on the Mac and Linux.
+The Feed and the server plugins' tabs (such as Radar) don't appear, and **Settings** has no
+**Devices** page. **Settings › Core plugins** (on Linux, the **Core plugins** page) lists the server
+plugins, which don't run until the vault is hosted, with **Host this vault…** beside them on the Mac
+and Linux.
 
 ## How to choose
 
@@ -71,6 +75,7 @@ The first time you open AIDE, the **Get started** screen asks where your notes l
     - **Restore a backup…** (Mac): a backup of a hosted vault, restored into a new folder and hosted on
       this Mac.
 - **Your AIDE server**: **Server** (its address) and **Pairing code**, then **Connect**.
+  <Badge text="Next release" /> The **Server** field starts empty instead of `http://localhost:8080`.
 - **Connect to a host**: **Pairing link**, then **Connect to the host**.
 
 **On Linux:**
@@ -80,9 +85,12 @@ The first time you open AIDE, the **Get started** screen asks where your notes l
     - **Open folder…**: a folder of Markdown notes you already have, like an Obsidian vault.
     - **Restore a backup…**: a backup of a hosted vault, into a new folder, hosted on this computer.
 - **Connect to a server**: **Server** and **Pairing code**, then **Connect**.
+  <Badge text="Next release" /> The **Server** field starts empty instead of `http://localhost:8080`.
 - **Connect to a host**: **Pairing link**, then **Connect to the host**.
 
-**Advanced: static token (dev)** at the bottom is for development servers; you won't need it.
+The server and host choices sit behind **Connect to a server or host…**, which opens their fields in
+its place; a pairing link opens them filled in. **Advanced: static token (dev)** at the bottom is for
+development servers; you won't need it.
 
 To use a desktop host, start in local mode on the computer that will host, then host that vault (below).
 [Connect your devices](/docs/getting-started/connect-devices/) covers pairing.

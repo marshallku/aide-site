@@ -24,6 +24,8 @@ The plugin keeps its own clone of your repository on the machine that runs the p
 
 It syncs the notes under these top-level folders, as `.md` files at the same paths in the repository: `daily`, `weekly`, `monthly`, `topics`, `brainstorm`, `missions` and `templates`. Other notes stay out of the repository.
 
+<Badge text="Next release" /> A new sync, one that has never run before, mirrors `daily`, `weekly`, `monthly`, `quarterly`, `yearly`, `topics` and `templates` instead, and follows the remote's default branch. A sync that ran before keeps the folders above and the `master` branch, so nothing it already mirrors drops out. `prefixes` and `branch` (below) still choose for you.
+
 **When both sides changed.** Edits to different parts of a note merge, as `git merge` would. When the same lines changed on both sides, AIDE's version wins, the file's version is kept as a separate note under `conflicts/`, and a Feed event names it. Two daily notes for the same day created on both sides (one in AIDE, one in the repository) are combined: AIDE's text first, then whatever the file has that AIDE's doesn't, section by section; a todo on both sides is kept once, checked if either side checked it.
 
 **New and deleted notes.** A note you create in AIDE gets a file; a file added to the repository becomes a note. A file deleted from the repository archives its note, which you can bring back from **Recently deleted**; a note you delete in AIDE is removed from the repository. If the other side was edited since the last sync, the edit wins over the delete.
@@ -43,7 +45,7 @@ With **Direction** set to `export`, AIDE is the only writer: nothing is imported
 
 - A [desktop host](/docs/self-hosting/desktop-host/) or your own server.
 - `git` installed on the machine that runs the plugins.
-- A git repository, with its branch already created (the plugin clones that branch; it doesn't create it).
+- A git repository, with its branch already created (the plugin clones that branch; it doesn't create it). <Badge text="Next release" /> A new sync without `branch` takes the branch the remote's `HEAD` points to (`main` for an empty repository). If it can't reach the remote on its first start (no network, the SSH key not loaded yet), it doesn't guess: its status says "Can't reach the repository yet; trying again in a minute", and it tries again every minute. The folders and branch it picks the first time are kept from then on.
 - Access that works without a prompt. The plugin runs `git` as you, with your git credentials (an SSH key with an agent, or a credential helper for HTTPS), and never asks for a password: a remote that needs one fails.
 
 ## Set it up
@@ -63,8 +65,8 @@ With **Direction** set to `export`, AIDE is the only writer: nothing is imported
     }
     ```
 
-2. Restart the host so it reads the file: quit AIDE and open it again (with **Keep running while I'm logged in** on, turn it off and on again).
-3. Turn the plugin on: **Docs sync** under **On the server** in Settings, then **Enabled** (on Linux, the switch on its row in **Settings › Plugins**). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
+2. Restart the host so it reads the file: quit AIDE and open it again (with **Keep running while I'm logged in** on, turn it off and on again). <Badge text="Next release" /> No restart: the host picks up the change within about a minute.
+3. Turn the plugin on: **Docs sync** under **Settings › Core plugins**, then **Enabled** (on Linux, the switch on its row on the **Core plugins** page of Settings). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
 4. Within a minute the plugin clones the repository and runs its first sync. Notes that exist on both sides by the same path are paired and merged; the rest are created on the other side.
 
 </Steps>
@@ -88,8 +90,8 @@ Under `"docs-sync"` in `plugins.json`:
 | Key        | What it does                                                                                     | Default |
 | ---------- | ------------------------------------------------------------------------------------------------ | ------- |
 | `remote`   | The repository to clone and push to. Required: without it the plugin doesn't start.              | none |
-| `branch`   | The branch to sync.                                                                              | `master` |
-| `prefixes` | The top-level folders to sync, as a list. Replaces the default list.                             | `["daily", "weekly", "monthly", "topics", "brainstorm", "missions", "templates"]` |
+| `branch`   | The branch to sync.                                                                              | `master`; <Badge text="Next release" /> for a new sync, the remote's default branch |
+| `prefixes` | The top-level folders to sync, as a list. Replaces the default list.                             | `["daily", "weekly", "monthly", "topics", "brainstorm", "missions", "templates"]`; <Badge text="Next release" /> for a new sync, `["daily", "weekly", "monthly", "quarterly", "yearly", "topics", "templates"]` |
 | `clone`    | Where the plugin keeps its clone.                                                                | `plugins/docs-sync/clone` in the host's data folder |
 | `author`   | The commit author's name.                                                                        | `aide docs-sync` |
 | `email`    | The commit author's email.                                                                       | `aide@localhost` |
@@ -100,7 +102,7 @@ The clone belongs to the plugin: it's reset to the remote at every sync, so don'
 
 ### Nothing syncs
 
-Look in the host log (its path is under **Log** in Settings › Host). Without `remote` the plugin stops at once with `docs-sync: remote is required`. A `git clone`, `fetch` or `push` failure shows git's own message: usually a branch that doesn't exist, or credentials that need a prompt.
+Look in the host log (its path is under **Log** in Settings › Host). Without `remote` the plugin stops at once with `docs-sync: remote is required`. <Badge text="Next release" /> Instead, it says "Set the repository to sync (remote) in the plugins' config file" under its settings in the app and waits. A `git clone`, `fetch` or `push` failure shows git's own message: usually a branch that doesn't exist, or credentials that need a prompt.
 
 ### A Feed event says "Sync stopped"
 

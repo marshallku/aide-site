@@ -39,10 +39,20 @@
                     "sync every 5m",
                     "reminder N min before each event"
                 ],
+                "settings": [
+                    {
+                        "key": "signInLink",
+                        "title": "Sign-in link",
+                        "type": "secret",
+                        "help": "Only from a phone or another computer: after Sign in with Google, paste the address the browser ends on (it starts with http://127.0.0.1)."
+                    }
+                ],
                 "locales": {
                     "ko": {
                         "description": "앱에 Google 캘린더를 표시하고 데일리 노트에 오늘 일정을 써요. 일정 전 알림과 AI 준비 노트를 보내고 회의 노트에 일정 정보를 채워요.",
-                        "name": "캘린더"
+                        "name": "캘린더",
+                        "settings.signInLink.help": "휴대폰이나 다른 컴퓨터에서만: Google로 로그인한 뒤 브라우저가 멈춘 주소(http://127.0.0.1로 시작)를 붙여 넣어 주세요.",
+                        "settings.signInLink.title": "로그인 링크"
                     }
                 }
             },
@@ -129,7 +139,7 @@
             "id": "briefing",
             "manifest": {
                 "name": "Morning briefing",
-                "description": "Weather (KMA), today's schedule, up to three suggested todos, health and yesterday — written into the day's briefing note.",
+                "description": "Weather, today's schedule, up to three suggested todos, health and yesterday — written into the day's briefing note.",
                 "version": "0.1.0",
                 "publishes": [
                     "briefing.morning"
@@ -144,7 +154,8 @@
                     {
                         "key": "at",
                         "title": "Time",
-                        "type": "time"
+                        "type": "time",
+                        "default": "07:00"
                     },
                     {
                         "key": "push",
@@ -155,13 +166,28 @@
                             "force",
                             "never"
                         ],
-                        "help": "Empty lets triage decide."
+                        "help": "Automatic lets triage decide.",
+                        "default": "force"
                     },
                     {
                         "key": "note",
                         "title": "Write into",
                         "type": "string",
-                        "help": "A note path with {date}, or daily for the daily note."
+                        "help": "A note path with {date}, or daily for the daily note.",
+                        "default": "briefings/{date}"
+                    },
+                    {
+                        "key": "location",
+                        "title": "Weather location",
+                        "type": "string",
+                        "help": "Latitude, longitude for the weather (Open-Meteo, no key), e.g. 51.51, -0.13. Empty: no weather."
+                    },
+                    {
+                        "key": "work",
+                        "title": "Work items",
+                        "type": "bool",
+                        "help": "Adds your open items from GitHub, Linear and Jira (the note work/now).",
+                        "default": "true"
                     },
                     {
                         "key": "prompt",
@@ -174,24 +200,33 @@
                 "locales": {
                     "en": {
                         "settings.prompt.help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
-                        "settings.prompt.title": "Prompt"
+                        "settings.prompt.title": "Prompt",
+                        "settings.push.options": [
+                            "Automatic",
+                            "Always",
+                            "Never"
+                        ]
                     },
                     "ko": {
-                        "description": "날씨(기상청), 오늘 일정, 할 일 제안 최대 3개, 건강과 어제의 기록을 브리핑 노트에 써요.",
+                        "description": "날씨, 오늘 일정, 할 일 제안 최대 3개, 건강과 어제의 기록을 브리핑 노트에 써요.",
                         "name": "아침 브리핑",
                         "settings.at.title": "시간",
+                        "settings.location.help": "날씨를 볼 위도, 경도예요(Open-Meteo, 키 없이). 예: 37.57, 126.98. 비우면 날씨를 빼요.",
+                        "settings.location.title": "날씨 위치",
                         "settings.note.help": "{date}가 들어간 노트 경로예요. daily는 데일리 노트에 써요.",
                         "settings.note.title": "쓸 노트",
                         "settings.prompt.default": "제공된 자료만 바탕으로 짧고 따뜻한 아침 브리핑을 써 주세요. 제목 없이 짧은 문단이나 불릿을 쓰고, 항목마다 2~3줄 이내로 정리해 주세요.\n자료가 있는 항목을 다뤄 주세요.\n- 날씨: 오전·오후 날씨, 최저·최고 기온, 강수확률과 옷차림 한 줄.\n- 일정: 오늘 일정을 자세히, 내일과 모레는 미리보기로. 일정이 없으면 짧게 알려 주세요.\n- 할 일 제안: 주인이 직접 넣은 열린 할 일 중 오늘 현실적으로 할 만한 것을 최대 3개 골라 \"[노트] 제목\"으로 적어 주세요. 지시가 아닌 제안이에요. 압박하거나 밀린 날짜를 세지 말고, 없는 일을 만들지 마세요. 열린 일이 없으면 생략해 주세요.\n- 건강: 어제 걸음·수면·운동과 최근 3일의 흐름.\n- 어제 돌아보기: 핵심과 미해결 사항.\n마지막에는 판단 없이 부드러운 오늘의 한마디를 덧붙여 주세요. 근거 자료가 없는 항목은 생략해 주세요.\n",
                         "settings.prompt.help": "사용 언어에 맞는 기본 프롬프트가 채워져 있어요. 자유롭게 수정해도 응답 형식은 유지돼요. 비우면 기본값으로 돌아가요.",
                         "settings.prompt.title": "프롬프트",
-                        "settings.push.help": "비워 두면 알림 분류가 결정해요.",
+                        "settings.push.help": "자동은 알림 분류가 결정해요.",
                         "settings.push.options": [
                             "자동",
                             "항상 알림",
                             "알림 안 함"
                         ],
-                        "settings.push.title": "알림"
+                        "settings.push.title": "알림",
+                        "settings.work.help": "GitHub, Linear, Jira에서 열려 있는 항목(work/now 노트)을 넣어요.",
+                        "settings.work.title": "업무 항목"
                     }
                 }
             },
@@ -222,7 +257,8 @@
                     {
                         "key": "at",
                         "title": "Time",
-                        "type": "time"
+                        "type": "time",
+                        "default": "21:30"
                     },
                     {
                         "key": "push",
@@ -233,13 +269,15 @@
                             "force",
                             "never"
                         ],
-                        "help": "Empty lets triage decide."
+                        "help": "Automatic lets triage decide.",
+                        "default": "never"
                     },
                     {
                         "key": "note",
                         "title": "Write into",
                         "type": "string",
-                        "help": "A note path with {date}, or daily for the daily note."
+                        "help": "A note path with {date}, or daily for the daily note.",
+                        "default": "briefings/{date}"
                     },
                     {
                         "key": "prompt",
@@ -252,7 +290,12 @@
                 "locales": {
                     "en": {
                         "settings.prompt.help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
-                        "settings.prompt.title": "Prompt"
+                        "settings.prompt.title": "Prompt",
+                        "settings.push.options": [
+                            "Automatic",
+                            "Always",
+                            "Never"
+                        ]
                     },
                     "ko": {
                         "description": "오늘 노트와 열린 이슈를 보고 진척, 밀린 일, 내일로 넘길 일을 브리핑 노트에 정리해요.",
@@ -263,7 +306,7 @@
                         "settings.prompt.default": "오늘 데일리를 바탕으로 하루를 짧게 정리해 주세요. 열린 이슈는 오래됐을 수 있는 힌트이므로 오늘 기록의 증거를 우선해 주세요. 근거 없이 방치했다고 하거나 밀린 날짜를 세지 마세요.\n마크다운 불릿에 굵은 항목명으로 **진척된 것**, **밀린 것**, **내일로 넘길 것**, **새로 열린 이슈**를 사용해 주세요. 항목마다 1~4줄로 쓰고 해당 사항이 없으면 생략해 주세요. 끝낸 일, 미뤄진 일, 내일 이어갈 행동, 새로 생긴 질문을 구분하고 차분하게 정리해 주세요.\n",
                         "settings.prompt.help": "사용 언어에 맞는 기본 프롬프트가 채워져 있어요. 자유롭게 수정해도 응답 형식은 유지돼요. 비우면 기본값으로 돌아가요.",
                         "settings.prompt.title": "프롬프트",
-                        "settings.push.help": "비워 두면 알림 분류가 결정해요.",
+                        "settings.push.help": "자동은 알림 분류가 결정해요.",
                         "settings.push.options": [
                             "자동",
                             "항상 알림",
@@ -486,23 +529,33 @@
                     {
                         "key": "at",
                         "title": "Time",
-                        "type": "time"
+                        "type": "time",
+                        "default": "18:00"
                     },
                     {
                         "key": "note",
                         "title": "Write into",
                         "type": "string",
-                        "help": "A note path with {date}, or daily for the daily note."
+                        "help": "A note path with {date}, or daily for the daily note.",
+                        "default": "briefings/{date}"
                     },
                     {
                         "key": "followUpDays",
                         "title": "Waiting for an answer after (days)",
-                        "type": "number"
+                        "type": "number",
+                        "default": "3"
                     },
                     {
                         "key": "urgent",
                         "title": "Push urgent mail",
-                        "type": "bool"
+                        "type": "bool",
+                        "default": "true"
+                    },
+                    {
+                        "key": "signInLink",
+                        "title": "Sign-in link",
+                        "type": "secret",
+                        "help": "Only from a phone or another computer: after Sign in with Google, paste the address the browser ends on (it starts with http://127.0.0.1)."
                     }
                 ],
                 "locales": {
@@ -513,6 +566,8 @@
                         "settings.followUpDays.title": "답장 대기 기준(일)",
                         "settings.note.help": "{date}가 들어간 노트 경로예요. daily는 데일리 노트에 써요.",
                         "settings.note.title": "쓸 노트",
+                        "settings.signInLink.help": "휴대폰이나 다른 컴퓨터에서만: Google로 로그인한 뒤 브라우저가 멈춘 주소(http://127.0.0.1로 시작)를 붙여 넣어 주세요.",
+                        "settings.signInLink.title": "로그인 링크",
                         "settings.urgent.title": "급한 메일 알림"
                     }
                 }
@@ -882,6 +937,177 @@
                 "notes:write:*",
                 "ai:run",
                 "events:publish:radar"
+            ]
+        },
+        {
+            "id": "github",
+            "manifest": {
+                "name": "GitHub",
+                "description": "Open assignments, review requests and mentions from GitHub in your Feed and work/now.",
+                "version": "0.1.0",
+                "publishes": [
+                    "github"
+                ],
+                "slots": [
+                    "github.open"
+                ],
+                "schedules": [
+                    "every 2m (notifications)",
+                    "every 10m (search)"
+                ],
+                "settings": [
+                    {
+                        "key": "apiToken",
+                        "title": "API token",
+                        "type": "secret",
+                        "help": "Classic personal access token with repo and notifications scopes.",
+                        "link": {
+                            "title": "Create a token",
+                            "url": "https://github.com/settings/tokens/new?scopes=repo,notifications&description=AIDE"
+                        }
+                    },
+                    {
+                        "key": "repos",
+                        "title": "Repositories",
+                        "type": "list",
+                        "help": "Optional owner/repo or owner/* filters."
+                    },
+                    {
+                        "key": "mentions",
+                        "title": "Mentions",
+                        "type": "bool",
+                        "help": "Include mentions and comment notifications.",
+                        "default": "true"
+                    }
+                ],
+                "locales": {
+                    "ko": {
+                        "description": "GitHub의 할당된 작업, 리뷰 요청, 멘션을 피드와 work/now에 모아요.",
+                        "name": "GitHub",
+                        "settings.apiToken.help": "repo와 notifications 권한이 있는 클래식 개인 액세스 토큰이에요.",
+                        "settings.apiToken.link": "토큰 만들기",
+                        "settings.apiToken.title": "API 토큰",
+                        "settings.mentions.help": "멘션과 댓글 알림을 포함해요.",
+                        "settings.mentions.title": "멘션",
+                        "settings.repos.help": "owner/repo 또는 owner/*로 범위를 좁힐 수 있어요.",
+                        "settings.repos.title": "저장소"
+                    }
+                }
+            },
+            "scopes": [
+                "notes:write:work",
+                "events:publish:github"
+            ]
+        },
+        {
+            "id": "linear",
+            "manifest": {
+                "name": "Linear",
+                "description": "Open assignments and notifications from Linear in your Feed and work/now.",
+                "version": "0.1.0",
+                "publishes": [
+                    "linear"
+                ],
+                "slots": [
+                    "linear.open"
+                ],
+                "schedules": [
+                    "every 5m"
+                ],
+                "settings": [
+                    {
+                        "key": "apiKey",
+                        "title": "API key",
+                        "type": "secret",
+                        "link": {
+                            "title": "Create an API key",
+                            "url": "https://linear.app/settings/account/security"
+                        }
+                    },
+                    {
+                        "key": "teams",
+                        "title": "Teams",
+                        "type": "list",
+                        "help": "Optional team keys, such as ENG."
+                    }
+                ],
+                "locales": {
+                    "ko": {
+                        "description": "Linear의 할당된 작업과 알림을 피드와 work/now에 모아요.",
+                        "name": "Linear",
+                        "settings.apiKey.link": "API 키 만들기",
+                        "settings.apiKey.title": "API 키",
+                        "settings.teams.help": "ENG 같은 팀 키로 범위를 좁힐 수 있어요.",
+                        "settings.teams.title": "팀"
+                    }
+                }
+            },
+            "scopes": [
+                "notes:write:work",
+                "events:publish:linear"
+            ]
+        },
+        {
+            "id": "jira",
+            "manifest": {
+                "name": "Jira",
+                "description": "Open Jira work and deadlines in your Feed and work/now.",
+                "version": "0.1.0",
+                "publishes": [
+                    "jira"
+                ],
+                "slots": [
+                    "jira.open"
+                ],
+                "schedules": [
+                    "every 5m"
+                ],
+                "settings": [
+                    {
+                        "key": "site",
+                        "title": "Site",
+                        "type": "string",
+                        "help": "Your Jira Cloud host, such as acme.atlassian.net."
+                    },
+                    {
+                        "key": "email",
+                        "title": "Email",
+                        "type": "string"
+                    },
+                    {
+                        "key": "apiToken",
+                        "title": "API token",
+                        "type": "secret",
+                        "link": {
+                            "title": "Create an API token",
+                            "url": "https://id.atlassian.com/manage-profile/security/api-tokens"
+                        }
+                    },
+                    {
+                        "key": "jql",
+                        "title": "JQL",
+                        "type": "string",
+                        "help": "Open work only; matching issues not assigned to you appear as filter matches.",
+                        "default": "assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC"
+                    }
+                ],
+                "locales": {
+                    "ko": {
+                        "description": "Jira의 열린 작업과 마감일을 피드와 work/now에 모아요.",
+                        "name": "Jira",
+                        "settings.apiToken.link": "API 토큰 만들기",
+                        "settings.apiToken.title": "API 토큰",
+                        "settings.email.title": "이메일",
+                        "settings.jql.help": "열린 작업만 조회해요. 나에게 할당되지 않은 항목은 필터 결과로 표시해요.",
+                        "settings.jql.title": "JQL",
+                        "settings.site.help": "acme.atlassian.net 같은 Jira Cloud 호스트예요.",
+                        "settings.site.title": "사이트"
+                    }
+                }
+            },
+            "scopes": [
+                "notes:write:work",
+                "events:publish:jira"
             ]
         }
     ],

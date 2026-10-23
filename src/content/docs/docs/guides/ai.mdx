@@ -5,7 +5,7 @@ sidebar:
     order: 11
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 AIDE brings no model of its own. You choose where models run: the Claude Code or Codex you already
 use on your computer, your own Anthropic API key, or the AI set on your server. You can also run
@@ -62,6 +62,11 @@ its own choice.
 The device's Anthropic key is saved under **Settings › AI** when AIDE keeps notes without a
 server, in the device's keychain (on Linux, the system keyring when one answers, else a file only
 you can read). The model it uses for Organize can be changed there too.
+
+<Badge text="Next release" /> With a server or a desktop host, **Settings › AI** is the server's (below),
+so the device's key has its own place: on the Mac and iPhone, **Anthropic key on this device** in
+**Settings › Assistant**, shown when **Model from** is **Anthropic API key**; on Linux, the
+**Anthropic key on this device** page of Settings. The key stays on this device.
 
 ## Settings › AI on a server
 

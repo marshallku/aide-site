@@ -89,8 +89,8 @@ aren't under `topics`.
 <Steps>
 
 1. Make sure `claude` (or `codex`) works in a terminal on this computer and is signed in.
-2. In AIDE, open **Settings** and choose **Catch-up** under **On the server** (on Linux, **Settings ›
-   Plugins › Catch-up**).
+2. In AIDE, open **Settings** and choose **Catch-up** under **Core plugins** (on Linux, the **Catch-up** row
+   on the **Core plugins** page of Settings).
 3. Pick the **Agent**, and set **Repositories** to the folders your git repositories are in.
 4. Turn on **Enabled**. The first run is at 23:59.
 
@@ -138,7 +138,12 @@ The entries are written in the language you chose under **Settings › Language 
 The Feed item gives the reason.
 
 - `executable file not found`: the host can't find `claude` or `codex`. It looks on its own `PATH`,
-  which may not include the folder your terminal finds the CLI in.
+  which may not include the folder your terminal finds the CLI in. <Badge text="Next release" /> It
+  finds the CLI the way [Radar](/docs/plugins/radar/) does: on its `PATH`, in the usual install
+  folders (`~/.local/bin`, `/opt/homebrew/bin`, `/usr/local/bin`, `~/.bun/bin`, `~/.npm-global/bin`,
+  `~/.claude/local`, `~/.cargo/bin`), and else on your login shell's `PATH`. When it's still not
+  found, the reason reads `catchup: claude isn't installed on this computer (or isn't on the login
+  shell's PATH)`.
 - A timeout: raise **Time limit (minutes)**. A run after several nights off has more days to read.
 - A sign-in error: run the CLI in a terminal and sign in again.
 

@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem, Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 AIDE는 공개 저장소 [aide-releases](https://github.com/marshallku/aide-releases)에서 Mac용과 x86_64
 Linux용으로 배포돼요. 설치하면 명령줄 도구 `aidectl`과 [데스크톱 호스트](/ko/docs/self-hosting/desktop-host/)에
@@ -190,6 +190,19 @@ curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/
 노트와 설정은 남아요. AIDE가 대신 보관하는 보관소는 `~/Library/Application Support/com.marshallku.aide`
 아래에, 호스팅한 보관소의 서버 데이터(데이터베이스와 플러그인 상태)는
 `~/Library/Application Support/AIDE/hosts` 아래에 있어요. 직접 연 폴더는 절대 건드리지 않아요.
+<Badge text="다음 릴리스" /> 스크립트의 마지막 줄에 남는 위치가 나와요: `AIDE removed from … (notes and settings
+stay in ~/Library/Application Support/com.marshallku.aide, a hosted vault's server data in ~/Library/Application
+Support/AIDE)`.
+
+<Badge text="다음 릴리스" /> Homebrew로 이것까지 지우려면 `--zap`을 붙여요.
+
+```bash
+brew uninstall --zap --cask aide
+```
+
+`~/Library/Application Support/com.marshallku.aide`(AIDE가 대신 보관하는 보관소),
+`~/Library/Application Support/AIDE`(호스팅한 보관소의 서버 데이터), AIDE의 캐시와 환경설정도 휴지통으로 옮겨요.
+직접 연 폴더는 이때도 건드리지 않아요.
 
 </TabItem>
 <TabItem label="Linux">
