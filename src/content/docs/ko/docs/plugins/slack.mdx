@@ -5,7 +5,7 @@ sidebar:
     order: 20
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -165,6 +165,7 @@ Slack 앱 하나는 AIDE 하나에만 연결하세요. Slack은 Socket Mode 앱�
 - **추가 허용 사용자**: 멤버 ID는 `U01AB2CD3EF`처럼 생겼어요. Slack에서 그 사람의 프로필을 열고 <strong>⋮</strong>와 **Copy
   member ID**를 선택해요.
 - **포함할 채널**과 **제외할 채널**에는 Slack에 보이는 그대로 채널 이름을 넣어요.
+- **프롬프트** <Badge text="다음 릴리스" />: 스레드를 요약할 때 AI에게 요청하는 내용이에요. 기본 지침이 플러그인이 쓰는 언어로 채워져 있어요. 요약이 무엇을 다룰지, 얼마나 길지 바꾸려면 고쳐요. 요약의 모양은 그대로예요. 문단 하나 뒤에 **결정**과 할 일로 쓴 **할 일**이 오고, 이 제목은 플러그인이 쓰는 언어를 따라요. <strong>기본값으로 되돌리기</strong>를 누르거나 칸을 비우면 기본 프롬프트로 돌아가요. [프롬프트](/ko/docs/plugins/overview/#프롬프트)를 참고하세요.
 
 설정을 바꾸면 플러그인이 다시 시작되고, 1분 안에 바뀐 설정을 반영해요.
 

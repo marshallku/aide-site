@@ -1,8 +1,8 @@
 ---
-// A plugin's settings as the app shows them (Settings › Plugins › <plugin>), from its manifest in
-// src/data/plugins.json, in the page's language. `defaults` gives every setting's default as the
-// page describes it ("" for none); a setting the manifest has and the page doesn't fails the build,
-// so a new setting in AIDE can't go undocumented.
+// A plugin's settings as the app shows them, from its manifest in src/data/plugins.json, in the
+// page's language. A setting whose manifest gives its default shows that one (a prompt folds away);
+// `defaults` gives every other setting's default as the page describes it ("" for none). A setting
+// the manifest has and neither does fails the build, so a new setting in AIDE can't go undocumented.
 import { findPlugin, toLocale, type Plugin } from "#lib/plugins";
 
 interface Props {
@@ -15,7 +15,9 @@ const { id, kind = "server", defaults } = Astro.props;
 const locale = toLocale(Astro.currentLocale);
 const plugin = findPlugin(id, kind, locale);
 
-const missing = plugin.settings.filter((field) => !(field.key in defaults)).map((field) => field.key);
+const missing = plugin.settings
+    .filter((field) => !(field.key in defaults) && field.default === undefined)
+    .map((field) => field.key);
 const extra = Object.keys(defaults).filter((key) => !plugin.settings.some((field) => field.key === key));
 if (missing.length > 0 || extra.length > 0) {
     throw new Error(
@@ -31,6 +33,7 @@ const LABELS = {
         default: "Default",
         about: "What it does",
         none: "—",
+        prefilled: "Prefilled in your language",
         types: {
             string: "Text",
             text: "Long text",
@@ -48,6 +51,7 @@ const LABELS = {
         default: "기본값",
         about: "설명",
         none: "—",
+        prefilled: "내 언어로 채워져 있어요",
         types: {
             string: "텍스트",
             text: "긴 텍스트",
@@ -85,7 +89,20 @@ const typeLabel = (type: string) => LABELS.types[type as keyof typeof LABELS.typ
                     <td>
                         <span class:list={["type", { secret: field.type === "secret" }]}>{typeLabel(field.type)}</span>
                     </td>
-                    <td>{defaults[field.key] || LABELS.none}</td>
+                    <td>
+                        {field.default !== undefined && !(field.key in defaults) ? (
+                            field.default.length > 40 || field.default.includes("\n") ? (
+                                <details class="prefilled">
+                                    <summary>{LABELS.prefilled}</summary>
+                                    <pre>{field.default}</pre>
+                                </details>
+                            ) : (
+                                field.default
+                            )
+                        ) : (
+                            defaults[field.key] || LABELS.none
+                        )}
+                    </td>
                     <td>
                         {field.help}
                         {field.options && (
@@ -131,5 +148,16 @@ const typeLabel = (type: string) => LABELS.types[type as keyof typeof LABELS.typ
     }
     .link {
         margin: 0.25rem 0 0;
+    }
+    .prefilled summary {
+        cursor: pointer;
+        font-size: var(--sl-text-xs);
+    }
+    .prefilled pre {
+        max-width: 22rem;
+        max-height: 16rem;
+        overflow: auto;
+        font-size: var(--sl-text-2xs);
+        white-space: pre-wrap;
     }
 </style>

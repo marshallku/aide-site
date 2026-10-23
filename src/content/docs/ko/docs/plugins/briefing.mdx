@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -50,13 +50,15 @@ import PluginSettings from "#components/PluginSettings.astro";
 
 ## 설정
 
-<PluginSettings id="briefing" defaults={{ at: "07:00", push: "force (항상 알림)", note: "briefings/{date}", prompt: "" }} />
+<PluginSettings id="briefing" defaults={{ at: "07:00", push: "force (항상 알림)", note: "briefings/{date}" }} />
 
 **알림.** 따로 고르기 전까지는 선택 목록에 **자동**이 보여도 `force`처럼 매일 아침 알림을 보내요. 피드에서만 읽으려면 `never`(**알림 안 함**)를 골라요. **자동**을 직접 고르면 피드의 분류가 알림을 보낼지 정해요.
 
 **쓸 노트.** `daily`로 정하면 오늘 데일리 노트의 끝에 있는 자기 섹션(또는 템플릿에서 `{{slot briefing.morning}}`을 둔 곳)에 브리핑을 써요. 그 밖의 값은 노트 경로이고, `{date}`는 `YYYY-MM-DD` 형식의 날짜로 바뀌어요.
 
 **프롬프트.** 직접 쓴 지침이 기본 지침을 완전히 대신해요. 플러그인은 그 뒤에 날짜와 모은 자료를 모두 붙이니까, 자료로 무엇을 할지 적어 주세요. 예를 들면 "글머리표 세 개: 날씨, 첫 회의, 할 일 하나."처럼요.
+
+<Badge text="다음 릴리스" /> 칸에 기본 프롬프트가 플러그인이 쓰는 언어로 채워져 있어서, 처음부터 쓰지 않고 고쳐 쓰면 돼요. 프롬프트에 무엇을 쓰든 플러그인은 그 뒤에 응답 규칙(자기 섹션에 쓸 Markdown, 받은 자료만 사용)을 붙여요. <strong>기본값으로 되돌리기</strong>를 누르거나 칸을 비우면 기본 프롬프트로 돌아가요. [프롬프트](/ko/docs/plugins/overview/#프롬프트)를 참고하세요.
 
 ### 로컬 키
 

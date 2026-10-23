@@ -5,7 +5,7 @@ sidebar:
     order: 11
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 
 Google 캘린더 플러그인은 Google 캘린더를 AIDE로 가져와요. 캘린더 섹션에 일정이 보이고, 오늘 일정이 데일리 노트에 들어가고, 회의 몇 분 전에 알림과 준비할 내용을 받아요.
@@ -35,6 +35,8 @@ Google 캘린더 플러그인은 Google 캘린더를 AIDE로 가져와요. 캘�
 **준비 노트를 써요.** 알림 직후 AI에 무엇을 준비할지 물어봐요. AI는 일정과 제목이 맞는 노트를 받아서, 회의 주제, 관련된 미완료 할 일이나 결정 사항, 해야 할 일 한 가지에서 세 가지를 답해요. 답은 하루 노트(`briefings/{date}`)의 `#### 14:00 Design review 준비` 같은 제목 아래에 들어가요. **준비할 내용이 있으면 알려주기**를 켜면, AI가 구체적인 것(읽을 문서, 남은 결정, 챙길 물건)을 찾았는지도 판단해서, 찾았을 때만 "14:00 Design review 준비"라는 알림으로 보내요. 준비 노트는 한 번에 일정 하나씩, 최대 90초 동안 만들어요. 기다리는 일정이 8개를 넘으면 넘는 만큼은 건너뛰어요.
 
 **회의 노트를 채워요.** 일정으로 만든 [회의 노트](/ko/docs/guides/meetings/)에 캘린더가 아는 내용을 담은 섹션을 유지해요. 시간, 장소, 화상 회의 링크, 다른 참석자, 일정 링크와 설명이 들어가고, 일정이 취소되면 취소됐다고 표시해요.
+
+<Badge text="다음 릴리스" /> 제목이 없는 일정은 일정 목록, 알림, 준비 노트, 앱의 캘린더에 "(제목 없음)"으로 보여요. 플러그인이 쓰는 언어가 영어면 "(No title)"이에요.
 
 ## 시작하기 전에
 

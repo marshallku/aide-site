@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Steps } from "@astrojs/starlight/components";
+import { Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -49,13 +49,15 @@ AI 요청이 실패하면 다음 날 저녁까지 10분마다 다시 시도해�
 
 ## 설정
 
-<PluginSettings id="recap" defaults={{ at: "21:30", push: "never (알림 안 함)", note: "briefings/{date}", prompt: "" }} />
+<PluginSettings id="recap" defaults={{ at: "21:30", push: "never (알림 안 함)", note: "briefings/{date}" }} />
 
 **알림.** 따로 고르기 전까지는 선택 목록에 **자동**이 보여도 `never`처럼 알림을 보내지 않아요. 매일 저녁 알림을 받으려면 `force`(**항상 알림**)를, 피드의 분류에 맡기려면 **자동**을 골라요.
 
 **쓸 노트.** `daily`로 정하면 오늘 데일리 노트 자체의 자기 섹션(끝, 또는 템플릿에서 `{{slot recap.evening}}`을 둔 곳)에 정리를 써요. 이때 저녁 정리는 자기가 전에 쓴 글을 읽는 내용에서 빼서, 자기 자신을 정리하지 않아요. 읽는 순간에 데일리 노트를 고치고 있었다면 10분 뒤에 다시 시도해요.
 
 **프롬프트.** 직접 쓴 지침이 기본 지침을 대신해요. 그 뒤에는 여전히 날짜, 오늘 데일리 노트, 열린 이슈가 붙어요.
+
+<Badge text="다음 릴리스" /> 칸에 기본 프롬프트가 플러그인이 쓰는 언어로 채워져 있어요. 프롬프트에 무엇을 쓰든 플러그인은 그 뒤에 응답 규칙을 붙여요. <strong>기본값으로 되돌리기</strong>를 누르거나 칸을 비우면 기본 프롬프트로 돌아가요. [프롬프트](/ko/docs/plugins/overview/#프롬프트)를 참고하세요.
 
 ### 로컬 키
 

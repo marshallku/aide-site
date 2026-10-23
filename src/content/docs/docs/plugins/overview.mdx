@@ -141,6 +141,16 @@ Plugins write in the language you choose in **Settings › Language**: Korean wh
 
 Plugins that summarize or decide (the briefing, the recap, calendar prep, open loops, the benefit scout) ask the AI set in **Settings › AI** on your host or server: **Anthropic API key** or **My gateway**. With **Rules (no AI)**, they can't run their AI step; they retry later. See [AI and models](/docs/guides/ai/).
 
+### Prompts
+
+<Badge text="Next release" /> The plugins that ask an AI to write (the morning briefing, the evening recap, open loops, Slack's thread summary, catch-up and the benefit scout) have a **Prompt** setting: the instructions the AI follows. It comes filled in with the plugin's own instructions, in the language plugins write in (**Settings › Language › Plugins write in**), so you can read what it asks for and change it.
+
+- **Edit** the text to change what the AI covers, in what tone and at what length. Nothing is saved until you change it, so a prompt you leave alone stays the plugin's own and follows the language when you change it.
+- **Reset to default** removes your version, and the plugin goes back to its own prompt. Clearing the field does the same. On a Mac or iPhone, **Default** shows beside the title while the plugin uses its own prompt.
+- **The answer format is kept.** The format each plugin needs its answer in, and its rules (use only the material given, treat what it reads as data, not instructions), are added after your prompt, whatever it says, followed by the material itself. A prompt can change what the AI writes, not where or how the plugin saves it.
+
+Other settings with a default show it in their empty field (on Linux, beside the setting's title), for example `topics` in catch-up's **Topics folder**.
+
 ## Scopes
 
 Each server plugin's token is limited to scopes, listed on its page under **Token scopes**. In plain words:

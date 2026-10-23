@@ -5,7 +5,7 @@ sidebar:
     order: 15
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -81,6 +81,8 @@ The middle dot is the character `·` (U+00B7), not a period or a bullet. Copy it
 <PluginSettings id="loops" defaults={{ at: "21:15", note: "loops/open" }} />
 
 **Loops note** is a note path. If you rename or move the note, change it here too.
+
+**Prompt.** <Badge text="Next release" /> The instructions your AI follows, filled in with the built-in ones in the language plugins write in. Edit them to change how it judges progress or words next actions. The note's format, the merge by id and the rule that only today's daily counts as evidence are added after your text and stay as they are, so a prompt can't make the plugin drop items or write an invalid note. **Reset to default**, or clearing the field, brings back the built-in prompt. See [Prompts](/docs/plugins/overview/#prompts).
 
 ## Troubleshooting
 

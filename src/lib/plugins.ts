@@ -11,6 +11,8 @@ export interface SettingField {
     options?: string[];
     help?: string;
     link?: { title: string; url: string };
+    /// What the plugin uses unset (a prompt prefilled in the app), in the reader's language.
+    default?: string;
 }
 
 type Locales = Record<string, Record<string, string | string[]>>;
@@ -78,6 +80,7 @@ function localize(locales: Locales | undefined, locale: Locale) {
             help: field.help === undefined ? undefined : text(`settings.${field.key}.help`, field.help),
             options: Array.isArray(options) && options.length === field.options?.length ? options : field.options,
             link: field.link && { ...field.link, title: text(`settings.${field.key}.link`, field.link.title) },
+            default: field.default === undefined ? undefined : text(`settings.${field.key}.default`, field.default),
         };
     };
     return { text, setting };

@@ -5,7 +5,7 @@ sidebar:
     order: 11
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 
 The Google Calendar plugin brings your Google calendars into AIDE: they show in the Calendar section, today's events go into your daily note, and a few minutes before each meeting you get a reminder and notes on what to prepare.
@@ -35,6 +35,8 @@ A day with nothing reads `- No events`. The list is written when the daily is cr
 **Writes prep notes.** Right after a reminder, it asks your AI what to prepare: the AI gets the event and the notes that match its title, and answers with what the meeting is about, related open todos or decisions, and one to three things to do. The answer goes into the day note (`briefings/{date}`) under a heading like `#### 14:00 Prep for Design review`. With **Tell me when there's something to prepare** on, the AI also decides whether it found something concrete (a document to read, a pending decision, something to bring), and only then sends it to you as a notification, "14:00 Prep for Design review". Prep runs one event at a time, up to 90 seconds each; when more than 8 are waiting, the extra ones are skipped.
 
 **Fills in meeting notes.** In a [meeting note](/docs/guides/meetings/) made from one of its events, it keeps a section with what the calendar knows: when, where, the video link, the other attendees, the event link and its description, and marks it cancelled if the event is.
+
+<Badge text="Next release" /> An event without a title is called "(No title)" in the agenda, reminders, prep notes and the app's calendar, in the language plugins write in.
 
 ## Before you start
 

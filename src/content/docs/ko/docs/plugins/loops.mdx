@@ -5,7 +5,7 @@ sidebar:
     order: 15
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -81,6 +81,8 @@ Anything above the first ## heading is yours and kept as it is.
 <PluginSettings id="loops" defaults={{ at: "21:15", note: "loops/open" }} />
 
 **열린 이슈 노트**는 노트 경로예요. 노트 이름을 바꾸거나 옮기면 여기도 바꿔 주세요.
+
+**프롬프트.** <Badge text="다음 릴리스" /> AI가 따르는 지침이고, 기본 지침이 플러그인이 쓰는 언어로 채워져 있어요. 진척을 어떻게 판단할지, 다음 행동을 어떻게 쓸지 바꾸려면 고쳐요. 노트의 형식, id로 합치는 방식, 오늘 데일리만 근거로 삼는 규칙은 내 지침 뒤에 그대로 붙어서, 프롬프트로 항목을 빠뜨리거나 형식에 맞지 않는 노트를 쓰게 할 수는 없어요. <strong>기본값으로 되돌리기</strong>를 누르거나 칸을 비우면 기본 프롬프트로 돌아가요. [프롬프트](/ko/docs/plugins/overview/#프롬프트)를 참고하세요.
 
 ## 문제 해결
 

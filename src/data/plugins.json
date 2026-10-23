@@ -60,7 +60,7 @@
             "id": "docs-sync",
             "manifest": {
                 "name": "Docs sync",
-                "description": "Mirrors your notes to the ~/docs git repository and imports edits made there (3-way merge; AIDE wins overlaps, the file's version is kept under conflicts/).",
+                "description": "Mirrors your notes to your configured git repository and imports edits made there (3-way merge; AIDE wins overlaps, the file's version is kept under conflicts/).",
                 "version": "0.1.0",
                 "publishes": [
                     "docs.sync"
@@ -99,7 +99,7 @@
                 ],
                 "locales": {
                     "ko": {
-                        "description": "노트를 ~/docs git 저장소와 동기화해요. 겹치는 수정은 AIDE 쪽을 남기고 파일 버전을 conflicts/에 보관해요.",
+                        "description": "노트를 git 저장소와 동기화해요. 겹치는 수정은 AIDE 쪽을 남기고 파일 버전을 conflicts/에 보관해요.",
                         "name": "문서 동기화",
                         "settings.interval.options": [
                             "30초",
@@ -167,17 +167,23 @@
                         "key": "prompt",
                         "title": "Prompt",
                         "type": "text",
-                        "help": "Your own instructions in place of the built-in ones; the day's material is added after them. Empty uses the built-in prompt."
+                        "help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "default": "Write a concise, warm morning briefing using only the supplied material. Use short paragraphs or bullets, without a heading. Keep each topic to two or three lines.\nCover, when data is available:\n- Weather: morning and afternoon conditions, low/high temperatures, rain probability, and one clothing suggestion.\n- Schedule: today's details and a preview of tomorrow and the following day. Say briefly when there are no events.\n- Suggested todos: choose at most three realistic items from the owner's open todos, using \"[Note] title\". These are suggestions. Avoid pressure, overdue counts, or invented tasks. Omit when none are open.\n- Health: yesterday's steps, sleep and exercise, with the three-day trend.\n- Yesterday: highlights and unresolved matters.\nFinish with one gentle, nonjudgmental thought for today. Omit topics without supporting data.\n"
                     }
                 ],
                 "locales": {
+                    "en": {
+                        "settings.prompt.help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "settings.prompt.title": "Prompt"
+                    },
                     "ko": {
                         "description": "날씨(기상청), 오늘 일정, 할 일 제안 최대 3개, 건강과 어제의 기록을 브리핑 노트에 써요.",
                         "name": "아침 브리핑",
                         "settings.at.title": "시간",
                         "settings.note.help": "{date}가 들어간 노트 경로예요. daily는 데일리 노트에 써요.",
                         "settings.note.title": "쓸 노트",
-                        "settings.prompt.help": "기본 지침 대신 사용할 지침이에요. 뒤에 오늘의 자료를 붙여요. 비워 두면 기본 프롬프트를 사용해요.",
+                        "settings.prompt.default": "제공된 자료만 바탕으로 짧고 따뜻한 아침 브리핑을 써 주세요. 제목 없이 짧은 문단이나 불릿을 쓰고, 항목마다 2~3줄 이내로 정리해 주세요.\n자료가 있는 항목을 다뤄 주세요.\n- 날씨: 오전·오후 날씨, 최저·최고 기온, 강수확률과 옷차림 한 줄.\n- 일정: 오늘 일정을 자세히, 내일과 모레는 미리보기로. 일정이 없으면 짧게 알려 주세요.\n- 할 일 제안: 주인이 직접 넣은 열린 할 일 중 오늘 현실적으로 할 만한 것을 최대 3개 골라 \"[노트] 제목\"으로 적어 주세요. 지시가 아닌 제안이에요. 압박하거나 밀린 날짜를 세지 말고, 없는 일을 만들지 마세요. 열린 일이 없으면 생략해 주세요.\n- 건강: 어제 걸음·수면·운동과 최근 3일의 흐름.\n- 어제 돌아보기: 핵심과 미해결 사항.\n마지막에는 판단 없이 부드러운 오늘의 한마디를 덧붙여 주세요. 근거 자료가 없는 항목은 생략해 주세요.\n",
+                        "settings.prompt.help": "사용 언어에 맞는 기본 프롬프트가 채워져 있어요. 자유롭게 수정해도 응답 형식은 유지돼요. 비우면 기본값으로 돌아가요.",
                         "settings.prompt.title": "프롬프트",
                         "settings.push.help": "비워 두면 알림 분류가 결정해요.",
                         "settings.push.options": [
@@ -239,17 +245,23 @@
                         "key": "prompt",
                         "title": "Prompt",
                         "type": "text",
-                        "help": "Your own instructions in place of the built-in ones; the day's material is added after them. Empty uses the built-in prompt."
+                        "help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "default": "Write a concise evening recap from today's daily note. Treat open loops as potentially stale hints; today's evidence takes priority. Never claim neglect or count overdue days without evidence.\nUse Markdown bullets with bold section labels: Progress, Slipped, Carry to tomorrow, New issues. Keep each section to one to four lines and omit sections with nothing to report. Distinguish completed work, work that slipped, next steps worth carrying forward, and newly opened questions. Use a calm, nonjudgmental tone.\n"
                     }
                 ],
                 "locales": {
+                    "en": {
+                        "settings.prompt.help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "settings.prompt.title": "Prompt"
+                    },
                     "ko": {
                         "description": "오늘 노트와 열린 이슈를 보고 진척, 밀린 일, 내일로 넘길 일을 브리핑 노트에 정리해요.",
                         "name": "저녁 정리",
                         "settings.at.title": "시간",
                         "settings.note.help": "{date}가 들어간 노트 경로예요. daily는 데일리 노트에 써요.",
                         "settings.note.title": "쓸 노트",
-                        "settings.prompt.help": "기본 지침 대신 사용할 지침이에요. 뒤에 오늘의 자료를 붙여요. 비워 두면 기본 프롬프트를 사용해요.",
+                        "settings.prompt.default": "오늘 데일리를 바탕으로 하루를 짧게 정리해 주세요. 열린 이슈는 오래됐을 수 있는 힌트이므로 오늘 기록의 증거를 우선해 주세요. 근거 없이 방치했다고 하거나 밀린 날짜를 세지 마세요.\n마크다운 불릿에 굵은 항목명으로 **진척된 것**, **밀린 것**, **내일로 넘길 것**, **새로 열린 이슈**를 사용해 주세요. 항목마다 1~4줄로 쓰고 해당 사항이 없으면 생략해 주세요. 끝낸 일, 미뤄진 일, 내일 이어갈 행동, 새로 생긴 질문을 구분하고 차분하게 정리해 주세요.\n",
+                        "settings.prompt.help": "사용 언어에 맞는 기본 프롬프트가 채워져 있어요. 자유롭게 수정해도 응답 형식은 유지돼요. 비우면 기본값으로 돌아가요.",
                         "settings.prompt.title": "프롬프트",
                         "settings.push.help": "비워 두면 알림 분류가 결정해요.",
                         "settings.push.options": [
@@ -283,6 +295,13 @@
                 ],
                 "settings": [
                     {
+                        "key": "prompt",
+                        "title": "Prompt",
+                        "type": "text",
+                        "help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "default": "Update open loops using today's daily note as the only evidence. Close an item only when the daily shows it is finished. When progress is documented, refresh its next action and review date. Leave unsupported items untouched. Add an item only for a clearly new open matter. Avoid pressure or claims that something has been neglected for a number of days. Keep titles and next actions concrete and brief.\n"
+                    },
+                    {
                         "key": "at",
                         "title": "Time",
                         "type": "time"
@@ -294,11 +313,18 @@
                     }
                 ],
                 "locales": {
+                    "en": {
+                        "settings.prompt.help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "settings.prompt.title": "Prompt"
+                    },
                     "ko": {
                         "description": "오늘 데일리 노트를 바탕으로 열린 이슈의 완료 여부, 다음 행동과 검토 날짜를 갱신해요. 항목을 삭제하지 않아요.",
                         "name": "열린 이슈",
                         "settings.at.title": "시간",
-                        "settings.note.title": "열린 이슈 노트"
+                        "settings.note.title": "열린 이슈 노트",
+                        "settings.prompt.default": "오늘 데일리에 나온 증거만으로 열린 이슈를 갱신해 주세요. 끝났다는 증거가 있을 때만 닫고, 진척이 있으면 다음 행동과 검토 날짜를 고쳐 주세요. 근거가 없는 항목은 그대로 두세요. 새로 열린 일이 분명할 때만 추가해 주세요. 방치한 날짜를 세거나 압박하지 말고, 제목과 다음 행동은 짧고 구체적으로 써 주세요.\n",
+                        "settings.prompt.help": "사용 언어에 맞는 기본 프롬프트가 채워져 있어요. 자유롭게 수정해도 응답 형식은 유지돼요. 비우면 기본값으로 돌아가요.",
+                        "settings.prompt.title": "프롬프트"
                     }
                 }
             },
@@ -323,16 +349,30 @@
                 ],
                 "settings": [
                     {
+                        "key": "prompt",
+                        "title": "Prompt",
+                        "type": "text",
+                        "help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "default": "Act as a weekly scout for benefits and policy news in Korea. Compare the supplied catalog entries and news candidates with the owner's life profile. Favor confidence over quantity: include only items worth acting on, place conditionally relevant news on the watch list, and omit irrelevant, promotional or duplicate items.\nPrioritize near deadlines and the owner's current focus. For each useful catalog benefit, explain the application method, deadline and estimated amount when supplied. Clearly say that catalog information may be outdated and must be checked at the official link; never claim eligibility or verified amounts.\nWrite a notification-sized Markdown briefing with sections for immediate actions and items to review, omitting empty sections. Do not invent figures or facts. Watch items should explain why they may matter later and the life change that would make them relevant.\n"
+                    },
+                    {
                         "key": "profileNote",
                         "title": "Profile note",
                         "type": "string"
                     }
                 ],
                 "locales": {
+                    "en": {
+                        "settings.prompt.help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "settings.prompt.title": "Prompt"
+                    },
                     "ko": {
                         "description": "생활 프로필 노트를 한국의 생애주기별 혜택과 정책 소식에 맞춰 보고, 행동할 만한 내용을 매주 브리핑으로 전해요.",
                         "name": "생활 혜택",
-                        "settings.profileNote.title": "프로필 노트"
+                        "settings.profileNote.title": "프로필 노트",
+                        "settings.prompt.default": "한국의 지원 혜택과 정책 뉴스를 주 1회 살피는 스카우트예요. 제공된 카탈로그와 뉴스 후보를 주인의 생활 프로필에 비춰 평가해 주세요. 양보다 확신을 우선하고, 지금 행동할 가치가 있는 것만 브리핑에 담아 주세요. 상황이 바뀌면 유용할 뉴스는 관심 목록에, 무관한 내용·홍보·중복은 빼 주세요.\n기한이 임박한 항목과 현재 집중하는 일을 우선해 주세요. 혜택의 신청법·기한·예상액은 제공된 값만 사용하고, 카탈로그 기준이므로 공식 링크에서 확인해야 한다고 알려 주세요. 자격이나 금액을 검증했다고 말하지 마세요.\n알림 하나 분량의 마크다운으로 🎯 지금 챙길 것 / 📋 검토할 것을 정리하고 빈 항목은 생략해 주세요. 수치나 사실을 만들지 마세요. 관심 목록에는 나중에 필요한 이유와 어떤 생활 변화가 생기면 유효한지 적어 주세요.\n",
+                        "settings.prompt.help": "사용 언어에 맞는 기본 프롬프트가 채워져 있어요. 자유롭게 수정해도 응답 형식은 유지돼요. 비우면 기본값으로 돌아가요.",
+                        "settings.prompt.title": "프롬프트"
                     }
                 }
             },
@@ -498,6 +538,20 @@
                 ],
                 "settings": [
                     {
+                        "key": "prompt",
+                        "title": "Prompt",
+                        "type": "text",
+                        "help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "default": "Review Claude Code and Codex conversations on this computer for the inclusive date window supplied below. Summarize meaningful work, decisions and lessons into daily, weekly and existing topic notes; propose a new topic only when it is clearly distinct.\nProbe file structures first because CLI formats vary. Read Claude Code sessions in ~/.claude/projects/*/*.jsonl, project memory folders and ~/.claude/handoffs/latest.md. Read Codex rollouts in ~/.codex/sessions/YYYY/MM/DD/rollout-*.jsonl, ~/.codex/history.jsonl and ~/.codex/memories/. Use file discovery, reading and search tools; search or chunk large logs.\nFilter sidechains, tool chatter, system reminders, task notifications, hook feedback, review boilerplate and developer/reasoning instructions. Preserve meaningful user-authored content. Compare session claims with the supplied git history before describing committed work. Describe project status only from this window's sessions and git evidence, not old notes or memories. Record renames or absorbed projects in the daily; omit unsupported projects and avoid claims about long inactivity.\nPut each day's work in that day's daily. Add a weekly summary only when the week has ended. Use the supplied existing topic paths to select relevant topics; do not assume a local notes mirror. Prefer concrete, durable information and reciprocal related-topic links. With many sessions, prioritize meaningful work by working directory and keep short sessions concise.\n"
+                    },
+                    {
+                        "key": "topicsFolder",
+                        "title": "Topics folder",
+                        "type": "string",
+                        "help": "Folder containing topic notes. Default: topics. Requires read and write access to this prefix.",
+                        "default": "topics"
+                    },
+                    {
                         "key": "at",
                         "title": "Time",
                         "type": "time"
@@ -525,7 +579,7 @@
                         "key": "repos",
                         "title": "Repositories",
                         "type": "list",
-                        "help": "Globs of the git repositories to check sessions against. Default: ~/dev/*"
+                        "help": "Globs of repositories to check, e.g. ~/code/*. Empty means no repositories."
                     },
                     {
                         "key": "instructions",
@@ -535,6 +589,10 @@
                     }
                 ],
                 "locales": {
+                    "en": {
+                        "settings.prompt.help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "settings.prompt.title": "Prompt"
+                    },
                     "ko": {
                         "description": "매일 밤 Claude Code와 Codex 세션 및 git 기록을 데일리·주간·주제 노트에 정리하고 catchup/candidates에 새 주제를 제안해요.",
                         "name": "지난 작업 정리",
@@ -548,8 +606,13 @@
                         "settings.instructions.help": "무엇을 보고 제외할지, 어떻게 쓸지 기본 프롬프트에 덧붙여요. 응답 형식은 유지해요.",
                         "settings.instructions.title": "추가 지침",
                         "settings.model.title": "모델",
-                        "settings.repos.help": "세션과 대조할 git 저장소의 글롭 패턴이에요. 기본값: ~/dev/*",
-                        "settings.repos.title": "저장소"
+                        "settings.prompt.default": "이 컴퓨터의 Claude Code·Codex 대화를 제공된 시작일부터 종료일까지 살펴보고, 의미 있는 작업·결정·배운 점을 데일리·주간·기존 주제 노트에 남겨 주세요. 명백히 별개인 새 주제만 후보로 제안해 주세요.\nCLI마다 형식이 다르므로 파일 구조부터 확인해 주세요. Claude Code는 ~/.claude/projects/*/*.jsonl, 프로젝트 memory 폴더, ~/.claude/handoffs/latest.md를, Codex는 ~/.codex/sessions/YYYY/MM/DD/rollout-*.jsonl, ~/.codex/history.jsonl, ~/.codex/memories/를 살펴보세요. 파일 찾기·읽기·검색 도구를 쓰고 큰 로그는 검색하거나 나눠 읽어 주세요.\nsidechain, 도구 잡음, 시스템 알림, 작업 알림, 훅 피드백, 리뷰 보일러플레이트, developer·reasoning 지시는 걸러 주세요. 사용자가 직접 남긴 의미 있는 내용은 보존해 주세요. 실제 커밋 여부는 제공된 git 기록과 대조하고, 프로젝트 상태는 이번 기간의 세션·git 증거만으로 판단해 주세요. 옛 노트나 memory를 현재 상태처럼 옮기지 마세요. 이름 변경·흡수는 데일리에 남기고, 근거가 없는 프로젝트와 장기간 방치했다는 표현은 빼 주세요.\n그날 일은 그날 데일리에, 주간 요약은 한 주가 끝났을 때만 써 주세요. 제공된 기존 주제 경로로 관련 주제를 고르고 로컬 노트 미러가 있다고 가정하지 마세요. 구체적이고 오래 참고할 정보를 우선하고 관련 주제 링크는 양방향으로 제안해 주세요. 세션이 많으면 작업 디렉터리별로 중요한 것부터, 짧은 세션은 핵심만 정리해 주세요.\n",
+                        "settings.prompt.help": "사용 언어에 맞는 기본 프롬프트가 채워져 있어요. 자유롭게 수정해도 응답 형식은 유지돼요. 비우면 기본값으로 돌아가요.",
+                        "settings.prompt.title": "프롬프트",
+                        "settings.repos.help": "확인할 저장소의 glob 패턴이에요. 예: ~/code/*. 비우면 저장소를 확인하지 않아요.",
+                        "settings.repos.title": "저장소",
+                        "settings.topicsFolder.help": "주제 노트가 있는 폴더예요. 기본값은 topics예요. 이 경로의 읽기·쓰기 권한이 필요해요.",
+                        "settings.topicsFolder.title": "주제 폴더"
                     }
                 }
             },
@@ -576,6 +639,13 @@
                     "slack.thread"
                 ],
                 "settings": [
+                    {
+                        "key": "prompt",
+                        "title": "Prompt",
+                        "type": "text",
+                        "help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "default": "Summarize the Slack thread as a useful knowledge-base note. Start with two to four sentences explaining what was discussed, why, and the outcome. Then list decisions and action items, omitting sections that have none. Preserve the responsible person's name when stated. Do not invent facts, decisions, owners, or commitments. Keep the tone factual and concise.\n"
+                    },
                     {
                         "key": "appToken",
                         "title": "App token",
@@ -636,6 +706,10 @@
                     }
                 ],
                 "locales": {
+                    "en": {
+                        "settings.prompt.help": "Prefilled in your language. Edit freely; the answer format is kept. Clear to restore the default.",
+                        "settings.prompt.title": "Prompt"
+                    },
                     "ko": {
                         "description": "Slack의 Save to AIDE 단축키로 메시지의 전체 스레드를 채널별 폴더의 노트에 저장하고 요약과 할 일을 덧붙여요.",
                         "name": "Slack",
@@ -652,6 +726,9 @@
                         "settings.follow.title": "내 채널 팔로우",
                         "settings.ignore.help": "제외할 채널 이름이에요.",
                         "settings.ignore.title": "제외할 채널",
+                        "settings.prompt.default": "Slack 스레드를 나중에 다시 읽기 좋은 지식 노트로 정리해 주세요. 무엇을 왜 논의했고 결론이 무엇인지 첫 문단에 2~4문장으로 요약해 주세요. 이어서 결정과 할 일을 정리하되 없는 항목은 생략해 주세요. 담당자가 명시돼 있으면 이름을 남기고, 사실·결정·담당자·약속을 만들어 내지 마세요. 간결하고 담백하게 써 주세요.\n",
+                        "settings.prompt.help": "사용 언어에 맞는 기본 프롬프트가 채워져 있어요. 자유롭게 수정해도 응답 형식은 유지돼요. 비우면 기본값으로 돌아가요.",
+                        "settings.prompt.title": "프롬프트",
                         "settings.summarize.help": "스레드 위에 AI 요약과 할 일을 써요.",
                         "settings.summarize.title": "요약",
                         "settings.userToken.help": "앱을 설치한 뒤 OAuth & Permissions › User OAuth Token에 있는 토큰이에요. xoxp-로 시작해요.",

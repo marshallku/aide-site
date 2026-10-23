@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Steps } from "@astrojs/starlight/components";
+import { Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -49,13 +49,15 @@ If the AI call fails, the plugin tries again every 10 minutes until the next eve
 
 ## Settings
 
-<PluginSettings id="recap" defaults={{ at: "21:30", push: "never (no notification)", note: "briefings/{date}", prompt: "" }} />
+<PluginSettings id="recap" defaults={{ at: "21:30", push: "never (no notification)", note: "briefings/{date}" }} />
 
 **Notification.** Until you choose, the recap never notifies you, as `never` does, although the picker shows **Default**. Choose `force` to be notified every evening, or **Default** to let the Feed's sorting decide.
 
 **Write into.** `daily` puts the recap into today's daily note itself, in its own section (at the end, or where your template puts `{{slot recap.evening}}`). The recap then leaves its own earlier text out of what it reads, so it doesn't recap itself. If you edit the daily at the exact moment it reads it, it tries again 10 minutes later.
 
 **Prompt.** Your own instructions replace the built-in ones; the date, today's daily and the open loops still follow them.
+
+<Badge text="Next release" /> The field comes filled in with the built-in prompt, in the language plugins write in. The plugin keeps its answer rules after your text, whatever the prompt says. **Reset to default**, or clearing the field, brings back the built-in prompt. See [Prompts](/docs/plugins/overview/#prompts).
 
 ### Local keys
 

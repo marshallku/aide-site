@@ -5,7 +5,7 @@ sidebar:
     order: 20
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -174,6 +174,7 @@ To follow your channels for Radar, also turn on **Follow my channels**.
 - **Also allowed**: member ids look like `U01AB2CD3EF`. In Slack, open someone's profile, choose
   **⋮** and **Copy member ID**.
 - **Only these channels** and **Never these channels** take channel names, as Slack shows them.
+- **Prompt** <Badge text="Next release" />: what your AI is asked for when it summarizes a thread, filled in with the built-in instructions in the language plugins write in. Edit it to change what the summary covers or how long it is. The summary's shape stays: a paragraph, then **Decisions** and **Action items** as todos, with the headings in the language plugins write in. **Reset to default**, or clearing the field, brings back the built-in prompt. See [Prompts](/docs/plugins/overview/#prompts).
 
 Changing a setting restarts the plugin; it picks the change up within a minute.
 

@@ -5,7 +5,7 @@ sidebar:
     order: 16
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -88,6 +88,8 @@ Every field is optional; leave out what doesn't apply. The plugin also accepts `
 <PluginSettings id="benefits" defaults={{ profileNote: "profile/life" }} />
 
 **Profile note** is a note path. Empty means `profile/life`.
+
+**Prompt.** <Badge text="Next release" /> How your AI weighs the week's benefits and news and writes the briefing, filled in with the built-in instructions in the language plugins write in. They're written for Korea's benefits and policy news, like the rest of the plugin. Edit them to change what counts as worth acting on or how the briefing reads. The answer format and the rules are added after your text and stay as they are: only the material given, no made-up figures or eligibility, catalog figures marked as such, and links copied exactly. **Reset to default**, or clearing the field, brings back the built-in prompt. See [Prompts](/docs/plugins/overview/#prompts).
 
 ### Local keys
 

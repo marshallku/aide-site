@@ -5,7 +5,7 @@ sidebar:
     order: 12
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -36,6 +36,8 @@ import PluginSettings from "#components/PluginSettings.astro";
 ### 내보내기 전용
 
 **동기화 방향**을 `export`(**내보내기 전용**)로 정하면 AIDE만 파일을 써요. 저장소에서는 아무것도 가져오지 않아요. 누군가 저장소에서 고친 파일은 `conflicts/` 아래에 노트로 보관한 뒤 AIDE 쪽 버전으로 덮어써요. `export`로 바꾸면 그 전에 양방향 동기화를 한 번 더 실행해서, 바꾸기 전에 고친 내용을 잃지 않아요. 내보내기 전용 모드에서도 한 번에 20개 넘는 파일을 교체하려 하면 동기화를 멈춰요.
+
+<Badge text="다음 릴리스" /> 그 `conflicts/` 노트 맨 위에 저장소에서 고친 파일을 바꿨다고 알리는 줄은 플러그인이 쓰는 언어로 쓰여요.
 
 ## 시작하기 전에
 

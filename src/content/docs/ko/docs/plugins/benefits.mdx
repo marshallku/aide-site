@@ -5,7 +5,7 @@ sidebar:
     order: 16
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -88,6 +88,8 @@ import PluginSettings from "#components/PluginSettings.astro";
 <PluginSettings id="benefits" defaults={{ profileNote: "profile/life" }} />
 
 **프로필 노트**는 노트 경로예요. 비워 두면 `profile/life`를 써요.
+
+**프롬프트.** <Badge text="다음 릴리스" /> 그 주의 혜택과 뉴스를 AI가 어떻게 따지고 브리핑을 어떻게 쓸지 정하는 지침이에요. 기본 지침이 플러그인이 쓰는 언어로 채워져 있고, 플러그인의 나머지처럼 한국의 혜택과 정책 뉴스에 맞춰 쓰여 있어요. 무엇을 챙길 만하다고 볼지, 브리핑을 어떻게 쓸지 바꾸려면 고쳐요. 응답 형식과 규칙은 내 지침 뒤에 그대로 붙어요. 받은 자료만 쓰고, 수치나 자격을 지어내지 않고, 카탈로그 수치는 카탈로그 기준이라고 밝히고, 링크는 그대로 옮겨요. <strong>기본값으로 되돌리기</strong>를 누르거나 칸을 비우면 기본 프롬프트로 돌아가요. [프롬프트](/ko/docs/plugins/overview/#프롬프트)를 참고하세요.
 
 ### 로컬 키
 

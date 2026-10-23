@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -50,13 +50,15 @@ Material that can't be read is skipped: without weather settings there's no weat
 
 ## Settings
 
-<PluginSettings id="briefing" defaults={{ at: "07:00", push: "force (always notify)", note: "briefings/{date}", prompt: "" }} />
+<PluginSettings id="briefing" defaults={{ at: "07:00", push: "force (always notify)", note: "briefings/{date}" }} />
 
 **Notification.** Until you choose, the briefing notifies you every morning, as `force` does, although the picker shows **Default**. Choose `never` to read it in the Feed only. Choosing **Default** yourself lets the Feed's sorting decide whether it's worth a notification.
 
 **Write into.** `daily` puts the briefing into today's daily note, in its own section at the end (or where your template puts `{{slot briefing.morning}}`). Any other value is a note path, with `{date}` replaced by the day in `YYYY-MM-DD`.
 
 **Prompt.** Your own instructions replace the built-in ones entirely. The plugin still adds the date and all the gathered material after them, so write what you want done with it, for example "Three bullet points: weather, the first meeting, one todo."
+
+<Badge text="Next release" /> The field comes filled in with the built-in prompt, in the language plugins write in, so you change it rather than start from nothing. The plugin keeps its answer rules after your text (Markdown for its own section, only the material given), whatever the prompt says. **Reset to default**, or clearing the field, brings back the built-in prompt. See [Prompts](/docs/plugins/overview/#prompts).
 
 ### Local keys
 
