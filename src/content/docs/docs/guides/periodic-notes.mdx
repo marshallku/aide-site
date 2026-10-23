@@ -5,14 +5,14 @@ sidebar:
     order: 2
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 Periodic notes are one note per day, week, month, quarter or year, made from a template the first time you open them. They're where AIDE puts the day's todos, your calendar agenda and what plugins write about a day.
 
 ## Opening them
 
 - **Today** opens today's daily note: <kbd>⌘</kbd><kbd>T</kbd> on the Mac, <kbd>Ctrl</kbd><kbd>T</kbd> on Linux, or the **Today** tile in the Wiki.
-- The Wiki's **Journal** section has a tile for each period you've turned on: **Today**, **This week**, **This month**, **Quarter** and **This year**. **Calendar** beside the heading shows a month calendar with week numbers; click a day, a week or the month to open its note.
+- The Wiki's **Journal** section has a tile for each period you've turned on: **Today**, **This week**, **This month**, **Quarter** and **This year**. **Calendar** beside the heading shows a month calendar with week numbers; click a day, a week or the month to open its note. <Badge text="Next release" /> Today has a ring around it, and the day or week of the note you have open is filled in, so you can see where a click took you. On the Mac and Linux that's the note in the selected tab; on the iPhone, the one you last opened from the Wiki.
 - The command palette lists this week's, month's, quarter's and year's notes.
 - A link to a periodic note that doesn't exist yet, such as `[[2026-10-23]]`, creates it when you follow it.
 - `aide://today` opens today's note from outside the app, and `aidectl daily` prints or creates it from the command line (see [aidectl](/docs/developers/aidectl/)).
