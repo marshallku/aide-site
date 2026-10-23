@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 A device plugin adds something to the AIDE app itself: a tab, a sheet you open on a note, a view in the
 desktop's right panel, a command, or a job that runs at a set time. It runs on the device, inside a
@@ -25,6 +25,29 @@ The list shows each installed plugin with its state: **On**, **Off**, **Update a
 On the Mac you can also open **Browse Plugins** from the toolbar or the command palette
 (<kbd>⇧</kbd><kbd>⌘</kbd><kbd>P</kbd>); on Linux from the ribbon or with
 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>P</kbd>.
+
+### Core and community plugins <Badge text="Next release" />
+
+Settings splits plugins the way Obsidian does:
+
+- **Core plugins** come with AIDE and update with it: the [server plugins](/docs/plugins/overview/) and, on
+  the iPhone, SSH. On Linux it's the **Core plugins** page.
+- **Community plugins** are the ones you install yourself, from the plugin index or a link: everything on
+  this page. On Linux it's the **Community plugins** page. The browse command is called **Browse
+  community plugins**.
+
+The **Community plugins** section has:
+
+- **Restricted mode**: while it's on, no community plugin runs in this workspace (their tabs, panels,
+  commands and set times stop). What's installed and its settings are kept, and turning it off brings
+  them back.
+- The installed plugins, each saying **Restricted** while restricted mode is on.
+- **From the community**: up to three plugins in the index that you haven't installed, each opening its
+  install screen.
+
+In **Browse community plugins** each plugin also says who made it, its version and when that version was
+published, and the install screen links its source code. The index can be browsed on the web too, at
+[marshallku.github.io/aide-plugins](https://marshallku.github.io/aide-plugins/).
 
 ## Install from the index
 
