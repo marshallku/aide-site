@@ -8,7 +8,7 @@ sidebar:
 import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 Hosting turns a vault on your Mac or Linux computer into a server of its own. You get what local mode
-leaves out (server plugins, the Feed, AI with your own key, Claude through `aidectl mcp`), your notes stay
+leaves out (server plugins, the Feed, AI with your own key, Claude Code and other MCP apps reading your notes through `aidectl mcp`), your notes stay
 Markdown files in the same folder, and you don't run a separate server.
 
 ## What hosting runs
@@ -48,6 +48,8 @@ Once it's running, a **Host** group takes the place of **Notes** in Settings. It
 - **Vault**: the folder being served.
 - **Running**: the socket the host answers on.
 - **Log**: the host's log file. Open it when something goes wrong.
+- <Badge text="Next release" /> **Status: Running** instead, with the socket and the **Log** folded under
+  **Show details** (on Linux, a **Details** row that expands).
 - **Devices over the network…**, **Keep running while I'm logged in**, **Back up…** and **Stop
   hosting…**, which this page covers below.
 - **Vaults**, **Recently deleted** and **Leave out of notes**, as in local mode.
