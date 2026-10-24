@@ -1,5 +1,6 @@
 // The landing page's small behaviours: reveal on scroll, the theme switch (shared with Starlight's
-// "starlight-theme" setting, so the manual opens in the same theme) and the copy buttons.
+// "starlight-theme" setting, so the manual opens in the same theme), the hero's platform and the copy
+// buttons.
 
 const THEME_KEY = "starlight-theme";
 
@@ -59,6 +60,22 @@ function setupThemeSwitch() {
     });
 }
 
+// The hero offers the Mac; on Linux it offers the install script instead. The download section lists both.
+function setupPlatform() {
+    const agent = navigator.userAgent;
+    if (!agent.includes("Linux") || agent.includes("Android")) return;
+    document.querySelectorAll("[data-mac-only]").forEach((element) => element.remove());
+    for (const element of document.querySelectorAll<HTMLElement>("[data-linux-label]")) {
+        element.textContent = element.dataset.linuxLabel ?? "";
+    }
+    for (const button of document.querySelectorAll<HTMLButtonElement>("[data-linux-command]")) {
+        const command = button.dataset.linuxCommand ?? "";
+        button.dataset.copy = command;
+        const code = button.querySelector("code");
+        if (code) code.textContent = command;
+    }
+}
+
 function setupCopyButtons() {
     for (const button of document.querySelectorAll<HTMLButtonElement>("[data-copy]")) {
         const label = button.querySelector("[data-copy-label]");
@@ -79,4 +96,5 @@ function setupCopyButtons() {
 document.documentElement.classList.remove("no-js");
 setupReveal();
 setupThemeSwitch();
+setupPlatform();
 setupCopyButtons();

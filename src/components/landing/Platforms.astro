@@ -1,6 +1,6 @@
 ---
 import Icon from "#components/Icon.astro";
-import { BREW, COPY, INSTALLER, RELEASES, docsHref, type Lang } from "#lib/landing-copy";
+import { BREW, COPY, INSTALLER, LINUX_LIBRARIES, RELEASES, docsHref, type Lang } from "#lib/landing-copy";
 
 interface Props {
     lang: Lang;
@@ -9,9 +9,22 @@ interface Props {
 const { lang } = Astro.props;
 const copy = COPY[lang].platforms;
 const hero = COPY[lang].hero;
-const commands = [
-    { platform: copy.mac, command: BREW, note: "Homebrew" },
-    { platform: copy.linux, command: INSTALLER, note: copy.installer },
+const cards = [
+    {
+        platform: copy.mac,
+        steps: [
+            { note: "Homebrew", command: BREW },
+            { note: copy.macScript, command: INSTALLER },
+        ],
+    },
+    {
+        platform: copy.linux,
+        steps: [
+            { note: copy.linuxArch, command: LINUX_LIBRARIES.arch },
+            { note: copy.linuxUbuntu, command: LINUX_LIBRARIES.ubuntu },
+            { note: copy.linuxScript, command: INSTALLER },
+        ],
+    },
 ];
 ---
 
@@ -22,17 +35,23 @@ const commands = [
             <h2 class="display">{copy.title}</h2>
         </div>
         <div class="cards">
-            {commands.map(({ platform, command, note }, index) => (
+            {cards.map(({ platform, steps }, index) => (
                 <article data-reveal style={`--delay: ${index * 0.08}s`}>
                     <h3>{platform.name}</h3>
                     <p class="req">{platform.req}</p>
-                    <p class="note">{note}</p>
-                    <button class="command" type="button" data-copy={command} data-copied={hero.copied}>
-                        <code>{command}</code>
-                        <span class="copy" data-copy-label>
-                            {hero.copy}
-                        </span>
-                    </button>
+                    <div class="steps">
+                        {steps.map(({ note, command }) => (
+                            <>
+                                <p class="note">{note}</p>
+                                <button class="command" type="button" data-copy={command} data-copied={hero.copied}>
+                                    <code>{command}</code>
+                                    <span class="copy" data-copy-label>
+                                        {hero.copy}
+                                    </span>
+                                </button>
+                            </>
+                        ))}
+                    </div>
                 </article>
             ))}
             <article class="soon" data-reveal style="--delay: 0.16s">
@@ -83,6 +102,11 @@ const commands = [
         color: var(--ink-2);
         font-size: 0.9rem;
     }
+    .steps {
+        display: flex;
+        flex-direction: column;
+        margin-top: auto;
+    }
     .note {
         margin: 1.5rem 0 0.5rem;
         color: var(--ink-3);
@@ -92,7 +116,6 @@ const commands = [
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        margin-top: auto;
         padding: 0.7rem 0.75rem 0.7rem 0.9rem;
         border: 0;
         border-radius: 12px;

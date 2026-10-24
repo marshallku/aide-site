@@ -15,6 +15,7 @@ const en = {
         title: ["A personal assistant", "you own, end to end."],
         lede: "AIDE keeps your notes and todos as plain Markdown, files what you jot down into your wiki, and sorts everything that happens around you by what it needs from you. On your Mac, your Linux desktop and your iPhone, with a server that is yours.",
         primary: "Download for Mac",
+        primaryLinux: "Download for Linux",
         secondary: "Read the manual",
         copy: "Copy",
         copied: "Copied",
@@ -170,7 +171,10 @@ const en = {
         mac: { name: "Mac", req: "macOS 14 or later · Apple silicon and Intel" },
         linux: { name: "Linux", req: "x86_64 · GTK 4 and libadwaita" },
         iphone: { name: "iPhone", req: "iOS 17 or later", status: "In TestFlight beta, not public yet" },
-        installer: "Or the installer, for macOS and Linux",
+        macScript: "Or the install script",
+        linuxArch: "First the GTK libraries, on Arch",
+        linuxUbuntu: "Or on Ubuntu",
+        linuxScript: "Then the install script, without sudo",
         releases: "All releases",
     },
     closing: {
@@ -210,6 +214,7 @@ const ko: Copy = {
         title: ["처음부터 끝까지,", "내가 가진 개인 비서."],
         lede: "AIDE는 노트와 할 일을 평범한 마크다운으로 남기고, 대충 적어 둔 메모를 위키로 옮겨 주고, 주변에서 일어나는 일을 내가 해야 할 일에 따라 나눠 줘요. Mac과 Linux 데스크톱, iPhone에서 돌아가고, 서버도 내 것이에요.",
         primary: "Mac용 다운로드",
+        primaryLinux: "Linux용 다운로드",
         secondary: "설명서 읽기",
         copy: "복사",
         copied: "복사됨",
@@ -361,7 +366,10 @@ const ko: Copy = {
         mac: { name: "Mac", req: "macOS 14 이상 · Apple 실리콘과 Intel" },
         linux: { name: "Linux", req: "x86_64 · GTK 4와 libadwaita" },
         iphone: { name: "iPhone", req: "iOS 17 이상", status: "TestFlight 베타 중, 아직 공개 전" },
-        installer: "macOS와 Linux용 설치 스크립트",
+        macScript: "또는 설치 스크립트",
+        linuxArch: "먼저 GTK 라이브러리를 설치해요. Arch에서는",
+        linuxUbuntu: "Ubuntu에서는",
+        linuxScript: "그다음 설치 스크립트를 실행해요. sudo는 필요 없어요",
         releases: "모든 릴리스",
     },
     closing: {
@@ -392,6 +400,11 @@ export const COPY: Record<Lang, Copy> = { en, ko };
 export const BREW = "brew install --cask marshallku/tap/aide";
 export const INSTALLER =
     "curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/install.sh | bash";
+// The libraries the Linux app takes from the distribution; install.sh names the same when one is missing.
+export const LINUX_LIBRARIES = {
+    arch: "sudo pacman -S gtk4 libadwaita webkitgtk-6.0 libheif vte4 gst-plugins-good gst-plugins-bad",
+    ubuntu: "sudo apt install libgtk-4-1 libadwaita-1-0 libwebkitgtk-6.0-4 libheif1 libvte-2.91-gtk4-0 gstreamer1.0-plugins-good gstreamer1.0-plugins-bad",
+};
 export const RELEASES = "https://github.com/marshallku/aide-releases/releases";
 
 /// A docs path in the page's language: `/docs/x/` or `/ko/docs/x/`.

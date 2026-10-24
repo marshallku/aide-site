@@ -18,7 +18,7 @@ const hero = COPY[lang].hero;
         <p class="lede">{copy.body}</p>
         <div class="actions">
             <a class="button button-primary" href="#download">
-                {hero.primary}
+                <span data-linux-label={hero.primaryLinux}>{hero.primary}</span>
             </a>
             <a class="button button-ghost" href={docsHref(lang, "getting-started/introduction")}>
                 {copy.docs} →
