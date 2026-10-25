@@ -1,0 +1,137 @@
+---
+// /plugins/<id>/: one plugin of the public index. On an iPhone with AIDE, a link to this page from
+// elsewhere opens the plugin in the app (a universal link); Open in AIDE does the same from here.
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+
+import { describeCapability, hasManualPage, reportHref, shown, type CommunityPlugin } from "#lib/community";
+import type { Locale } from "#lib/plugins";
+
+interface Props {
+    plugin: CommunityPlugin;
+    locale: Locale;
+}
+
+const { plugin, locale } = Astro.props;
+const prefix = locale === "ko" ? "/ko" : "";
+const copy = {
+    en: {
+        version: "Version",
+        author: "By",
+        updated: "Published",
+        asks: "Asks to",
+        nothing: "Nothing beyond showing its page",
+        open: "Open in AIDE",
+        manual: "Read about it in the manual",
+        report: "Report a problem",
+        get: "Don't have AIDE yet? Get it",
+        all: "All community plugins",
+    },
+    ko: {
+        version: "버전",
+        author: "만든 사람",
+        updated: "게시일",
+        asks: "요청 권한",
+        nothing: "페이지 표시 외에는 없음",
+        open: "AIDE에서 열기",
+        manual: "설명서에서 자세히 보기",
+        report: "문제 신고",
+        get: "아직 AIDE가 없나요? 받기",
+        all: "모든 커뮤니티 플러그인",
+    },
+}[locale];
+const report = reportHref(plugin);
+const { name, description } = shown(plugin, locale);
+---
+
+<StarlightPage frontmatter={{ title: name, description }}>
+    <p>{description}</p>
+    <dl class="community-facts not-content">
+        <div>
+            <dt>{copy.version}</dt>
+            <dd>{plugin.version}</dd>
+        </div>
+        {plugin.author && (
+            <div>
+                <dt>{copy.author}</dt>
+                <dd>{plugin.author}</dd>
+            </div>
+        )}
+        {plugin.updated && (
+            <div>
+                <dt>{copy.updated}</dt>
+                <dd>{plugin.updated}</dd>
+            </div>
+        )}
+        <div>
+            <dt>{copy.asks}</dt>
+            <dd>
+                {plugin.capabilities.length === 0
+                    ? copy.nothing
+                    : plugin.capabilities.map((capability) => describeCapability(capability, locale)).join(" · ")}
+            </dd>
+        </div>
+    </dl>
+    <p class="community-actions not-content">
+        <a class="primary" href={`aide://plugin/${plugin.id}`}>
+            {copy.open}
+        </a>
+        {report && <a href={report}>{copy.report} ↗</a>}
+    </p>
+    <ul>
+        {hasManualPage(plugin.id) && (
+            <li>
+                <a href={`${prefix}/docs/plugins/${plugin.id}/`}>{copy.manual}</a>
+            </li>
+        )}
+        <li>
+            <a href={`${prefix}/#download`}>{copy.get}</a>
+        </li>
+        <li>
+            <a href={`${prefix}/plugins/`}>{copy.all}</a>
+        </li>
+    </ul>
+</StarlightPage>
+
+<style>
+    .community-facts {
+        display: grid;
+        gap: 0.5rem;
+        margin: 1.5rem 0;
+        padding: 1rem 1.25rem;
+        border: 1px solid var(--sl-color-hairline-light);
+        border-radius: var(--radius-m);
+        background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+        font-size: var(--sl-text-sm);
+    }
+    .community-facts div {
+        display: grid;
+        grid-template-columns: 9.5rem 1fr;
+        gap: 1rem;
+    }
+    .community-facts dt {
+        color: var(--sl-color-gray-3);
+    }
+    .community-facts dd {
+        margin: 0;
+    }
+    @media (max-width: 40rem) {
+        .community-facts div {
+            grid-template-columns: 1fr;
+            gap: 0.15rem;
+        }
+    }
+    .community-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+    }
+    .community-actions .primary {
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        background: var(--sl-color-accent);
+        color: var(--sl-color-text-invert);
+        font-weight: 600;
+        text-decoration: none;
+    }
+</style>

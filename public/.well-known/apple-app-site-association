@@ -1,0 +1,13 @@
+{
+    "applinks": {
+        "details": [
+            {
+                "appIDs": ["8QNJMX7JJ2.com.marshallku.aide"],
+                "components": [
+                    { "/": "/plugins/?*", "comment": "A community plugin's page opens it in AIDE" },
+                    { "/": "/ko/plugins/?*", "comment": "The same page in Korean" }
+                ]
+            }
+        ]
+    }
+}

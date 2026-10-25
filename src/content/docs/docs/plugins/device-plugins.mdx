@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 A device plugin adds something to the AIDE app itself: a tab, a sheet you open on a note, a view in the
 desktop's right panel, a command, or a job that runs at a set time. It runs on the device, inside a
@@ -132,6 +132,7 @@ Choose an installed plugin in the list to see:
   **Run on schedule** turns all of them off and on; turning it back on doesn't catch up what was
   skipped.
 - **Access you approved**, and **Source**, the address it came from.
+  <Badge text="Next release" /> **Report a problem** there opens a new issue on the plugin's repository.
 - **Go back to the previous version** and **Remove**.
 
 ## Update, roll back, remove
@@ -154,6 +155,20 @@ hash of each file, so what installs is exactly what was approved.
 
 The index can also withdraw a version. A withdrawn plugin is turned off and shows **Withdrawn** with
 the reason. It stays off until you choose **Turn on anyway**; remove it if you don't trust it.
+
+### On the iPhone
+
+<Badge text="Next release" /> AIDE on the iPhone, like the Mac App Store build, runs only plugins the public
+index lists, as the App Store asks:
+
+- There's no **Add from a URL** and no **Index** field. With a server, the iPhone reads the public index
+  itself, not the server's copy.
+- A plugin installed earlier from a link or another index says **Not in the index** and doesn't run. Its
+  settings and data are kept: remove it, or install the index's version. When the index lists a different
+  version of it, its screen says so and offers **Update**.
+- A withdrawn plugin has no **Turn on anyway**.
+- Every plugin in the index has a page under [Community plugins](/plugins/). On an iPhone with AIDE, a
+  link to that page, or **Open in AIDE** on it, opens the plugin's install screen.
 
 <Aside>
 The index can list an older version of a plugin than the one these pages describe. **Browse

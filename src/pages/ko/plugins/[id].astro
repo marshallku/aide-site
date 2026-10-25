@@ -1,0 +1,12 @@
+---
+import CommunityPluginPage from "#components/CommunityPluginPage.astro";
+import { COMMUNITY_PLUGINS } from "#lib/community";
+
+export function getStaticPaths() {
+    return COMMUNITY_PLUGINS.map((plugin) => ({ params: { id: plugin.id }, props: { plugin } }));
+}
+
+const { plugin } = Astro.props;
+---
+
+<CommunityPluginPage plugin={plugin} locale="ko" />

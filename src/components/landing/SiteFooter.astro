@@ -35,6 +35,12 @@ const year = new Date().getFullYear();
                 <li>
                     <a href={RELEASES}>{copy.links.releases}</a>
                 </li>
+                <li>
+                    <a href={lang === "ko" ? "/ko/plugins/" : "/plugins/"}>{copy.links.community}</a>
+                </li>
+                <li>
+                    <a href={lang === "ko" ? "/ko/privacy/" : "/privacy/"}>{copy.links.policy}</a>
+                </li>
             </ul>
         </div>
         <div>

@@ -1,0 +1,59 @@
+---
+title: Privacy policy
+description: What the developer of AIDE receives from the apps, what goes to the services you set up, and what never leaves your devices.
+---
+
+AIDE is made by Marshall Ku. This policy covers the AIDE apps for iPhone, Mac and Linux and the services
+the developer runs for them. It was last updated on October 25, 2026.
+
+## The short version
+
+- There's no AIDE account, no analytics, no ads and no tracking.
+- Your notes, todos and settings stay on your device, on a computer that hosts your vault, or on a server
+  you run. The developer never receives them.
+- What leaves your devices goes where you set it up: your own server, or the AI provider you choose.
+
+## What the developer receives
+
+- **Notifications to an iPhone.** A server without its own Apple push key sends iPhone notifications
+  through the developer's push relay. The relay passes each notification's title and body to Apple and
+  doesn't store them. When a delivery fails, its log keeps a short hash of the device's notification token
+  (not the token itself), so a broken device can be told apart. Nothing in it names you.
+- **Nothing else.** The apps don't report usage, crashes or errors to the developer. (If you turned on
+  **Share With App Developers** in your iPhone's or Mac's settings, Apple passes crash reports on.)
+
+## What goes to services you set up
+
+- **Your server or host.** In server mode, the app sends your notes, todos and settings to the server you
+  connected to, over TLS. That server is yours, or run by whoever you chose.
+- **The AI you set up.** AI runs only where you set it up: an Anthropic API key in the app, Claude Code or
+  Codex on your computer, your own gateway, or your server's AI. Then the assistant, Organize and the other
+  AI features send what they need (the messages you write, your open todos, today's events, the notes the
+  assistant reads) to that provider, under the account it uses. The provider keeps them according to its
+  own policy and that account's settings. With no AI set up, nothing goes to an AI provider.
+  [Privacy and security](/docs/self-hosting/privacy/) lists every feature and what it sends.
+- **GitHub.** The app reads the plugin index and plugin files from GitHub Pages, and AIDE from this website
+  on a Mac or Linux computer checks for updates on GitHub, the way a browser loads a page. No personal
+  data is sent.
+- **Apple.** On the iPhone and Mac, speech you dictate is turned into text on the device, and the Calendar
+  reads the calendars already on it.
+
+## What stays on your device
+
+Voice and meeting audio, your device's calendars, a device plugin's own storage, and, without a server,
+all of your notes. See [Privacy and security](/docs/self-hosting/privacy/) for the details.
+
+## Children
+
+AIDE isn't directed at children and collects nothing from anyone.
+
+## Your choices
+
+You can use AIDE with no server and no AI. You can delete your notes, a device, or the whole vault from
+the app at any time. Removing the app removes what it kept in its own storage; a folder you picked for
+your notes stays where it is.
+
+## Contact
+
+Questions about this policy: open an issue at
+[github.com/marshallku/aide-releases](https://github.com/marshallku/aide-releases/issues).

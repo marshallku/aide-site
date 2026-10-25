@@ -18,7 +18,8 @@ export default defineConfig({
     integrations: [
         starlight({
             title: "AIDE",
-            plugins: [starlightLinksValidator({ errorOnLocalLinks: false })],
+            // The community plugin pages are custom pages (src/pages/plugins), which it can't see.
+            plugins: [starlightLinksValidator({ errorOnLocalLinks: false, exclude: ["/plugins/", "/ko/plugins/"] })],
             description: "A personal assistant you own end to end: notes, todos, a feed triaged by AI, and plugins.",
             logo: { src: "./src/assets/aide/app-icon.png", alt: "AIDE" },
             favicon: "/favicon.svg",

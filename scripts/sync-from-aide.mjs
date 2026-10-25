@@ -1,6 +1,6 @@
 // Copies what the site shares with AIDE from a checkout of the (private) AIDE repo, so the build
 // itself never needs it: the design tokens as CSS, the app mark, the icon set, the assistant's
-// characters and the plugins' manifests the manual documents. Run it when AIDE changes:
+// characters and the plugins' manifests the manual documents, and the public plugin index's list. Run it when AIDE changes:
 // `AIDE_REPO=~/dev/aide node scripts/sync-from-aide.mjs`.
 //
 // `--check` copies nothing: it exits 1 when the plugins' manifests differ from src/data/plugins.json,
@@ -96,6 +96,25 @@ for (const id of ["mochi", "piyo"]) {
 copyFileSync(join(AIDE, "design/characters/rig.mjs"), join(ROOT, "src/scripts/rig.mjs"));
 
 writeFileSync(PLUGINS, pluginsJson(AIDE));
+
+// The public plugin index the apps install from: each plugin it lists gets a page at /plugins/<id>/
+// (the iPhone app's universal link to it, App Review 4.7).
+const INDEX = "https://marshallku.github.io/aide-plugins/plugins.json";
+const index = await (await fetch(INDEX)).json();
+const community = {
+    note: `The public plugin index (${INDEX}), as scripts/sync-from-aide.mjs last read it.`,
+    plugins: index.plugins.map(({ id, name, description, author, version, capabilities, repo, updated }) => ({
+        id,
+        name,
+        description,
+        author,
+        version,
+        capabilities: capabilities ?? [],
+        repo,
+        updated,
+    })),
+};
+writeFileSync(join(ROOT, "src/data/community-plugins.json"), `${JSON.stringify(community, null, 4)}\n`);
 
 const source = {
     note: "The AIDE checkout these files were copied from (scripts/sync-from-aide.mjs).",

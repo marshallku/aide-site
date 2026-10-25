@@ -1,0 +1,68 @@
+---
+// /plugins/: every plugin in the public index with a link to its page, and the rules the index keeps
+// (App Review 4.7: the store app's software is listed, reviewed, reportable and fit for everyone).
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+
+import { COMMUNITY_PLUGINS, shown } from "#lib/community";
+import type { Locale } from "#lib/plugins";
+
+interface Props {
+    locale: Locale;
+}
+
+const { locale } = Astro.props;
+const prefix = locale === "ko" ? "/ko" : "";
+const copy = {
+    en: {
+        title: "Community plugins",
+        description: "Every plugin in the public AIDE plugin index, the only plugins the App Store app installs.",
+        lede: "These are the plugins in the AIDE plugin index. AIDE from the App Store installs only these; on a Mac or Linux computer with AIDE from this website, you can also add one from a link. Open a plugin's page on your iPhone to install it in AIDE.",
+        rules: "How plugins are listed",
+        list: [
+            "Every version is reviewed before it's listed. The index pins each file by its hash, and AIDE checks every file against the index before it installs a plugin.",
+            "Plugins must suit everyone: AIDE is rated 4+, and the index doesn't list anything meant for an older audience, so no plugin needs an age check.",
+            "A plugin runs in a sandbox, with only the access you approve when you install it.",
+        ],
+        report: "Report a problem",
+        reportText:
+            "Use **Report a problem** on a plugin's page here or in AIDE (on the plugin's page in **Settings**). It opens an issue on the index's repository, and reports get an answer within 7 days. A plugin found harmful is withdrawn from the index: it turns off in every AIDE the next time AIDE reads the index, and AIDE from the App Store can't turn it back on.",
+    },
+    ko: {
+        title: "커뮤니티 플러그인",
+        description: "공개 AIDE 플러그인 목록에 있는 모든 플러그인이에요. App Store의 AIDE는 이 플러그인만 설치해요.",
+        lede: "AIDE 플러그인 목록에 있는 플러그인이에요. App Store에서 받은 AIDE는 이 플러그인만 설치해요. 이 웹사이트에서 받은 Mac이나 Linux의 AIDE에서는 링크로도 추가할 수 있어요. iPhone에서 플러그인 페이지를 열면 AIDE에서 바로 설치할 수 있어요.",
+        rules: "목록에 오르는 방식",
+        list: [
+            "모든 버전은 목록에 오르기 전에 검토를 거쳐요. 목록은 파일마다 해시를 기록하고, AIDE는 설치하기 전에 모든 파일을 목록과 대조해요.",
+            "플러그인은 누구나 쓸 수 있어야 해요. AIDE는 4+ 등급이고 목록에는 나이 제한이 필요한 플러그인을 올리지 않아서, 연령 확인이 필요한 플러그인은 없어요.",
+            "플러그인은 샌드박스에서 실행되고, 설치할 때 허용한 권한만 쓸 수 있어요.",
+        ],
+        report: "문제 신고",
+        reportText:
+            "여기나 AIDE(**설정**의 플러그인 페이지)에서 **문제 신고**를 누르세요. 플러그인 목록 저장소에 이슈가 열리고, 신고에는 7일 안에 답해요. 해로운 것으로 확인된 플러그인은 목록에서 철회돼요. AIDE가 다음에 목록을 읽을 때 모든 AIDE에서 꺼지고, App Store의 AIDE에서는 다시 켤 수 없어요.",
+    },
+}[locale];
+const bold = (text: string) => text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+---
+
+<StarlightPage frontmatter={{ title: copy.title, description: copy.description }}>
+    <p>{copy.lede}</p>
+    <ul>
+        {COMMUNITY_PLUGINS.map((plugin) => {
+            const { name, description } = shown(plugin, locale);
+            return (
+                <li>
+                    <a href={`${prefix}/plugins/${plugin.id}/`}>{name}</a>: {description}
+                </li>
+            );
+        })}
+    </ul>
+    <h2 id="rules">{copy.rules}</h2>
+    <ul>
+        {copy.list.map((line) => (
+            <li>{line}</li>
+        ))}
+    </ul>
+    <h2 id="report">{copy.report}</h2>
+    <p set:html={bold(copy.reportText)} />
+</StarlightPage>
