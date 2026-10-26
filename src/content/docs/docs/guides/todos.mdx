@@ -131,7 +131,9 @@ You can also just type a todo into any note.
 Click a todo to open its note at that line. Its menu (right-click on the Mac and Linux, touch and hold on the iPhone; on the iPhone, swipe left for **Done** and right for **Start**) has:
 
 - **Done**, **In progress**, **To do**, **Cancel**, and **Migrated** in the Bullet Journal preset.
-- **Move to today** and **Move to tomorrow**: the todo, its memo and its subtasks move to that day's daily note, and the line where it was becomes `[>]`. An earlier day's group has a **Move to today** button for all of its todos.
+- **Move to today** and **Move to tomorrow**: the todo, its memo and its subtasks move to that day's daily note, and the line where it was becomes `[>]`. An earlier day's group has a **Move to today** button for all of its todos. <Badge text="Next release" /> A todo that moves out of a daily note takes that day along as its created date (` ➕ 2026-10-20`) unless it has one, so its [age](#old-todos) carries over.
+- <Badge text="Next release" /> **Move to a day…**: the same, to a day you pick from today on.
+- <Badge text="Next release" /> **Someday**: adds your someday tag (`#someday`) so the todo waits under **Someday / maybe** at the end of **All**, out of the way. It isn't asked about as an old todo.
 - **Add memo…** or **Edit memo…**: the memo under the todo.
 - **Set time…**: how long it should take, as `25m`, `1h` or `1h30m`. AIDE writes it as `[estimate:: …]` and shows it as a timer chip.
 - **Schedule…** (today's todos): a start and an end, such as `09:00` and `10:30`; the end can be left out. AIDE writes it as the todo's time block. **Remove** takes it away.
@@ -146,6 +148,41 @@ For counted work-and-break cycles, see the [Pomodoro plugin](/docs/plugins/pomod
 ### The assistant's proposals
 
 The [assistant](/docs/guides/assistant/) can propose changes to your todos: times, estimates, moves, new todos. They wait on the Todos screen under the todo they change, and new todos under **Proposed**, until you take (**✓**) or drop (**✕**) them, or **Take all**.
+
+## Old todos
+
+<Badge text="Next release" /> Todos you keep not doing pile up. AIDE asks about old ones, so each gets a decision: do it today, give it a day, keep it for someday, or drop it.
+
+### How old a todo is
+
+A todo's age counts from its created date (`➕ 2026-10-01` or `[created:: 2026-10-01]`), else from the date of the daily note it's in. A todo in a note without a date and with no created date has no age, and is never asked about.
+
+A todo is **old** when it's open, not indented, and as old as **Settings › Todos › Old todos** says (14 days unless you change it), unless it's:
+
+- today's (in today's daily note, or due or scheduled today);
+- overdue (Overdue asks about it already);
+- waiting for a day ahead: due, scheduled or starting after today, or in a daily note after today;
+- kept for someday (tagged with your someday tag);
+- scheduled for later (`[<]`).
+
+Taking an old todo into today is the decision for that day: if it isn't done, it's asked about again the next day.
+
+### To decide
+
+**All** shows old todos under **To decide**, after today's groups, the oldest first, each with a chip saying how many days old it is. They don't show in the preset's other groups. **Today** says how many wait (**N old todos to decide**). When a vault opens with more than 30 old todos, **All** says so once, with **Tidy up…**; **Not now** hides that for good on this device.
+
+### Tidy up
+
+**Tidy up…** (in the Todos header, and on **To decide**) decides on several todos at a time:
+
+- **Old** lists the old todos, oldest first. **No age** lists the open todos in notes without a date that have no created date, by note: nothing tells how old they are, so they're never asked about otherwise. **All open** lists every open todo.
+- Pick todos, then **Today**, **A day…**, **Someday** or **Drop**. Drop marks them cancelled (`[-]`) where they are. A todo that changed meanwhile is left as it is, and AIDE says how many.
+- **Look alike** groups open todos whose titles read the same (case and spaces aside). Open a group to see each one as it's written, with its memo and note, and **Keep** the one to keep: the others are dropped. Recurring todos are never grouped.
+- **Ask the assistant** hands the old todos to the [assistant](/docs/guides/assistant/), which proposes a decision for each: today, a day, someday or drop. Nothing changes until you take a proposal.
+
+### The weekly tidy
+
+With [**Speak first**](/docs/guides/assistant/#speaking-first) on, the assistant asks about old todos once a week, on **Weekly tidy**'s day at the evening recap's time (21:00 when the recap is off), when there are some. Its proposals wait on the Todos screen like any other.
 
 ## View presets
 
@@ -172,6 +209,10 @@ In Eisenhower, a todo is important when its priority is high or highest, and urg
 | **Carry open todos** | **Off**, **Move, mark source \[>\]**, **Move, strike through (이월)** | Off |
 | **Add under heading** | a heading name; empty adds at the end of the note | `Todo` |
 | **Inbox note** | a note path | `inbox` |
+| **Ask about old todos** <Badge text="Next release" /> | on or off, and after how many days (3 to 90) | on, 14 days |
+| **Old todos when carrying** <Badge text="Next release" /> | **Leave them where they are**, **Keep carrying** | Leave them where they are |
+| **Someday tag** <Badge text="Next release" /> | a tag name, without `#` | `someday` |
+| **Weekly tidy** <Badge text="Next release" /> | **The day before the week starts**, **Off**, or a day of the week | The day before the week starts |
 
 **Except on that day's daily** leaves out the date when you complete a todo in the daily note of that same day, where the note's date already says when.
 
@@ -185,6 +226,8 @@ Carrying needs `{{slot todo-carry.open}}` in your daily template, which is where
 ## Todo
 {{slot todo-carry.open}}
 ```
+
+<Badge text="Next release" /> With **Old todos when carrying** on **Leave them where they are**, a todo that's old (by its age, whatever day it's carried into) or kept for someday isn't carried: it stays open where it is, so a new day doesn't fill up with old ones. Todos keeps listing it from there, in whichever group fits it now. A carried todo takes the day it came from as its created date when it has none.
 
 In a local vault, AIDE carries the todos itself. With a server or a desktop host, the [Todo carry](/docs/plugins/todo-carry/) plugin does it and needs to be turned on.
 

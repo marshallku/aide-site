@@ -5,7 +5,7 @@ sidebar:
     order: 10
 ---
 
-import { Steps } from "@astrojs/starlight/components";
+import { Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 
 Todo carry takes the todos you didn't finish in your last daily note and puts them into the new one, so nothing is left behind in yesterday's page.
@@ -30,6 +30,8 @@ When AIDE creates a daily note that contains the `todo-carry.open` slot, the plu
 The old line is marked only after the todo is in the new note, so a todo is never lost between the two. If the plugin stops halfway, it finishes the move when it starts again.
 
 It only carries into today's or tomorrow's daily. Opening an old daily, or one far ahead, never pulls todos into it.
+
+<Badge text="Next release" /> A carried todo takes the day it came from as its created date (` ➕ 2026-10-20`) when it has none, so its age carries over. With **Old todos when carrying** on **Leave them where they are** (the default), a todo that's old by its age, or kept for someday, isn't carried: it stays open in the old note. Todos keeps listing it from there, in whichever group fits it now (see [Old todos](/docs/guides/todos/#old-todos)).
 
 If [the assistant](/docs/guides/assistant/) moved a todo out of the old note in the meantime, the plugin doesn't carry it too, and takes back a copy it already made.
 
@@ -57,7 +59,7 @@ If [the assistant](/docs/guides/assistant/) moved a todo out of the old note in 
 
 ## Settings
 
-The plugin has no settings of its own. The one choice it reads is **Carry open todos** in **Settings › Todos**, described above.
+The plugin has no settings of its own. It reads **Carry open todos** in **Settings › Todos**, described above, and <Badge text="Next release" /> **Ask about old todos**, **Old todos when carrying** and **Someday tag** next to it.
 
 ## Troubleshooting
 

@@ -58,6 +58,7 @@ The assistant can propose to:
 | Status | Marks it open, in progress, done or cancelled. |
 | Add | A new todo in that day's daily note, today or up to a year ahead. |
 | Move | The todo, with its memo and subtasks, goes to another day's daily note; it is marked migrated `[>]` where it was. |
+| Someday <Badge text="Next release" /> | Adds your someday tag, so the todo waits under **Someday / maybe** ([old todos](/docs/guides/todos/#old-todos)). |
 
 - **Take** (✓) applies one card. **Drop** (✕) discards it. **Take all** takes every waiting card of
   a reply, in order.
@@ -125,7 +126,9 @@ The assistant can start the conversation on its own, under **Settings › Assist
 | **Evening recap** | 21:00 | What got done, what's left, what should move to tomorrow. Made up for 3 hours. |
 | **Before meetings** | 15 minutes | Checks your todos and calendar before each timed event and tells you only when there's something to say. Off, 5, 10, 15, 30 or 60 minutes. |
 | **When a time block passes** | On | Within an hour after a todo's time block ends while it's still open: "A time block passed", with **Done** and **Tomorrow**. No model involved. |
-| **Quiet from** / **Quiet until** | 22:00 / 07:00 | Meeting checks and nudges hold off; the morning and evening still run but say nothing aloud. |
+| **Quiet from** / **Quiet until** | 22:00 / 07:00 | Meeting checks and nudges hold off; the morning, the evening and the weekly tidy still run but say nothing aloud. |
+
+<Badge text="Next release" /> **Weekly tidy**: once a week, on the day **Settings › Todos › Weekly tidy** names, at the evening recap's time (21:00 when the recap is off), when you have [old todos](/docs/guides/todos/#old-todos), the assistant proposes a decision for each: today, a day, someday or drop. Its notification is **Weekly tidy**. The assistant also sees old todos in every conversation, each with its age.
 
 - It tells you through a notification (**Today's plan**, **This evening**, **Before** a meeting);
   clicking it opens Todos with the assistant. At most six meeting checks and nudges a day.
