@@ -5,6 +5,8 @@ sidebar:
     order: 6
 ---
 
+import { Badge } from "@astrojs/starlight/components";
+
 AIDE has three ways to look across your notes: search finds one, the graph shows how they connect, and Review shows what you got done in a week, month, quarter or year.
 
 ## Searching notes
@@ -59,6 +61,7 @@ Review lists the todos you completed in a period: the record to look back on at 
 - Three counts sit at the top: todos **done**, the **notes** they were in, and **active days**.
 - When that period's note exists, its `## Summary` section shows as the period's summary. While the period is turned on in **Settings › Wiki**, a button opens its note (creating it if needed).
 - **By day** groups the todos by the day they were completed; **By note** groups them by the note they're in, the note with the most first.
+- <Badge text="Next release" /> A week also looks ahead: **Still open** lists every [old todo](/docs/guides/todos/#old-todos) that's still open, the oldest first, with how many days old it is and "old since this week" on the ones that just turned old. **Tidy up…** opens Todos' Tidy up to decide on them.
 
 A todo counts on the day of its completion date (` ✅ 2026-10-22`). One without a date counts for the day of the daily note it's in, marked "recorded". Only done todos (`[x]`) count; cancelled and migrated ones don't. See [Todos](/docs/guides/todos/) for how completion dates are written.
 
