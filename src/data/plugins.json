@@ -617,8 +617,11 @@
                         "type": "enum",
                         "options": [
                             "claude",
-                            "codex"
-                        ]
+                            "codex",
+                            "grok",
+                            "agy"
+                        ],
+                        "help": "Run from your home folder to read your sessions. Claude Code and Grok get only their file-reading tools, Codex its read-only sandbox; Antigravity can't turn its tools off and uses any your Antigravity allows without asking."
                     },
                     {
                         "key": "model",
@@ -651,9 +654,12 @@
                     "ko": {
                         "description": "매일 밤 Claude Code와 Codex 세션 및 git 기록을 데일리·주간·주제 노트에 정리하고 catchup/candidates에 새 주제를 제안해요.",
                         "name": "지난 작업 정리",
+                        "settings.agent.help": "세션을 읽으려고 홈 폴더에서 실행해요. Claude Code와 Grok은 파일 읽기 도구만, Codex는 읽기 전용 샌드박스로 실행해요. Antigravity는 도구를 끌 수 없어서 Antigravity가 묻지 않고 쓰도록 허용된 도구는 모두 써요.",
                         "settings.agent.options": [
                             "Claude Code",
-                            "Codex"
+                            "Codex",
+                            "Grok",
+                            "Antigravity"
                         ],
                         "settings.agent.title": "에이전트",
                         "settings.at.title": "시간",
@@ -824,9 +830,11 @@
                             "auto",
                             "claude",
                             "codex",
+                            "grok",
+                            "agy",
                             "server"
                         ],
-                        "help": "Claude Code or Codex on this computer, with no tools, or the server's AI. Auto: the first there."
+                        "help": "Claude Code, Codex, Grok or Antigravity on this computer, with as few tools as each allows, or the server's AI. Auto: the first there."
                     },
                     {
                         "key": "model",
@@ -899,11 +907,13 @@
                     "ko": {
                         "description": "이 컴퓨터의 Slack 피드(Slack › 내 채널 팔로우)와 이 컴퓨터의 Claude Code·Codex 세션을 살펴 놓치기 쉬운 내용을 알려요. 적절한 때 리마인더를 보내고 함께 일하는 사람의 노트를 관리하며 할 일을 제안해요.",
                         "name": "레이더",
-                        "settings.agent.help": "이 컴퓨터의 Claude Code·Codex(도구 없이) 또는 서버의 AI를 써요. 자동은 먼저 사용 가능한 모델이에요.",
+                        "settings.agent.help": "이 컴퓨터의 Claude Code·Codex·Grok·Antigravity(각자 끌 수 있는 도구는 모두 끄고) 또는 서버의 AI를 써요. 자동은 먼저 사용 가능한 모델이에요.",
                         "settings.agent.options": [
                             "자동",
                             "Claude Code",
                             "Codex",
+                            "Grok",
+                            "Antigravity",
                             "서버"
                         ],
                         "settings.agent.title": "모델",
