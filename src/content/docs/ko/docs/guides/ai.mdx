@@ -26,7 +26,7 @@ Codex, 내 Anthropic API 키, 또는 서버에 설정한 AI 중에서요. AI 없
 | 서버가 없을 때의 정리 | 기기의 **설정 › AI**에 넣은 내 Anthropic 키 | 규칙으로 분류해요. |
 | [피드](/ko/docs/guides/feed/) 분류 | **설정 › AI**(서버) | 규칙으로 분류해요. |
 | 대신 글을 써 주는 서버 플러그인: [브리핑](/ko/docs/plugins/briefing/), [저녁 정리](/ko/docs/plugins/recap/), [열린 이슈](/ko/docs/plugins/loops/), [캘린더 준비](/ko/docs/plugins/gcal/), [Gmail](/ko/docs/plugins/gmail/), [Slack](/ko/docs/plugins/slack/) 요약, [복습](/ko/docs/plugins/recall/) 카드, [혜택](/ko/docs/plugins/benefits/) | **설정 › AI**(서버), 허용한 플러그인마다 | 플러그인 페이지마다 적혀 있어요. Gmail은 확인할 메일 목록을 계속 보여 주고, 브리핑과 회고는 모델이 필요해요. |
-| [레이더](/ko/docs/plugins/radar/) | 자체 **모델** 설정: Claude Code, 그다음 Codex, 없으면 서버 | 모델이 필요해요. |
+| [레이더](/ko/docs/plugins/radar/) | 자체 **모델** 설정: Claude Code, 그다음 Codex, 없으면 서버(<Badge text="다음 릴리스" /> Codex 다음에 Grok, Antigravity) | 모델이 필요해요. |
 | [지난 작업 정리](/ko/docs/plugins/catchup/) | 플러그인을 실행하는 컴퓨터의 Claude Code나 Codex | 모델이 필요해요. |
 
 음성 입력과 회의 받아쓰기는 모델 서비스를 전혀 쓰지 않아요. 기기에서 글로 옮겨요.
@@ -54,6 +54,23 @@ Codex, 내 Anthropic API 키, 또는 서버에 설정한 AI 중에서요. AI 없
   참고하세요.
 - iPhone에서는 **자동**, **Anthropic API 키**, **서버** 중에서 골라요.
 - **서버**는 서버를 쓸 때만 보여요.
+
+<Badge text="다음 릴리스" /> Mac과 Linux에서는 **Grok**과 **Antigravity**도 고를 수 있어요.
+
+| 선택 | 실행 위치 | 기본 모델 |
+|---|---|---|
+| **Grok** | 이 Mac이나 Linux 컴퓨터의 `grok` 프로그램, 내 로그인으로. | Grok 자체 기본값 |
+| **Antigravity** | 이 Mac이나 Linux 컴퓨터의 `agy` 프로그램, 내 로그인으로. | Antigravity 자체 기본값 |
+
+- **자동**은 Claude Code, Codex, Grok, Antigravity, 내 Anthropic 키, 서버 순으로 시도해요.
+- AIDE는 먼저 로그인 셸의 `PATH`에서 찾아서 터미널이 쓰는 것과 같은 프로그램을 써요. 그다음 AIDE 자신의 `PATH`와 흔한 설치
+  폴더를 봐요. 여러 개를 찾으면 경로 옆 메뉴(**2개 찾음**)에 버전과 함께 모두 나와요. 하나를 고르거나 **자동**을 골라 처음 찾은
+  것을 쓰면 돼요.
+- 각 프로그램은 끌 수 있는 도구를 모두 끄고 실행돼요. Grok은 내장 도구를 이름으로 모두 빼고, 내 Claude Code나 Cursor 설정을
+  불러오지 않아요. Antigravity는 도구를 끌 방법이 없어서, 물어봐야 하는 도구는 거절하지만 Antigravity가 묻지 않고 쓰도록 허용된
+  도구는 모두 써요. 도구를 모두 끌 수 없는 프로그램도 그대로 쓰고, 경로 아래와 **테스트** 결과에 그렇다고 알려 줘요("… 내 도구를
+  함께 써요.").
+- 어시스턴트가 보내는 내용은 내 로그인으로 그 프로그램의 제공자에게 가요. Grok은 xAI, Antigravity는 Google이에요.
 
 서버 없이 노트를 둘 때는 기기의 Anthropic 키를 **설정 › AI**에 저장해요. 키는 기기의 키체인에 저장돼요(Linux에서는
 응답하는 시스템 키링이 있으면 거기에, 없으면 나만 읽을 수 있는 파일에). 정리에 쓸 모델도 거기서 바꿀 수 있어요.

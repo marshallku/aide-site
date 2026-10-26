@@ -5,7 +5,7 @@ sidebar:
     order: 21
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -125,7 +125,9 @@ Slack 메시지도, 내 세션도 "알려 줘"라고 하지 않았어요. 레이
 
 - **모델**: `auto`는 Claude Code가 설치되어 있으면 Claude Code를, 없으면 Codex를, 그것도 없으면 서버의 AI를
   써요. `claude`와 `codex`는 이 컴퓨터에서 그 CLI를 도구 없이 실행해요. 답만 할 수 있어요. `server`는 서버에
-  설정된 AI를 써요. 실행마다 3분이 지나면 멈춰요.
+  설정된 AI를 써요. 실행마다 3분이 지나면 멈춰요. <Badge text="다음 릴리스" /> `grok`과 `agy`는 Grok과
+  Antigravity를 실행하고, `auto`는 Codex 다음에 이 둘을 시도해요. 각 CLI는 끌 수 있는 도구를 모두 끄고 실행돼요.
+  도구를 모두 끌 수 없는 CLI(Antigravity는 항상)도 그대로 쓰고, `radar/status`의 **모델** 줄에 그렇다고 적어요.
 - **모델 이름**: CLI에 넘겨요. 비워 두면 CLI의 기본 모델을 써요(Claude Code는 `sonnet`).
 - **확인 간격(분)**: 5분보다 짧게 할 수 없어요.
 - **하루 최대 알림 수**: 요청한 리마인더는 따로 세요.

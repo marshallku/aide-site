@@ -23,6 +23,11 @@ work in Claude Code or Codex.
 - **Claude Code** runs as `claude -p` with only its Read, Glob and Grep tools. It has no shell and
   can't edit or write files, fetch from the web or start other agents.
 - **Codex** runs as `codex exec` in its read-only sandbox.
+- <Badge text="Next release" /> **Grok** (**Agent** `grok`) runs with only its file-reading tools
+  (`read_file`, `grep`, `list_dir`), without your Claude Code or Cursor setup.
+- <Badge text="Next release" /> **Antigravity** (**Agent** `agy`) can't turn its tools off. Run from
+  your home folder, it refuses the tools that would ask, but uses any your Antigravity allows without
+  asking, so it isn't limited to reading.
 
 The agent reads, for the days since the last run:
 

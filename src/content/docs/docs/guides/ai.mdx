@@ -27,7 +27,7 @@ There are two settings, because some AI runs in the app on your device and some 
 | Organize without a server | Your Anthropic key in **Settings › AI** on the device | Files by rules. |
 | [Feed](/docs/guides/feed/) sorting | **Settings › AI** (the server) | Sorted by rules. |
 | Server plugins that write for you: [briefing](/docs/plugins/briefing/), [recap](/docs/plugins/recap/), [open loops](/docs/plugins/loops/), [calendar prep](/docs/plugins/gcal/), [Gmail](/docs/plugins/gmail/), [Slack](/docs/plugins/slack/) summaries, [Recall](/docs/plugins/recall/) cards, [benefits](/docs/plugins/benefits/) | **Settings › AI** (the server), for each plugin you allow it | Each plugin page says. Gmail still lists mail to check; the briefing and recap need a model. |
-| [Radar](/docs/plugins/radar/) | Its own **Model** setting: Claude Code, then Codex, else the server | Needs one. |
+| [Radar](/docs/plugins/radar/) | Its own **Model** setting: Claude Code, then Codex, else the server (<Badge text="Next release" /> Grok and Antigravity after Codex) | Needs one. |
 | [Catch-up](/docs/plugins/catchup/) | Claude Code or Codex on the computer running the plugins | Needs one. |
 
 Voice input and meeting transcription use no model service at all: they are written down on the
@@ -58,6 +58,25 @@ its own choice.
   own tools instead; see [the assistant](/docs/guides/assistant/#use-my-claude-code-setup).
 - On the iPhone the choices are **Automatic**, **Anthropic API key** and **Server**.
 - **Server** appears only when you use a server.
+
+<Badge text="Next release" /> **Grok** and **Antigravity** are choices too, on the Mac and Linux:
+
+| Choice | Where it runs | Default model |
+|---|---|---|
+| **Grok** | The `grok` program on this Mac or Linux computer, with your own login. | Grok's own |
+| **Antigravity** | The `agy` program on this Mac or Linux computer, with your own login. | Antigravity's own |
+
+- **Automatic** tries Claude Code, Codex, Grok, Antigravity, your Anthropic key, then the server.
+- AIDE looks on your login shell's `PATH` first, so it runs the copy your terminal runs, then on its
+  own `PATH` and in the usual install folders. When it finds more than one copy, the menu beside
+  the path (**2 found**) lists each with its version; pick one, or **Automatic** for the first.
+- Each runs with as few tools as it allows. Grok's built-in tools are removed by name, and it
+  doesn't load your Claude Code or Cursor setup. Antigravity has no way to turn its tools off: it
+  refuses the ones that would ask, but uses any your Antigravity allows without asking. A program
+  that can't turn every tool off is used all the same, and AIDE says so under its path and in the
+  **Test** result ("… so it shares your tools.").
+- What the assistant sends goes to that program's provider under your own login: xAI for Grok,
+  Google for Antigravity.
 
 The device's Anthropic key is saved under **Settings › AI** when AIDE keeps notes without a
 server, in the device's keychain (on Linux, the system keyring when one answers, else a file only

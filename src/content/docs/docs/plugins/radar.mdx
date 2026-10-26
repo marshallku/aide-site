@@ -5,7 +5,7 @@ sidebar:
     order: 21
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -131,7 +131,10 @@ the other takes over if the first stops for 15 minutes.
 
 - **Model**: `auto` uses Claude Code if it's installed, else Codex, else the server's AI. `claude` and
   `codex` run those CLIs on this computer with no tools at all: they can only answer. `server` uses
-  the AI set up on the server. Each run is stopped after 3 minutes.
+  the AI set up on the server. Each run is stopped after 3 minutes. <Badge text="Next release" />
+  `grok` and `agy` run Grok and Antigravity, and `auto` tries them after Codex. Each CLI runs with as
+  few tools as it allows; one that can't turn them all off (Antigravity always) is used all the
+  same, and `radar/status` says so in a **Model** line.
 - **Model name**: passed to the CLI. Empty uses the CLI's own default (`sonnet` for Claude Code).
 - **Look every (minutes)**: never less than 5.
 - **Tell at most (a day)**: reminders you get are counted apart from this.
