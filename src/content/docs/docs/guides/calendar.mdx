@@ -5,7 +5,7 @@ sidebar:
     order: 8
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Badge, Tabs, TabItem } from "@astrojs/starlight/components";
 
 The Calendar section shows your events next to your notes and todos, so you can plan a day in one
 place and start a meeting note from an event. The same events appear under **Todos › Today** and
@@ -77,7 +77,8 @@ calendars**. For each one:
 - the coloured dot picks its colour: one of Google Calendar's colours, **Custom**, or back to the
   original with **Use Google's color** (**Use the calendar's color** for a device or `.ics`
   calendar);
-- the bell (with a server only) turns reminders for that calendar on or off.
+- the bell turns reminders for that calendar on or off (<Badge text="Next release" /> on a device's
+  own calendars too, once **Remind before events** is on).
 
 A calendar that failed to sync says **Sync failed** with the reason.
 
@@ -97,8 +98,19 @@ The prep uses the AI set in **Settings › AI** on the server ([AI and models](/
 The [assistant](/docs/guides/assistant/#speaking-first) can also check before meetings, on your
 computer; with both turned on, you may hear about a meeting twice.
 
-Calendars read from the device or from `.ics` files have no bells and no reminders of AIDE's own:
-the Mac and iPhone alert you through the system's Calendar as usual.
+### Reminders without a server
+
+<Badge text="Next release" /> Calendars read from the device or from `.ics` files can be reminded by AIDE too, off until you turn
+**Remind before events** on in the same list (with **When**; there's no AI prep). The device's own
+calendar app may alert for the same events: with both on, you get both.
+
+- **iPhone and Mac:** AIDE schedules the reminders for the next two days as system notifications and
+  keeps them current while it's open, so they arrive with AIDE closed. An event moved while AIDE
+  was closed may still be reminded at its old time once.
+- **Linux:** AIDE reminds you while it runs, reading the calendar again just before so a moved or
+  cancelled event isn't announced; a calendar that can't be read then isn't reminded.
+
+Clicking a reminder opens the **Calendar**.
 
 ## An event's details
 

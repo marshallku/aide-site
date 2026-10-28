@@ -58,13 +58,13 @@
             "name": "Recall",
             "description": "Spaced repetition over cards you write in notes (`front :: back`, `front ::: back` both ways, or a question, a line with ?, and its answer), and over cards the server plugin makes every night from what you newly wrote, which wait in an inbox until you accept them. Schedules each card on the forgetting curve (FSRS) and keeps your reviews in recall/log, so every device and the server's daily reminder agree.",
             "author": "AIDE",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "capabilities": [
                 "notes:read:*",
                 "notes:write:recall"
             ],
             "repo": "https://github.com/marshallku/aide-plugins",
-            "updated": "2026-10-23"
+            "updated": "2026-10-28"
         },
         {
             "id": "word-count",

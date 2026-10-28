@@ -5,7 +5,7 @@ sidebar:
     order: 17
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -89,6 +89,21 @@ and the electron transport chain.
 카드를 세고, 새 카드와 받은 카드함에서 기다리는 카드도 함께 세요. 기다리는 카드를 담아 "오늘 복습할 카드
 N장" 피드 항목을 하나 올리고 기기에 푸시 알림을 보내요. 아무것도 없으면 올리지 않아요.
 
+### 로컬 모드의 매일 알림
+
+<Badge text="다음 릴리스" /> 서버가 없으면 기기가 직접 알려요. 로컬 보관소에서 **복습**을 처음 열면 AIDE가 **매일 복습 알림을 받을까요?**라고
+물어요. **8:00에 알려 주세요**를 고르면 기기 플러그인의 **매일 알림** 시각이 정해져요(플러그인 설정에서 바꾸거나
+지울 수 있어요). 알림은 서버와 같은 방식으로 세고 같은 문구로 알려요.
+
+- **iPhone과 Mac:** 앞으로 7일 치를 시스템 알림으로 예약하고, AIDE가 열려 있는 동안 최신으로 유지해요. 그래서
+  AIDE를 닫아 두어도 알림이 와요. 일주일에 한 번은 AIDE를 열어 주세요. 일주일 넘게 열지 않으면 다시 열 때까지
+  알림이 멈춰요. AIDE 알림이 꺼져 있으면 플러그인 설정에 **알림 설정 열기**와 함께 표시돼요.
+- **Linux:** AIDE가 실행 중일 때만 알려요. 정한 시각에, 또는 그 뒤 세 시간 안에 AIDE를 켜면 그때 알려요. 그날
+  아침 AIDE가 실행되지 않은 컴퓨터는 그날 알림을 받지 않아요.
+
+알림을 누르면 **복습**이 열려요. 서버를 쓰면 서버 플러그인의 아침 알림이 오고, **매일 알림**은 아무 일도 하지
+않아요.
+
 ## 시작하기 전에
 
 - **복습만 하려면:** iPhone, Mac, Linux 컴퓨터의 AIDE면 돼요. 다른 건 필요 없어요.
@@ -116,7 +131,9 @@ N장" 피드 항목을 하나 올리고 기기에 푸시 알림을 보내요. �
 
 **설정 › 커뮤니티 플러그인 › 복습**(Linux에서는 **설정 › 커뮤니티 플러그인 › 복습**)에 있어요.
 
-<PluginSettings id="recall" kind="device" defaults={{ prefixes: "cards", newPerDay: "20" }} />
+<PluginSettings id="recall" kind="device" defaults={{ prefixes: "cards", newPerDay: "20", remindAt: "꺼짐" }} />
+
+<Badge text="다음 릴리스" /> **매일 알림**은 AIDE 다음 릴리스부터 동작해요([로컬 모드](#로컬-모드의-매일-알림)).
 
 ### 서버 플러그인
 
