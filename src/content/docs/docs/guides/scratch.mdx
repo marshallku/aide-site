@@ -19,6 +19,17 @@ Scratch is where you write without deciding where something belongs. Each scratc
 
 **Settings › Quick capture** on the Mac turns **Show AIDE in the menu bar** and **Quick capture shortcut** on or off (both on by default) and records another shortcut: click the field and press the keys, <kbd>Esc</kbd> keeps the old one, and **Reset** goes back to <kbd>⌥</kbd><kbd>Space</kbd>.
 
+### A todo instead of a note
+
+<Badge text="Next release" /> Start what you capture with `/todo` (or `/할일`) and it goes to today's todos instead of Scratch: each line after the word is one todo, added under your daily note's todo heading as Todos' quick add does.
+
+```
+/todo call the bank
+pay rent
+```
+
+It works in Quick capture (which says **Added to today's todos**), Scratch's capture field, the [assistant](/docs/guides/assistant/) (added at once, without asking the model) and `aidectl capture`. In Quick capture and Scratch, a todo that can't be added stays in the field on its own (any already added stay as they are), so trying again doesn't add one twice; the assistant says which ones weren't added.
+
 If AIDE can't reach your notes when you capture (the server is offline, say), the text is kept under **Not sent** in Scratch and added once it can.
 
 ## Organize

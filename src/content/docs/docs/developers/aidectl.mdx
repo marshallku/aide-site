@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 `aidectl` reads and writes your AIDE notes from a terminal, a script, an editor or a status bar. It goes through AIDE's own note rules, so a write never overwrites an edit it didn't see. It knows nothing about any particular workflow: you compose `get`, `put`, `append` and `toggle` yourself.
 
@@ -173,6 +173,8 @@ aidectl capture [text… | -]
 ```
 
 Adds a scratch note, as the apps' quick capture does. The text comes from the arguments, or from standard input with `-` or no arguments; it's trimmed, and empty text is a usage error. Prints the new note's path (`--json`: the note).
+
+<Badge text="Next release" /> Text starting with `/todo` (or `/할일`) adds each line after it to today's todos instead, under the daily note's todo heading, and prints the daily note's path once per todo (`--json`: the daily note); `/todo` with nothing after it is a usage error. It works with a server and with a notes folder alike.
 
 ```sh
 pbpaste | aidectl capture
