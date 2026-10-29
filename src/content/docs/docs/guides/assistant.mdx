@@ -146,6 +146,18 @@ The assistant can start the conversation on its own, under **Settings › Assist
 - When the system has AIDE's notifications turned off, the settings say **System notifications are
   off** with **Open notification settings**.
 
+### Todos it finds
+
+<Badge text="Next release" /> What [radar](/docs/plugins/radar/) picks up from Slack and your coding sessions, and mail [Gmail](/docs/plugins/gmail/) finds asks for a reply ("Reply to Kim: sign the contract"), come as new todos. **Settings › Assistant › Speak first › Todos it finds** decides what happens to them on this device, every minute while AIDE is open:
+
+| Choice | What happens |
+|---|---|
+| **Add and tell me** (default) | They go into today's daily note when nothing stands in the way (no time, no warning, nothing you dropped or undid before), and AIDE says **Added N todos** in a notification and the character's bubble. Each shows as taken in the conversation, with **Undo**. |
+| **Ask first** | AIDE asks **Found N todos** once, with **Add** in the notification and the bubble. |
+| **Leave on Todos** | They wait under **Proposed** on Todos, as before; with **Plan on its own** on, radar's are still added by it. |
+
+Calendar events aren't turned into todos: they're already in the plan.
+
 ## On the desktop
 
 On the Mac and Linux, **Settings › Assistant › Show on the desktop** (off by default) floats the

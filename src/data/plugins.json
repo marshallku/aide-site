@@ -512,7 +512,7 @@
             "id": "gmail",
             "manifest": {
                 "name": "Gmail",
-                "description": "Reads your mail (never sends): once a day, what asks for a reply, what you're waiting on and how much else came, in the day note; urgent mail pushed.",
+                "description": "Reads your mail (never sends): once a day, what asks for a reply, what you're waiting on and how much else came, in the day note, and a todo proposed for each reply; urgent mail pushed.",
                 "version": "0.1.0",
                 "publishes": [
                     "gmail.urgent",
@@ -560,7 +560,7 @@
                 ],
                 "locales": {
                     "ko": {
-                        "description": "메일을 읽고 답장이 필요한 메일, 답장을 기다리는 메일, 나머지 메일 수를 매일 노트에 정리해요. 급한 메일은 알림으로 보내요. 메일을 보내지는 않아요.",
+                        "description": "메일을 읽고 답장이 필요한 메일, 답장을 기다리는 메일, 나머지 메일 수를 매일 노트에 정리하고, 답장할 메일마다 할 일을 제안해요. 급한 메일은 알림으로 보내요. 메일을 보내지는 않아요.",
                         "name": "Gmail",
                         "settings.at.title": "시간",
                         "settings.followUpDays.title": "답장 대기 기준(일)",

@@ -3,7 +3,7 @@
 // on screen, blinks, idles, hops when touched, thinks while the assistant works and calls for
 // attention when it has something to say.
 
-import { Director, compose, drawList, random, readRig, type DrawItem, type Shape } from "./rig.mjs";
+import { CALM_FPS, Director, compose, drawList, random, readRig, type DrawItem, type Shape } from "./rig.mjs";
 
 import mochi from "#assets/aide/mochi.json";
 import piyo from "#assets/aide/piyo.json";
@@ -82,8 +82,8 @@ export function mountCharacter(
     };
 
     /// Draws the frame for `now`; whether it is still moving and when it next wants to (director).
-    const draw = (now: number): { animating: boolean; wake: number | null } => {
-        if (!context) return { animating: false, wake: null };
+    const draw = (now: number): { animating: boolean; calm: boolean; wake: number | null } => {
+        if (!context) return { animating: false, calm: false, wake: null };
         const frame = director.update(now, {
             visible: true,
             waiting: false,
@@ -92,7 +92,7 @@ export function mountCharacter(
             told,
             bubble: state.bubble,
         });
-        if (!frame) return { animating: false, wake: null };
+        if (!frame) return { animating: false, calm: false, wake: null };
         const [boxW, boxH] = rig.box;
         const scale = Math.min(canvas.width / boxW, canvas.height / boxH);
         const offsetX = (canvas.width - boxW * scale) / 2;
@@ -119,16 +119,19 @@ export function mountCharacter(
             }
         }
         context.globalAlpha = 1;
-        return { animating: frame.animating, wake: frame.wake };
+        return { animating: frame.animating, calm: frame.calm, wake: frame.wake };
     };
 
-    // Frames only while something moves; a still character sleeps until its next blink or idle.
+    // Frames only while something moves (CALM_FPS while it only breathes); a still character sleeps
+    // until its next blink or idle.
     const tick = (time: number) => {
         frameId = 0;
         const now = time / 1000;
-        const { animating, wake } = draw(now);
+        const { animating, calm, wake } = draw(now);
         if (!onScreen || document.hidden) return;
-        if (animating) {
+        if (animating && calm) {
+            wakeTimer = window.setTimeout(start, 1000 / CALM_FPS);
+        } else if (animating) {
             frameId = requestAnimationFrame(tick);
         } else if (wake != null) {
             wakeTimer = window.setTimeout(start, Math.max(0, (wake - now) * 1000));

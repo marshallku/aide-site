@@ -29,6 +29,8 @@ export interface Frame {
     action: unknown;
     blink: unknown;
     animating: boolean;
+    /// Only breathing moves: CALM_FPS frames a second will do.
+    calm: boolean;
     wake: number | null;
 }
 
@@ -38,8 +40,12 @@ export interface DirectorInput {
     busy: boolean;
     listening: boolean;
     told: number;
+    answered?: number;
+    poked?: number;
     bubble?: string | null;
 }
+
+export const CALM_FPS: number;
 
 export function readRig(json: unknown): { rig: Rig; problems: string[] };
 export function compose(rig: Rig, frame: Frame): unknown;

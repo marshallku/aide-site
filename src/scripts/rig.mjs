@@ -7,7 +7,12 @@ export const PROPS = ["tx", "ty", "rot", "sx", "sy", "opacity"];
 const ADDITIVE = new Set(["tx", "ty", "rot"]);
 export const POSES = ["waiting", "thinking", "listening"];
 export const REQUIRED_CLIPS = ["blink", "greet", "attention", "hop", "think"];
-export const PRIORITY = { attention: 4, greet: 3, hop: 2 };
+/// Clips a rig may have: `breathe` loops while it isn't thinking, `cheer` greets an answer, `poke`
+/// answers a pointer over it or a tap.
+export const OPTIONAL_CLIPS = ["breathe", "cheer", "poke"];
+export const PRIORITY = { attention: 5, greet: 4, cheer: 3, hop: 2, poke: 2 };
+/// Frames a second while nothing but `breathe` moves (a calm frame loop, README › How they play).
+export const CALM_FPS = 15;
 export const BLEND = 0.25;
 export const GREET_AFTER = 600;
 export const ATTENTION_EVERY = 15;
@@ -148,7 +153,7 @@ export function readRig(json) {
     }
     const clips = {};
     for (const [name, raw] of Object.entries(json?.clips ?? {})) {
-        if (!(REQUIRED_CLIPS.includes(name) || /^idle\.[a-z][a-z0-9-]*$/.test(name))) say(`no clip ${name}`);
+        if (!(REQUIRED_CLIPS.includes(name) || OPTIONAL_CLIPS.includes(name) || /^idle\.[a-z][a-z0-9-]*$/.test(name))) say(`no clip ${name}`);
         const loop = raw.loop === true;
         if (!finite(raw.duration) || raw.duration <= 0) say(`clip ${name}: duration`);
         const tracks = [];
@@ -172,8 +177,8 @@ export function readRig(json) {
         clips[name] = { name, duration: raw.duration, loop, tracks };
     }
     for (const name of REQUIRED_CLIPS) if (!clips[name]) say(`clip ${name} missing`);
-    if (clips.think && !clips.think.loop) say("clip think must loop");
-    for (const name of ["blink", "greet", "attention", "hop"]) if (clips[name]?.loop) say(`clip ${name} must not loop`);
+    for (const name of ["think", "breathe"]) if (clips[name] && !clips[name].loop) say(`clip ${name} must loop`);
+    for (const name of ["blink", "greet", "attention", "hop", "cheer", "poke"]) if (clips[name]?.loop) say(`clip ${name} must not loop`);
     const rig = { id: json?.id, name: json?.name, box, palette, groups, parts, poses, clips, idle: Object.keys(clips).filter((name) => name.startsWith("idle.")).sort() };
     if (!problems.length) problems.push(...envelope(rig));
     return { rig, problems };
@@ -304,17 +309,18 @@ function envelope(rig) {
     const problems = [];
     const combos = [];
     for (let mask = 0; mask < 8; mask++) combos.push(Object.fromEntries(POSES.map((name, index) => [name, (mask >> index) & 1 ? true : false])));
-    const actions = [null, ...Object.keys(rig.clips).filter((name) => !["blink", "think"].includes(name))];
+    const actions = [null, ...Object.keys(rig.clips).filter((name) => !["blink", "think", "breathe"].includes(name))];
+    const loops = [null, "think", ...(rig.clips.breathe ? ["breathe"] : [])];
     const [w, h] = rig.box;
     for (const on of combos) {
         const pose = poseValues(rig, on);
         for (const action of actions) {
-            for (const thinking of [false, true]) {
+            for (const loopClip of loops) {
                 for (const blinking of [false, true]) {
                     for (let step = 0; step <= 60; step++) {
                         const u = step / 60;
                         const at = (name) => ({ clip: name, at: u * rig.clips[name].duration });
-                        const values = compose(rig, { pose, loop: thinking ? at("think") : null, action: action ? at(action) : null, blink: blinking ? at("blink") : null });
+                        const values = compose(rig, { pose, loop: loopClip ? at(loopClip) : null, action: action ? at(action) : null, blink: blinking ? at("blink") : null });
                         for (const item of drawList(rig, values, [0, 0, 0])) {
                             if (item.opacity <= 0) continue;
                             const m = item.matrix;
@@ -323,7 +329,7 @@ function envelope(rig) {
                             for (const [x, y] of shapePoints(item.shape)) {
                                 const [X, Y] = [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
                                 if (X - widen < 1 || Y - widen < 1 || X + widen > w - 1 || Y + widen > h - 1) {
-                                    const where = [Object.entries(on).filter(([, v]) => v).map(([k]) => k).join("+") || "resting", action, thinking && "think", blinking && "blink"].filter(Boolean).join(", ");
+                                    const where = [Object.entries(on).filter(([, v]) => v).map(([k]) => k).join("+") || "resting", action, loopClip, blinking && "blink"].filter(Boolean).join(", ");
                                     problems.push(`${item.id} leaves the box (${where}, at ${u.toFixed(2)})`);
                                     return problems;
                                 }
@@ -350,7 +356,8 @@ export function random(seed) {
 }
 
 /// Plays a rig (README › How they play). `update(now, input)` with input {visible, busy, listening,
-/// waiting, bubble (key or null), told (a counter)} returns the frame to draw and when to look again.
+/// waiting, bubble (key or null), told, answered, poked (counters)} returns the frame to draw and
+/// when to look again.
 export class Director {
     constructor(rig, rng, reduceMotion = false) {
         this.rig = rig;
@@ -369,7 +376,10 @@ export class Director {
         this.lastIdle = null;
         this.bubble = null;
         this.told = 0;
+        this.answered = 0;
+        this.poked = 0;
         this.busySince = 0;
+        this.shownSince = 0;
     }
 
     /// Reduce Motion turned on or off while it plays: what plays stops; nothing else is forgotten.
@@ -406,6 +416,8 @@ export class Director {
             this.blendFrom = null;
             this.bubble = null;
             this.told = input.told;
+            this.answered = input.answered ?? 0;
+            this.poked = input.poked ?? 0;
             return null;
         }
         if (!this.onScreen) {
@@ -417,10 +429,15 @@ export class Director {
             this.blinkAt = now + 2.5 + this.rng() * 3.5;
             this.idleAt = now + 12 + this.rng() * 18;
             this.told = input.told;
+            this.answered = input.answered ?? 0;
+            this.poked = input.poked ?? 0;
+            this.shownSince = now;
         }
         const on = { waiting: input.waiting, thinking: input.busy, listening: input.listening };
         if (POSES.some((name) => on[name] !== this.on[name])) {
             if (on.thinking && !this.on.thinking) this.busySince = now;
+            // Breathing starts over where thinking ends, so it doesn't jump into the middle of a breath.
+            if (!on.thinking && this.on.thinking) this.shownSince = now;
             if (!this.reduce) {
                 this.blendFrom = this.poseNow(now);
                 this.blendAt = now;
@@ -431,6 +448,14 @@ export class Director {
         if (input.told !== this.told) {
             this.told = input.told;
             this.play("hop", now);
+        }
+        if ((input.answered ?? 0) !== this.answered) {
+            this.answered = input.answered ?? 0;
+            this.play("cheer", now);
+        }
+        if ((input.poked ?? 0) !== this.poked) {
+            this.poked = input.poked ?? 0;
+            this.play("poke", now);
         }
         if ((input.bubble ?? null) !== (this.bubble?.key ?? null)) {
             this.bubble = input.bubble == null ? null : { key: input.bubble, times: 1, next: now + ATTENTION_EVERY };
@@ -455,11 +480,14 @@ export class Director {
             }
             this.idleAt = now + 12 + this.rng() * 18;
         }
-        const loop = on.thinking && !this.reduce ? { clip: "think", at: now - this.busySince } : null;
+        const breathing = !on.thinking && !this.reduce && this.rig.clips.breathe;
+        const loop = this.reduce ? null : on.thinking ? { clip: "think", at: now - this.busySince } : breathing ? { clip: "breathe", at: now - this.shownSince } : null;
         const action = this.action ? { clip: this.action.clip, at: now - this.action.start } : null;
         const blink = this.blink ? { clip: "blink", at: now - this.blink.start } : null;
         const animating = Boolean(loop || action || blink || this.blendFrom);
+        // Only breathing: frames at CALM_FPS, not every display frame.
+        const calm = animating && loop?.clip === "breathe" && !action && !blink && !this.blendFrom;
         const wakes = [this.blinkAt, this.idleAt, this.bubble && this.bubble.times < ATTENTION_TIMES ? this.bubble.next : null].filter((value) => value != null && !this.reduce);
-        return { pose: this.poseNow(now), loop, action, blink, animating, wake: wakes.length ? Math.min(...wakes) : null };
+        return { pose: this.poseNow(now), loop, action, blink, animating, calm, wake: wakes.length ? Math.min(...wakes) : null };
     }
 }
