@@ -158,6 +158,24 @@ The assistant can start the conversation on its own, under **Settings › Assist
 
 Calendar events aren't turned into todos: they're already in the plan.
 
+### Simple todos, done for you
+
+<Badge text="Next release" /> The assistant can take simple todos off your hands and tell you afterwards. Choose how in **Settings › Assistant › Simple todos** (or in **What AIDE can do**); it's **Off** until you do. It runs on the Mac (not the App Store build) and on Linux, with [Claude Code](#where-the-model-comes-from) installed there, whatever model the assistant otherwise uses, and needs **Keep conversations**. Turn it on on one device.
+
+| Choice | What it may do |
+|---|---|
+| **Off** (default) | Nothing. |
+| **Prepare them, then tell me** | Search and read the web, and draft: what it found or wrote goes under the todo. It never marks a todo done. Your todos go to Claude to work on. |
+| **Do them, then tell me** | Also use whatever your Claude Code may use without asking — your allow rules, plus the rules under **Also allowed** (such as `mcp__slack__send_message`) — to do what a todo asks, like posting the message it names. A todo it finished is marked done. AIDE tells it to do only what each todo asks and never to pay, sign or delete anything, but that is an instruction to the model, not a limit: it can reach what your rules allow. |
+
+Once an hour in your workday (not in quiet hours, and no more once it has told you three times that day), it looks at today's and overdue open todos it hasn't tried, picks at most two it can finish or prepare on its own, and works on them. Anything that needs your judgement, money, signing, deleting or someone else is left alone. Then:
+
+- The todo gets a memo, **AIDE · 14:05 · what it did**, with what it found or drafted under it.
+- The conversation keeps the report, with what it did outside AIDE, and each todo shows as taken with **Undo**. Undo takes the memo (and the done mark) back; what it did outside AIDE stays done.
+- A notification and the character's bubble say **Took care of N todos**.
+
+A todo it picked is never handed to it again, even after Undo, and one it said it can't do isn't offered for two weeks. If a run fails or AIDE quits midway, it says **Couldn't finish simple todos** and names the todos it may have worked on, so you can check them. The record of what it picked is the note `assistant/tried`.
+
 ## On the desktop
 
 On the Mac and Linux, **Settings › Assistant › Show on the desktop** (off by default) floats the
