@@ -122,6 +122,13 @@ notes under `assistant/`, `radar/` and `people/` (<Badge text="Next release" /> 
 note and this week's weekly note. For anything else it shows a card, **The assistant wants to read:
 …**, with **Allow** and **Deny**. Each note it reads is sent cut to 4 KB.
 
+<Badge text="Next release" /> It can also search your notes. When you name something only by its
+words ("the deploy checklist Kim sent", "what we decided about pricing"), it searches for up to
+three short queries, the way AIDE's search does, and the conversation says **Searched your notes for
+…**. It sees each match's path, title and the line around it, at most 12 notes, never a conversation
+note or anything under Never read. It can then read the notes it found without asking, and answer or
+propose from them. Speaking first never searches.
+
 **Never read** (**Settings › Assistant**, folders separated by commas, such as `private/, health/`)
 keeps whole folders out: their todos are left out of what the assistant sees, and a note it asks
 for there isn't sent. The setting belongs to each device's assistant. It doesn't limit the
@@ -132,6 +139,11 @@ for there isn't sent. The setting belongs to each device's assistant. It doesn't
 With **Keep conversations** on (the default), each exchange is written to that day's note
 `assistant/<date>`, with what became of each proposal (**Took**, **Dropped**). Every device shows
 the same conversation, and it survives a restart. Turning it off also turns off speaking first.
+
+<Badge text="Next release" /> The conversation opens on its newest message and shows its last ten
+exchanges. **Show earlier** at the top brings ten more, and so does scrolling up to the top (on
+macOS 15, iOS 18 and Linux). Each message goes to the model with only the last few before it, so a
+long conversation never grows what it sends.
 
 ## Speaking first
 
