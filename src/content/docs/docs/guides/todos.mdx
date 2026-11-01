@@ -44,6 +44,25 @@ AIDE reads the fields of the Obsidian Tasks plugin (emoji) and of Dataview (`[ke
 
 The editor highlights these fields as you type. <Badge text="Next release" /> Off the line you're editing, a todo's time block is tinted, its estimate shows as a timer chip and `[by:: aide]` as an **AI** chip, so what the assistant added stands out; put the cursor on the line to see them as written. AIDE reads a recurrence rule but doesn't create the next occurrence when you complete the todo. <Badge text="Next release" /> It does: see [Recurring todos](#recurring-todos).
 
+#### Fields as chips <Badge text="Next release" />
+
+Off the line you're editing, every field shows as a chip, the way the Todos screen shows it:
+
+- **Due** says Today, Tomorrow, Yesterday, a weekday or the date: red once it's past, orange today, blue later. **Scheduled** and **start** read the same way, in blue.
+- **Priority** shows its flag and name (Highest, High, Medium, Low, Lowest) in the Todos screen's colours. **Repeat** shows its rule; **done**, **cancelled** and **created** show their date.
+- Only a field's first occurrence becomes a chip. A value AIDE can't read, such as `[due:: someday]`, shows as written in the warning colour.
+
+While you're editing a note, click a chip to change it:
+
+- **Dates**: Today, Tomorrow, Next week (next Monday), Pick a date…, or Remove.
+- **Priority**: one of the six; Normal takes it away.
+- **Estimate**: 15m to 2h, or Remove. **Repeat**: every day, weekday, week or month, or Remove.
+
+The field is rewritten where it is, in the format it was written in, and one undo takes the change back. Remove takes out every copy of that field on the line.
+
+- **Status menu**: right-click a checkbox, or press and hold it on the iPhone, to set Open, In progress, Done or Cancelled. Done works like a click: it adds the completion date and the next occurrence of a recurring todo.
+- **Add a field**: on the todo line you're editing, the **+** at its end adds a due date, scheduled date, priority, estimate or repeat, in your todo format.
+
 Also read from a todo's text:
 
 - **Time block**, as the Day Planner plugin writes it: `09:00 - 10:30` or `9:00` at the start of the text. A block whose end is before its start ends the next day.
