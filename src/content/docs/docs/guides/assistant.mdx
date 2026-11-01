@@ -74,8 +74,18 @@ The assistant can propose to:
   **Proposed** section at the top, each with ✓ and ✕.
 - A taken card has **Undo**. It puts the line back only if it's still exactly as the assistant left
   it; if you've edited it since, Undo says so and leaves your note alone.
+- <Badge text="Next release" /> **Drop all** sits beside every **Take all** and drops the waiting
+  cards at once. When cards wait in two or more replies, a bar under the conversation says
+  **N proposals waiting**, with Take all and Drop all for all of them.
 - A card can be taken for 24 hours. When you take it later, its times are checked again against the
   day as it is now; a new clash asks you to choose **Take anyway**.
+- <Badge text="Next release" /> A card whose time is gone reads **Time passed** and can't be taken
+  any more: a block that has ended, a new todo at a time that has passed, a move to a day gone by.
+  Cards with no time, such as a status, an estimate or a new todo with no time, don't run out
+  this way.
+- <Badge text="Next release" /> Cards that need nothing more (dropped, time passed, expired, or
+  changed since) fold into one line under their reply, such as "3 dropped · 2 time passed". **Show**
+  brings them back.
 - Taking a card twice, here or on another device, applies it once.
 
 Every applied change leaves a small action record at the end of the note it changed (shown as a
