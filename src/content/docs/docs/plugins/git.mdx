@@ -1,0 +1,100 @@
+---
+title: Git
+description: Commits the vault open on your Mac or Linux computer to its git repository every few minutes, and pulls and pushes it with its remote.
+sidebar:
+    order: 3
+---
+
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+
+<Badge text="Next release" />
+
+Git keeps a vault that is a git repository committed and in step with its remote, so your notes don't pile up as uncommitted changes. It comes with AIDE on the Mac and on Linux, and works on the vault open on that computer in local mode.
+
+## What it does
+
+While AIDE is open with the vault, Git runs once when the vault opens, then every few minutes (10 by default). Each run:
+
+1. Commits every change in the vault (new, changed, moved and deleted files) with your commit message, `vault backup: {{date}}` unless you change it. AIDE's own files for this device are left out (see below).
+2. With **Pull and push** on and an upstream branch set, fetches the remote. If the remote has new commits, it merges them: a fast-forward when you have none of your own, otherwise a merge commit, `Merge origin/main into main`. Then it pushes your commits to the upstream branch.
+
+A run never rebases, resets, stashes, force-pushes or rewrites a commit. When something needs you, it stops before touching anything and says why on the Git page:
+
+- your changes and the remote's change the same lines (the files are listed; resolve it in a terminal),
+- another git command is running (it tries again next time),
+- a merge or rebase is under way, or files have conflicts,
+- the repository isn't on a branch,
+- a file the remote added is already on this computer, untracked or ignored.
+
+**Commit and sync now** on the Git page runs it at once, whether or not automatic commits are on. The command palette has **Commit and sync with git**. When an automatic run needs you, a warning shows in the panel's footer next to the vault's name; its menu starts with the reason and opens the Git page.
+
+What git pulls in reaches your notes as any change made outside AIDE does. git never fast-forwards over a file changed since the commit, so an edit you make while a run is going waits for the next run.
+
+## Before you start
+
+- The vault's folder must be its git repository's own folder (where `.git` is). A vault inside a larger repository isn't committed, so nothing outside it is ever committed or pushed.
+- git must be installed. On a Mac, Homebrew's git or the Xcode command line tools.
+- To pull and push, the branch needs an upstream: run `git push -u origin main` (with your remote and branch) once in a terminal.
+- AIDE runs git as your terminal does, with your login shell's environment, so your credential helper, SSH keys and git settings apply. It never asks for a password: a remote that needs one fails, and the Git page shows git's message.
+
+## Set it up
+
+<Steps>
+
+1. Open **Settings › Core plugins** and choose **Git**. On Linux, it's at the top of the **Core plugins** page.
+2. Check the top of the page: it shows the branch and its upstream, how many changes aren't committed, and the last commit.
+3. Turn on **Commit changes automatically**, and choose how often under **Commit every**: 5, 10, 30 or 60 minutes.
+4. Leave **Pull and push** on to sync with the remote, or turn it off to only commit.
+
+</Steps>
+
+These settings are kept on this computer for this vault. Another computer that opens a clone of the same repository has its own.
+
+## Settings
+
+| Setting                      | Default                  | What it does                                                                                       |
+| ---------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------- |
+| Commit changes automatically | Off                      | Commits the vault when it opens and every few minutes while AIDE is open                           |
+| Commit every                 | 10 minutes               | 5, 10, 30 or 60 minutes, counted from the last run's start                                          |
+| Pull and push                | On                       | Fetches, merges and pushes the branch's upstream after committing                                   |
+| Commit message               | `vault backup: {{date}}` | `{{date}}` is the time (`2026-11-03 14:05`), `{{files}}` how many files the commit holds. Its first line is used, up to 200 characters; empty is the default |
+
+## AIDE's device files
+
+AIDE keeps some files of its own under `.aide/` in the vault: the note index, versions, the archive of deleted notes, unfinished operations and the lock that keeps a second AIDE out. They belong to this computer, change with every edit and conflict between computers, so Git never commits them. Only `.aide/settings.json`, the vault's own settings (such as what you've left out of your notes), is committed with the vault.
+
+If your repository already tracks some of them, the Git page says so. **Stop tracking them** takes them out of the repository (the files stay on disk), adds `.aide/*` and `!.aide/settings.json` to `.gitignore`, and commits that. It does nothing while you have changes staged. When another computer stopped tracking them first, a run here does the same before merging, so neither side loses its files.
+
+<Aside>
+A deleted note is kept in `.aide/archive/` on this computer, which Git doesn't commit. The repository still has the note as it was in the last commit before you deleted it.
+</Aside>
+
+## Troubleshooting
+
+### Git says the vault isn't a git repository
+
+The vault's folder has no `.git`. Run `git init` in it (and add a remote) in a terminal, then open the Git page again.
+
+### Git says the vault is inside another repository
+
+The repository's folder is above the vault's. Open the repository's folder as the vault, or make the vault a repository of its own.
+
+### Git couldn't merge
+
+Your commits and the remote's change the same lines of the files listed. Nothing was merged or pushed; your commits stay, and later runs keep committing. Run `git pull` in the vault's folder, resolve the conflicts, commit, and the next run pushes.
+
+### Git says the remote changes AIDE's device files
+
+Another computer commits its `.aide/` files. Open the Git page there and choose **Stop tracking them**.
+
+### Another git command is running, for a long time
+
+git leaves `.git/index.lock` while it works. After 10 minutes the warning says it may be left over from a git that stopped. If no git is running, delete that file; AIDE never deletes it.
+
+## Where it works
+
+Mac (the build from aide.marshallku.dev) and Linux. Not on the iPhone: an iPhone app can't run git or keep running in the background. Not in the Mac App Store build, whose sandbox can't reach your SSH keys, git settings or credential helpers.
+
+## Privacy
+
+Git talks only to the remotes your repository names, with your own credentials, as git in your terminal does. AIDE stores its settings and the last run's result on this computer, nowhere else.
