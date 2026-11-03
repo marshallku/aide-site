@@ -145,6 +145,26 @@ exchanges. **Show earlier** at the top brings ten more, and so does scrolling up
 macOS 15, iOS 18 and Linux). Each message goes to the model with only the last few before it, so a
 long conversation never grows what it sends.
 
+### Chats
+
+<Badge text="Next release" /> Besides the assistant, which speaks first and works on its own, you can
+keep chats: conversations you start, each asking the model you pick. Use them for a question you want
+a stronger model for, or to keep a topic apart from your day's planning.
+
+- The row over the conversation names what's shown. Open it for **Assistant**, your 30 newest
+  **Chats**, and **New chat**.
+- A chat is named by the first thing you ask in it. **More › Rename…** renames it; **More › Delete**
+  moves it to **Recently deleted**.
+- On a chat, the model menu picks its model for the backend in use: **Default** (the one in
+  **Settings › Assistant**), **opus**, **sonnet** or **haiku** for Claude Code, an Anthropic API key or
+  a server, or any name under **Other…**. The choice is kept for that backend only, so a Claude model
+  is never sent to Codex. With **Automatic**, it's the first backend AIDE tries on that device.
+- A chat can read and search your notes and propose changes like the assistant. Its proposals stay in
+  the chat; Todos and the character show only the assistant's. Nothing speaks first in a chat.
+- A chat keeps all its exchanges in its own note, `assistant/chats/<id>`, on every device, however
+  old. Switching to another chat doesn't stop an answer that's coming.
+- **Open conversation** in a bubble always shows the assistant.
+
 ## Speaking first
 
 The assistant can start the conversation on its own, under **Settings › Assistant › Speak first**
