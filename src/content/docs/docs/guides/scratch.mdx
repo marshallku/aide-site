@@ -64,3 +64,17 @@ Organize uses AI when one is set up, and rules otherwise. When AI is available t
 <Aside title="What Organize sends">
 With AI, Organize sends the scratch notes it organizes, and your wiki's page names, to the model: with your own key, directly to Anthropic. The text of your other notes isn't sent. By rules, nothing leaves your device or server.
 </Aside>
+
+## Filing on its own
+
+<Badge text="Next release" />
+
+Turn on **Settings › Assistant › Scratch › File scratch notes** and scratch notes go where they belong without you: every 10 minutes while AIDE is open (on the iPhone, while it's in front), each scratch note you haven't touched for 10 minutes is placed by the assistant's model and moved there.
+
+- The model only chooses the note it goes to: an existing one, or a new path. Your text goes there **exactly as you wrote it**, at the end, followed by an invisible `<!-- aide:filed … -->` marker. To choose, the model sees the note, what search finds for it and the names of your notes; never anything under **Never read**, `scratch/` or `assistant/`.
+- A note that's just a link is a **bookmark**: AIDE reads the page for its title and description and files `- [Title](link) — description` on the page about it. It refuses addresses on your own computer or network. On a Mac or iPhone, a site that switches its address to one of those between AIDE's check and the connection can still receive one request with no cookies; AIDE throws its answer away.
+- The scratch note goes to **Recently deleted** only after its text is in place. There is no automatic undo: delete the block from the page (it ends at the marker) and restore the scratch note if you want it back.
+- A note it can't place stays in Scratch and waits a day, or until you edit it. It never files into a journal folder that has no note yet, and never into the middle of a code block.
+- Each run that filed something says **Filed N scratch notes** with where each went, and the month's list is kept in `assistant/filed/<year-month>`.
+
+It uses the assistant's backend (**Settings › Assistant**), whatever **Keep conversations** says. It's off by default.
