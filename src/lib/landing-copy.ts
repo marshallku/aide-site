@@ -416,7 +416,7 @@ export const docsHref = (lang: Lang, path: string) => `${lang === "ko" ? "/ko" :
 
 /// One line per plugin for the landing page's grid (the manifests' descriptions are for Settings).
 // Plugins in AIDE's main branch that no release carries yet: the grid marks them.
-export const NEXT_RELEASE = new Set(["github", "linear", "jira"]);
+export const NEXT_RELEASE = new Set(["github", "linear", "jira", "agent-sessions"]);
 
 export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
     en: {
@@ -440,6 +440,7 @@ export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
         excalidraw: "Draw in your notes; drawings stay plain SVG files.",
         pomodoro: "A 25/5 focus timer that logs your sessions each evening.",
         "word-count": "The word count of the note you're reading, in the side panel.",
+        "agent-sessions": "Your Claude Code, Codex and Grok sessions, made into a note the way you ask.",
     },
     ko: {
         "todo-carry": "어제 끝내지 못한 할 일을 오늘 데일리 노트로 옮겨요.",
@@ -462,5 +463,6 @@ export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
         excalidraw: "노트 안에 그림을 그리고, 그림은 평범한 SVG로 남아요.",
         pomodoro: "25/5 집중 타이머, 저녁마다 세션을 기록해요.",
         "word-count": "읽고 있는 노트의 단어 수를 사이드 패널에 보여 줘요.",
+        "agent-sessions": "Claude Code, Codex, Grok 세션을 원하는 대로 노트로 만들어요.",
     },
 };

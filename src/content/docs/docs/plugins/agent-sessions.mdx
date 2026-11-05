@@ -1,0 +1,67 @@
+---
+title: Agent sessions
+description: A device plugin that lists your Claude Code, Codex and Grok sessions on this computer and turns one into a note, the way you ask.
+sidebar:
+    order: 35
+---
+
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+
+<Badge text="Next release" /> Agent sessions turns what you worked out with a coding agent into a
+note: the sessions Claude Code, Codex and Grok keep on this computer are listed newest first, and
+for the one you pick you say what to make of it ("what I learned about lifetimes, with the
+examples"). AIDE's assistant writes the note and you check it before it's saved.
+
+<PluginFacts id="agent-sessions" kind="device" />
+
+## What it does
+
+- **An Agent sessions panel** in the desktop's right panel (Mac and Linux): every session in
+  `~/.claude/projects`, `~/.codex/sessions` and `~/.grok/sessions`, newest first, with its agent,
+  project and when it was last used. Runs a program started (`claude -p`, `codex exec`) aren't
+  listed. **All agents** narrows it to one agent; **Refresh** reads them again.
+- **`/session`** in Quick capture (<kbd>⌥</kbd><kbd>Space</kbd>) and Scratch's field: `/session
+  what I learned about lifetimes` opens the panel with that as the instruction, so you only pick the
+  session. It's in the `/` list with the app's own commands.
+- **Import from an agent session** in the command palette opens the panel too.
+
+Pick a session and it shows what you'll ask for: **What to make of it** (your `/session` text, or
+the plugin's default) and the **Folder** the note goes into. **Make note** reads the session, what
+you typed and what the agent answered (tool runs and their output are left out; a long session
+keeps its first prompt and its latest turns, and says how many it left out), and asks the assistant
+for a note. The note shows as a title and Markdown you can edit; **Save** writes it, with
+`source: "claude:<session>"` in its properties, and **Open** opens it. **Ask again** asks once
+more, **Discard** drops it. Nothing is written before **Save**, and what you were editing is kept
+if you hide the panel.
+
+## Set it up
+
+<Steps>
+
+1. Make sure the [assistant](/docs/guides/assistant/) works on this computer (**Settings ›
+   Assistant**, **Test**): it writes the notes.
+2. Open **Browse community plugins** and choose **Agent sessions**.
+3. Approve its access: reading your agent sessions on this computer, asking this device's
+   assistant, changing notes (it writes the note where you say) and keeping its own data. Then
+   **Install**.
+4. Type `/session` and what you want in Quick capture or Scratch, or open **Agent sessions** in the
+   right panel.
+
+</Steps>
+
+**Settings › Community plugins › Agent sessions** sets the default **Folder for new notes**
+(`topics`) and **What to make of a session**.
+
+<Aside>
+Sessions are read on a Mac or Linux computer: an iPhone has none, and the App Store version of
+AIDE for Mac can't read other apps' folders. There, `/session` says so.
+</Aside>
+
+## Privacy
+
+The plugin reads your agent sessions where the agents keep them and never changes them. The session
+you pick (what you typed and what the agent answered, at most 200 KB) goes to the assistant you set
+up in **Settings › Assistant** — the same Claude Code, Codex, Anthropic API or server it uses for
+everything else, with its tools off — and nowhere else. The plugin makes no network requests of its
+own.
