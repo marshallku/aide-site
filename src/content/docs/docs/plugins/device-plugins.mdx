@@ -56,7 +56,7 @@ published, and the install screen links its source code. The index can be browse
 1. Open **Browse community plugins**. It lists the plugins in the index with what each one asks for. A plugin
    you already have says **Installed**, or **Update** when the index has a newer version.
 2. Choose a plugin. AIDE downloads it and checks every file against the index before showing it.
-3. Under **It asks to**, turn on each permission you agree to. Only what you turn on is allowed.
+3. Under **It asks to**, each permission starts on <Badge text="Next release" />. Turn off what you don't agree to; only what stays on is allowed.
 4. Choose **Install**. The plugin is on right away.
 
 </Steps>
@@ -183,6 +183,12 @@ public one. With a server, **Browse community plugins** shows the server's copy 
 To make an index for your own plugins, see [Build a device plugin](/docs/developers/device-plugins/).
 
 ## Troubleshooting
+
+### A plugin says it doesn't have the access it needs
+
+<Badge text="Next release" />
+
+You installed it with a permission off, and it tried to use it (Kanban shows `not allowed: reading boards`). Choose **Review access** over its page and turn on what it needs (on a Mac or iPhone, then choose **Done**; on Linux it opens the plugin's page in Settings); the plugin starts again. Its page in **Settings › Community plugins** has the same switches under **Access**.
 
 ### A plugin says Needs reinstall
 
