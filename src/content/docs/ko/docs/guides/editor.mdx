@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
 
 AIDE의 노트는 모두 Markdown 파일이고, iPhone, Mac, Linux에서 똑같은 실시간 미리보기 편집기 하나로 편집해요. 입력한 내용은 평범한 Markdown 그대로 남아요. 편집기는 스타일만 입히고, 커서가 없는 줄의 문법 기호를 숨길 뿐이에요.
 
@@ -97,6 +97,8 @@ AIDE는 Obsidian이 쓰는 두 가지 링크를 모두 읽어요.
 `![[name]]`은 그 경로, 그다음 `attachments/` 아래, 그다음 보관소 어디든 그 이름의 파일을 찾아요. `![](path)`는 노트 폴더 기준, 그다음 보관소 최상위 기준이에요. 파일이 아니라 노트를 가리키는 `![[Some note]]`는 그 노트로 가는 링크로 보여요. AIDE는 노트 안에 다른 노트를 그리지 않아요.
 
 ### 사진 추가하기
+
+<Badge text="다음 릴리스" /> 툴바의 **사진** 외에 `/image`(또는 `/이미지`)를 입력하거나, 이미지(스크린샷 등)를 붙여 넣거나, 이미지 파일을 노트에 끌어다 놓을 수 있어요. Mac과 Linux에서는 파일을, iPhone에서는 사진 보관함에서 골라요.
 
 편집기 도구 막대의 **Photo**를 누르고 이미지를 고르세요. AIDE는 긴 변이 최대 2560픽셀인 JPEG로 다시 인코딩하고(이때 위치 같은 카메라 메타데이터도 빠져요), 새 이름으로 `attachments/` 아래에 저장한 뒤 커서 위치에 `![](attachments/…)`를 넣어요. GIF는 계속 움직이도록 그대로 둬요.
 

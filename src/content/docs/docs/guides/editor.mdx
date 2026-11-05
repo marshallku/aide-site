@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
 
 Every note in AIDE is a Markdown file, and you edit it in one live-preview editor that is the same on the iPhone, the Mac and Linux. What you type stays plain Markdown; the editor only styles it and hides the syntax on lines your cursor isn't on.
 
@@ -98,7 +98,7 @@ Each attachment is at most 20 MB, and its contents must match its extension: a P
 
 ### Adding a photo
 
-Press **Photo** in the editor's toolbar and pick an image. AIDE re-encodes it as a JPEG of at most 2560 pixels on its long side, which also drops camera metadata such as location, saves it under `attachments/` with a new name, and inserts `![](attachments/…)` at the cursor. A GIF is kept as it is so it still moves.
+Press **Photo** in the editor's toolbar and pick an image (a file on the Mac and Linux, your photo library on the iPhone). <Badge text="Next release" /> You can also type `/image`, paste an image (a screenshot, say), or drop image files on the note. AIDE re-encodes it as a JPEG of at most 2560 pixels on its long side, which also drops camera metadata such as location, saves it under `attachments/` with a new name, and inserts `![](attachments/…)` at the cursor. A GIF is kept as it is so it still moves.
 
 SVG and HTML files aren't added through the photo picker: put them in the vault folder yourself and link them.
 
