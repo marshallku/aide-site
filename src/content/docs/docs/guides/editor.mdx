@@ -45,7 +45,14 @@ A quote whose first line is `> [!kind]` draws as a callout with an icon. AIDE dr
 
 ### Frontmatter properties
 
-A YAML block at the very top of a note shows as a **Properties** panel of key and value rows. Click it to edit the raw YAML. AIDE reads a few keys itself:
+<Badge text="Next release" /> A strip above the title stands for the YAML block at the top of a note: the note's **type** first, then a chip for each property, then **+**.
+
+- **Type** says what kind of note it is: Note, Idea, Log, Source, Reference, How-to, Decision, Project, Person, Meeting or Map. Without a `type:` it comes from the folder (daily, weekly and monthly notes are Logs, `sources/` holds Sources, `meetings/` Meetings, `people/` People, `maps/` Maps); click it to choose another, and choosing the folder's own takes `type:` away again.
+- **Click a property** to change it in place: a list shows its items with ×, a `YYYY-MM-DD` value a date picker, `true`/`false` Yes and No, anything else a text field that suggests values other notes use for that key. Backspace in an empty field removes the property.
+- **+** adds a property, suggesting the keys your notes use, those used with the same type first.
+- Only the property you change is rewritten: comments, order and quotes in the YAML stay as they are. Something the strip can't change (invalid YAML, a key given twice, a nested value) shows in orange and opens the YAML. **N more** lists the rest and **Edit YAML**; moving the cursor into the top of the note shows the raw YAML too.
+
+AIDE reads a few keys itself:
 
 - `title`: the note's title. Without it, the title is the first heading, then the first line of text, then the file name.
 - `aliases` (or `alias`): other names a `[[link]]` can use to find the note.
@@ -81,6 +88,19 @@ When a link can't be followed directly, AIDE asks:
 - **No note at** `<file>` appears when nothing matches. **Create note** makes the note at the file Obsidian would create (the vault's top level, or the path the link spells), titled with the link's name, and opens it.
 
 Web links (`https://…`) open in your browser. Other schemes (`mailto:`, `file:`) do nothing.
+
+### Connecting a block
+
+<Badge text="Next release" />
+
+A paragraph, a list item (with what's under it) or a quote can be connected to other notes. On a Mac or Linux, a handle appears beside the block under the pointer or the cursor; on every device the toolbar's **Connect** does the same for the cursor's block. Its menu:
+
+- **Memo**: a `> [!memo]` callout right under the block, for a remark about it. It stays with the block when you extract it.
+- **Extract to a new note**: the block (and its memo) moves to a new note beside this one, which links back with `source:`; here it becomes a link to the new note. If the block changed meanwhile it stays in both notes, and AIDE says so. A block that other notes point at stays where it is: copy its link instead.
+- **Link to a note…**: pick a note, and the block shows there under **Linked** (`![[This note#^id]]`), once.
+- **Copy link**: `[[This note#^id]]`, to paste anywhere. On a heading, `[[This note#Heading]]`.
+
+Each gives the block an id (` ^k3x9qa`) where Obsidian looks for it, so the links work there too.
 
 ## Images and embeds
 
