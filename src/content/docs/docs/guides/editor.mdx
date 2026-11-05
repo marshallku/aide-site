@@ -82,6 +82,12 @@ Typing `[[` opens a list of your notes ranked by what you type; pick one to inse
 
 Click a rendered link to follow it. <kbd>⌘</kbd>-click (<kbd>Ctrl</kbd>-click on Linux) or a middle-click opens it in a new tab on the desktop. On the line your cursor is on, the link shows as raw text and clicking it just places the cursor.
 
+<Badge text="Next release" /> Rest the pointer on a note link for a moment (on the iPhone, press and hold it) to peek: the note's title and first lines, with **Open**. A `aide://` link written in a note (`aide://note/…`, `aide://today`) opens too.
+
+### Notes inside a note
+
+<Badge text="Next release" /> `![[Note]]` shows another note inside this one, `![[Note#Heading]]` one of its sections and `![[Note#^block-id]]` one block, read-only and kept up to date; click it to open the note. A block that other notes point at shows **↗ 2** (how many) after it; click it to see which.
+
 When a link can't be followed directly, AIDE asks:
 
 - **Which note?** lists the paths of every note the link matches, when several share its name.
