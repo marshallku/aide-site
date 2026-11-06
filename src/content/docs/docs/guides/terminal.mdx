@@ -67,6 +67,33 @@ The terminal sets `TERM=xterm-256color`, `COLORTERM=truecolor` and `TERM_PROGRAM
 otherwise passes on the environment AIDE was started with. A program in the terminal can copy to
 your clipboard but can't read it.
 
+### comux in the terminal <Badge text="Next release" />
+
+On Linux for now (the Mac follows), a tab running comux shows comux's sessions, spaces and agents
+in AIDE's own controls around the terminal, instead of comux drawing them as text:
+
+- A sidebar on the left: **Spaces** and **Agents**, each agent with its status (**working**,
+  **ready**, **blocked**, **idle** or **done**). Click a row to go there; rest the pointer on one to
+  preview its pane. Drag its edge to change its width; AIDE remembers it.
+- A top bar: where you are, the **Work graph** buttons and the bell. The bell shows how many
+  notifications are unread. Click it for **Notifications**: click one to go to its pane, **Dismiss**
+  one, or **Clear all**.
+- A status bar at the bottom: the session, its tabs, counters (**Bells**, **Waiting for you**,
+  **Agents running**, **Unread notifications**), usage gauges and the clock.
+- comux's pickers, prompts, confirms and menus as a card over the tab. Right-click a row or a chip
+  for its menu, such as **Jump to pane**, **Rename tab…** or **Rename session…**.
+
+**Work graph** opens a graph of every agent's work beside the terminal; **Every agent's work, across
+sessions** widens it to all sessions. The buttons never take the keyboard, so what you type keeps
+going to the terminal.
+
+To use a comux on a server, right-click a tab and choose **Open remote comux…**. Enter a host from
+`~/.ssh/config` or `user@host`, and the comux command there if it isn't `comux`. It opens in a new
+tab over `ssh`, with that server's sessions in the sidebar.
+
+Only the tab on screen (in the Terminal section or the right panel) gets AIDE's controls. A tab you
+can't see, or one without comux, shows comux as comux draws it itself.
+
 <Aside type="note">
 The Terminal is part of the Mac app on the release page. A build for the Mac App Store, where the
 sandbox doesn't allow starting a shell, would leave it out.
@@ -102,6 +129,46 @@ menu with **Run startup command**, **Disconnect** and **Reconnect**. Sessions st
 move around the app, and switching between notes on the device and a server doesn't close them;
 turning SSH off does.
 
+### comux on a host <Badge text="Next release" />
+
+If a host runs comux, its row in the list has a **comux** button beside it. Tapping the row still
+opens a shell; **comux** opens the host's comux instead, over the same sign-in, known hosts and
+keychain. Touching and holding the row offers both: **Open a shell** and **Open comux**. An open
+comux is listed with the sessions as "comux on" the host; swipe it to **Close** it.
+
+The comux screen shows the panes as comux draws them, with:
+
+- comux's tabs across the top, and a button on the left that opens **Spaces and agents** as a
+  drawer.
+- **Notifications** on the right, with the unread count, as a drawer from the right.
+- comux's status line at the bottom, and its pickers, prompts, confirms and menus over the screen.
+- A key bar over the keyboard: **esc**, **tab**, **ctrl**, the arrows, comux's keys (**^b**,
+  **^f**, **^b a**, **^b c**, **^b n**, **^b p**, **^b z**), **^c** and **Hide**.
+- The **Session** menu: **Work graph** (a graph of every agent's work, in a sheet), **New tab**,
+  **New session…**, **Resume a conversation…**, **Reconnect** and **Disconnect**.
+
+In the host's editor, the **comux** section has **comux command**: what runs on the host for comux.
+Left empty, AIDE runs `comux proxy --stdio` from your login shell.
+
+For a host that signs in with **A password, asked each time**, the comux screen asks for the
+password. If the server turns it down, it says so and asks again.
+
+### Agent notifications <Badge text="Next release" />
+
+**Agent notifications**, in the host editor's **comux** section, is on by default. The next time you
+open that host's comux, AIDE asks for permission to notify you and gives comux a key made for this
+iPhone. comux then sends its agents' notifications through a push relay to Apple's push service,
+sealed with that key: only this iPhone can read the title and text. The relay and Apple carry only
+a placeholder. If comux turns notifications down, or is too old for them, the section says so.
+
+Tapping a notification opens the SSH section on that host's comux, at the agent's pane. A
+notification from the comux you're looking at doesn't show a banner. If its key is gone, the
+notification reads "Agent notification" and "Open AIDE to see it." If SSH is turned off, tapping it
+tells you to turn SSH on first.
+
+Turning the switch off, or deleting the host, deletes its key at once. comux is told to forget this
+iPhone the next time you connect to it.
+
 ### Keys and passwords
 
 **Keychain** (in the section's menu) holds what you sign in with. Choose **Add**, then:
@@ -112,6 +179,9 @@ turning SSH off does.
   `~/.ssh/authorized_keys` on the server.
 - **Import a key…**: an ED25519 private key in OpenSSH format (`BEGIN OPENSSH PRIVATE KEY`),
   unencrypted or with a passphrase.
+- **New Secure Enclave key…** <Badge text="Next release" />: where the iPhone or iPad has a Secure
+  Enclave, it makes a P-256 key there. Its private half can't be read out, not even by AIDE, and it
+  works only on that device. Copy or share its public key the same way.
 
 Keys and passwords are kept in the iPhone's keychain, never in the host list.
 
