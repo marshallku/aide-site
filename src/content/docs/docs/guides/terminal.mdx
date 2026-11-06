@@ -48,8 +48,8 @@ For the tab, find and text-size keys, see [Keyboard shortcuts](/docs/guides/shor
 | **Draw with the GPU** (Mac) <Badge text="Next release" /> | On | Draws the terminal with Metal. Off draws it with Core Text. Applies to new tabs. |
 | **Font thickening** (Mac) <Badge text="Next release" /> | **Off** | **On**, **Off**, or **On non-Retina displays**: draws text a little heavier. |
 | **Color blending** (Mac) <Badge text="Next release" /> | **Native** | **Native** or **Linear**. Linear applies only when drawing with the GPU, and not over a wallpaper. |
-| **Kitty keyboard protocol** (Linux) <Badge text="Next release" /> | On | Programs that ask for it get every key with its modifiers. Applies to new tabs. |
-| **Images** (Linux) <Badge text="Next release" /> | On | Programs can draw pictures: kitty graphics, and sixel where the system's VTE has it. Pictures more than 200 lines up in the scrollback aren't drawn. Applies to new tabs. |
+| **Kitty keyboard protocol** <Badge text="Next release" /> | On | Programs that ask for it get every key with its modifiers. Applies to new tabs. |
+| **Images** <Badge text="Next release" /> | On | Programs can draw pictures with kitty graphics. On Linux, sixel too where the system's VTE has it, and pictures more than 200 lines up in the scrollback aren't drawn. Applies to new tabs. |
 
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
 are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`).
@@ -58,7 +58,7 @@ are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`).
 
 Keys with no text, such as <kbd>Home</kbd>, <kbd>F5</kbd> or the arrows, reach programs the way
 xterm sends them. A program that asks for the kitty keyboard protocol gets every key with its
-modifiers instead, on the Mac and, with **Kitty keyboard protocol** on, on Linux.
+modifiers instead, while **Kitty keyboard protocol** is on.
 
 On Linux, dropping files on a tab types their paths, quoted for the shell. A dropped image from
 another app is saved first and its path typed; a dropped link is typed as text.
