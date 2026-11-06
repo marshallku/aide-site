@@ -1,0 +1,120 @@
+---
+title: Bookmarks
+description: A device plugin that saves a link as a note, once per address, from its own tab or with /bookmark in Quick capture and Scratch.
+sidebar:
+    order: 36
+---
+
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+
+<Badge text="Next release" />
+
+Bookmarks keeps the links you want to come back to as notes, one note per address, with a title and
+tags. Nothing is fetched from the page: you save the address, and the note holds what you gave it.
+
+<PluginFacts id="bookmark" kind="device" />
+
+## What it does
+
+### The Bookmarks tab
+
+It adds a **Bookmarks** tab:
+
+- **Address**, **Title** and **Tags**, then **Save** (or <kbd>Return</kbd> in any of them). Leave
+  **Title** empty and the title comes from the address: its host and last path segment, like
+  `example.com/guide`, or the host alone. Tags go in as `#read #later` or `read, later`.
+- After saving, the tab says **Saved: &lt;path&gt;**, or **Already saved: &lt;path&gt;** when the
+  address has a note already.
+- **Saved, newest first** lists your bookmarks with their title, address and note path. **Open** opens
+  the note; **Delete** moves it to **Recently deleted**, where you can bring it back.
+
+The list updates by itself when a bookmark is saved elsewhere: from a capture, or on another device.
+
+### /bookmark
+
+In Quick capture or Scratch, type:
+
+```text
+/bookmark https://example.com/guide How the guide works #read #later
+```
+
+The first word is the address, words starting with `#` are tags, and the rest is the title. Both the
+title and the tags can be left out. The command is in the `/` list as **Save a bookmark**. When the
+address is already saved, it says **Already saved: &lt;path&gt;** instead of saving it again.
+
+### One note per address
+
+Before saving, the plugin puts the address in one standard form:
+
+- the scheme and host in lower case, and a default port (`:443`, `:80`) left out;
+- the part after `#` left out;
+- tracking parameters removed: `utm_…`, `gclid`, `fbclid`, `mc_cid`, `mc_eid` and `ref`. Other
+  parameters stay, in their order;
+- an address without a scheme, like `example.com/guide`, taken as `https://`.
+
+`/guide` and `/guide/` stay different addresses. Only `http` and `https` addresses are saved.
+
+The note's name is made from that address, so the same address always lands on the same note:
+`bookmarks/<12 letters and digits>`. A bookmark looks like this:
+
+```markdown
+---
+url: "https://example.com/guide"
+title: "How the guide works"
+captured_at: 2026-11-07T05:12:30.000Z
+source: aide
+tags: [read, later]
+---
+
+<https://example.com/guide>
+```
+
+`captured_at` is the time you saved it, in UTC. You can write anything under the address; the plugin
+doesn't change a note once it's saved.
+
+## Set it up
+
+<Steps>
+
+1. Open **Browse community plugins** (in **Settings**, under **Community plugins**; on Linux, the
+   **Community plugins** page of Settings) and choose **Bookmarks**.
+2. Approve **Read, change and archive notes in bookmarks**, then **Install**.
+3. Open the **Bookmarks** tab and save an address, or type `/bookmark` and one in Quick capture.
+
+</Steps>
+
+It has no settings. More on installing, updating and removing is in [Installing device
+plugins](/docs/plugins/device-plugins/).
+
+<Aside>
+Bookmarks isn't in the public plugin index yet. Until it is, **Browse community plugins** doesn't list
+it.
+</Aside>
+
+## Troubleshooting
+
+### That isn't a web address
+
+The text before the first space isn't an address. Check for a typo, or put the address first after
+`/bookmark`.
+
+### Only http and https addresses are saved
+
+Addresses like `mailto:` or `file:` aren't saved.
+
+### Already saved
+
+That address, in its standard form, already has a note. The message names it; open it from the list.
+An address that differs only in tracking parameters or the part after `#` is the same address.
+
+## Limits
+
+- Nothing is fetched: the title is what you type, or the one made from the address.
+- Two devices that save the same address while offline each make the note. When they sync, that ends
+  in an ordinary sync conflict.
+
+## Privacy
+
+The plugin reads and changes only the notes under `bookmarks/`, synced like any other note. It makes no
+network requests: the addresses you save are never opened.

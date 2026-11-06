@@ -1,0 +1,200 @@
+---
+title: Discord
+description: A Discord bot brings the messages of the channels you follow, mentions and DMs to your Feed, and a 🔖 reaction saves a message as a note.
+sidebar:
+    order: 25
+---
+
+import { Badge, Steps } from "@astrojs/starlight/components";
+import PluginFacts from "#components/PluginFacts.astro";
+import PluginSettings from "#components/PluginSettings.astro";
+
+<Badge text="Next release" />
+
+The Discord plugin connects a Discord bot of your own to AIDE. The messages of the channels you follow,
+mentions and DMs come to your Feed, and reacting to a message with 🔖 saves it as a note.
+
+<PluginFacts id="discord" />
+
+## What it does
+
+### Messages in the Feed
+
+The bot reads the servers you invited it to. What it sees goes to the Feed:
+
+| Feed item                     | When                                                                                   | Pushed |
+| ----------------------------- | -------------------------------------------------------------------------------------- | ------ |
+| **&lt;name&gt; in Discord**   | Someone writes in a channel in **Followed channels**.                                   | No     |
+| **&lt;name&gt; mentioned you** | A message mentions the bot, or you when **Your user id** is set, in any channel the bot reads. | Yes    |
+| **&lt;name&gt; messaged you** | Someone in **Allowed users** (or you) sends the bot a DM.                               | Yes    |
+| **&lt;name&gt; reacted with …** | Someone reacts to a message in a followed channel, or an allowed user reacts in a DM with the bot. | No     |
+
+Each item links to the message in Discord. Messages from bots, the plugin's own bot included, and
+system messages (joins, pins) are left out. DMs from people who aren't allowed are ignored.
+
+### Save a message as a note
+
+React to a message with the **Save emoji** (🔖 unless you change it) and the plugin saves it as a note.
+It counts in a followed channel or in a DM with the bot, and only when the reaction is yours or an
+allowed user's. The note goes to:
+
+```text
+inbox/discord/<channel>/<date>-<first line>
+```
+
+The date is the day the message was written; the name comes from its first line. DMs go under
+`inbox/discord/dm/`. A **Saved from Discord** item appears in the Feed (not pushed).
+
+A saved note looks like this:
+
+```markdown
+---
+source: discord
+discord: 1029384756/1122334455/1234567890
+channel: "#general"
+link: https://discord.com/channels/1029384756/1122334455/1234567890
+saved: 2026-11-07
+tags: [discord]
+---
+# Shall we ship the beta on Friday?
+
+<!-- aide:slot discord.message -->
+**Mina** · 2026-11-07 14:05
+> Shall we ship the beta on Friday?
+> 📎 [notes.pdf](https://cdn.discordapp.com/…)
+<!-- /aide:slot discord.message -->
+```
+
+The message is its author and time with its text quoted; mentions become names and attachments
+become links. A message is saved once: reacting to it again, or someone else's reaction, doesn't save
+it again, so what you write in the note stays.
+
+A save is kept by the plugin before it's done, so a restart loses nothing. When Discord asks it to
+slow down, it waits as long as Discord says. Other failures are tried again each minute, up to 6
+times; a message that's gone or that the bot may not read isn't retried. When a save fails for good,
+the Feed gets **A Discord message wasn't saved**, with the reason.
+
+### After a disconnection
+
+The plugin keeps its connection to Discord and picks up where it was when it reconnects. When Discord
+can't resume the connection, the plugin reads back each followed channel
+from the last message it saw, up to the latest 100. When that falls short, because Discord didn't
+answer or more than 100 messages were written, the Feed gets **Some Discord messages weren't read
+back**, naming the channel. Reactions made while it was disconnected aren't seen, so a 🔖 added then
+doesn't save the message: react again.
+
+## Before you start
+
+- **A desktop host or a server running the server plugins.** The plugin keeps a connection to Discord
+  open from the computer it runs on, and sees messages only while that computer is awake and the host
+  is running ([Host on your desktop](/docs/self-hosting/desktop-host/)).
+- **A Discord server you can invite a bot to.**
+
+The plugin connects out to Discord, so nothing on the internet has to reach your computer. It reads
+Discord as the bot, not as you: it sees the channels the bot was let into, and nothing else.
+
+## Set it up
+
+You create your own Discord application with a bot, then give the plugin the bot's token.
+
+<Steps>
+
+1. In AIDE, open **Settings** and choose **Discord** under **Core plugins** (on Linux, the **Discord**
+   row on the **Core plugins** page of Settings). The status under its settings says **Add the bot
+   token**.
+2. Next to **Bot token**, choose **Discord Developer Portal** and make a new application.
+3. On the application's **Bot** page, choose **Reset Token** and copy the token. On the same page,
+   turn on **Message Content Intent**.
+4. In AIDE, paste the token into **Bot token** and choose **Save**.
+5. In the Developer Portal, open **OAuth2 › URL Generator**, pick the scope `bot` and the permissions
+   **View Channels** and **Read Message History**. Open the URL it makes and add the bot to your
+   server.
+6. In Discord, turn on **Developer Mode** (**Settings › Advanced**). Right-click a channel and choose
+   **Copy Channel ID**, and add it to **Followed channels**. Copy your own user id the same way into
+   **Your user id**, and other people's into **Allowed users**.
+7. Turn on **Enabled**. Within a minute the status says **Connected as &lt;your bot&gt;**.
+8. React to a message in a followed channel with 🔖.
+
+</Steps>
+
+The token is a secret setting. AIDE seals it on the server, only the Discord plugin can read it, and
+the app never shows it again: a saved token reads **Saved in AIDE**, with **Replace** and **Remove**.
+
+## Settings
+
+<PluginSettings
+    id="discord"
+    defaults={{
+        botToken: "",
+        channels: "",
+        users: "",
+        owner: "",
+        folder: "inbox/discord",
+    }}
+/>
+
+- **Followed channels**, **Allowed users** and **Your user id** take Discord ids, a long number. A
+  mention you paste, like `<@123…>` or `<#123…>`, works too. Anything else stops the plugin with **Not
+  a Discord id: …** until you fix it.
+- **Your user id** is allowed like the people in **Allowed users**, and messages that mention you come
+  to the Feed as mentions of the bot do.
+- **Save emoji**: a custom emoji is named without colons, as in `save`. Clearing it brings back 🔖.
+- **Save into**: each channel gets its own folder inside, named after the channel; DMs go into `dm`.
+  Clearing it brings back `inbox/discord`.
+
+## Status
+
+The line under the plugin's settings says how it's doing.
+
+| Status                                                                | What it means                                                                         |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **Connected as …**                                                    | Connected to Discord as that bot.                                                     |
+| **Add the bot token**                                                 | No token is saved. The plugin waits until one is.                                     |
+| **Not a Discord id: …**                                               | A channel or user setting holds something that isn't an id. The plugin waits until you change it. |
+| **Reconnecting to Discord…**                                          | The connection dropped; the plugin is connecting again by itself.                     |
+| **Discord refused the bot token**                                     | The token is wrong or was reset. The plugin waits until you change it.                |
+| **Turn on Message Content Intent for the bot (Developer Portal › Bot)** | Discord won't connect without it. The plugin waits until the settings change.       |
+| **Discord closed the connection for good: …**                         | Discord refused the connection for another reason, with its code. The plugin waits until the settings change. |
+
+## Troubleshooting
+
+### Discord refused the bot token
+
+The token was pasted wrong, or it was reset in the Developer Portal since. Choose **Reset Token** on
+the **Bot** page again and save the new token under **Replace**.
+
+### Turn on Message Content Intent
+
+Open the application's **Bot** page in the Developer Portal, turn on **Message Content Intent** and
+save there. Then change any setting in AIDE (or turn the plugin off and on) so it connects again.
+
+### Nothing from a channel comes to the Feed
+
+- Check that the channel's id is in **Followed channels**, not its name.
+- The bot must be able to see the channel: it needs **View Channels** and **Read Message History**
+  there, which a private channel may not give it.
+- Mentions come from any channel the bot reads, followed or not.
+
+### A 🔖 reaction didn't save the message
+
+- Only you (**Your user id**) and the people in **Allowed users** can save.
+- The message must be in a followed channel or in a DM with the bot.
+- A reaction made while the plugin was disconnected isn't seen. Remove it and react again.
+- A message is saved only once. If you deleted the note, reacting again doesn't save it a second time.
+
+### A Discord message wasn't saved
+
+The reason follows. Discord answered that the message is gone or that the bot may not read it, or it
+failed 6 times in a row. Check the bot's access to the channel.
+
+## Limits
+
+- The bot only reads. It doesn't send messages or reply in Discord.
+
+## Privacy
+
+- The plugin connects from your computer to Discord. Nothing connects in.
+- It reads only what the bot can see in the servers you invited it to.
+- Feed items carry the message's text, its author and a link to it. A saved message becomes a note,
+  stored and synced like any other. Nothing goes to an AI.
+- The token is sealed on the server, readable only by this plugin, and never shown in the apps.

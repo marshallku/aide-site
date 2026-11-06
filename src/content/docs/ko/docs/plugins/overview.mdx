@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 플러그인은 AIDE가 대신 해 주는 일을 늘려 줘요. 아침 브리핑, Google 캘린더, 노트의 git 미러, 매주 찾아 주는 생활 혜택 같은 것들이에요. 어떤 플러그인은 AIDE 서버 옆에서 늘 실행되고, 어떤 플러그인은 한 기기의 앱 안에서 실행돼요.
 
@@ -188,6 +188,7 @@ AI에게 글을 쓰게 하는 플러그인(아침 브리핑, 저녁 정리, 열�
 | [Gmail](/ko/docs/plugins/gmail/)                      | 서버   | 하루 한 번 답장이 필요한 메일과 답을 기다리는 메일을 알려 주고, 급한 메일은 바로 알려요.      |
 | [지난 작업 정리](/ko/docs/plugins/catchup/)           | 서버   | 매일 밤 Claude Code와 Codex 세션, git 기록을 노트에 정리해요.                                 |
 | [Slack](/ko/docs/plugins/slack/)                      | 서버   | Save to AIDE로 Slack 스레드를 요약과 할 일이 담긴 노트로 저장해요.                            |
+| [Discord](/ko/docs/plugins/discord/) <Badge text="다음 릴리스" /> | 서버 | Discord 봇이 팔로우한 채널, 멘션, DM을 피드로 가져오고, 🔖 반응을 단 메시지를 노트로 저장해요. |
 | [레이더](/ko/docs/plugins/radar/)                     | 서버   | 이 컴퓨터의 Slack 채널과 코딩 세션을 지켜보고 놓칠 만한 일을 알려 줘요.                       |
 | [GitHub](/ko/docs/plugins/github/) | 서버 | 할당된 작업, 리뷰 요청, 멘션을 피드와 `work/now`에 모아요.                            |
 | [Linear](/ko/docs/plugins/linear/) | 서버 | Linear 이슈, 멘션, 마감일을 피드와 `work/now`에 모아요.                               |
@@ -195,6 +196,7 @@ AI에게 글을 쓰게 하는 플러그인(아침 브리핑, 저녁 정리, 열�
 | [아이젠하워 매트릭스](/ko/docs/plugins/eisenhower/)   | 기기   | 미완료 할 일을 지금 하기, 일정 잡기, 위임하기, 나중에로 나눠요.                               |
 | [Excalidraw](/ko/docs/plugins/excalidraw/)            | 기기   | 노트에 그림을 그리고, 어떤 리더에서도 보이는 SVG 파일로 저장해요.                             |
 | [뽀모도로](/ko/docs/plugins/pomodoro/)                | 기기   | 하루의 집중 세션을 기록하는 집중 타이머예요.                                                  |
+| [북마크](/ko/docs/plugins/bookmark/) <Badge text="다음 릴리스" /> | 기기 | 링크를 주소마다 한 번만, 탭이나 `/bookmark`로 노트에 저장해요. |
 | [단어 수](/ko/docs/plugins/word-count/)               | 기기   | 읽고 있는 노트의 단어 수를 세요.                                                              |
 
 ## 기기 플러그인

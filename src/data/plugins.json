@@ -807,6 +807,87 @@
             ]
         },
         {
+            "id": "discord",
+            "manifest": {
+                "name": "Discord",
+                "description": "A Discord bot brings the messages of the channels you follow, mentions and DMs to your Feed; a 🔖 reaction saves a message as a note.",
+                "version": "0.1.0",
+                "publishes": [
+                    "discord"
+                ],
+                "slots": [
+                    "discord.message"
+                ],
+                "settings": [
+                    {
+                        "key": "botToken",
+                        "title": "Bot token",
+                        "type": "secret",
+                        "help": "Your application › Bot › Reset Token. Turn on Message Content Intent on the same page, and invite the bot to your server.",
+                        "link": {
+                            "title": "Discord Developer Portal",
+                            "url": "https://discord.com/developers/applications"
+                        }
+                    },
+                    {
+                        "key": "channels",
+                        "title": "Followed channels",
+                        "type": "list",
+                        "help": "Channel ids (Developer Mode › Copy Channel ID). Their messages come to your Feed, and saving works there."
+                    },
+                    {
+                        "key": "users",
+                        "title": "Allowed users",
+                        "type": "list",
+                        "help": "User ids whose save reactions count and whose DMs to the bot come to your Feed."
+                    },
+                    {
+                        "key": "owner",
+                        "title": "Your user id",
+                        "type": "string",
+                        "help": "Mentions of you count like mentions of the bot; you're allowed too."
+                    },
+                    {
+                        "key": "emoji",
+                        "title": "Save emoji",
+                        "type": "string",
+                        "help": "Reacting with it saves the message as a note. A custom emoji by its name.",
+                        "default": "🔖"
+                    },
+                    {
+                        "key": "folder",
+                        "title": "Save into",
+                        "type": "string",
+                        "help": "A folder; each channel gets its own inside. Default: inbox/discord"
+                    }
+                ],
+                "locales": {
+                    "ko": {
+                        "description": "Discord 봇이 팔로우한 채널의 메시지, 멘션, DM을 피드로 가져와요. 🔖 반응을 달면 메시지를 노트로 저장해요.",
+                        "name": "Discord",
+                        "settings.botToken.help": "애플리케이션 › Bot › Reset Token에서 받아요. 같은 페이지에서 Message Content Intent를 켜고 봇을 서버에 초대하세요.",
+                        "settings.botToken.link": "Discord 개발자 포털",
+                        "settings.botToken.title": "봇 토큰",
+                        "settings.channels.help": "채널 ID예요(개발자 모드 › 채널 ID 복사). 이 채널의 메시지가 피드에 오고, 여기서 저장할 수 있어요.",
+                        "settings.channels.title": "팔로우할 채널",
+                        "settings.emoji.help": "이 이모지로 반응하면 메시지를 노트로 저장해요. 커스텀 이모지는 이름으로 적어요.",
+                        "settings.emoji.title": "저장 이모지",
+                        "settings.folder.help": "채널별 하위 폴더를 만들 폴더예요. 기본값: inbox/discord",
+                        "settings.folder.title": "저장할 폴더",
+                        "settings.owner.help": "나를 멘션한 메시지도 봇 멘션처럼 다뤄요. 나도 허용된 사용자예요.",
+                        "settings.owner.title": "내 사용자 ID",
+                        "settings.users.help": "저장 반응이 인정되고, 봇에게 보낸 DM이 피드에 오는 사용자 ID예요.",
+                        "settings.users.title": "허용할 사용자"
+                    }
+                }
+            },
+            "scopes": [
+                "notes:read:*",
+                "notes:write:*",
+                "events:publish:discord"
+            ]
+        },
+        {
             "id": "radar",
             "manifest": {
                 "name": "Radar",
@@ -1208,6 +1289,59 @@
                 "Untitled session": "제목 없는 세션",
                 "What to make of it": "무엇을 만들까요",
                 "just now": "방금"
+            }
+        },
+        {
+            "id": "bookmark",
+            "name": "Bookmarks",
+            "version": "1.0.0",
+            "description": "Saves a link as a note, once per address: tracking parameters and the fragment left out, under bookmarks/ with its title and tags. From its tab, or /bookmark in Quick Capture and Scratch. Nothing is fetched.",
+            "author": "AIDE",
+            "render": "web",
+            "tabs": [
+                {
+                    "id": "bookmarks",
+                    "title": "Bookmarks",
+                    "icon": "bookmark"
+                }
+            ],
+            "commands": [
+                {
+                    "id": "add",
+                    "title": "Save a bookmark",
+                    "icon": "bookmark",
+                    "slash": "bookmark"
+                }
+            ],
+            "capabilities": [
+                "notes:write:bookmarks"
+            ],
+            "locales": {
+                "ko": {
+                    "name": "북마크",
+                    "description": "링크를 노트로 저장해요. 주소마다 한 번만, 추적 매개변수와 # 뒤는 빼고, bookmarks/ 아래에 제목과 태그와 함께요. 탭에서, 또는 빠른 메모와 Scratch에서 /bookmark로. 페이지를 가져오지는 않아요.",
+                    "tabs.bookmarks.title": "북마크",
+                    "commands.add.title": "북마크 저장"
+                }
+            },
+            "strings": {
+                "A link saved as a note, once per address. Nothing is fetched.": "링크를 주소마다 한 번만 노트로 저장해요. 페이지를 가져오지는 않아요.",
+                "Address": "주소",
+                "Already saved: %@": "이미 저장했어요: %@",
+                "Delete": "삭제",
+                "From the address": "주소에서",
+                "Moved to Recently deleted.": "최근 삭제한 항목으로 옮겼어요.",
+                "No bookmarks yet": "아직 북마크가 없어요",
+                "Only http and https addresses are saved.": "http와 https 주소만 저장해요.",
+                "Open": "열기",
+                "Save": "저장",
+                "Save an address above, or type /bookmark and one in Quick Capture.": "위에 주소를 저장하거나, 빠른 메모에서 /bookmark 뒤에 주소를 입력하세요.",
+                "Saved, newest first": "저장한 북마크, 최신순",
+                "Saved: %@": "저장했어요: %@",
+                "Tags": "태그",
+                "That isn't a web address.": "웹 주소가 아니에요.",
+                "Title": "제목",
+                "Write a web address after /bookmark.": "/bookmark 뒤에 웹 주소를 입력하세요."
             }
         },
         {

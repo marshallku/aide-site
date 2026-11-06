@@ -416,7 +416,7 @@ export const docsHref = (lang: Lang, path: string) => `${lang === "ko" ? "/ko" :
 
 /// One line per plugin for the landing page's grid (the manifests' descriptions are for Settings).
 // Plugins in AIDE's main branch that no release carries yet: the grid marks them.
-export const NEXT_RELEASE = new Set<string>();
+export const NEXT_RELEASE = new Set<string>(["discord", "bookmark"]);
 
 export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
     en: {
@@ -431,6 +431,7 @@ export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
         gmail: "Read-only: mail that needs a reply, and what you're waiting on.",
         catchup: "Each night, your Claude Code and Codex sessions written into your notes.",
         slack: "Save to AIDE: a whole Slack thread into a note, with a summary.",
+        discord: "Followed channels, mentions and DMs in your Feed; a 🔖 saves a message as a note.",
         radar: "Watches your Slack and coding sessions and tells you what matters.",
         github: "Your assignments, review requests and mentions in one place.",
         linear: "Your Linear issues, mentions and deadlines in one place.",
@@ -441,6 +442,7 @@ export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
         pomodoro: "A 25/5 focus timer that logs your sessions each evening.",
         "word-count": "The word count of the note you're reading, in the side panel.",
         "agent-sessions": "Your Claude Code, Codex and Grok sessions, made into a note the way you ask.",
+        bookmark: "Links saved as notes, one per address, from a tab or /bookmark. Nothing fetched.",
     },
     ko: {
         "todo-carry": "어제 끝내지 못한 할 일을 오늘 데일리 노트로 옮겨요.",
@@ -454,6 +456,7 @@ export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
         gmail: "읽기 전용: 답장이 필요한 메일과 답을 기다리는 메일.",
         catchup: "밤마다 Claude Code와 Codex 세션을 노트에 정리해요.",
         slack: "AIDE에 저장: Slack 스레드 전체를 요약과 함께 노트로.",
+        discord: "팔로우한 채널, 멘션, DM을 피드로. 🔖 반응으로 메시지를 노트에 저장해요.",
         radar: "Slack과 코딩 세션을 살피고 중요한 걸 알려 줘요.",
         github: "할당된 작업, 리뷰 요청, 멘션을 한곳에.",
         linear: "Linear 이슈, 멘션, 마감일을 한곳에.",
@@ -464,5 +467,6 @@ export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
         pomodoro: "25/5 집중 타이머, 저녁마다 세션을 기록해요.",
         "word-count": "읽고 있는 노트의 단어 수를 사이드 패널에 보여 줘요.",
         "agent-sessions": "Claude Code, Codex, Grok 세션을 원하는 대로 노트로 만들어요.",
+        bookmark: "링크를 주소마다 노트 하나로, 탭이나 /bookmark로 저장해요. 가져오는 건 없어요.",
     },
 };

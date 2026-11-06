@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 Plugins add work AIDE does for you: a morning briefing, your Google calendars, a git mirror of your notes, a weekly scan for benefits. Some run beside your AIDE server around the clock; others run inside the app on one device.
 
@@ -189,6 +189,7 @@ A plugin you turned off can't use its token at all: the server refuses every req
 | [Gmail](/docs/plugins/gmail/)                      | Server | Once a day, the mail that needs a reply and what you're waiting on; urgent mail pushed.       |
 | [Catch-up](/docs/plugins/catchup/)                 | Server | Each night, your Claude Code and Codex sessions and git history written into your notes.      |
 | [Slack](/docs/plugins/slack/)                      | Server | Save to AIDE saves a Slack thread as a note, with a summary and action items.                 |
+| [Discord](/docs/plugins/discord/) <Badge text="Next release" /> | Server | A Discord bot brings followed channels, mentions and DMs to the Feed; a 🔖 reaction saves a message as a note. |
 | [Radar](/docs/plugins/radar/)                      | Server | Watches your Slack channels and coding sessions on this computer and tells you what you'd miss. |
 | [GitHub](/docs/plugins/github/) | Server | Your assignments, review requests and mentions in the Feed and in `work/now`.        |
 | [Linear](/docs/plugins/linear/) | Server | Your Linear issues, mentions and deadlines in the Feed and in `work/now`.            |
@@ -196,6 +197,7 @@ A plugin you turned off can't use its token at all: the server refuses every req
 | [Eisenhower matrix](/docs/plugins/eisenhower/)     | Device | Open todos sorted into do, schedule, delegate and later.                                      |
 | [Excalidraw](/docs/plugins/excalidraw/)            | Device | Drawings in your notes, saved as SVG files any reader can show.                               |
 | [Pomodoro](/docs/plugins/pomodoro/)                | Device | A focus timer that logs the day's sessions.                                                   |
+| [Bookmarks](/docs/plugins/bookmark/) <Badge text="Next release" /> | Device | Saves a link as a note, once per address, from its tab or `/bookmark`. |
 | [Word count](/docs/plugins/word-count/)            | Device | The word count of the note you're reading.                                                    |
 
 ## Device plugins

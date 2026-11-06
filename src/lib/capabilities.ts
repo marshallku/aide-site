@@ -26,6 +26,11 @@ export function describeCapability(capability: string, locale: Locale): string {
         ],
         "attachments:read": ["Read the images and documents your notes show", "노트에 표시되는 이미지와 문서 읽기"],
         "attachments:write": ["Add images and documents to your notes", "노트에 이미지와 문서 추가"],
+        "sessions:read": [
+            "Read your Claude Code, Codex and Grok sessions on this computer",
+            "이 컴퓨터의 Claude Code, Codex, Grok 세션 읽기",
+        ],
+        "ai:run": ["Ask this device's assistant, on your allowance", "이 기기의 어시스턴트에게 묻기(내 사용량으로)"],
     };
     const pick = ([en, ko]: [string, string]) => (locale === "ko" ? ko : en);
     if (fixed[capability]) return pick(fixed[capability]);

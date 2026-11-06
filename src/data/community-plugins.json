@@ -2,6 +2,21 @@
     "note": "The public plugin index (https://marshallku.github.io/aide-plugins/plugins.json), as scripts/sync-from-aide.mjs last read it.",
     "plugins": [
         {
+            "id": "agent-sessions",
+            "name": "Agent sessions",
+            "description": "Lists this computer's Claude Code, Codex and Grok sessions, newest first, and makes a note of one the way you ask: from the right panel, or /session in Quick Capture and Scratch.",
+            "author": "AIDE",
+            "version": "1.0.0",
+            "capabilities": [
+                "sessions:read",
+                "ai:run",
+                "notes:write:*",
+                "storage"
+            ],
+            "repo": "https://github.com/marshallku/aide-plugins",
+            "updated": "2026-11-06"
+        },
+        {
             "id": "eisenhower",
             "name": "Eisenhower matrix",
             "description": "Open todos sorted into do / schedule / delegate / drop by priority and due date.",
