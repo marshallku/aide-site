@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { LinkCard } from "@astrojs/starlight/components";
+import { Badge, LinkCard } from "@astrojs/starlight/components";
 
 A todo in AIDE is a checkbox line in a note, so there's no separate todo database: `- [ ] Call the bank` in any note is a todo, and the Todos screen gathers every open one from all your notes. Checking it off anywhere changes that line in its note.
 
@@ -41,6 +41,8 @@ AIDE reads the fields of the Obsidian Tasks plugin (emoji) and of Dataview (`[ke
 | recurrence | `🔁 every week` | `[repeat:: every week]` |
 | estimate | — | `[estimate:: 25m]`, `1h`, `1h30m` or plain minutes |
 | by | — | `[by:: aide]`: who added it (`aide` for the assistant, radar and the Claude app through AIDE) |
+| project <Badge text="Next release" /> | — | `[project:: AIDE app]`: what it's part of. Up to 60 letters, digits, spaces, `-`, `_`, `.` and `/`; no brackets, `:`, `#` or `@` |
+| source <Badge text="Next release" /> | — | `[source:: https://…]`: where it came from, such as a Slack message, a mail thread or an issue. Only `http://` and `https://` links |
 
 The editor highlights these fields as you type. Off the line you're editing, a todo's time block is tinted, its estimate shows as a timer chip and `[by:: aide]` as an **AI** chip, so what the assistant added stands out; put the cursor on the line to see them as written. Completing a todo with a recurrence rule creates its next occurrence: see [Recurring todos](#recurring-todos).
 
@@ -50,6 +52,7 @@ Off the line you're editing, every field shows as a chip, the way the Todos scre
 
 - **Due** says Today, Tomorrow, Yesterday, a weekday or the date: red once it's past, orange today, blue later. **Scheduled** and **start** read the same way, in blue.
 - **Priority** shows its flag and name (Highest, High, Medium, Low, Lowest) in the Todos screen's colours. **Repeat** shows its rule; **done**, **cancelled** and **created** show their date.
+- **Project** <Badge text="Next release" /> shows its name. **Source** <Badge text="Next release" /> shows where the link goes (Slack, Gmail, GitHub, or the site's address); click it to open the link, whether or not you're editing.
 - Only a field's first occurrence becomes a chip. A value AIDE can't read, such as `[due:: someday]`, shows as written in the warning colour.
 
 While you're editing a note, click a chip to change it:
