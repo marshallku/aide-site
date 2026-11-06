@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 Plugins add work AIDE does for you: a morning briefing, your Google calendars, a git mirror of your notes, a weekly scan for benefits. Some run beside your AIDE server around the clock; others run inside the app on one device.
 
@@ -21,7 +21,7 @@ Plugins add work AIDE does for you: a morning briefing, your Google calendars, a
 
 Most of this page is about server plugins. Device plugins are covered in [Installing device plugins](#device-plugins) below.
 
-<Badge text="Next release" /> **Git**, also under **Core plugins** on the Mac (not the Mac App Store build) and Linux, is part of the app itself: it commits the vault open on that computer to its git repository and syncs it with the remote, with no server. See [Git](/docs/plugins/git/).
+**Git**, also under **Core plugins** on the Mac (not the Mac App Store build) and Linux, is part of the app itself: it commits the vault open on that computer to its git repository and syncs it with the remote, with no server. See [Git](/docs/plugins/git/).
 
 ## Where server plugins run
 
@@ -34,7 +34,7 @@ On a desktop host, plugins are turned on and set up on the hosting computer: a p
 
 In local mode (no server, no host), server plugins don't run yet: they start once you host the vault on a Mac or Linux computer, or connect to a server. Local mode still lists them in **Settings › Core plugins** (on Linux, the **Server plugins** group of the **Core plugins** page), with **Host this vault…** on the Mac and Linux.
 
-<Badge text="Next release" /> Choose a plugin there to see what it does and where it runs. On a Mac or Linux
+Choose a plugin there to see what it does and where it runs. On a Mac or Linux
 computer, its **Host and turn on** hosts the vault (the notes stay in the same folder) and opens Settings
 again on that plugin, switched on. It shows **Turning on …** until the host lists the plugin, which takes
 a few seconds.
@@ -86,23 +86,19 @@ The file holds an optional time zone for the plugins' schedules (the computer's 
 }
 ```
 
-The host reads `plugins.json` when it starts. After you create or change it, quit AIDE and open it again. If **Keep running while I'm logged in** is on, quitting doesn't stop the host: turn that setting off and on again, and the host restarts around the change.
-
-<Badge text="Next release" /> No restart is needed: the host notices when `plugins.json` appears, changes or goes away, and restarts the plugins with it. A change applies within about a minute.
+No restart is needed: the host notices when `plugins.json` appears, changes or goes away, and restarts the plugins with it. A change applies within about a minute.
 
 A value set in the app wins over the same key in `plugins.json`. Each plugin page lists the local keys it reads.
 
 <Aside type="caution">
-A mistake in `plugins.json` (a missing comma, a block that isn't an object) stops the whole runner, so no plugin runs. The host log names the file and the problem.
-
-<Badge text="Next release" /> A file that doesn't parse is left out instead, and the plugins run without it; a plugin block that doesn't parse is left out for that plugin alone. The host log warns `plugins config doesn't parse; plugins run without it` or `a plugin's block in the plugins config doesn't parse; it runs without it`, with the file and the problem.
+A mistake in `plugins.json` (a missing comma, a block that isn't an object) doesn't stop the other plugins: a file that doesn't parse is left out, and the plugins run without it; a plugin block that doesn't parse is left out for that plugin alone. The host log warns `plugins config doesn't parse; plugins run without it` or `a plugin's block in the plugins config doesn't parse; it runs without it`, with the file and the problem.
 </Aside>
 
 ### Status line
 
 A plugin can report how it's doing, shown under its settings in a muted line, or in red when something is wrong. Slack, for example, shows that it's connected or that Slack refused the tokens. The app asks again every 5 seconds while you're looking.
 
-<Badge text="Next release" /> A status can come with a button under it. [Google Calendar](/docs/plugins/gcal/) and [Gmail](/docs/plugins/gmail/), for example, show **Sign in with Google**, which opens in the browser.
+A status can come with a button under it. [Google Calendar](/docs/plugins/gcal/) and [Gmail](/docs/plugins/gmail/), for example, show **Sign in with Google**, which opens in the browser.
 
 ## What plugins write
 
@@ -156,7 +152,7 @@ Plugins that summarize or decide (the briefing, the recap, calendar prep, open l
 
 ### Prompts
 
-<Badge text="Next release" /> The plugins that ask an AI to write (the morning briefing, the evening recap, open loops, Slack's thread summary, catch-up and the benefit scout) have a **Prompt** setting: the instructions the AI follows. It comes filled in with the plugin's own instructions, in the language plugins write in (**Settings › Language › Plugins write in**), so you can read what it asks for and change it.
+The plugins that ask an AI to write (the morning briefing, the evening recap, open loops, Slack's thread summary, catch-up and the benefit scout) have a **Prompt** setting: the instructions the AI follows. It comes filled in with the plugin's own instructions, in the language plugins write in (**Settings › Language › Plugins write in**), so you can read what it asks for and change it.
 
 - **Edit** the text to change what the AI covers, in what tone and at what length. Nothing is saved until you change it, so a prompt you leave alone stays the plugin's own and follows the language when you change it.
 - **Reset to default** removes your version, and the plugin goes back to its own prompt. Clearing the field does the same. On a Mac or iPhone, **Default** shows beside the title while the plugin uses its own prompt.
@@ -194,9 +190,9 @@ A plugin you turned off can't use its token at all: the server refuses every req
 | [Catch-up](/docs/plugins/catchup/)                 | Server | Each night, your Claude Code and Codex sessions and git history written into your notes.      |
 | [Slack](/docs/plugins/slack/)                      | Server | Save to AIDE saves a Slack thread as a note, with a summary and action items.                 |
 | [Radar](/docs/plugins/radar/)                      | Server | Watches your Slack channels and coding sessions on this computer and tells you what you'd miss. |
-| [GitHub](/docs/plugins/github/) <Badge text="Next release" /> | Server | Your assignments, review requests and mentions in the Feed and in `work/now`.        |
-| [Linear](/docs/plugins/linear/) <Badge text="Next release" /> | Server | Your Linear issues, mentions and deadlines in the Feed and in `work/now`.            |
-| [Jira](/docs/plugins/jira/) <Badge text="Next release" />     | Server | Your open Jira work and deadlines in the Feed and in `work/now`.                     |
+| [GitHub](/docs/plugins/github/) | Server | Your assignments, review requests and mentions in the Feed and in `work/now`.        |
+| [Linear](/docs/plugins/linear/) | Server | Your Linear issues, mentions and deadlines in the Feed and in `work/now`.            |
+| [Jira](/docs/plugins/jira/)     | Server | Your open Jira work and deadlines in the Feed and in `work/now`.                     |
 | [Eisenhower matrix](/docs/plugins/eisenhower/)     | Device | Open todos sorted into do, schedule, delegate and later.                                      |
 | [Excalidraw](/docs/plugins/excalidraw/)            | Device | Drawings in your notes, saved as SVG files any reader can show.                               |
 | [Pomodoro](/docs/plugins/pomodoro/)                | Device | A focus timer that logs the day's sessions.                                                   |

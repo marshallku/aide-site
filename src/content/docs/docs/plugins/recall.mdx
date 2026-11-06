@@ -5,7 +5,7 @@ sidebar:
     order: 17
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -96,7 +96,7 @@ When there's nothing at all, it posts nothing.
 
 ### The daily reminder in local mode
 
-<Badge text="Next release" /> With no server, the device reminds you itself. The first time you open **Recall** in a local vault,
+With no server, the device reminds you itself. The first time you open **Recall** in a local vault,
 AIDE asks **Get a daily Recall reminder?**; **Remind me at 8:00** sets the device plugin's
 **Daily reminder** time (change it or clear it in the plugin's settings). The reminder counts as the
 server's does and says the same thing.
@@ -141,8 +141,7 @@ In **Settings › Community plugins › Recall** (on Linux, **Settings › Commu
 
 <PluginSettings id="recall" kind="device" defaults={{ prefixes: "cards", newPerDay: "20", remindAt: "Off" }} />
 
-<Badge text="Next release" /> **Daily reminder** takes effect with the next release of AIDE
-([in local mode](#the-daily-reminder-in-local-mode)).
+**Daily reminder** also works [in local mode](#the-daily-reminder-in-local-mode).
 
 ### Server plugin
 

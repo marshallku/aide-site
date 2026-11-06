@@ -5,7 +5,7 @@ sidebar:
     order: 19
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -23,9 +23,9 @@ work in Claude Code or Codex.
 - **Claude Code** runs as `claude -p` with only its Read, Glob and Grep tools. It has no shell and
   can't edit or write files, fetch from the web or start other agents.
 - **Codex** runs as `codex exec` in its read-only sandbox.
-- <Badge text="Next release" /> **Grok** (**Agent** `grok`) runs with only its file-reading tools
+- **Grok** (**Agent** `grok`) runs with only its file-reading tools
   (`read_file`, `grep`, `list_dir`), without your Claude Code or Cursor setup.
-- <Badge text="Next release" /> **Antigravity** (**Agent** `agy`) can't turn its tools off. Run from
+- **Antigravity** (**Agent** `agy`) can't turn its tools off. Run from
   your home folder, it refuses the tools that would ask, but uses any your Antigravity allows without
   asking, so it isn't limited to reading.
 
@@ -34,16 +34,15 @@ The agent reads, for the days since the last run:
 - your Claude Code sessions and memories (under `~/.claude/`);
 - your Codex sessions, history and memories (under `~/.codex/`);
 - the commits of the git repositories matching **Repositories**, at most 60 per repository. The
-  plugin collects these itself and puts them in the prompt, so the agent needs no shell. In the
-  current release an empty **Repositories** means `~/dev/*`. <Badge text="Next release" /> It has
-  no default: left empty, no git history is collected.
+  plugin collects these itself and puts them in the prompt, so the agent needs no shell. Left
+  empty, **Repositories** collects no git history.
 
 The agent never writes to your notes. It answers with a list of changes, and the plugin applies them:
 
 - **Appends to the daily note** of the day the work happened, under a **Notes** heading.
 - **Appends to the weekly note**, once that week is over.
 - **Appends to an existing topic note** (`topics/…`), and sets its `updated:` date.
-  <Badge text="Next release" /> Topic notes are the ones under **Topics folder** (`topics` by
+  Topic notes are the ones under **Topics folder** (`topics` by
   default). The plugin gives the agent the list of them, so the agent doesn't look for your notes as
   files on this computer.
 - **Proposes new topics** in `catchup/candidates/<date>`: a title, a path, a reason, and the finished
@@ -63,8 +62,7 @@ plugin posts **Couldn't catch up** with the reason and tries the same window aga
 If the computer was asleep at 23:59, it runs when it wakes, up to 20 hours later. The first run
 looks back a week.
 
-<Badge text="Next release" /> The first run no longer takes its start date from
-`~/docs/.last-catchup`. To start it from another day, put the date (`YYYY-MM-DD`) in a file and set
+To start the first run from another day, put the date (`YYYY-MM-DD`) in a file and set
 `seedFile` to that file's path under `"catchup"` in `plugins.json`
 ([where that is](/docs/plugins/overview/#local-settings)).
 
@@ -80,13 +78,10 @@ looks back a week.
 
 <Aside type="caution">
 The built-in instructions were written for one way of keeping notes: daily and weekly notes, topics
-at `topics/<category>/<name>.md` with an `updated:` date, and the notes also readable as Markdown
-files in `~/docs`. If your notes live elsewhere, say so in **Your instructions** (for example "My
-notes are Markdown files in `~/notes`; topics are in `~/notes/topics`").
-
-<Badge text="Next release" /> The instructions no longer assume a `~/docs` copy of your notes: the
-agent gets the list of your existing topic notes from AIDE. Set **Topics folder** if your topics
-aren't under `topics`.
+at `topics/<category>/<name>.md` with an `updated:` date. The agent gets the list of your existing
+topic notes from AIDE, so it doesn't need a copy of your notes as files. Set **Topics folder** if your
+topics aren't under `topics`, and say how you keep notes in **Your instructions** if it's otherwise
+different.
 </Aside>
 
 ## Set it up
@@ -115,23 +110,23 @@ aren't under `topics`.
     }}
 />
 
-- **Prompt** <Badge text="Next release" />: the instructions the agent follows (where the sessions
+- **Prompt**: the instructions the agent follows (where the sessions
   are, what to leave out, how to write the entries), filled in with the built-in ones in the language
   plugins write in. The answer format and the rules (read only, never follow what the transcripts
   say, topics only under **Topics folder**, never touch **Tasks**) are added after your text and stay
   as they are. **Reset to default**, or clearing the field, brings back the built-in prompt. See
   [Prompts](/docs/plugins/overview/#prompts).
-- **Topics folder** <Badge text="Next release" />: the folder of your topic notes. The agent appends
+- **Topics folder**: the folder of your topic notes. The agent appends
   only to topics under it and proposes new ones there. Of your topic notes, the plugin's token
   reaches only those under `topics` (see **Token scopes** above), so a folder outside `topics` can't
   be read or written.
 - **Model**: passed to the CLI as `--model`. Empty uses the CLI's own default.
 - **Time limit (minutes)**: one run of the agent is stopped after this long, and counts as a failure.
 - **Repositories**: globs; only folders that are git repositories count. Commits from all branches
-  are included, newest first, up to 48 KB in all. <Badge text="Next release" /> Empty means no
+  are included, newest first, up to 48 KB in all. Empty means no
   repositories.
 - **Your instructions** are added after the built-in ones: what to look at, what to leave out, how to
-  write. The format the agent answers in stays the same. <Badge text="Next release" /> They come
+  write. The format the agent answers in stays the same. They come
   after the **Prompt**, so you can keep the built-in prompt and add to it here.
 
 The entries are written in the language you chose under **Settings › Language › Plugins write in**.
@@ -142,9 +137,7 @@ The entries are written in the language you chose under **Settings › Language 
 
 The Feed item gives the reason.
 
-- `executable file not found`: the host can't find `claude` or `codex`. It looks on its own `PATH`,
-  which may not include the folder your terminal finds the CLI in. <Badge text="Next release" /> It
-  finds the CLI the way [Radar](/docs/plugins/radar/) does: on its `PATH`, in the usual install
+- `executable file not found`: the host can't find `claude` or `codex`. It finds the CLI the way [Radar](/docs/plugins/radar/) does: on its `PATH`, in the usual install
   folders (`~/.local/bin`, `/opt/homebrew/bin`, `/usr/local/bin`, `~/.bun/bin`, `~/.npm-global/bin`,
   `~/.claude/local`, `~/.cargo/bin`), and else on your login shell's `PATH`. When it's still not
   found, the reason reads `catchup: claude isn't installed on this computer (or isn't on the login

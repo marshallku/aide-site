@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
 Every note in AIDE is a Markdown file, and you edit it in one live-preview editor that is the same on the iPhone, the Mac and Linux. What you type stays plain Markdown; the editor only styles it and hides the syntax on lines your cursor isn't on.
 
@@ -31,9 +31,9 @@ Type `/` at the start of a line or after a space to open the command menu, then 
 | Divider | `---` |
 | Today | today's date, `YYYY-MM-DD` |
 | Link to note | `[[]]` with the note list open |
-| Today's note <Badge text="Next release" /> | a link to today's daily note, `[[YYYY-MM-DD]]` |
-| Meeting <Badge text="Next release" /> | today's events from your calendar; pick one to link its meeting note |
-| Image <Badge text="Next release" /> | an image, picked as Photo picks one |
+| Today's note | a link to today's daily note, `[[YYYY-MM-DD]]` |
+| Meeting | today's events from your calendar; pick one to link its meeting note |
+| Image | an image, picked as Photo picks one |
 
 The menu also lists each entry's Korean name, so `/할 일` finds **To-do**.
 
@@ -50,7 +50,7 @@ A quote whose first line is `> [!kind]` draws as a callout with an icon. AIDE dr
 
 ### Frontmatter properties
 
-<Badge text="Next release" /> A strip above the title stands for the YAML block at the top of a note: the note's **type** first, then a chip for each property, then **+**.
+A strip above the title stands for the YAML block at the top of a note: the note's **type** first, then a chip for each property, then **+**.
 
 - **Type** says what kind of note it is: Note, Idea, Log, Source, Reference, How-to, Decision, Project, Person, Meeting or Map. Without a `type:` it comes from the nearest folder that has one (`daily/`, `weekly/`, `monthly/`, `quarterly/`, `yearly/`, `journal/`, `journals/` and `briefings/` are Logs, `sources/` holds Sources, `meetings/` Meetings, `people/` People, `maps/` Maps, `ideas/` and `brainstorm/` Ideas, `projects/` and `missions/` Projects, `decisions/` Decisions, `references/` and `repos/` References, `howto/` and `guides/` How-tos, so `topics/decisions/…` is a Decision); click it to choose another, and choosing the folder's own takes `type:` away again.
 - **Click a property** to change it in place: a list shows its items with ×, a `YYYY-MM-DD` value a date picker, `true`/`false` Yes and No, anything else a text field that suggests values other notes use for that key. Backspace in an empty field removes the property.
@@ -87,11 +87,11 @@ Typing `[[` opens a list of your notes ranked by what you type; pick one to inse
 
 Click a rendered link to follow it. <kbd>⌘</kbd>-click (<kbd>Ctrl</kbd>-click on Linux) or a middle-click opens it in a new tab on the desktop. On the line your cursor is on, the link shows as raw text and clicking it just places the cursor.
 
-<Badge text="Next release" /> Rest the pointer on a note link for a moment (on the iPhone, press and hold it) to peek: the note's title and first lines, with **Open**. A `aide://` link written in a note (`aide://note/…`, `aide://today`) opens too.
+Rest the pointer on a note link for a moment (on the iPhone, press and hold it) to peek: the note's title and first lines, with **Open**. A `aide://` link written in a note (`aide://note/…`, `aide://today`) opens too.
 
 ### Notes inside a note
 
-<Badge text="Next release" /> `![[Note]]` shows another note inside this one, `![[Note#Heading]]` one of its sections and `![[Note#^block-id]]` one block, read-only and kept up to date; click it to open the note. A block that other notes point at shows **↗ 2** (how many) after it; click it to see which.
+`![[Note]]` shows another note inside this one, `![[Note#Heading]]` one of its sections and `![[Note#^block-id]]` one block, read-only and kept up to date; click it to open the note. A block that other notes point at shows **↗ 2** (how many) after it; click it to see which.
 
 When a link can't be followed directly, AIDE asks:
 
@@ -101,8 +101,6 @@ When a link can't be followed directly, AIDE asks:
 Web links (`https://…`) open in your browser. Other schemes (`mailto:`, `file:`) do nothing.
 
 ### Connecting a block
-
-<Badge text="Next release" />
 
 A paragraph, a list item (with what's under it) or a quote can be connected to other notes. On a Mac or Linux, a handle appears beside the block under the pointer or the cursor; on every device the toolbar's **Connect** does the same for the cursor's block. Its menu:
 
@@ -129,7 +127,7 @@ Each attachment is at most 20 MB, and its contents must match its extension: a P
 
 ### Adding a photo
 
-Press **Photo** in the editor's toolbar and pick an image (a file on the Mac and Linux, your photo library on the iPhone). <Badge text="Next release" /> You can also type `/image`, paste an image (a screenshot, say), or drop image files on the note. AIDE re-encodes it as a JPEG of at most 2560 pixels on its long side, which also drops camera metadata such as location, saves it under `attachments/` with a new name, and inserts `![](attachments/…)` at the cursor. A GIF is kept as it is so it still moves.
+Press **Photo** in the editor's toolbar and pick an image (a file on the Mac and Linux, your photo library on the iPhone). You can also type `/image`, paste an image (a screenshot, say), or drop image files on the note. AIDE re-encodes it as a JPEG of at most 2560 pixels on its long side, which also drops camera metadata such as location, saves it under `attachments/` with a new name, and inserts `![](attachments/…)` at the cursor. A GIF is kept as it is so it still moves.
 
 SVG and HTML files aren't added through the photo picker: put them in the vault folder yourself and link them.
 

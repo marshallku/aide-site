@@ -5,7 +5,7 @@ sidebar:
     order: 11
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -33,12 +33,12 @@ A day with nothing reads `- No events`. The list is written when the daily is cr
 
 **Fills in meeting notes.** In a [meeting note](/docs/guides/meetings/) made from one of its events, it keeps a section with what the calendar knows: when, where, the video link, the other attendees, the event link and its description, and marks it cancelled if the event is.
 
-<Badge text="Next release" /> An event without a title is called "(No title)" in the agenda, reminders, prep notes and the app's calendar, in the language plugins write in.
+An event without a title is called "(No title)" in the agenda, reminders, prep notes and the app's calendar, in the language plugins write in.
 
 ## Before you start
 
 - A [desktop host](/docs/self-hosting/desktop-host/) or your own server. The plugin runs there and reads Google from that machine.
-- A Google account. <Badge text="Next release" /> You sign in from the plugin's settings in the app; you don't need an OAuth client of your own. Until this release, the plugin needed `credentials.json` and a token file you made yourself (see [Your own OAuth files](#your-own-oauth-files)).
+- A Google account. You sign in from the plugin's settings in the app; you don't need an OAuth client of your own. Earlier versions needed `credentials.json` and a token file you made yourself (see [Your own OAuth files](#your-own-oauth-files)).
 - For prep notes: an AI set in **Settings › AI** (**Anthropic API key** or **My gateway**).
 
 ## Set it up
@@ -46,7 +46,7 @@ A day with nothing reads `- No events`. The list is written when the daily is cr
 <Steps>
 
 1. Turn the plugin on: **Calendar** under **Settings › Core plugins**, then **Enabled** (on Linux, the switch on its row on the **Core plugins** page of Settings). See [Turn a plugin on](/docs/plugins/overview/#turn-a-plugin-on).
-2. <Badge text="Next release" /> Within a minute the plugin's status, under its settings, reads "Sign in to read your calendars…" with a **Sign in with Google** button. Choose it, pick your Google account and allow AIDE to see your calendars.
+2. Within a minute the plugin's status, under its settings, reads "Sign in to read your calendars…" with a **Sign in with Google** button. Choose it, pick your Google account and allow AIDE to see your calendars.
     - **On the computer that runs the plugins** (the desktop host's own app): the browser comes back to AIDE by itself and says "AIDE is signed in to Google. You can close this tab."
     - **From a phone or another computer**: the browser ends on a page that doesn't load, at an address starting with `http://127.0.0.1`. Copy that whole address, paste it into the plugin's **Sign-in link** setting and save. The plugin picks it up within a few seconds.
 
@@ -67,7 +67,7 @@ The token stays in the plugin's state folder on the computer that runs the plugi
 
 <PluginSettings id="gcal" defaults={{ signInLink: "" }} />
 
-**Sign-in link** <Badge text="Next release" /> is only for signing in from a phone or another computer (see [Set it up](#set-it-up)).
+**Sign-in link** is only for signing in from a phone or another computer (see [Set it up](#set-it-up)).
 
 The rest of the plugin's choices are in the **Calendars…** sheet, under the plugin in Settings (on Linux, the **Calendars…** row in its expanded row):
 
@@ -113,8 +113,8 @@ In `plugins.json` on a desktop host (see [Local settings](/docs/plugins/overview
 Setups from before Sign in with Google keep working. The plugin uses, in this order:
 
 1. The token file named by `tokenFile`, with the client named by `credentials`.
-2. <Badge text="Next release" /> The account you signed in with from the app.
-3. The files it read before this release, when they exist: `~/.config/life-assistant/google-token.json`, with the client at `~/.config/life-assistant/credentials.json`.
+2. The account you signed in with from the app.
+3. The files earlier versions read, when they exist: `~/.config/life-assistant/google-token.json`, with the client at `~/.config/life-assistant/credentials.json`.
 
 A token file must be granted the read-only calendar scope (`https://www.googleapis.com/auth/calendar.readonly`) for that same client. When Google refreshes it, the plugin saves the new one in its own state folder and never writes into your token file. If you replace your token file later (after signing in again), the newer file wins. While one of these files is in use, the plugin doesn't offer **Sign in with Google**, unless Google refuses the old files' token (see [Calendar asks me to sign in again](#calendar-asks-me-to-sign-in-again)).
 
@@ -122,14 +122,14 @@ A token file must be granted the read-only calendar scope (`https://www.googleap
 
 ### No calendars show up
 
-- <Badge text="Next release" /> Look at the plugin's status under its settings. "Sign in to read your calendars…" means it's still waiting for you to sign in.
+- Look at the plugin's status under its settings. "Sign in to read your calendars…" means it's still waiting for you to sign in.
 - "That sign-in link is old or already used; sign in again": the pasted address came from an earlier attempt. Choose **Sign in with Google** again and paste the new address.
 - "This build can't sign in to Google; set credentials in the plugins' config file": this copy of AIDE has no Google client built in. Use [your own OAuth files](#your-own-oauth-files).
 - With your own files, the plugin can't start until it can read them. It tries again every 30 seconds, and the host log (its path is under **Log** in Settings › Host) says which file it couldn't read. Check the paths, and that the token was issued for the same OAuth client as `credentials.json`.
 
 ### Calendar asks me to sign in again
 
-<Badge text="Next release" /> Google stopped taking the plugin's access (you removed it at [myaccount.google.com/permissions](https://myaccount.google.com/permissions) or changed your password). The plugin sets the refused token aside and shows **Sign in with Google** again. That holds for the app's sign-in and for the files it read before this release (`~/.config/life-assistant/google-token.json`): such a file is skipped until it changes, and never deleted. A token file you named with `tokenFile` isn't set aside; sign in again with your own tooling and replace the file.
+Google stopped taking the plugin's access (you removed it at [myaccount.google.com/permissions](https://myaccount.google.com/permissions) or changed your password). The plugin sets the refused token aside and shows **Sign in with Google** again. That holds for the app's sign-in and for the files earlier versions read (`~/.config/life-assistant/google-token.json`): such a file is skipped until it changes, and never deleted. A token file you named with `tokenFile` isn't set aside; sign in again with your own tooling and replace the file.
 
 ### google: no refresh token came back
 

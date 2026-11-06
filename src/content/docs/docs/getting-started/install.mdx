@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Tabs, TabItem, Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
 
 AIDE is released for the Mac and for Linux on x86_64 from the public
 [aide-releases](https://github.com/marshallku/aide-releases) repository. Each install also gives you
@@ -122,7 +122,7 @@ AIDE opens on **Get started**, where you choose where your notes live: on this d
 you already have (an Obsidian vault opens in place), or on a server or desktop host.
 [Ways to run AIDE](/docs/getting-started/ways-to-run/) explains each choice.
 
-<Badge text="Next release" /> Once your notes open, **What AIDE can do** shows the features that are easy to miss, each with the switch or page that turns it on: adding todos from anywhere with `/todo`, the [assistant](/docs/guides/assistant/) and its character, the morning plan and evening recap, your calendar, Slack, radar and Gmail. Until you open it or choose **Not now**, Todos offers it in a card; afterwards it's in **Settings** (on Linux, the command palette).
+Once your notes open, **What AIDE can do** shows the features that are easy to miss, each with the switch or page that turns it on: adding todos from anywhere with `/todo`, the [assistant](/docs/guides/assistant/) and its character, the morning plan and evening recap, your calendar, Slack, radar and Gmail. Until you open it or choose **Not now**, Todos offers it in a card; afterwards it's in **Settings** (on Linux, the command palette).
 
 ## Updates
 
@@ -193,11 +193,11 @@ The script quits AIDE, removes `AIDE.app` from `~/Applications` (or the folder y
 Your notes and settings stay. A vault AIDE keeps for you is under
 `~/Library/Application Support/com.marshallku.aide`, and a hosted vault's server data (its database
 and plugin state) is under `~/Library/Application Support/AIDE/hosts`. Folders you opened yourself
-are never touched. <Badge text="Next release" /> The script's last line says where they stay:
+are never touched. The script's last line says where they stay:
 `AIDE removed from … (notes and settings stay in ~/Library/Application Support/com.marshallku.aide,
 a hosted vault's server data in ~/Library/Application Support/AIDE)`.
 
-<Badge text="Next release" /> To remove those too with Homebrew, add `--zap`:
+To remove those too with Homebrew, add `--zap`:
 
 ```bash
 brew uninstall --zap --cask aide

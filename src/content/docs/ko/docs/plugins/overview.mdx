@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 플러그인은 AIDE가 대신 해 주는 일을 늘려 줘요. 아침 브리핑, Google 캘린더, 노트의 git 미러, 매주 찾아 주는 생활 혜택 같은 것들이에요. 어떤 플러그인은 AIDE 서버 옆에서 늘 실행되고, 어떤 플러그인은 한 기기의 앱 안에서 실행돼요.
 
@@ -21,7 +21,7 @@ import { Aside, Badge } from "@astrojs/starlight/components";
 
 이 페이지는 주로 서버 플러그인을 다뤄요. 기기 플러그인은 아래 [기기 플러그인 설치](#기기-플러그인)에서 설명해요.
 
-<Badge text="다음 릴리스" /> Mac(Mac App Store 빌드 제외)과 Linux의 **코어 플러그인**에 있는 **Git**은 앱 자체에 들어 있어요. 서버 없이, 그 컴퓨터에서 연 보관소를 git 저장소에 커밋하고 원격과 동기화해요. [Git](/ko/docs/plugins/git/)을 참고하세요.
+Mac(Mac App Store 빌드 제외)과 Linux의 **코어 플러그인**에 있는 **Git**은 앱 자체에 들어 있어요. 서버 없이, 그 컴퓨터에서 연 보관소를 git 저장소에 커밋하고 원격과 동기화해요. [Git](/ko/docs/plugins/git/)을 참고하세요.
 
 ## 서버 플러그인이 실행되는 곳
 
@@ -34,7 +34,7 @@ import { Aside, Badge } from "@astrojs/starlight/components";
 
 로컬 모드(서버도 호스트도 없음)에서는 서버 플러그인이 아직 실행되지 않아요. Mac이나 Linux 컴퓨터에서 보관소를 호스팅하거나 서버에 연결하면 실행돼요. 로컬 모드에서도 **설정 › 코어 플러그인**(Linux에서는 **코어 플러그인** 페이지의 **서버 플러그인** 그룹)에 목록이 보이고, Mac과 Linux에서는 <strong>이 보관소 호스팅…</strong>도 함께 보여요.
 
-<Badge text="다음 릴리스" /> 거기서 플러그인을 고르면 무엇을 하고 어디서 실행되는지 보여요. Mac이나 Linux
+거기서 플러그인을 고르면 무엇을 하고 어디서 실행되는지 보여요. Mac이나 Linux
 컴퓨터에서는 **호스팅하고 켜기**를 누르면 보관소를 호스팅하고(노트는 같은 폴더에 그대로 있어요) 그 플러그인을 켠
 채로 설정을 다시 열어요. 호스트가 플러그인을 띄울 때까지 몇 초 동안 **… 켜는 중**이 보여요.
 
@@ -85,23 +85,19 @@ Slack의 토큰처럼 비밀 값을 받는 플러그인도 있어요. 값을 입
 }
 ```
 
-호스트는 시작할 때 `plugins.json`을 읽어요. 파일을 만들거나 고친 뒤에는 AIDE를 종료했다가 다시 열어요. **로그인한 동안 계속 실행**이 켜져 있으면 종료해도 호스트가 멈추지 않아요. 이때는 그 설정을 껐다가 다시 켜면 호스트가 변경 사항을 반영해 다시 시작해요.
-
-<Badge text="다음 릴리스" /> 다시 시작하지 않아도 돼요. 호스트가 `plugins.json`이 생기거나, 바뀌거나, 없어지는 것을 알아채고 그 내용으로 플러그인을 다시 시작해요. 바뀐 내용은 1분쯤 안에 반영돼요.
+`plugins.json`을 만들거나 고친 뒤 호스트를 다시 시작하지 않아도 돼요. 호스트가 `plugins.json`이 생기거나, 바뀌거나, 없어지는 것을 알아채고 그 내용으로 플러그인을 다시 시작해요. 바뀐 내용은 1분쯤 안에 반영돼요.
 
 앱에서 정한 값이 `plugins.json`의 같은 키보다 우선해요. 각 플러그인 페이지에 그 플러그인이 읽는 로컬 키가 나와 있어요.
 
 <Aside type="caution">
-`plugins.json`에 실수가 있으면(쉼표 누락, 객체가 아닌 블록 등) 러너 전체가 멈춰서 어떤 플러그인도 실행되지 않아요. 호스트 로그에 파일 이름과 문제가 나와요.
-
-<Badge text="다음 릴리스" /> 대신 읽을 수 없는 파일은 빼고 플러그인을 실행하고, 읽을 수 없는 플러그인 블록은 그 플러그인에서만 빼요. 호스트 로그에 `plugins config doesn't parse; plugins run without it` 또는 `a plugin's block in the plugins config doesn't parse; it runs without it`이 파일 이름, 문제와 함께 나와요.
+`plugins.json`에 실수가 있어도(쉼표 누락, 객체가 아닌 블록 등) 다른 플러그인은 멈추지 않아요. 읽을 수 없는 파일은 빼고 플러그인을 실행하고, 읽을 수 없는 플러그인 블록은 그 플러그인에서만 빼요. 호스트 로그에 `plugins config doesn't parse; plugins run without it` 또는 `a plugin's block in the plugins config doesn't parse; it runs without it`이 파일 이름, 문제와 함께 나와요.
 </Aside>
 
 ### 상태 줄
 
 플러그인은 자기 상태를 알릴 수 있어요. 설정 아래에 흐린 줄로 보이고, 문제가 있으면 빨간색으로 보여요. 예를 들어 Slack은 연결됐는지, Slack이 토큰을 거부했는지 보여 줘요. 화면을 보고 있는 동안 앱이 5초마다 다시 확인해요.
 
-<Badge text="다음 릴리스" /> 상태 줄 아래에 버튼이 함께 나올 수도 있어요. 예를 들어 [Google 캘린더](/ko/docs/plugins/gcal/)와 [Gmail](/ko/docs/plugins/gmail/)은 **Google로 로그인**을 보여 주고, 누르면 브라우저에서 열려요.
+상태 줄 아래에 버튼이 함께 나올 수도 있어요. 예를 들어 [Google 캘린더](/ko/docs/plugins/gcal/)와 [Gmail](/ko/docs/plugins/gmail/)은 **Google로 로그인**을 보여 주고, 누르면 브라우저에서 열려요.
 
 ## 플러그인이 쓰는 내용
 
@@ -155,7 +151,7 @@ AIDE가 이 템플릿으로 노트를 만들면 각 슬롯은 두 마커 주석(
 
 ### 프롬프트
 
-<Badge text="다음 릴리스" /> AI에게 글을 쓰게 하는 플러그인(아침 브리핑, 저녁 정리, 열린 이슈, Slack의 스레드 요약, 지난 작업 정리, 생활 혜택)에는 **프롬프트** 설정이 있어요. AI가 따르는 지침이에요. 플러그인 자체의 지침이 플러그인이 쓰는 언어(**설정 › 언어 › 플러그인 작성 언어**)로 채워져 있어서, 무엇을 요청하는지 읽고 바꿀 수 있어요.
+AI에게 글을 쓰게 하는 플러그인(아침 브리핑, 저녁 정리, 열린 이슈, Slack의 스레드 요약, 지난 작업 정리, 생활 혜택)에는 **프롬프트** 설정이 있어요. AI가 따르는 지침이에요. 플러그인 자체의 지침이 플러그인이 쓰는 언어(**설정 › 언어 › 플러그인 작성 언어**)로 채워져 있어서, 무엇을 요청하는지 읽고 바꿀 수 있어요.
 
 - **고치기**: 무엇을 다룰지, 어떤 말투로 얼마나 길게 쓸지 바꾸려면 내용을 고쳐요. 고치기 전에는 아무것도 저장되지 않아서, 그대로 둔 프롬프트는 플러그인 자체의 것으로 남고 언어를 바꾸면 그 언어를 따라가요.
 - <strong>기본값으로 되돌리기</strong>를 누르면 내가 고친 내용이 지워지고 플러그인 자체의 프롬프트로 돌아가요. 칸을 비워도 마찬가지예요. Mac과 iPhone에서는 플러그인 자체의 프롬프트를 쓰는 동안 제목 옆에 **기본값**이 보여요.
@@ -193,9 +189,9 @@ AIDE가 이 템플릿으로 노트를 만들면 각 슬롯은 두 마커 주석(
 | [지난 작업 정리](/ko/docs/plugins/catchup/)           | 서버   | 매일 밤 Claude Code와 Codex 세션, git 기록을 노트에 정리해요.                                 |
 | [Slack](/ko/docs/plugins/slack/)                      | 서버   | Save to AIDE로 Slack 스레드를 요약과 할 일이 담긴 노트로 저장해요.                            |
 | [레이더](/ko/docs/plugins/radar/)                     | 서버   | 이 컴퓨터의 Slack 채널과 코딩 세션을 지켜보고 놓칠 만한 일을 알려 줘요.                       |
-| [GitHub](/ko/docs/plugins/github/) <Badge text="다음 릴리스" /> | 서버 | 할당된 작업, 리뷰 요청, 멘션을 피드와 `work/now`에 모아요.                            |
-| [Linear](/ko/docs/plugins/linear/) <Badge text="다음 릴리스" /> | 서버 | Linear 이슈, 멘션, 마감일을 피드와 `work/now`에 모아요.                               |
-| [Jira](/ko/docs/plugins/jira/) <Badge text="다음 릴리스" />     | 서버 | 진행 중인 Jira 작업과 마감일을 피드와 `work/now`에 모아요.                            |
+| [GitHub](/ko/docs/plugins/github/) | 서버 | 할당된 작업, 리뷰 요청, 멘션을 피드와 `work/now`에 모아요.                            |
+| [Linear](/ko/docs/plugins/linear/) | 서버 | Linear 이슈, 멘션, 마감일을 피드와 `work/now`에 모아요.                               |
+| [Jira](/ko/docs/plugins/jira/)     | 서버 | 진행 중인 Jira 작업과 마감일을 피드와 `work/now`에 모아요.                            |
 | [아이젠하워 매트릭스](/ko/docs/plugins/eisenhower/)   | 기기   | 미완료 할 일을 지금 하기, 일정 잡기, 위임하기, 나중에로 나눠요.                               |
 | [Excalidraw](/ko/docs/plugins/excalidraw/)            | 기기   | 노트에 그림을 그리고, 어떤 리더에서도 보이는 SVG 파일로 저장해요.                             |
 | [뽀모도로](/ko/docs/plugins/pomodoro/)                | 기기   | 하루의 집중 세션을 기록하는 집중 타이머예요.                                                  |

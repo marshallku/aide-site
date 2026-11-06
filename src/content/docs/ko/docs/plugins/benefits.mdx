@@ -5,7 +5,7 @@ sidebar:
     order: 16
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -89,7 +89,7 @@ import PluginSettings from "#components/PluginSettings.astro";
 
 **프로필 노트**는 노트 경로예요. 비워 두면 `profile/life`를 써요.
 
-**프롬프트.** <Badge text="다음 릴리스" /> 그 주의 혜택과 뉴스를 AI가 어떻게 따지고 브리핑을 어떻게 쓸지 정하는 지침이에요. 기본 지침이 플러그인이 쓰는 언어로 채워져 있고, 플러그인의 나머지처럼 한국의 혜택과 정책 뉴스에 맞춰 쓰여 있어요. 무엇을 챙길 만하다고 볼지, 브리핑을 어떻게 쓸지 바꾸려면 고쳐요. 응답 형식과 규칙은 내 지침 뒤에 그대로 붙어요. 받은 자료만 쓰고, 수치나 자격을 지어내지 않고, 카탈로그 수치는 카탈로그 기준이라고 밝히고, 링크는 그대로 옮겨요. <strong>기본값으로 되돌리기</strong>를 누르거나 칸을 비우면 기본 프롬프트로 돌아가요. [프롬프트](/ko/docs/plugins/overview/#프롬프트)를 참고하세요.
+**프롬프트.** 그 주의 혜택과 뉴스를 AI가 어떻게 따지고 브리핑을 어떻게 쓸지 정하는 지침이에요. 기본 지침이 플러그인이 쓰는 언어로 채워져 있고, 플러그인의 나머지처럼 한국의 혜택과 정책 뉴스에 맞춰 쓰여 있어요. 무엇을 챙길 만하다고 볼지, 브리핑을 어떻게 쓸지 바꾸려면 고쳐요. 응답 형식과 규칙은 내 지침 뒤에 그대로 붙어요. 받은 자료만 쓰고, 수치나 자격을 지어내지 않고, 카탈로그 수치는 카탈로그 기준이라고 밝히고, 링크는 그대로 옮겨요. <strong>기본값으로 되돌리기</strong>를 누르거나 칸을 비우면 기본 프롬프트로 돌아가요. [프롬프트](/ko/docs/plugins/overview/#프롬프트)를 참고하세요.
 
 ### 로컬 키
 
@@ -116,7 +116,7 @@ import PluginSettings from "#components/PluginSettings.astro";
 
 - 맞는 혜택도, 알릴 만한 것도 없는 주에는 이벤트가 없어요. 대부분 이 경우예요.
 - 프로필 노트가 없으면 그 주를 건너뛰어요. **프로필 노트**의 경로를 확인하세요.
-- frontmatter 블록(맨 위의 `---` 줄)이 없는 프로필 노트는 읽을 수 없어요. 플러그인이 일주일 내내 10분마다 다시 시도하고, 호스트 로그에 `life profile has no YAML frontmatter`가 나와요. <Badge text="다음 릴리스" /> 대신 그 주에 한 번 피드에 알림 없이 "생활 프로필 노트를 읽을 수 없어요"라고 알리고, 노트에 frontmatter가 생길 때까지 그 주는 건너뛰어요.
+- frontmatter 블록(맨 위의 `---` 줄)이 없는 프로필 노트는 읽을 수 없어요. 플러그인은 그 주에 한 번 피드에 알림 없이 "생활 프로필 노트를 읽을 수 없어요"라고 알리고, 노트에 frontmatter가 생길 때까지 그 주는 건너뛰어요.
 - **설정 › AI**가 <strong>규칙(AI 미사용)</strong>이 아닌지 확인하세요.
 
 ### 브리핑의 링크를 누를 수 없어요

@@ -5,7 +5,7 @@ sidebar:
     order: 9
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 The assistant plans your day with you. You tell it what you want ("Plan my day", "I lost the
 afternoon, what can move?"), and it answers with a short reply and concrete changes to your todos:
@@ -27,13 +27,13 @@ today**, **What can move to tomorrow?** On the Mac, <kbd>Return</kbd> or <kbd>�
 sends; on Linux, <kbd>Enter</kbd> sends and <kbd>Shift</kbd><kbd>Enter</kbd> starts a new line. The
 button beside Send starts a **New conversation**.
 
-<Badge text="Next release" /> On the Mac, <kbd>⇧</kbd><kbd>Return</kbd> starts a new line too (on the
+On the Mac, <kbd>⇧</kbd><kbd>Return</kbd> starts a new line too (on the
 iPhone, Return starts a new line and Send sends). You don't have to wait for an answer: a message
 you send while the assistant is still answering waits under it as **Sends after this answer**, and
 goes once the answer is in, with the answer in what it knows. Several wait in the order you sent
 them, and ✕ takes one back before it goes. If the answer asks to read a note, what waits holds until you choose **Allow** or **Deny**. A turn that fails says why with **Retry**, which sends the same message again.
 
-<Badge text="Next release" /> To add a todo without asking, start the message with `/todo`: each line after it goes to today's todos at once, even while an answer is coming, and the conversation says what was added ([A todo instead of a note](/docs/guides/scratch/#a-todo-instead-of-a-note)). The command list shows as soon as you type `/`.
+To add a todo without asking, start the message with `/todo`: each line after it goes to today's todos at once, even while an answer is coming, and the conversation says what was added ([A todo instead of a note](/docs/guides/scratch/#a-todo-instead-of-a-note)). The command list shows as soon as you type `/`.
 
 ## What it sees
 
@@ -66,7 +66,7 @@ The assistant can propose to:
 | Status | Marks it open, in progress, done or cancelled. |
 | Add | A new todo in that day's daily note, today or up to a year ahead. |
 | Move | The todo, with its memo and subtasks, goes to another day's daily note; it is marked migrated `[>]` where it was. |
-| Someday <Badge text="Next release" /> | Adds your someday tag, so the todo waits under **Someday / maybe** ([old todos](/docs/guides/todos/#old-todos)). |
+| Someday | Adds your someday tag, so the todo waits under **Someday / maybe** ([old todos](/docs/guides/todos/#old-todos)). |
 
 - **Take** (✓) applies one card. **Drop** (✕) discards it. **Take all** takes every waiting card of
   a reply, in order.
@@ -74,16 +74,16 @@ The assistant can propose to:
   **Proposed** section at the top, each with ✓ and ✕.
 - A taken card has **Undo**. It puts the line back only if it's still exactly as the assistant left
   it; if you've edited it since, Undo says so and leaves your note alone.
-- <Badge text="Next release" /> **Drop all** sits beside every **Take all** and drops the waiting
+- **Drop all** sits beside every **Take all** and drops the waiting
   cards at once. When cards wait in two or more replies, a bar under the conversation says
   **N proposals waiting**, with Take all and Drop all for all of them.
 - A card can be taken for 24 hours. When you take it later, its times are checked again against the
   day as it is now; a new clash asks you to choose **Take anyway**.
-- <Badge text="Next release" /> A card whose time is gone reads **Time passed** and can't be taken
+- A card whose time is gone reads **Time passed** and can't be taken
   any more: a block that has ended, a new todo at a time that has passed, a move to a day gone by.
   Cards with no time, such as a status, an estimate or a new todo with no time, don't run out
   this way.
-- <Badge text="Next release" /> Cards that need nothing more (dropped, time passed, expired, or
+- Cards that need nothing more (dropped, time passed, expired, or
   changed since) fold into one line under their reply, such as "3 dropped · 2 time passed". **Show**
   brings them back.
 - Taking a card twice, here or on another device, applies it once.
@@ -110,7 +110,7 @@ Two notes are yours to edit and are sent with every message (the first 2 KB of e
   something, that's a card too; taken, it adds a line to this note.
 - `assistant/goals`: what you're working toward.
 
-<Badge text="Next release" /> Your open work is sent too: the [GitHub](/docs/plugins/github/),
+Your open work is sent too: the [GitHub](/docs/plugins/github/),
 [Linear](/docs/plugins/linear/) and [Jira](/docs/plugins/jira/) sections of the `work/now` note, up to
 4 KiB in all, shared between them. The assistant reads it as data from your tools, never as
 instructions. It's left out when `work/` is under **Never read** (below).
@@ -118,11 +118,11 @@ instructions. It's left out when `work/` is under **Never read** (below).
 ## Reading your notes
 
 The assistant can ask to read up to three notes before answering. Some it reads without asking:
-notes under `assistant/`, `radar/` and `people/` (<Badge text="Next release" /> and `work/`), the note of any todo it was given, today's daily
+notes under `assistant/`, `radar/` and `people/` (and `work/`), the note of any todo it was given, today's daily
 note and this week's weekly note. For anything else it shows a card, **The assistant wants to read:
 …**, with **Allow** and **Deny**. Each note it reads is sent cut to 4 KB.
 
-<Badge text="Next release" /> It can also search your notes. When you name something only by its
+It can also search your notes. When you name something only by its
 words ("the deploy checklist Kim sent", "what we decided about pricing"), it searches for up to
 three short queries, the way AIDE's search does, and the conversation says **Searched your notes for
 …**. It sees each match's path, title and the line around it, at most 12 notes, never a conversation
@@ -140,14 +140,14 @@ With **Keep conversations** on (the default), each exchange is written to that d
 `assistant/<date>`, with what became of each proposal (**Took**, **Dropped**). Every device shows
 the same conversation, and it survives a restart. Turning it off also turns off speaking first.
 
-<Badge text="Next release" /> The conversation opens on its newest message and shows its last ten
+The conversation opens on its newest message and shows its last ten
 exchanges. **Show earlier** at the top brings ten more, and so does scrolling up to the top (on
 macOS 15, iOS 18 and Linux). Each message goes to the model with only the last few before it, so a
 long conversation never grows what it sends.
 
 ### Chats
 
-<Badge text="Next release" /> Besides the assistant, which speaks first and works on its own, you can
+Besides the assistant, which speaks first and works on its own, you can
 keep chats: conversations you start, each asking the model you pick. Use them for a question you want
 a stronger model for, or to keep a topic apart from your day's planning.
 
@@ -167,7 +167,7 @@ a stronger model for, or to keep a topic apart from your day's planning.
 
 ### On the graph
 
-<Badge text="Next release" /> A reply that touched notes has **Show on graph**, which plays the turn on
+A reply that touched notes has **Show on graph**, which plays the turn on
 the graph step by step; one that cites notes also shows **From:** with the notes it drew on. You can also ask with the
 graph on screen and watch it play as the answer comes ([Watching the assistant work](/docs/guides/search-graph-review/#watching-the-assistant-work)).
 
@@ -184,7 +184,7 @@ The assistant can start the conversation on its own, under **Settings › Assist
 | **When a time block passes** | On | Within an hour after a todo's time block ends while it's still open: "A time block passed", with **Done** and **Tomorrow**. No model involved. |
 | **Quiet from** / **Quiet until** | 22:00 / 07:00 | Meeting checks and nudges hold off; the morning, the evening and the weekly tidy still run but say nothing aloud. |
 
-<Badge text="Next release" /> **Weekly tidy**: once a week, on the day **Settings › Todos › Weekly tidy** names, at the evening recap's time (21:00 when the recap is off), when you have [old todos](/docs/guides/todos/#old-todos), the assistant proposes a decision for each: today, a day, someday or drop. Its notification is **Weekly tidy**. The assistant also sees old todos in every conversation, each with its age.
+**Weekly tidy**: once a week, on the day **Settings › Todos › Weekly tidy** names, at the evening recap's time (21:00 when the recap is off), when you have [old todos](/docs/guides/todos/#old-todos), the assistant proposes a decision for each: today, a day, someday or drop. Its notification is **Weekly tidy**. The assistant also sees old todos in every conversation, each with its age.
 
 - It tells you through a notification (**Today's plan**, **This evening**, **Before** a meeting);
   clicking it opens Todos with the assistant. At most six meeting checks and nudges a day.
@@ -196,7 +196,7 @@ The assistant can start the conversation on its own, under **Settings › Assist
 
 ### Todos it finds
 
-<Badge text="Next release" /> What [radar](/docs/plugins/radar/) picks up from Slack and your coding sessions, and mail [Gmail](/docs/plugins/gmail/) finds asks for a reply ("Reply to Kim: sign the contract"), come as new todos. **Settings › Assistant › Speak first › Todos it finds** decides what happens to them on this device, every minute while AIDE is open:
+What [radar](/docs/plugins/radar/) picks up from Slack and your coding sessions, and mail [Gmail](/docs/plugins/gmail/) finds asks for a reply ("Reply to Kim: sign the contract"), come as new todos. **Settings › Assistant › Speak first › Todos it finds** decides what happens to them on this device, every minute while AIDE is open:
 
 | Choice | What happens |
 |---|---|
@@ -208,7 +208,7 @@ Calendar events aren't turned into todos: they're already in the plan.
 
 ### Simple todos, done for you
 
-<Badge text="Next release" /> The assistant can take simple todos off your hands and tell you afterwards. Choose how in **Settings › Assistant › Simple todos** (or in **What AIDE can do**); it's **Off** until you do. It runs on the Mac (not the App Store build) and on Linux, with [Claude Code](#where-the-model-comes-from) installed there, whatever model the assistant otherwise uses, and needs **Keep conversations**. Turn it on on one device.
+The assistant can take simple todos off your hands and tell you afterwards. Choose how in **Settings › Assistant › Simple todos** (or in **What AIDE can do**); it's **Off** until you do. It runs on the Mac (not the App Store build) and on Linux, with [Claude Code](#where-the-model-comes-from) installed there, whatever model the assistant otherwise uses, and needs **Keep conversations**. Turn it on on one device.
 
 | Choice | What it may do |
 |---|---|
@@ -236,7 +236,7 @@ menu with **Show Assistant on the Desktop** (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>A<
 **Character** picks who it is: **Mochi** (the default) or **Piyo**. It looks like it's thinking
 while it works, listens while you talk, and holds up a note while proposals wait.
 
-<Badge text="Next release" /> **Nabi**, a kitten, joins them. The character breathes, cheers when
+**Nabi**, a kitten, joins them. The character breathes, cheers when
 an answer comes, wiggles when the pointer goes over it, waves hello, and now and then looks around,
 stretches or dozes off. **Character size** (**Small**, **Medium** by default, **Large**) sets how big
 it is on the desktop and over the conversation, where it now plays too: in the right panel, in the
@@ -289,7 +289,7 @@ and what is sent.
 
 On the iPhone the choices are **Automatic**, **Anthropic API key** and **Server**.
 
-<Badge text="Next release" /> **Grok** (the `grok` program) and **Antigravity** (the `agy` program)
+**Grok** (the `grok` program) and **Antigravity** (the `agy` program)
 join the list on the Mac and Linux, after Codex in **Automatic**'s order, each with its own default
 model. Each program's path field has a menu, such as **2 found**, listing every copy AIDE found with
 its version; pick one, or **Automatic** for the first. A program that can't turn all its tools off
@@ -297,7 +297,7 @@ is still used, and AIDE says so under its path and in the **Test** result, for e
 turn off shell_tool, so it shares your tools." Antigravity always says it: it has no way to turn
 its tools off, so it uses any your Antigravity allows without asking.
 
-<Badge text="Next release" /> With a server, **Anthropic key on this device** sits under **Model from**
+With a server, **Anthropic key on this device** sits under **Model from**
 when it's **Anthropic API key** (on Linux, a page of Settings with that title): it saves the key the
 assistant uses on this device, which the server's **Settings › AI** doesn't hold.
 

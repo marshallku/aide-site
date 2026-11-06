@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 Hosting turns a vault on your Mac or Linux computer into a server of its own. You get what local mode
 leaves out (server plugins, the Feed, AI with your own key, Claude Code and other MCP apps reading your notes through `aidectl mcp`), your notes stay
@@ -43,15 +43,14 @@ host instead.
 
 </Steps>
 
-<Badge text="Next release" /> Settings opens again by itself once the host is running.
+Settings opens again by itself once the host is running.
 
 Once it's running, a **Host** group takes the place of **Notes** in Settings. It shows:
 
 - **Vault**: the folder being served.
-- **Running**: the socket the host answers on.
-- **Log**: the host's log file. Open it when something goes wrong.
-- <Badge text="Next release" /> **Status: Running** instead, with the socket and the **Log** folded under
-  **Show details** (on Linux, a **Details** row that expands).
+- **Status: Running**, with the socket the host answers on and the **Log** (the host's log file; open
+  it when something goes wrong) folded under **Show details** (on Linux, a **Details** row that
+  expands).
 - **Devices over the network…**, **Keep running while I'm logged in**, **Back up…** and **Stop
   hosting…**, which this page covers below.
 - **Vaults**, **Recently deleted** and **Leave out of notes**, as in local mode.
@@ -150,13 +149,10 @@ turn plugins on or off, or reach MCP. Those stay with you on the host.
 
 ### Remove a device
 
-On Linux, **Settings › Devices** on the host lists the paired devices, with **Revoke** beside each. The
-Mac app doesn't list them while it hosts. To shut every device out there, choose **Turn off** under
-**Devices over the network…**.
-
-<Badge text="Next release" /> The Mac lists them too, under **Settings › Host › Devices**, with **Revoke**
-beside each. On a hosting computer, that page has no **Sign out**: you leave a hosted vault with
-**Stop hosting…**.
+The host lists the paired devices, with **Revoke** beside each: **Settings › Devices** on Linux,
+**Settings › Host › Devices** on the Mac. On a hosting computer, that page has no **Sign out**: you
+leave a hosted vault with **Stop hosting…**. To shut every device out at once, choose **Turn off**
+under **Devices over the network…**.
 
 On the device itself, **Settings › Devices › Sign out** forgets the host on that device only. Remove the
 device on the host to stop it for good.
@@ -200,13 +196,10 @@ docs-sync's git `remote` and `clone`, or a Google `credentials` and `tokenFile`.
 - Settings you change in the app win over the file for the keys the plugin's settings declare. The file
   keeps everything else. `token`, `remote`, `clone`, `credentials`, `tokenFile`, `healthDir` and
   `stateDir` only ever come from the file.
-- The host reads the file when it starts. After changing it, restart the host: quit AIDE and open it again
-  (with **Keep running while I'm logged in** off), or turn that setting off and on.
-  <Badge text="Next release" /> The host picks the file up while it runs: creating, changing or removing
-  it restarts the plugins with it within about a minute, without restarting the host.
-- <Badge text="Next release" /> A file that doesn't parse, or one plugin's block that doesn't, is left
-  out with a warning in `host.log`; the other plugins keep running. Until this release, either stopped
-  every plugin.
+- The host picks the file up while it runs: creating, changing or removing it restarts the plugins
+  with it within about a minute, without restarting the host.
+- A file that doesn't parse, or one plugin's block that doesn't, is left out with a warning in
+  `host.log`; the other plugins keep running.
 
 ## Stop hosting
 

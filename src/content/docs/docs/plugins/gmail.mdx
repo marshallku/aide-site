@@ -5,7 +5,7 @@ sidebar:
     order: 18
 ---
 
-import { Aside, Badge, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
 import PluginFacts from "#components/PluginFacts.astro";
 import PluginSettings from "#components/PluginSettings.astro";
 
@@ -32,7 +32,7 @@ choose another note):
   someone besides you was on it. Notes to yourself are left out.
 - A count: how many messages came today, and how many were newsletters and notifications.
 
-<Badge text="Next release" /> Each mail your AI found asks for a reply is also proposed as a todo, "Reply to *sender*: *what is asked*", once per message. AIDE adds it and tells you, or asks first, as [Todos it finds](/docs/guides/assistant/#todos-it-finds) says. Mail listed without the AI proposes nothing.
+Each mail your AI found asks for a reply is also proposed as a todo, "Reply to *sender*: *what is asked*", once per message. AIDE adds it and tells you, or asks first, as [Todos it finds](/docs/guides/assistant/#todos-it-finds) says. Mail listed without the AI proposes nothing.
 
 The section is the plugin's own: it rewrites it each day and leaves the rest of the note alone.
 Link the day note from your daily template to see it from your daily note, or set **Write into** to
@@ -43,7 +43,7 @@ templates](/docs/guides/periodic-notes/)).
 `📬 <subject>`, with who sent it and why it's urgent, linking to the thread. Turn off **Push urgent
 mail** to stop that.
 
-**A broken token** is said once a day: a pushed **Reconnect Gmail** item. <Badge text="Next release" /> The plugin also sets the refused token aside and shows **Sign in with Google** again under its settings, unless the token is your own `tokenFile` (see [Reconnect Gmail](#reconnect-gmail)).
+**A broken token** is said once a day: a pushed **Reconnect Gmail** item. The plugin also sets the refused token aside and shows **Sign in with Google** again under its settings, unless the token is your own `tokenFile` (see [Reconnect Gmail](#reconnect-gmail)).
 
 If the computer was asleep at 18:00, the day's section is written when it wakes, if that's within 6
 hours.
@@ -52,8 +52,8 @@ hours.
 
 - **A server or desktop host running the server plugins.** On a desktop host that's the computer AIDE
   hosts the vault on ([Host on your desktop](/docs/self-hosting/desktop-host/)).
-- **A Google account.** <Badge text="Next release" /> You sign in from the plugin's settings in the
-  app, with AIDE's own Google client. Until this release you had to create an OAuth client in Google
+- **A Google account.** You sign in from the plugin's settings in the
+  app, with AIDE's own Google client. Earlier versions needed you to create an OAuth client in Google
   Cloud yourself; that still works ([Your own OAuth client](#your-own-oauth-client)).
 - **An AI** for sorting the mail ([AI and models](/docs/guides/ai/)). Without one, the plugin still
   lists the mail, unsorted.
@@ -65,7 +65,7 @@ hours.
 1. In AIDE, open **Settings** and choose **Gmail** under **Core plugins** (on Linux, the **Gmail** row
    on the **Core plugins** page of Settings).
 2. Turn on **Enabled**. The plugin starts within a minute.
-3. <Badge text="Next release" /> The plugin's status, under its settings, reads "Sign in to read your
+3. The plugin's status, under its settings, reads "Sign in to read your
    mail (read-only)…" with a **Sign in with Google** button. Choose it, pick your Google account and
    allow AIDE to read your mail.
     - **On the computer that runs the plugins** (the desktop host's own app): the browser comes back
@@ -92,7 +92,7 @@ On a server with no app nearby, you can sign in with a command instead:
 `aide-plugins google-auth gmail`, run on the computer that runs the plugins. It opens Google's
 consent page in that computer's browser and waits up to 10 minutes. Sign in, allow read access to
 your mail, and the token is saved to `~/.config/aide-plugins/gmail-token.json`, where the plugin
-looks for it. <Badge text="Next release" /> The command uses AIDE's own Google client unless you name
+looks for it. The command uses AIDE's own Google client unless you name
 yours with `-credentials <file>`.
 
 `aide-plugins` comes with AIDE's desktop host:
@@ -125,11 +125,11 @@ Use the `host-<version>` folder of the AIDE you have installed.
 
 The command prints `Saved the token to … Turn the plugin on in AIDE.` when it's done. `-token <file>`
 saves the token elsewhere; then name it as `tokenFile` in the host's local plugin settings (below).
-While the plugin reads a token file, it doesn't offer **Sign in with Google**. <Badge text="Next release" /> The token file names the client that made it, so the plugin always refreshes it with that same client.
+While the plugin reads a token file, it doesn't offer **Sign in with Google**. The token file names the client that made it, so the plugin always refreshes it with that same client.
 
 ### Your own OAuth client
 
-Before this release, the plugin needed an OAuth client of your own, and setups that have one keep
+Earlier versions needed an OAuth client of your own, and setups that have one keep
 working. To make one: in the [Google Cloud console](https://console.cloud.google.com/), create a
 project, enable the **Gmail API**, set up the consent screen (user type **External**, then **Publish
 app** so its status is **In production**; left in **Testing**, Google expires your sign-in every 7
@@ -155,7 +155,7 @@ under `"gmail"`:
   the daily note.
 - **Waiting for an answer after (days)**: a thread you wrote last is listed once it has waited this
   long, until it is 30 days old.
-- **Sign-in link** <Badge text="Next release" /> is only for signing in from a phone or another
+- **Sign-in link** is only for signing in from a phone or another
   computer (see [Set it up](#set-it-up)).
 
 ## Troubleshooting
@@ -163,7 +163,7 @@ under `"gmail"`:
 ### Nothing arrived at 18:00
 
 - Check the plugin is **Enabled**, and that the host was running at 18:00 or woke within 6 hours.
-- <Badge text="Next release" /> Look at the plugin's status under its settings. "Sign in to read your
+- Look at the plugin's status under its settings. "Sign in to read your
   mail…" means it's still waiting for you to sign in.
 
 ### That sign-in link is old or already used
@@ -178,7 +178,7 @@ This copy of AIDE has no Google client built in. Use [your own OAuth client](#yo
 ### Reconnect Gmail
 
 The token stopped working: you removed AIDE's access, changed your Google password, or (with your
-own client) the consent screen was in **Testing** and the 7 days ran out. <Badge text="Next release" />
+own client) the consent screen was in **Testing** and the 7 days ran out.
 The plugin sets the refused token aside and shows **Sign in with Google** under its settings again:
 choose it. That holds for the app's sign-in and for the token `aide-plugins google-auth gmail` saved
 at `~/.config/aide-plugins/gmail-token.json`, which is skipped until it changes and never deleted.

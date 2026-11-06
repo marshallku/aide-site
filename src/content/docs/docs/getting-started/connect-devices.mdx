@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { Aside, Badge, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
 
 Once one computer hosts your vault, or you run your own server, every other device you use pairs with
 it and works on the same notes. Pairing is a one-time step per device; afterwards the device connects
@@ -27,10 +27,10 @@ then on; there is no password or token to copy around.
 - The other device can reach the hosting computer. With [Tailscale](https://tailscale.com/) on both,
   that works from anywhere; on the same Wi-Fi or LAN, a local address works at home.
 
-### Add your phone <Badge text="Next release" />
+### Add your phone
 
-The next release puts this whole page in one place: **Add your phone…**, the first row of the Host
-section (on Linux, the **Host** group).
+Everything on this page is in one place: **Add your phone…**, the first row of the Host section (on
+Linux, the **Host** group).
 
 <Steps>
 
@@ -86,9 +86,9 @@ as your host. A device's certificate lasts two years and renews itself when it c
 60 days; one that has expired has to pair again.
 
 <Aside>
-The link is shown as text, not a QR code. Send it to the other device the way you like (AirDrop, a
-note in another app, a message to yourself); it is useless after 5 minutes or once a device has
-used it. <Badge text="Next release" /> It's also shown as a QR code (see **Add your phone** above).
+The link is shown as text as well as a QR code (see **Add your phone** above). Send it to the other
+device the way you like (AirDrop, a note in another app, a message to yourself); it is useless after
+5 minutes or once a device has used it.
 </Aside>
 
 ### What a paired device can do
@@ -142,16 +142,15 @@ last seen; this one is marked **This device**.
 ### On a desktop host
 
 Devices are managed on the hosting computer, never from a paired device: a paired device's
-**Settings › Devices** shows the list, but revoking happens on the host. <Badge text="Next release" />
+**Settings › Devices** shows the list, but revoking happens on the host.
 A paired device's list has no **Revoke** buttons; its footer (on Linux, each row's tooltip) says
 "Devices are revoked on the computer that hosts your notes."
 
 - **Linux host:** **Settings › Devices** lists the devices paired with the host, with **Revoke** for
   each. A revoked device is cut off at once, its open connections closed.
-- **Mac host:** this release has no device list on the hosting Mac. To shut every paired device out,
-  choose **Turn off** in **Devices over the network**; the host then takes no device over the
-  network. <Badge text="Next release" /> **Settings › Host › Devices** lists them with **Revoke**,
-  as on Linux.
+- **Mac host:** **Settings › Host › Devices** lists the devices paired with the host, with **Revoke**
+  for each, as on Linux. To shut every paired device out at once, choose **Turn off** in **Devices
+  over the network**; the host then takes no device over the network.
 
 Restoring a host from a backup revokes every device; they pair again with the restored host.
 

@@ -5,7 +5,7 @@ sidebar:
     order: 5
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 Scratch is where you write without deciding where something belongs. Each scratch note is an ordinary note kept under `scratch/`; later, **Organize** proposes a place in your wiki for each one, and nothing moves until you approve it.
 
@@ -21,7 +21,7 @@ Scratch is where you write without deciding where something belongs. Each scratc
 
 ### A todo instead of a note
 
-<Badge text="Next release" /> Start what you capture with `/todo` (or `/할일`) and it goes to today's todos instead of Scratch: each line after the word is one todo, added under your daily note's todo heading as Todos' quick add does.
+Start what you capture with `/todo` (or `/할일`) and it goes to today's todos instead of Scratch: each line after the word is one todo, added under your daily note's todo heading as Todos' quick add does.
 
 ```
 /todo call the bank
@@ -30,9 +30,9 @@ pay rent
 
 It works in Quick capture (which says **Added to today's todos**), Scratch's capture field, Todos' own add field, the [assistant](/docs/guides/assistant/) (added at once, without asking the model) and `aidectl capture`. In Quick capture and Scratch, a todo that can't be added stays in the field on its own (any already added stay as they are), so trying again doesn't add one twice; the assistant says which ones weren't added.
 
-<Badge text="Next release" /> As soon as you type `/` in Quick capture, Scratch's field or the assistant's composer, a list of the commands shows with what each does, and narrows as you type (`/to`, `/할`). <kbd>↑</kbd> and <kbd>↓</kbd> move through it; <kbd>Tab</kbd> or <kbd>Return</kbd> (or a click) puts the command in the field so you can type the todo after it, so <kbd>Return</kbd> never saves a half-typed command.
+As soon as you type `/` in Quick capture, Scratch's field or the assistant's composer, a list of the commands shows with what each does, and narrows as you type (`/to`, `/할`). <kbd>↑</kbd> and <kbd>↓</kbd> move through it; <kbd>Tab</kbd> or <kbd>Return</kbd> (or a click) puts the command in the field so you can type the todo after it, so <kbd>Return</kbd> never saves a half-typed command.
 
-<Badge text="Next release" /> [Device plugins](/docs/plugins/device-plugins/) can add their own words to the list in Quick capture and Scratch's field, after `/todo`: `/session what I learned`, from [Agent sessions](/docs/plugins/agent-sessions/), hands the rest of the text to the plugin instead of saving it to Scratch. Quick capture says **Ran …**, as Scratch does; if the plugin can't do it, the text stays with why.
+[Device plugins](/docs/plugins/device-plugins/) can add their own words to the list in Quick capture and Scratch's field, after `/todo`: `/session what I learned`, from [Agent sessions](/docs/plugins/agent-sessions/), hands the rest of the text to the plugin instead of saving it to Scratch. Quick capture says **Ran …**, as Scratch does; if the plugin can't do it, the text stays with why.
 
 If AIDE can't reach your notes when you capture (the server is offline, say), the text is kept under **Not sent** in Scratch and added once it can.
 
@@ -61,15 +61,13 @@ Organize uses AI when one is set up, and rules otherwise. When AI is available t
     2. Otherwise, a note with todos goes to today's daily note.
     3. Otherwise, it goes to `inbox`.
 
-<Badge text="Next release" /> The reasons are written in the language plugins write in (**Settings › Language › Plugins write in**), with AI and by rules: "tagged #investing" in English, "#investing 태그가 있어요" in Korean.
+The reasons are written in the language plugins write in (**Settings › Language › Plugins write in**), with AI and by rules: "tagged #investing" in English, "#investing 태그가 있어요" in Korean.
 
 <Aside title="What Organize sends">
 With AI, Organize sends the scratch notes it organizes, and your wiki's page names, to the model: with your own key, directly to Anthropic. The text of your other notes isn't sent. By rules, nothing leaves your device or server.
 </Aside>
 
 ## Filing on its own
-
-<Badge text="Next release" />
 
 Turn on **Settings › Assistant › Scratch › File scratch notes** and scratch notes go where they belong without you: every 10 minutes while AIDE is open (on the iPhone, while it's in front), each scratch note you haven't touched for 10 minutes is placed by the assistant's model and moved there.
 

@@ -416,7 +416,7 @@ export const docsHref = (lang: Lang, path: string) => `${lang === "ko" ? "/ko" :
 
 /// One line per plugin for the landing page's grid (the manifests' descriptions are for Settings).
 // Plugins in AIDE's main branch that no release carries yet: the grid marks them.
-export const NEXT_RELEASE = new Set(["github", "linear", "jira", "agent-sessions"]);
+export const NEXT_RELEASE = new Set<string>();
 
 export const PLUGIN_BLURBS: Record<Lang, Record<string, string>> = {
     en: {

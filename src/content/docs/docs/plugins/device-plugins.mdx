@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 A device plugin adds something to the AIDE app itself: a tab, a sheet you open on a note, a view in the
 desktop's right panel, a command, or a job that runs at a set time. It runs on the device, inside a
@@ -56,7 +56,7 @@ published, and the install screen links its source code. The index can be browse
 1. Open **Browse community plugins**. It lists the plugins in the index with what each one asks for. A plugin
    you already have says **Installed**, or **Update** when the index has a newer version.
 2. Choose a plugin. AIDE downloads it and checks every file against the index before showing it.
-3. Under **It asks to**, each permission starts on <Badge text="Next release" />. Turn off what you don't agree to; only what stays on is allowed.
+3. Under **It asks to**, each permission starts on. Turn off what you don't agree to; only what stays on is allowed.
 4. Choose **Install**. The plugin is on right away.
 
 </Steps>
@@ -94,8 +94,8 @@ with `not allowed: …`.
 | `schedule`         | Run at set times while AIDE is open on this computer      | Its scheduled jobs, on the Mac and Linux                             |
 | `attachments:read` | Read the images and documents your notes show             | Reading embedded images and documents                                |
 | `attachments:write`| Add images and documents to your notes                    | Adding new ones; an existing attachment is never changed             |
-| `sessions:read`    | Read your Claude Code, Codex and Grok sessions on this computer | Listing and reading them, never changing them (Mac and Linux) <Badge text="Next release" /> |
-| `ai:run`           | Ask this device's assistant, on your allowance            | Asking the assistant you set up for a note <Badge text="Next release" /> |
+| `sessions:read`    | Read your Claude Code, Codex and Grok sessions on this computer | Listing and reading them, never changing them (Mac and Linux) |
+| `ai:run`           | Ask this device's assistant, on your allowance            | Asking the assistant you set up for a note |
 
 What a plugin can never do:
 
@@ -134,7 +134,7 @@ Choose an installed plugin in the list to see:
   **Run on schedule** turns all of them off and on; turning it back on doesn't catch up what was
   skipped.
 - **Access you approved**, and **Source**, the address it came from.
-  <Badge text="Next release" /> **Report a problem** there opens a new issue on the plugin's repository.
+  **Report a problem** there opens a new issue on the plugin's repository.
 - **Go back to the previous version** and **Remove**.
 
 ## Update, roll back, remove
@@ -160,7 +160,7 @@ the reason. It stays off until you choose **Turn on anyway**; remove it if you d
 
 ### On the iPhone
 
-<Badge text="Next release" /> AIDE on the iPhone, like the Mac App Store build, runs only plugins the public
+AIDE on the iPhone, like the Mac App Store build, runs only plugins the public
 index lists, as the App Store asks:
 
 - There's no **Add from a URL** and no **Index** field. With a server, the iPhone reads the public index
@@ -187,8 +187,6 @@ To make an index for your own plugins, see [Build a device plugin](/docs/develop
 ## Troubleshooting
 
 ### A plugin says it doesn't have the access it needs
-
-<Badge text="Next release" />
 
 You installed it with a permission off, and it tried to use it (Kanban shows `not allowed: reading boards`). Choose **Review access** over its page and turn on what it needs (on a Mac or iPhone, then choose **Done**; on Linux it opens the plugin's page in Settings); the plugin starts again. Its page in **Settings › Community plugins** has the same switches under **Access**.
 
