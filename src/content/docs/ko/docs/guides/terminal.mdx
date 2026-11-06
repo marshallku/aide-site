@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE에는 자체 터미널이 있어서, 노트 옆에 셸을 띄워 둘 수 있어요. 로컬 셸이 없는 iPhone에서는
 대신 SSH 섹션에서 서버로 터미널을 열어요.
@@ -44,8 +44,23 @@ Mac과 Linux의 AIDE에는 자체 터미널이 있어서, 노트 옆에 셸을 �
 | **커서 깜박임** | 켜짐 | |
 | **Option을 Meta로 사용**(Mac) | 켜짐 | <kbd>⌥</kbd>가 특수 문자를 입력하는 대신 셸에서 Meta/Alt로 동작해요. |
 | **스크롤 기록** | 10,000줄 | 1,000부터 100,000까지. |
+| **GPU로 그리기**(Mac) <Badge text="다음 릴리스" /> | 켜짐 | 터미널을 Metal로 그려요. 끄면 Core Text로 그려요. 새 탭부터 적용돼요. |
+| **글자 두껍게**(Mac) <Badge text="다음 릴리스" /> | **끔** | **켬**, **끔**, **Retina가 아닌 디스플레이에서**: 글자를 조금 더 두껍게 그려요. |
+| **색 혼합**(Mac) <Badge text="다음 릴리스" /> | **기본** | **기본** 또는 **선형**. 선형은 GPU로 그릴 때, 배경화면이 없을 때만 적용돼요. |
+| **kitty 키보드 프로토콜**(Linux) <Badge text="다음 릴리스" /> | 켜짐 | 요청하는 프로그램에 모든 키를 보조 키와 함께 보내요. 새 탭부터 적용돼요. |
+| **이미지**(Linux) <Badge text="다음 릴리스" /> | 켜짐 | 프로그램이 그림을 그릴 수 있어요. kitty 그래픽, 그리고 시스템의 VTE가 지원하면 sixel도요. 스크롤 기록에서 200줄보다 더 위에 있는 그림은 그리지 않아요. 새 탭부터 적용돼요. |
 
-바꾼 설정은 열린 탭에 바로 적용돼요. Linux에서는 같은 설정이 `config.toml`의 `[terminal]`에도 저장돼요.
+바꾼 설정은 표에 새 탭부터라고 적힌 것을 빼면 열린 탭에 바로 적용돼요. Linux에서는 같은 설정이 `config.toml`의
+`[terminal]`에도 저장돼요(`kitty_keyboard`, `images`).
+
+### 키와 그림 <Badge text="다음 릴리스" />
+
+<kbd>Home</kbd>, <kbd>F5</kbd>, 화살표처럼 글자가 없는 키는 xterm과 같은 방식으로 프로그램에 전달돼요. kitty
+키보드 프로토콜을 요청한 프로그램에는 Mac에서, 그리고 **kitty 키보드 프로토콜**이 켜진 Linux에서 모든 키를 보조 키와
+함께 보내요.
+
+Linux에서는 파일을 탭에 끌어다 놓으면 셸에 맞게 따옴표로 감싼 경로가 입력돼요. 다른 앱에서 끌어다 놓은 이미지는
+먼저 저장한 뒤 그 경로를 입력하고, 링크는 글자 그대로 입력해요.
 
 터미널은 `TERM=xterm-256color`, `COLORTERM=truecolor`, `TERM_PROGRAM=AIDE`를 설정하고, 그 밖에는 AIDE가 시작될
 때의 환경을 그대로 넘겨요. 터미널 안의 프로그램은 클립보드에 복사할 수는 있지만 클립보드를 읽을 수는 없어요.
