@@ -167,3 +167,77 @@ curl -s --unix-socket "$s" "http://aide/search?q=postgres&limit=5" | jq -r '.not
 <Aside title="No app open?">
 When no app has the vault open, there is no socket. `aidectl` then opens the folder itself for one command, with the same rules and answers, so scripts that use `aidectl` work either way. If the app has the vault open but no socket answers, update or restart the app.
 </Aside>
+
+## Terminal socket
+
+<Badge text="Next release" /> Each running AIDE app on the Mac and Linux also serves its terminal on one more socket, so programs can read and type into its panes and open, split and close its tabs. It speaks the same protocol as copad's terminal socket, not HTTP, so copad's `coctl` and comux's notification click work against AIDE. [`aidectl terminal`](/docs/developers/aidectl/#terminal) is built on it. The Mac App Store build and the iPhone don't have it.
+
+### Where it is
+
+- On the Mac: `/tmp/aide-<uid>/aide/gui-<pid>-<nonce>.sock`, in the same folder as the vault sockets.
+- On Linux: `$XDG_RUNTIME_DIR/aide/gui-<pid>-<nonce>.sock`. Without `XDG_RUNTIME_DIR` there is no terminal socket, and the app's log says so.
+- `<pid>` is the app's process id, so each running app has its own.
+- The folder is checked as for the vault sockets, the socket has mode `0600`, and only your user can connect.
+- The app removes its socket when it quits. When it starts, it removes any `gui-<pid>-*.sock` of yours whose process no longer runs.
+
+Every pane's shell gets two variables: `COPAD_SOCKET`, the path of this socket, and `COPAD_PANEL_ID`, the pane's id.
+
+### Requests and answers
+
+One JSON request per line, answered on the same connection, one JSON answer per line. A connection can send several requests.
+
+```json
+{"id": "1", "method": "terminal.read", "params": {"id": "…"}}
+{"id": "1", "ok": true, "result": {"text": "…"}}
+{"id": "1", "ok": false, "error": {"code": "not_found", "message": "…"}}
+```
+
+### Methods
+
+In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused pane, in the window that was in front last. Only the `tab.*` methods take tab ids.
+
+| Method | Params | What it does |
+| --- | --- | --- |
+| `system.ping` | | Answers, to check the socket |
+| `panel.focus` | `panel_id` | Selects the pane and its tab, shows the Terminal section and brings the window forward; answers `{focused, raised}`. A pane this app doesn't have answers `focused: false`, not an error. Linux always answers `raised: false` |
+| `terminal.read` | `id`, `start_row`, `start_col`, `end_row`, `end_col` | The live screen as text, or part of it: both ends included, an end past the screen clamped |
+| `terminal.state` | `id` | Size, cursor, folder, title, and whether its shell has exited |
+| `terminal.exec` | `id`, `command` | Types `command` and a newline. It doesn't wait for the command |
+| `terminal.feed` | `id`, `text` | Types `text` as it is |
+| `terminal.history` | `id`, `lines` | The last `lines` rows above the screen (at most 10 000), then the screen |
+| `terminal.context` | `id`, `history_lines` | State, screen and the rows above it |
+| `tab.new` | | Opens a tab; answers its pane's id |
+| `tab.close` | `id` | With a tab id, closes that tab and every pane in it; without one, closes the focused pane |
+| `tab.list`, `tab.info` | | `{count, current, tabs: [{id, index, title, selected, panes: [{id, title, focused, exited, cols, rows}]}]}` |
+| `tab.rename` | `id`, `title` | Names a tab |
+| `split.horizontal` | `id` | Splits the pane to the right; answers `{panel_id}` of the new pane |
+| `split.vertical` | `id` | Splits the pane downward; answers `{panel_id}` |
+| `pane.focus_next`, `pane.focus_prev` | | Focuses the next or previous pane |
+
+Reading doesn't move the pane's scroll position.
+
+### Errors
+
+| `code` | When |
+| --- | --- |
+| `parse_error` | The line isn't JSON |
+| `invalid_request` | Not a JSON object, or no string `id`, no `method`, or `params` isn't an object |
+| `invalid_params` | A param is missing or wrong (a read range that makes no sense, say) |
+| `unknown_method` | No method by that name |
+| `not_found` | No pane or tab with that id (one closed meanwhile, say) |
+| `no_terminal` | No terminal is open (no window, or no tab) |
+| `exited` | `terminal.exec` or `terminal.feed` on a pane whose shell has ended; it can still be read |
+| `too_small` | The pane is too small to split |
+| `busy` | 16 clients are already connected |
+| `frame_too_large` | The request line is longer than 64 KiB |
+
+### Terminal socket limits
+
+- A request line up to 64 KiB, 16 clients at once.
+- 10 seconds to send a line and 10 seconds to take its answer; a client that stalls is dropped.
+
+With `$t` the socket (from `$COPAD_SOCKET` in a pane, or the folder above):
+
+```sh
+printf '%s\n' '{"id": "1", "method": "tab.list"}' | nc -U "$t"
+```

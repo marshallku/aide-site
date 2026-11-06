@@ -93,6 +93,12 @@ The terminal sets `TERM=xterm-256color`, `COLORTERM=truecolor` and `TERM_PROGRAM
 otherwise passes on the environment AIDE was started with. A program in the terminal can copy to
 your clipboard but can't read it.
 
+<Badge text="Next release" /> Each pane's shell also gets `COPAD_SOCKET` and `COPAD_PANEL_ID`: the
+app's [terminal socket](/docs/developers/local-api/#terminal-socket) and that pane's id. With them,
+clicking comux's desktop notification brings forward the exact tab and pane it came from, and copad's
+`coctl` keeps working. [`aidectl terminal`](/docs/developers/aidectl/#terminal) uses the same socket
+to read, type into, split and list panes and tabs from a script.
+
 ### comux in the terminal <Badge text="Next release" />
 
 On the Mac and on Linux, a tab running comux shows comux's sessions, spaces and agents in AIDE's own

@@ -167,3 +167,77 @@ curl -s --unix-socket "$s" "http://aide/search?q=postgres&limit=5" | jq -r '.not
 <Aside title="열린 앱이 없나요?">
 보관소를 연 앱이 없으면 소켓도 없어요. 그때 `aidectl`은 명령 하나를 위해 폴더를 직접 열고, 규칙과 응답은 똑같아요. 그래서 `aidectl`을 쓰는 스크립트는 어느 쪽이든 동작해요. 앱이 보관소를 열었는데 응답하는 소켓이 없다면 앱을 업데이트하거나 다시 시작하세요.
 </Aside>
+
+## 터미널 소켓
+
+<Badge text="다음 릴리스" /> Mac과 Linux에서 실행 중인 AIDE 앱은 소켓을 하나 더 열어 터미널을 제공해요. 프로그램이 이 소켓으로 페인을 읽고 입력하고, 탭을 열고 나누고 닫을 수 있어요. HTTP가 아니라 copad의 터미널 소켓과 같은 프로토콜을 쓰기 때문에, copad의 `coctl`과 comux의 알림 클릭이 AIDE에서도 동작해요. [`aidectl terminal`](/ko/docs/developers/aidectl/#terminal)은 이 소켓 위에 만들어졌어요. Mac App Store 빌드와 iPhone에는 없어요.
+
+### 위치
+
+- Mac: 볼트 소켓과 같은 폴더의 `/tmp/aide-<uid>/aide/gui-<pid>-<nonce>.sock`이에요.
+- Linux: `$XDG_RUNTIME_DIR/aide/gui-<pid>-<nonce>.sock`이에요. `XDG_RUNTIME_DIR`이 없으면 터미널 소켓도 없고, 앱 로그에 그렇게 남아요.
+- `<pid>`는 앱의 프로세스 id라서, 실행 중인 앱마다 소켓이 따로 있어요.
+- 폴더는 볼트 소켓과 같은 방식으로 확인하고, 소켓은 모드 `0600`이며, 내 사용자만 연결할 수 있어요.
+- 앱은 종료할 때 자기 소켓을 지워요. 시작할 때는 프로세스가 더 이상 실행 중이 아닌 내 `gui-<pid>-*.sock`을 지워요.
+
+페인마다 셸은 두 변수를 받아요: 이 소켓의 경로인 `COPAD_SOCKET`과 그 페인의 id인 `COPAD_PANEL_ID`.
+
+### 요청과 응답
+
+한 줄에 JSON 요청 하나를 보내면, 같은 연결로 한 줄에 JSON 응답 하나가 와요. 한 연결로 요청을 여러 번 보낼 수 있어요.
+
+```json
+{"id": "1", "method": "terminal.read", "params": {"id": "…"}}
+{"id": "1", "ok": true, "result": {"text": "…"}}
+{"id": "1", "ok": false, "error": {"code": "not_found", "message": "…"}}
+```
+
+### 메서드
+
+`params`의 `id`(또는 `panel_id`)는 **페인** id이고, 없으면 마지막으로 앞에 있던 창의 포커스된 페인이에요. 탭 id는 `tab.*` 메서드만 받아요.
+
+| 메서드 | 파라미터 | 하는 일 |
+| --- | --- | --- |
+| `system.ping` | | 소켓이 살아 있는지 확인하는 응답을 해요 |
+| `panel.focus` | `panel_id` | 그 페인과 탭을 고르고, 터미널 섹션을 보여 주고, 창을 앞으로 가져와요. `{focused, raised}`로 응답해요. 이 앱에 없는 페인이면 오류가 아니라 `focused: false`예요. Linux는 항상 `raised: false`로 응답해요 |
+| `terminal.read` | `id`, `start_row`, `start_col`, `end_row`, `end_col` | 지금 화면, 또는 그 일부를 글자로 줘요. 양 끝을 포함하고, 화면을 넘는 끝은 화면 끝으로 맞춰요 |
+| `terminal.state` | `id` | 크기, 커서, 폴더, 제목, 셸이 끝났는지 |
+| `terminal.exec` | `id`, `command` | `command`와 줄바꿈을 입력해요. 명령을 기다리지는 않아요 |
+| `terminal.feed` | `id`, `text` | `text`를 그대로 입력해요 |
+| `terminal.history` | `id`, `lines` | 화면 위의 마지막 `lines`줄(최대 10 000줄), 그다음 화면 |
+| `terminal.context` | `id`, `history_lines` | 상태, 화면, 그 위의 줄 |
+| `tab.new` | | 탭을 열고 그 페인의 id로 응답해요 |
+| `tab.close` | `id` | 탭 id를 주면 그 탭을 안의 모든 페인과 함께 닫고, 없으면 포커스된 페인을 닫아요 |
+| `tab.list`, `tab.info` | | `{count, current, tabs: [{id, index, title, selected, panes: [{id, title, focused, exited, cols, rows}]}]}` |
+| `tab.rename` | `id`, `title` | 탭에 이름을 붙여요 |
+| `split.horizontal` | `id` | 페인을 오른쪽으로 나누고 새 페인의 `{panel_id}`로 응답해요 |
+| `split.vertical` | `id` | 페인을 아래로 나누고 `{panel_id}`로 응답해요 |
+| `pane.focus_next`, `pane.focus_prev` | | 다음 또는 이전 페인으로 포커스를 옮겨요 |
+
+읽어도 페인의 스크롤 위치는 바뀌지 않아요.
+
+### 오류
+
+| `code` | 언제 |
+| --- | --- |
+| `parse_error` | 줄이 JSON이 아님 |
+| `invalid_request` | JSON 객체가 아니거나, 문자열 `id`나 `method`가 없거나, `params`가 객체가 아님 |
+| `invalid_params` | 파라미터가 없거나 잘못됨(예: 말이 안 되는 읽기 범위) |
+| `unknown_method` | 그 이름의 메서드가 없음 |
+| `not_found` | 그 id의 페인이나 탭이 없음(그사이 닫혔을 때 등) |
+| `no_terminal` | 열린 터미널이 없음(창이나 탭이 없음) |
+| `exited` | 셸이 끝난 페인에 `terminal.exec`나 `terminal.feed`를 보냄. 읽기는 여전히 돼요 |
+| `too_small` | 페인이 나누기엔 너무 작음 |
+| `busy` | 이미 클라이언트 16개가 연결돼 있음 |
+| `frame_too_large` | 요청 줄이 64 KiB를 넘음 |
+
+### 터미널 소켓의 제한
+
+- 요청 한 줄은 64 KiB까지, 동시에 클라이언트 16개까지예요.
+- 한 줄을 보내는 데 10초, 응답을 받아 가는 데 10초가 주어지고, 멈춘 클라이언트는 연결이 끊겨요.
+
+`$t`가 그 소켓일 때(페인 안에서는 `$COPAD_SOCKET`, 아니면 위의 폴더):
+
+```sh
+printf '%s\n' '{"id": "1", "method": "tab.list"}' | nc -U "$t"
+```

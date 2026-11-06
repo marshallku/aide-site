@@ -88,6 +88,12 @@ Linux에서는 파일을 탭에 끌어다 놓으면 셸에 맞게 따옴표로 �
 터미널은 `TERM=xterm-256color`, `COLORTERM=truecolor`, `TERM_PROGRAM=AIDE`를 설정하고, 그 밖에는 AIDE가 시작될
 때의 환경을 그대로 넘겨요. 터미널 안의 프로그램은 클립보드에 복사할 수는 있지만 클립보드를 읽을 수는 없어요.
 
+<Badge text="다음 릴리스" /> 페인마다 셸은 `COPAD_SOCKET`과 `COPAD_PANEL_ID`도 받아요. 앱의
+[터미널 소켓](/ko/docs/developers/local-api/#터미널-소켓)과 그 페인의 id예요. 덕분에 comux의 데스크톱 알림을 클릭하면
+알림이 온 바로 그 탭과 페인이 앞으로 오고, copad의 `coctl`도 그대로 동작해요.
+[`aidectl terminal`](/ko/docs/developers/aidectl/#terminal)은 같은 소켓으로 스크립트에서 페인과 탭을 읽고, 입력하고,
+나누고, 목록으로 볼 수 있어요.
+
 ### 터미널 안의 comux <Badge text="다음 릴리스" />
 
 Mac과 Linux에서 comux를 실행 중인 탭은 comux가 글자로 그리던 세션, 스페이스, 에이전트를 터미널 둘레에 AIDE의

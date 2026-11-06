@@ -274,6 +274,57 @@ aidectl action run today
 aidectl action list | grep plugin/
 ```
 
+### terminal
+
+<Badge text="다음 릴리스" />
+
+```sh
+aidectl terminal <command> [--socket S] [--pane P] [--json]
+```
+
+AIDE 앱의 터미널을 읽고 입력하고, 탭과 페인을 열고 나누고 이름 붙이고 닫아요. 볼트가 아니라 앱의 [터미널 소켓](/ko/docs/developers/local-api/#터미널-소켓)과 통신하기 때문에 볼트나 서버가 필요 없어요.
+
+| 명령 | 하는 일 |
+| --- | --- |
+| `read [--start-row R --start-col C --end-row R --end-col C]` | 화면을, 또는 그 행과 열 사이(양 끝 포함)만 출력해요 |
+| `state` | 페인, 그 탭, 크기, 커서, 폴더, 제목, 셸이 끝났는지를 출력해요 |
+| `exec <line…>` | 그 줄과 <kbd>Enter</kbd>를 입력해요. 명령이 실행되기를 기다리지는 않아요 |
+| `feed <text>` | 글자를 그대로 입력해요. <kbd>Enter</kbd>는 넣지 않아요 |
+| `history [--lines N]` | 화면 위의 마지막 `N`줄, 그다음 화면을 출력해요(따로 정하지 않으면 `N`은 100) |
+| `context [--history-lines N]` | 화면 위의 줄(따로 정하지 않으면 50줄), 그다음 화면을 출력해요 |
+| `tabs` | 모든 탭과 그 페인을 보여 줘요: 탭 id, 페인 id, 제목, 그리고 페인이 화면에 보이는지, 포커스됐는지, 끝났는지 |
+| `new-tab` | 새 탭을 열고 그 페인 id를 출력해요 |
+| `close-tab [<tab>]` | 그 탭을 안의 모든 페인과 함께 닫아요. 탭 id가 없으면 포커스된 페인을 닫아요 |
+| `rename <tab> <title>` | 탭에 이름을 붙여요. 빈 제목을 주면 이름을 지워요 |
+| `split right\|down` | 페인을 나누고 새 페인의 id를 출력해요 |
+| `focus <pane>` | 그 페인을 앞으로 가져와요: 그 탭, 터미널 섹션, 그리고 창까지 |
+
+`read`, `state`, `exec`, `feed`, `history`, `context`, `split`은 `--pane`으로 지정한 페인에, 없으면 포커스된 페인에 동작해요. 페인 id는 `tabs`에 나오고, 페인의 셸 안에서는 `$COPAD_PANEL_ID`에 들어 있어요. `--json`을 주면 앱의 응답을 글자 대신 JSON으로 출력해요.
+
+읽어도 페인은 움직이지 않아요. `read`와 `history`는 뒤로 스크롤해 둔 상태에서도 지금 화면을 읽어요. 셸이 끝난 페인은 읽을 수는 있지만 입력할 수는 없어요.
+
+#### 어느 앱과 통신하나요
+
+- `--socket S`를 주면 그 소켓을 써요.
+- 없으면, 앱의 페인 안에서는 `$COPAD_SOCKET`이 가리키는 소켓을 써요. 그 앱이 종료됐으면 다른 앱을 찾지 않고 `COPAD_SOCKET (…) answers nothing`으로 멈춰요. 이때는 `--socket`으로 앱을 지정하세요.
+- 그것도 없으면, 내 사용자로 실행 중인 터미널 있는 AIDE 앱이 하나뿐일 때 그 앱을 써요. 하나도 없으면 멈추고, 둘 이상이면 짐작하지 않고 소켓 목록을 보여 주면서 `--socket`으로 고르라고 해요.
+
+Mac App Store 빌드와 iPhone에는 터미널 소켓이 없어요.
+
+| 결과 | 종료 코드 |
+| --- | --- |
+| 완료 | 0 |
+| 통신할 앱이 없거나, `$COPAD_SOCKET`이나 `--socket`이 응답하지 않거나, 앱이 거절함(셸이 끝난 페인, 나누기엔 너무 작은 페인) | 1 |
+| 앱이 여러 개 실행 중인데 `--socket`이 없거나, 인자가 잘못됨(예: 앱이 거절한 `read` 범위) | 2 |
+| 그 id의 페인이나 탭이 없음 | 5 |
+
+```sh
+aidectl terminal tabs
+pane=$(aidectl terminal split right)
+aidectl terminal exec --pane "$pane" 'make test'
+aidectl terminal history --lines 500 > scrollback.txt
+```
+
 ### mcp
 
 ```sh

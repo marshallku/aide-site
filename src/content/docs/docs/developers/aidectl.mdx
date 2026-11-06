@@ -274,6 +274,57 @@ aidectl action run today
 aidectl action list | grep plugin/
 ```
 
+### terminal
+
+<Badge text="Next release" />
+
+```sh
+aidectl terminal <command> [--socket S] [--pane P] [--json]
+```
+
+Reads and types into the AIDE app's terminal, and opens, splits, names and closes its tabs and panes. It talks to the app's [terminal socket](/docs/developers/local-api/#terminal-socket), not to a vault, so it needs no vault or server.
+
+| Command | What it does |
+| --- | --- |
+| `read [--start-row R --start-col C --end-row R --end-col C]` | Prints the screen, or the part of it between those rows and columns (both ends included) |
+| `state` | Prints the pane, its tab, size, cursor, folder, title and whether its shell has exited |
+| `exec <line…>` | Types the line and <kbd>Enter</kbd>. It doesn't wait for the command to run |
+| `feed <text>` | Types the text as it is, without <kbd>Enter</kbd> |
+| `history [--lines N]` | Prints the last `N` rows above the screen, then the screen (`N` is 100 unless you say) |
+| `context [--history-lines N]` | The rows above the screen (50 unless you say), then the screen |
+| `tabs` | Lists every tab and its panes: tab id, pane id, title, and whether the pane is on screen, focused or exited |
+| `new-tab` | Opens a new tab and prints its pane id |
+| `close-tab [<tab>]` | Closes that tab with every pane in it; without a tab id, closes the focused pane |
+| `rename <tab> <title>` | Names a tab; an empty title clears the name |
+| `split right\|down` | Splits the pane and prints the new pane's id |
+| `focus <pane>` | Brings that pane forward: its tab, the Terminal section and the window |
+
+`read`, `state`, `exec`, `feed`, `history`, `context` and `split` act on the pane `--pane` names, else on the focused pane. A pane's id is in `tabs`, and a pane's own shell has it in `$COPAD_PANEL_ID`. `--json` prints the app's answer as JSON instead of text.
+
+Reading never moves the pane: `read` and `history` read the live screen even when you've scrolled back. A pane whose shell has ended can still be read, but not typed into.
+
+#### Which app it talks to
+
+- `--socket S` names the socket.
+- Else, inside one of the app's panes, `$COPAD_SOCKET` names it. If that app has quit, `aidectl` stops with `COPAD_SOCKET (…) answers nothing` instead of trying another app: name one with `--socket`.
+- Else it uses the only AIDE app with a terminal running as your user. With none, it stops. With more than one, it doesn't guess: it lists their sockets and asks you to choose one with `--socket`.
+
+The Mac App Store build and the iPhone have no terminal socket.
+
+| What happened | Exit code |
+| --- | --- |
+| Done | 0 |
+| No app to talk to, a `$COPAD_SOCKET` or `--socket` that doesn't answer, or the app refused (a shell that has exited, a pane too small to split) | 1 |
+| Several apps running and no `--socket`, or wrong arguments (a `read` range the app refuses, say) | 2 |
+| No pane or tab with that id | 5 |
+
+```sh
+aidectl terminal tabs
+pane=$(aidectl terminal split right)
+aidectl terminal exec --pane "$pane" 'make test'
+aidectl terminal history --lines 500 > scrollback.txt
+```
+
 ### mcp
 
 ```sh
