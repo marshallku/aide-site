@@ -5,11 +5,14 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 AIDE on the Mac and Linux has the same shortcuts, with <kbd>⌘</kbd> on the Mac where Linux uses
 <kbd>Ctrl</kbd>. On the Mac each one is also in the menu bar, and every command is in the command
 palette with its shortcut.
+
+<Badge text="Next release" /> You can change any of them, turn them off and add your own in **Settings › Keyboard**: see
+[Change your shortcuts](#change-your-shortcuts).
 
 ## Window and navigation
 
@@ -141,3 +144,166 @@ terminal and reach the shell instead: <kbd>Ctrl</kbd><kbd>P</kbd>, <kbd>Ctrl</kb
 <kbd>Ctrl</kbd><kbd>W</kbd> and the tab-switching keys. The rest, <kbd>Ctrl</kbd><kbd>,</kbd>
 included, keep working. Click outside the terminal to use them again.
 </Aside>
+
+## Change your shortcuts
+
+<Badge text="Next release" /> On the Mac and Linux, everything the command palette runs is a named
+action, and **Settings › Keyboard** lists each one with the shortcut that runs it now. There you
+give an action a new shortcut, turn one off, and put shell commands on shortcuts of their own.
+
+### Record a shortcut
+
+<Steps>
+
+1. Open **Settings › Keyboard**. **Search shortcuts** narrows the list by name or by shortcut.
+2. Click the shortcut next to an action (**None** when it has none). It reads **Type a shortcut…**.
+3. Press the new shortcut. <kbd>Esc</kbd> keeps the old one; on Linux <kbd>Backspace</kbd> leaves
+   the action with none. Nothing runs while AIDE is listening.
+
+</Steps>
+
+The new shortcut replaces the action's built-in one. If another action had it, that action loses
+it, and AIDE says so: "… had this shortcut; it's off now." That action stays off, so its built-in
+shortcut doesn't come back later when you move yours elsewhere.
+
+- **Clear** turns an action's shortcut off, built-in one included.
+- **Reset** gives one action its built-in shortcut back. It appears only on an action you changed.
+- **Reset all** gives every action its built-in shortcut back. Your commands stay.
+
+On the Mac, the menu bar shows each action's shortcut as you set it.
+
+### Which shortcuts you can use
+
+A shortcut is one key with modifiers, and it needs <kbd>⌘</kbd> or <kbd>⌃</kbd> on the Mac, or
+<kbd>Ctrl</kbd> or <kbd>Super</kbd> on Linux. A key alone, or with only <kbd>Shift</kbd> or
+<kbd>⌥</kbd> / <kbd>Alt</kbd>, is typing: on many keyboard layouts <kbd>⌥</kbd> and <kbd>Alt</kbd>
+type letters and accents, so AIDE doesn't take them. Pressing one while recording says
+**Hold Command or Control with a key.** (**Hold Ctrl or Super with a key.** on Linux).
+
+A shortcut is the key's place on the keyboard, named by what that key types on a US keyboard. So
+it's the same shortcut whatever input source or layout you type with, and <kbd>⇧</kbd><kbd>⌘</kbd><kbd>1</kbd>
+stays <kbd>⇧</kbd><kbd>⌘</kbd><kbd>1</kbd>, not <kbd>⌘</kbd><kbd>!</kbd>. Function keys
+(F1–F24), the arrows, Home, End, Page Up, Page Down, Insert, Delete, Backspace, Tab, Return, Esc
+and Space work too.
+
+While an input method is composing (Korean, Japanese, Chinese), no shortcut runs, and holding a
+shortcut's keys down runs it once.
+
+### In a terminal
+
+The keys you press in a terminal belong to the program running there, so your shortcuts step aside:
+
+- **Mac**: while a terminal has the keyboard, only shortcuts with <kbd>⌘</kbd> reach AIDE. A
+  <kbd>⌃</kbd><kbd>⌥</kbd><kbd>J</kbd> of yours goes to the program there, and works everywhere else.
+- **Linux**: while a terminal has the keyboard, only shortcuts with <kbd>Ctrl</kbd><kbd>Shift</kbd>
+  or <kbd>Ctrl</kbd><kbd>Alt</kbd> (and <kbd>Ctrl</kbd><kbd>,</kbd>) reach AIDE. Plain
+  <kbd>Ctrl</kbd> letters, <kbd>Super</kbd> shortcuts and function keys go to the program.
+
+The terminal's own actions (**New terminal tab**, **Split right**, **Split down**, **Next pane**,
+**Previous pane**, **Close pane**) run only while a terminal has the keyboard, whatever shortcut
+you give them.
+
+### Commands
+
+**Commands** puts a shell command on a shortcut, for the Mac (not the Mac App Store build) and
+Linux.
+
+<Steps>
+
+1. In **Settings › Keyboard › Commands**, type the command in **Shell command**.
+2. Record its shortcut: on the Mac, click the button next to **Add a command** and press the
+   shortcut; on Linux, click the shortcut button in the row, press the shortcut, then click
+   **Add a command**.
+
+</Steps>
+
+The command runs with `/bin/sh -c` in your home folder, with AIDE's environment, and its output is
+dropped; AIDE doesn't wait for it. If it can't start, AIDE says **The command didn't start: …**.
+**Remove** takes a command off its shortcut. A command takes its shortcut from an action that had
+it, as recording does.
+
+### On Linux: config.toml
+
+On Linux, your shortcuts live in `~/.config/aide/config.toml` (the file `AIDE_CONFIG` names, when
+set), next to the app's other settings. **Settings › Keyboard** writes them there, keeping your
+comments and everything else in the file, and you can edit them by hand. AIDE reads the file again
+when it changes.
+
+```toml
+[keybindings]                          # a shortcut, then what it does
+"ctrl+alt+j" = "action:today"          # a named action
+"ctrl+shift+g" = "action:git-sync"
+"super+r" = "action:random"
+"ctrl+alt+k" = "spawn:touch /tmp/x"    # a shell command (a value without a prefix is one too)
+
+[keybindings_off]                      # built-in shortcuts turned off, by action id
+actions = ["new-scratch"]
+```
+
+- A shortcut is its modifiers `ctrl`, `alt`, `shift`, `super`, then the key, joined with `+`: a
+  letter or digit, a symbol a US keyboard types without <kbd>Shift</kbd> (`]`, `,`, `/`), `space`,
+  `f1`–`f24`, `left`, `right`, `up`, `down`, `home`, `end`, `pageup`, `pagedown`, `insert`,
+  `delete`, `backspace`, `tab`, `return` or `escape`. Any case works, and so do GTK's names
+  (`<Control><Shift>g`, `Page_Down`). Use `ctrl+shift+1`, not `ctrl+!`.
+- An action you give a shortcut here loses its built-in one; an action can have several.
+- One of yours wins over a built-in shortcut with the same keys.
+
+If something in these two tables can't be used (a shortcut without <kbd>Ctrl</kbd> or
+<kbd>Super</kbd>, `action:` with no id, a command that's empty, the same shortcut twice, `actions`
+that isn't a list), AIDE keeps the shortcuts it had before and **Settings › Keyboard** shows
+**The keyboard settings have a problem: …** with what's wrong. A shortcut to an action id the
+window doesn't have does nothing.
+
+On the Mac, the same shortcuts are kept in the app's settings; change them in **Settings ›
+Keyboard**.
+
+### Action ids
+
+Every action has an id, the same on the Mac and Linux. `aidectl action list` prints the ones your
+window has now, with their titles (see [aidectl](/docs/developers/aidectl/#action)). The fixed ones:
+
+| Id | Action |
+|---|---|
+| `new-scratch` | New scratch note |
+| `new-page` | New page… |
+| `today` | Open today's note |
+| `open` | Open a note… |
+| `random` | Open a random note |
+| `search` | Search notes |
+| `find` | Find in note |
+| `review` | Review |
+| `organize` | Organize scratch notes… |
+| `copy-link` | Copy link to this note |
+| `toggle-pin` | Pin this note |
+| `toggle-panel` | Toggle panel |
+| `toggle-right-panel` | Toggle right panel |
+| `back`, `forward` | Back, Forward |
+| `new-tab`, `close-tab`, `close-other-tabs` | New tab, Close tab, Close other tabs |
+| `next-tab`, `previous-tab` | Next tab, Previous tab |
+| `settings` | Settings |
+| `plugins` | Browse community plugins |
+| `assistant-overlay` | Show the assistant on the desktop |
+| `git-sync` | Commit and sync with git |
+| `new-meeting` | New meeting |
+| `import-recording` | Import recording… |
+| `new-window` | New window (Mac) |
+| `voice` | Say a message to the assistant (Linux) |
+| `feature-tour` | What AIDE can do (Linux) |
+| `terminal/new-tab` | New terminal tab |
+| `terminal/split-right`, `terminal/split-down` | Split right, Split down |
+| `terminal/next-pane`, `terminal/previous-pane` | Next pane, Previous pane |
+| `terminal/close-pane` | Close pane |
+
+Others come and go with what the window shows:
+
+- `section/<id>`: a section of the sidebar.
+- `periodic/weekly`, `periodic/monthly`, `periodic/quarterly`, `periodic/yearly`: this period's
+  note, when that period is on.
+- `plugin/<plugin>/<command>`: a plugin's command.
+
+### Run an action from a script
+
+`aidectl action run <id>` runs an action in the AIDE window of your vault, as if you'd picked it in
+the command palette, and returns once it has finished. It needs the app running with that vault
+open; see [aidectl](/docs/developers/aidectl/#action) and the
+[local API](/docs/developers/local-api/#actions).

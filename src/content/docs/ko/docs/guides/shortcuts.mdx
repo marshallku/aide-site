@@ -5,10 +5,13 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE는 같은 단축키를 써요. Linux에서 <kbd>Ctrl</kbd>을 쓰는 자리에 Mac에서는 <kbd>⌘</kbd>를 써요.
 Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 단축키와 함께 명령 팔레트에 있어요.
+
+<Badge text="다음 릴리스" /> **설정 › 키보드**에서 어떤 단축키든 바꾸거나 끄고, 나만의 단축키를 더할 수 있어요.
+[단축키 바꾸기](#단축키-바꾸기)를 참고하세요.
 
 ## 창과 이동
 
@@ -138,3 +141,159 @@ Mac에서 터미널에 키보드 포커스가 있으면 <kbd>⌘</kbd><kbd>T</kb
 <kbd>Ctrl</kbd><kbd>W</kbd>, 그리고 탭 전환 키예요. <kbd>Ctrl</kbd><kbd>,</kbd>를 비롯한 나머지는 계속 동작해요.
 다시 쓰려면 터미널 바깥을 클릭하세요.
 </Aside>
+
+## 단축키 바꾸기
+
+<Badge text="다음 릴리스" /> Mac과 Linux에서 명령 팔레트가 실행하는 것은 모두 이름 있는 동작(action)이에요.
+**설정 › 키보드**에는 동작마다 지금 그 동작을 실행하는 단축키가 나와요. 여기서 동작에 새 단축키를 주거나,
+단축키를 끄거나, 셸 명령에 단축키를 붙일 수 있어요.
+
+### 단축키 기록하기
+
+<Steps>
+
+1. **설정 › 키보드**를 열어요. **단축키 검색**으로 이름이나 단축키로 목록을 좁힐 수 있어요.
+2. 동작 옆의 단축키를 클릭해요(단축키가 없으면 **없음**). **단축키를 입력하세요…**로 바뀌어요.
+3. 새 단축키를 눌러요. <kbd>Esc</kbd>를 누르면 원래 단축키가 그대로 남아요. Linux에서는
+   <kbd>Backspace</kbd>를 누르면 그 동작에 단축키가 없어져요. AIDE가 단축키를 기다리는 동안에는 아무것도
+   실행되지 않아요.
+
+</Steps>
+
+새 단축키는 그 동작의 기본 단축키를 대신해요. 다른 동작이 그 단축키를 쓰고 있었다면 그 동작은 단축키를 잃고,
+AIDE가 "…에 있던 단축키라 그쪽은 꺼졌어요."라고 알려 줘요. 그 동작은 꺼진 채로 남아서, 나중에 내 단축키를
+다른 곳으로 옮겨도 기본 단축키가 다시 살아나지 않아요.
+
+- **지우기**는 동작의 단축키를 기본 단축키까지 꺼요.
+- **초기화**는 동작 하나의 기본 단축키를 되돌려요. 바꾼 동작에만 나타나요.
+- **모두 초기화**는 모든 동작의 기본 단축키를 되돌려요. 명령은 그대로 남아요.
+
+Mac에서는 메뉴 막대에도 각 동작의 단축키가 바꾼 대로 나와요.
+
+### 쓸 수 있는 단축키
+
+단축키는 수식 키와 키 하나로 이뤄지고, Mac에서는 <kbd>⌘</kbd>나 <kbd>⌃</kbd>, Linux에서는
+<kbd>Ctrl</kbd>이나 <kbd>Super</kbd>가 들어가야 해요. 키 하나만, 또는 <kbd>Shift</kbd>나
+<kbd>⌥</kbd> / <kbd>Alt</kbd>만 함께 누르는 건 글자 입력이에요. 많은 자판 배열에서 <kbd>⌥</kbd>와
+<kbd>Alt</kbd>로 글자나 악센트를 입력하기 때문에 AIDE는 이런 조합을 받지 않아요. 기록하는 중에 이런 조합을
+누르면 **Command 또는 Control과 다른 키를 함께 누르세요.**(Linux에서는 **Ctrl 또는 Super와 다른 키를 함께
+누르세요.**)라고 나와요.
+
+단축키는 키보드 위의 키 자리로 정해지고, 그 키가 US 자판에서 입력하는 글자로 이름이 붙어요. 그래서 어떤 입력
+소스나 자판 배열로 입력하든 같은 단축키이고, <kbd>⇧</kbd><kbd>⌘</kbd><kbd>1</kbd>은 <kbd>⌘</kbd><kbd>!</kbd>가
+아니라 <kbd>⇧</kbd><kbd>⌘</kbd><kbd>1</kbd>로 남아요. 기능 키(F1–F24), 화살표, Home, End, Page Up,
+Page Down, Insert, Delete, Backspace, Tab, Return, Esc, Space도 쓸 수 있어요.
+
+입력기가 글자를 조합하는 동안(한국어, 일본어, 중국어)에는 단축키가 실행되지 않고, 단축키를 꾹 누르고 있어도
+한 번만 실행돼요.
+
+### 터미널에서
+
+터미널에서 누르는 키는 그 안에서 실행 중인 프로그램의 것이라서, 내 단축키가 비켜 줘요.
+
+- **Mac**: 터미널에 키보드 포커스가 있는 동안에는 <kbd>⌘</kbd>가 들어간 단축키만 AIDE가 받아요. 내가 만든
+  <kbd>⌃</kbd><kbd>⌥</kbd><kbd>J</kbd>는 터미널에서는 프로그램으로 가고, 그 밖의 곳에서는 동작해요.
+- **Linux**: 터미널에 키보드 포커스가 있는 동안에는 <kbd>Ctrl</kbd><kbd>Shift</kbd>나
+  <kbd>Ctrl</kbd><kbd>Alt</kbd>가 들어간 단축키(그리고 <kbd>Ctrl</kbd><kbd>,</kbd>)만 AIDE가 받아요.
+  <kbd>Ctrl</kbd>과 글자만 누르는 단축키, <kbd>Super</kbd> 단축키, 기능 키는 프로그램으로 가요.
+
+터미널 자체의 동작(**새 터미널 탭**, **오른쪽으로 분할**, **아래로 분할**, **다음 페인**, **이전 페인**,
+**페인 닫기**)은 어떤 단축키를 주든 터미널에 키보드 포커스가 있을 때만 실행돼요.
+
+### 명령
+
+**명령**은 셸 명령에 단축키를 붙여요. Mac(Mac App Store 빌드 제외)과 Linux에서 쓸 수 있어요.
+
+<Steps>
+
+1. **설정 › 키보드 › 명령**의 **셸 명령**에 명령을 입력해요.
+2. 단축키를 기록해요. Mac에서는 **명령 추가** 옆의 버튼을 클릭하고 단축키를 눌러요. Linux에서는 그 줄의
+   단축키 버튼을 클릭하고 단축키를 누른 다음 **명령 추가**를 클릭해요.
+
+</Steps>
+
+명령은 홈 폴더에서 AIDE의 환경 변수로 `/bin/sh -c`로 실행되고, 출력은 버려요. AIDE는 명령이 끝나기를 기다리지
+않아요. 시작하지 못하면 **명령을 시작하지 못했어요: …**라고 알려 줘요. **제거**를 누르면 명령이 단축키에서
+빠져요. 명령도 기록할 때처럼, 그 단축키를 쓰던 동작에서 단축키를 가져와요.
+
+### Linux: config.toml
+
+Linux에서는 내 단축키가 앱의 다른 설정과 함께 `~/.config/aide/config.toml`(`AIDE_CONFIG`를 설정했다면 그
+파일)에 저장돼요. **설정 › 키보드**가 이 파일에 쓰면서 주석과 파일의 다른 내용은 그대로 두고, 직접 고쳐도
+돼요. 파일이 바뀌면 AIDE가 다시 읽어요.
+
+```toml
+[keybindings]                          # 단축키, 그리고 그 단축키가 할 일
+"ctrl+alt+j" = "action:today"          # 이름 있는 동작
+"ctrl+shift+g" = "action:git-sync"
+"super+r" = "action:random"
+"ctrl+alt+k" = "spawn:touch /tmp/x"    # 셸 명령(접두어 없는 값도 셸 명령이에요)
+
+[keybindings_off]                      # 꺼 둔 기본 단축키, 동작 id로
+actions = ["new-scratch"]
+```
+
+- 단축키는 수식 키 `ctrl`, `alt`, `shift`, `super`와 키를 `+`로 이어 써요. 키는 글자나 숫자,
+  <kbd>Shift</kbd> 없이 US 자판에서 입력하는 기호(`]`, `,`, `/`), `space`, `f1`–`f24`, `left`, `right`,
+  `up`, `down`, `home`, `end`, `pageup`, `pagedown`, `insert`, `delete`, `backspace`, `tab`, `return`,
+  `escape`예요. 대소문자는 상관없고, GTK의 이름(`<Control><Shift>g`, `Page_Down`)도 돼요. `ctrl+!`가 아니라
+  `ctrl+shift+1`로 써요.
+- 여기서 단축키를 준 동작은 기본 단축키를 잃어요. 한 동작에 단축키를 여러 개 줄 수도 있어요.
+- 내 단축키는 같은 키를 쓰는 기본 단축키보다 우선해요.
+
+두 표에 쓸 수 없는 값이 있으면(<kbd>Ctrl</kbd>이나 <kbd>Super</kbd>가 없는 단축키, id가 없는 `action:`,
+비어 있는 명령, 두 번 나오는 단축키, 목록이 아닌 `actions`) AIDE는 전에 쓰던 단축키를 그대로 쓰고, **설정 ›
+키보드**에 **키보드 설정에 문제가 있어요: …**와 함께 무엇이 잘못됐는지 보여 줘요. 창에 없는 동작 id를 가리키는
+단축키는 아무 일도 하지 않아요.
+
+Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보드**에서 바꾸세요.
+
+### 동작 id
+
+모든 동작에는 Mac과 Linux에서 같은 id가 있어요. `aidectl action list`는 지금 창에 있는 동작의 id를 제목과
+함께 보여 줘요([aidectl](/ko/docs/developers/aidectl/#action) 참고). 고정된 id는 이래요.
+
+| Id | 동작 |
+|---|---|
+| `new-scratch` | 새 스크래치 노트 |
+| `new-page` | 새 페이지… |
+| `today` | 오늘 노트 열기 |
+| `open` | 노트 열기… |
+| `random` | 무작위 노트 열기 |
+| `search` | 노트 검색 |
+| `find` | 노트에서 찾기 |
+| `review` | 회고 |
+| `organize` | 스크래치 노트 정리… |
+| `copy-link` | 이 노트 링크 복사 |
+| `toggle-pin` | 이 노트 고정 |
+| `toggle-panel` | 패널 표시 전환 |
+| `toggle-right-panel` | 오른쪽 패널 표시 전환 |
+| `back`, `forward` | 뒤로, 앞으로 |
+| `new-tab`, `close-tab`, `close-other-tabs` | 새 탭, 탭 닫기, 다른 탭 닫기 |
+| `next-tab`, `previous-tab` | 다음 탭, 이전 탭 |
+| `settings` | 설정 |
+| `plugins` | 커뮤니티 플러그인 둘러보기 |
+| `assistant-overlay` | 데스크톱에 어시스턴트 표시 |
+| `git-sync` | git으로 커밋하고 동기화 |
+| `new-meeting` | 새 회의 |
+| `import-recording` | 녹음 가져오기… |
+| `new-window` | 새 창(Mac) |
+| `voice` | 어시스턴트에게 말하기(Linux) |
+| `feature-tour` | AIDE로 할 수 있는 것(Linux) |
+| `terminal/new-tab` | 새 터미널 탭 |
+| `terminal/split-right`, `terminal/split-down` | 오른쪽으로 분할, 아래로 분할 |
+| `terminal/next-pane`, `terminal/previous-pane` | 다음 페인, 이전 페인 |
+| `terminal/close-pane` | 페인 닫기 |
+
+창에 보이는 것에 따라 생기고 없어지는 id도 있어요.
+
+- `section/<id>`: 사이드바의 섹션.
+- `periodic/weekly`, `periodic/monthly`, `periodic/quarterly`, `periodic/yearly`: 그 주기를 켰을 때 이번
+  주기의 노트.
+- `plugin/<plugin>/<command>`: 플러그인의 명령.
+
+### 스크립트에서 동작 실행하기
+
+`aidectl action run <id>`는 명령 팔레트에서 고른 것처럼 내 볼트의 AIDE 창에서 동작을 실행하고, 동작이 끝나면
+돌아와요. 그 볼트을 연 앱이 실행 중이어야 해요. [aidectl](/ko/docs/developers/aidectl/#action)과
+[로컬 API](/ko/docs/developers/local-api/#동작)를 참고하세요.

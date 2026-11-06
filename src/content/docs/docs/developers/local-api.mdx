@@ -5,7 +5,7 @@ sidebar:
     order: 3
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 While the AIDE app on the Mac or Linux has a vault open, it serves that vault's notes on a Unix socket. Any program you run on the same computer can read and write notes there with plain HTTP, with no server and no token, and gets the same answers a server would give. [`aidectl`](/docs/developers/aidectl/) is built on it; this page is for when you want to call it yourself.
 
@@ -80,6 +80,35 @@ Errors are `{"error": {"code": "…", "message": "…"}}`. A `version_conflict` 
 
 - A request that carries a `version` (update, archive, toggle, a section replace with `version`) gets `409 version_conflict` with the current note when the note changed since that version. The app never retries it for you: read again and decide.
 - Append and a section replace without `version` re-read and retry when an outside edit lands between their read and their write, up to 3 times.
+
+## Actions
+
+<Badge text="Next release" /> The app's socket also runs its named actions: what the command palette runs, by id. [Keyboard shortcuts](/docs/guides/shortcuts/#action-ids) lists the ids. A desktop host's socket doesn't have these routes (`404`).
+
+| Route | What it does |
+| --- | --- |
+| `GET /actions` | `{"actions": [{"id", "title", "available", "why"}]}`: the window's actions now; `why` (only on one that isn't available) says what it needs |
+| `POST /actions/{id}` | Runs the action and answers once it has finished: `200` `{"id", "ran": true}` |
+
+`POST /actions/{id}` can also answer:
+
+| Status | `code` | When |
+| --- | --- | --- |
+| `404` | `unknown_action` | No action has that id (a plugin removed meanwhile, say) |
+| `409` | `unavailable` | It can't run now; `message` says why |
+| `409` | `no_window` | No window shows this vault (`GET /actions` answers this too) |
+| `409` | `superseded` | Linux: something else was opened before it finished, so it didn't open what it fetched |
+| `500` | `action_failed` | The action failed (its error is the `message`) |
+| `500` | `window_closed` | The window closed while it ran |
+
+Both act in the window of this socket's vault that was used last, whether it's in front or not. Escape the `/` in an id (`/actions/plugin%2Fbookmark%2Fsave`); the unescaped form (`/actions/plugin/bookmark/save`) works too. [`aidectl action`](/docs/developers/aidectl/#action) is built on these routes.
+
+With `$s` the socket, as in [Examples](#examples):
+
+```sh
+curl -s --unix-socket "$s" http://aide/actions | jq -r '.actions[] | select(.available) | .id'
+curl -s --unix-socket "$s" -X POST http://aide/actions/today
+```
 
 ## Limits
 

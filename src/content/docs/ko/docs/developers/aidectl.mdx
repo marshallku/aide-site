@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 `aidectl`은 터미널, 스크립트, 에디터, 상태 표시줄에서 AIDE 노트를 읽고 써요. AIDE의 노트 규칙을 그대로 따르기 때문에, 보지 못한 편집을 덮어쓰는 일은 없어요. 특정 작업 방식은 정해 두지 않았어요. `get`, `put`, `append`, `toggle`을 직접 조합해서 쓰면 돼요.
 
@@ -244,6 +244,36 @@ macOS에서는 `open`, Linux에서는 `xdg-open`으로 AIDE 앱의 해당 위치
 
 `--print`를 주면 열지 않고 링크를 출력해요.
 
+### action
+
+<Badge text="다음 릴리스" />
+
+```sh
+aidectl action list [--json]
+aidectl action run <id>
+```
+
+AIDE 앱의 이름 있는 동작, 즉 명령 팔레트가 실행하는 것을 id로(`today`, `git-sync`, `terminal/split-right`, `plugin/<plugin>/<command>`) 보여 주고 실행해요. id 목록은 [키보드 단축키](/ko/docs/guides/shortcuts/#동작-id)에 있어요.
+
+- `list`는 지금 창에 있는 동작마다 id, 제목, 그리고 지금 실행할 수 없는 동작이면 이유와 함께 `unavailable: …`을 보여 줘요(예: 노트를 열지 않았는데 노트 명령). `--json`은 `id`, `title`, `available`, `why`의 목록으로 보여 줘요.
+- `run`은 명령 팔레트에서 고른 것처럼 동작을 실행하고, 동작이 끝나면 돌아와요. 성공하면 아무것도 출력하지 않아요. 최대 2분까지 기다려요.
+
+동작은 창에서 실행되기 때문에, 이 명령은 이 컴퓨터의 AIDE 앱하고만 통신해요. 데스크톱 호스트나 서버와는 통신하지 않고, 폴더를 직접 열지도 않아요. 대상은 앱에서 열려 있는 볼트(`--vault`, `AIDE_VAULT`, `vault=`)여야 하고, 서버를 대상으로 하면 사용법 오류예요. 동작은 그 볼트의 창 중 마지막으로 쓴 창에서 실행돼요. 다른 볼트의 창이 앞에 있어도 마찬가지예요.
+
+| 결과 | 종료 코드 |
+| --- | --- |
+| 동작을 실행함(또는 목록을 출력함) | 0 |
+| 그 볼트를 연 앱이 실행 중이 아니거나, Mac App Store 빌드임(로컬 API가 없어요) | 1 |
+| 지금 실행할 수 없는 동작(`… can't run now: …`)이거나 실패함 | 1 |
+| 그 볼트를 보여 주는 AIDE 창이 없음 | 1 |
+| 서버를 대상으로 했거나 인자가 잘못됨 | 2 |
+| 그 id의 동작이 없음 | 5 |
+
+```sh
+aidectl action run today
+aidectl action list | grep plugin/
+```
+
 ### mcp
 
 ```sh
@@ -269,7 +299,7 @@ aidectl plugins list [--json]
 | 2 | 사용법: 잘못된 플래그나 인자, 또는 볼트나 서버가 설정되지 않음 |
 | 3 | 이미 있는 경로(`put --create-only`) |
 | 4 | 충돌: 노트가 그사이 바뀌어서 아무것도 쓰지 않음 |
-| 5 | 찾을 수 없음: 노트, 또는 `append`의 제목 |
+| 5 | 찾을 수 없음: 노트, `append`의 제목, 또는 `action run`의 동작 |
 
 확장 명령은 자기 종료 코드로 끝나요(시그널로 끝났으면 128에 시그널 번호를 더한 값).
 

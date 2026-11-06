@@ -5,7 +5,7 @@ sidebar:
     order: 3
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 Mac이나 Linux의 AIDE 앱은 보관소를 열어 두는 동안 그 보관소의 노트를 Unix 소켓으로 제공해요. 같은 컴퓨터에서 실행하는 프로그램이라면 서버도 토큰도 없이 평범한 HTTP로 노트를 읽고 쓸 수 있고, 서버가 주는 것과 같은 응답을 받아요. [`aidectl`](/ko/docs/developers/aidectl/)도 이 위에서 만들어졌어요. 이 페이지는 직접 호출하고 싶을 때를 위한 거예요.
 
@@ -80,6 +80,35 @@ Note는 `{id, path, kind, title, body, version, todos, updatedAt}`이고, 다른
 
 - `version`을 담은 요청(수정, 보관, 토글, `version`을 담은 섹션 교체)은 그 버전 이후 노트가 바뀌었다면 현재 노트와 함께 `409 version_conflict`를 받아요. 앱은 대신 재시도하지 않아요. 다시 읽고 판단하세요.
 - 덧붙이기와 `version` 없는 섹션 교체는 읽기와 쓰기 사이에 외부 편집이 끼어들면 다시 읽고 재시도해요. 최대 3번까지요.
+
+## 동작
+
+<Badge text="다음 릴리스" /> 앱의 소켓은 이름 있는 동작, 즉 명령 팔레트가 실행하는 것을 id로 실행하기도 해요. id 목록은 [키보드 단축키](/ko/docs/guides/shortcuts/#동작-id)에 있어요. 데스크톱 호스트의 소켓에는 이 경로가 없어요(`404`).
+
+| 경로 | 하는 일 |
+| --- | --- |
+| `GET /actions` | `{"actions": [{"id", "title", "available", "why"}]}`: 지금 창에 있는 동작이에요. `why`는 실행할 수 없는 동작에만 붙고, 무엇이 필요한지 알려 줘요 |
+| `POST /actions/{id}` | 동작을 실행하고 끝나면 답해요: `200` `{"id", "ran": true}` |
+
+`POST /actions/{id}`는 이렇게 답하기도 해요.
+
+| 상태 | `code` | 언제 |
+| --- | --- | --- |
+| `404` | `unknown_action` | 그 id의 동작이 없음(예: 그사이 제거된 플러그인) |
+| `409` | `unavailable` | 지금 실행할 수 없음. `message`가 이유예요 |
+| `409` | `no_window` | 이 보관소를 보여 주는 창이 없음(`GET /actions`도 이렇게 답해요) |
+| `409` | `superseded` | Linux: 끝나기 전에 다른 것이 열려서 가져온 것을 열지 않음 |
+| `500` | `action_failed` | 동작이 실패함(`message`가 그 오류예요) |
+| `500` | `window_closed` | 실행하는 동안 창이 닫힘 |
+
+두 경로 모두 이 소켓의 보관소를 보여 주는 창 중 마지막으로 쓴 창에서 동작해요. 그 창이 앞에 있든 없든 마찬가지예요. id의 `/`는 이스케이프하세요(`/actions/plugin%2Fbookmark%2Fsave`). 이스케이프하지 않은 형태(`/actions/plugin/bookmark/save`)도 돼요. [`aidectl action`](/ko/docs/developers/aidectl/#action)이 이 경로 위에서 만들어졌어요.
+
+`$s`가 [예시](#예시)에서처럼 소켓일 때:
+
+```sh
+curl -s --unix-socket "$s" http://aide/actions | jq -r '.actions[] | select(.available) | .id'
+curl -s --unix-socket "$s" -X POST http://aide/actions/today
+```
 
 ## 제한
 

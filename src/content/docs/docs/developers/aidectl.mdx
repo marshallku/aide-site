@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 `aidectl` reads and writes your AIDE notes from a terminal, a script, an editor or a status bar. It goes through AIDE's own note rules, so a write never overwrites an edit it didn't see. It knows nothing about any particular workflow: you compose `get`, `put`, `append` and `toggle` yourself.
 
@@ -244,6 +244,36 @@ Opens the AIDE app at that place, through `open` on macOS or `xdg-open` on Linux
 
 `--print` prints the link instead of opening it.
 
+### action
+
+<Badge text="Next release" />
+
+```sh
+aidectl action list [--json]
+aidectl action run <id>
+```
+
+Lists and runs the AIDE app's named actions: what its command palette runs, by id (`today`, `git-sync`, `terminal/split-right`, `plugin/<plugin>/<command>`). [Keyboard shortcuts](/docs/guides/shortcuts/#action-ids) lists the ids.
+
+- `list` prints each action the window has now: id, title, and `unavailable: …` with the reason for one that can't run now (a note command with no note open, say). `--json` prints them as a list of `id`, `title`, `available` and `why`.
+- `run` runs the action and returns once it has finished, as if you'd picked it in the command palette. It prints nothing when it worked. It waits at most two minutes.
+
+Actions run in a window, so this command talks only to the AIDE app on this computer, never to a desktop host or a server, and never opens the folder itself. The target must be a vault (`--vault`, `AIDE_VAULT` or `vault=`), open in the app: a server is a usage error. The action runs in the window of that vault you used last, even when another vault's window is in front.
+
+| What happened | Exit code |
+| --- | --- |
+| The action ran (or the list printed) | 0 |
+| The app isn't running with the vault open, or is the Mac App Store build (it has no local API) | 1 |
+| The action can't run now (`… can't run now: …`), or failed | 1 |
+| No AIDE window shows the vault | 1 |
+| A server as target, or wrong arguments | 2 |
+| No action has that id | 5 |
+
+```sh
+aidectl action run today
+aidectl action list | grep plugin/
+```
+
 ### mcp
 
 ```sh
@@ -269,7 +299,7 @@ The extension commands found (see below): name, description, path, tab-separated
 | 2 | Usage: a wrong flag or argument, or no vault or server configured |
 | 3 | Path taken (`put --create-only`) |
 | 4 | Conflict: the note moved on; nothing was written |
-| 5 | Not found: the note, or the heading for `append` |
+| 5 | Not found: the note, the heading for `append`, or the action for `action run` |
 
 An extension command exits with its own code (128 plus the signal number when a signal ended it).
 
