@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE는 같은 단축키를 써요. Linux에서 <kbd>Ctrl</kbd>을 쓰는 자리에 Mac에서는 <kbd>⌘</kbd>를 써요.
 Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 단축키와 함께 명령 팔레트에 있어요.
@@ -104,12 +104,16 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 
 ## 터미널
 
-터미널에 키보드 포커스가 있을 때는 이 키가 터미널 탭에 동작해요.
+터미널에 키보드 포커스가 있을 때는 이 키가 터미널 탭과 페인에 동작해요.
 
 | 동작 | Mac | Linux |
 |---|---|---|
 | 새 탭 | <kbd>⌘</kbd><kbd>T</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>T</kbd> |
 | 탭 닫기 | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
+| 포커스된 페인 닫기(마지막 페인이면 탭) <Badge text="다음 릴리스" /> | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
+| 포커스된 페인을 오른쪽으로 분할 <Badge text="다음 릴리스" /> | <kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>D</kbd> |
+| 포커스된 페인을 아래로 분할 <Badge text="다음 릴리스" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> |
+| 다음 / 이전 페인 <Badge text="다음 릴리스" /> | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>N</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd> |
 | 이전 / 다음 탭 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
 | 1–9번 탭으로 이동 | <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
 | 터미널에서 찾기 | <kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> |
@@ -120,6 +124,11 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 Mac에서 터미널에 키보드 포커스가 있으면 <kbd>⌘</kbd><kbd>T</kbd>, <kbd>⌘</kbd><kbd>W</kbd>,
 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd>, <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd>,
 <kbd>⌘</kbd><kbd>F</kbd>는 터미널 탭에 동작해요. 그 밖의 곳에서는 첫 번째 표에 적힌 대로 동작해요.
+
+<Badge text="다음 릴리스" /> <kbd>⌘</kbd><kbd>W</kbd>와 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd>는 탭 전체 대신
+포커스된 페인을 닫아요. 페인이 하나뿐인 탭은 전처럼 닫혀요. 탭의 ×와 **닫기**는 지금처럼 탭 전체를 닫아요. 페인
+키는 터미널 페인에 키보드 포커스가 있을 때만 동작해요. [탭을 페인으로 나누기](/ko/docs/guides/terminal/#탭을-페인으로-나누기-)를
+참고하세요.
 
 <Aside type="note" title="Linux 터미널에서 양보하는 단축키">
 이 앱 단축키는 셸도 쓰는 키라서, 키보드 포커스가 터미널에 있는 동안에는 꺼지고 셸로 전달돼요:

@@ -22,6 +22,32 @@ The **Terminal** section in the sidebar is a row of tabs over a shell, filling t
 - With no tab open, the section says **No shells open**.
 - The shells keep running while you're elsewhere in AIDE. Coming back finds them as you left them.
 
+### Split a tab into panes <Badge text="Next release" />
+
+A tab can hold more than one shell side by side. Each part is a pane, with its own shell, and you
+split and move between them from the keyboard or the **Go** menu:
+
+| Action | Mac | Linux |
+|---|---|---|
+| **Split Right** | <kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>D</kbd> |
+| **Split Down** | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> |
+| **Next Pane** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>N</kbd> |
+| **Previous Pane** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd> |
+| Close the focused pane | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
+
+- The keys work only while a terminal pane has the keyboard. **Go** › **Split Right**,
+  **Split Down**, **Next Pane** and **Previous Pane** (on the Mac) are greyed out otherwise.
+- A split halves the focused pane. The new pane opens a shell in the focused pane's folder.
+- Click a pane to focus it. While a tab has more than one pane, the focused one has an outline in
+  the accent colour.
+- Drag the line between two panes to resize them.
+- Each pane keeps at least 20 columns and 5 rows. A split that would leave less is refused with a
+  beep.
+- The tab's title, its folder (where a new tab starts) and the find bar follow the focused pane.
+- <kbd>⌘</kbd><kbd>W</kbd> (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> on Linux) closes the focused
+  pane and ends its shell; on the tab's last pane it closes the tab. The tab's × and **Close** still
+  close the whole tab, with every pane in it.
+
 ### Beside your notes
 
 The right panel (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>\\</kbd>, <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>\\</kbd> on
@@ -29,7 +55,7 @@ Linux) has a **Terminal** view: the same tabs and the same shells, next to whate
 shows, such as a note. While the main area is the Terminal section, the shells are there and the
 panel says so.
 
-For the tab, find and text-size keys, see [Keyboard shortcuts](/docs/guides/shortcuts/#terminal).
+For the tab, pane, find and text-size keys, see [Keyboard shortcuts](/docs/guides/shortcuts/#terminal).
 
 ### Settings › Terminal
 
@@ -92,7 +118,8 @@ To use a comux on a server, right-click a tab and choose **Open remote comux…*
 tab over `ssh`, with that server's sessions in the sidebar.
 
 Only the tab on screen (in the Terminal section or the right panel) gets AIDE's controls. A tab you
-can't see, or one without comux, shows comux as comux draws it itself.
+can't see, or one without comux, shows comux as comux draws it itself. In a tab split into panes,
+each pane runs its own comux, and the focused pane's comux gets the controls.
 
 <Aside type="note">
 The Terminal is part of the Mac app on the release page. A build for the Mac App Store, where the

@@ -3,6 +3,8 @@ title: Privacy policy
 description: What the developer of AIDE receives from the apps, what goes to the services you set up, and what never leaves your devices.
 ---
 
+import { Badge } from "@astrojs/starlight/components";
+
 AIDE is made by Marshall Ku. This policy covers the AIDE apps for iPhone, Mac and Linux and the services
 the developer runs for them. It was last updated on October 25, 2026.
 
@@ -19,6 +21,10 @@ the developer runs for them. It was last updated on October 25, 2026.
   through the developer's push relay. The relay passes each notification's title and body to Apple and
   doesn't store them. When a delivery fails, its log keeps a short hash of the device's notification token
   (not the token itself), so a broken device can be told apart. Nothing in it names you.
+- **comux agent notifications.** <Badge text="Next release" /> When a comux host in the iPhone or iPad
+  SSH section sends its agents' notifications, they're sealed end to end. The relay and Apple see only a
+  fixed placeholder, an id for the key, and the encrypted notification. The iPhone opens
+  it with a key it shares only with that host, kept in the iPhone's keychain.
 - **Nothing else.** The apps don't report usage, crashes or errors to the developer. (If you turned on
   **Share With App Developers** in your iPhone's or Mac's settings, Apple passes crash reports on.)
 
