@@ -166,7 +166,27 @@ Click a todo to open its note at that line. Its menu (right-click on the Mac and
 
 **Focus for** runs a timer for the todo's estimate, else its time block's length, else 25 minutes. A bar on top of the list shows the todo's title and the time left, with **Done**, which checks the todo off, and **Stop**. When the time is up you get a notification, even with AIDE closed. One focus runs at a time per vault, and it survives relaunching the app. Nothing is written to the note until you press **Done**.
 
-For counted work-and-break cycles, see the [Pomodoro plugin](/docs/plugins/pomodoro/).
+#### Pomodoro <Badge text="Next release" />
+
+Turn on **Pomodoro** under **Settings › Todos › Focus** to follow each focus with a break, as copad's
+pomodoro did:
+
+- A focus runs for the todo's estimate, else for **Focus** (25 minutes). When it's over, a **Break**
+  (5 minutes) starts by itself. Every few finished focuses (**Long break every N focuses**, 4) the break is a
+  **Long break** (15 minutes).
+- When a break is over, AIDE waits for you to start the next focus. It never loops on its own.
+- The bar shows the phase, the time left and how many focuses you finished today, with **Pause**
+  (**Resume**) and **Skip**. A skipped or stopped focus doesn't count. The count starts again at
+  midnight.
+- You get a notification when a focus or a break is over. On the Mac and iPhone it comes even with AIDE
+  closed. On Linux it comes while AIDE runs, and a break that ended while it was closed is told once
+  when it starts again.
+- Changes in Settings apply from the next focus, on this device.
+- On the Mac and Linux, the command palette has **Pause or resume the focus**, **Skip to the next
+  phase** and **Stop the focus** (`focus/toggle`, `focus/skip`, `focus/stop`), which you can give a
+  shortcut.
+
+For a separate timer that logs a daily count, see the [Pomodoro plugin](/docs/plugins/pomodoro/).
 
 ### The assistant's proposals
 
