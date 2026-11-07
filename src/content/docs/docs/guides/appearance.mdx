@@ -61,6 +61,18 @@ Under **Settings › Appearance › Window** on the Mac, or **Settings › Gener
   opens in a new tab. Without it, hold <kbd>⌘</kbd> (Mac) or <kbd>Ctrl</kbd> (Linux), or use the
   middle mouse button, to do the same.
 
+## Status items (Mac and Linux) <Badge text="Next release" />
+
+At the bottom of the sidebar, above Settings, AIDE shows small status items: the focus timer's ring
+while a focus or break runs, items your [device plugins](/docs/plugins/device-plugins/) show, and
+items scripts set with [`aidectl status-item`](/docs/developers/aidectl/#status-item). Click one to
+run what it does; right-click the focus ring to pause, resume, skip the phase or stop. When there
+are more than fit, the rest are under **…**. Each vault's windows show only that vault's items.
+
+Turn the row off with **Status items** under **Settings › Appearance › Window** on the Mac, or in the
+**Window** group of **Settings › Appearance** on Linux (`status_items` under `[window]` in
+`config.toml`).
+
 ## Window opacity (Mac and Linux) <Badge text="Next release" />
 
 **Window opacity**, under **Settings › Appearance › Window** on the Mac and in the **Window** group

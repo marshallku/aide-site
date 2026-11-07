@@ -158,6 +158,16 @@ curl -s --unix-socket "$s" -X POST http://aide/browser/navigate -d '{"url": "htt
 | `POST /events` | `{"kind": "custom.<name>", "payload"}`: `202` `{"id"}`. `custom.*`만 받고, 8 KiB를 넘는 페이로드는 `413`이에요 |
 | `GET /events?epoch=&after=&limit=` | 최근 이벤트 500개에서 `{"epoch", "events", "next", "dropped"}`. `after`가 사라졌거나, 앱이 다시 시작됐거나, `after`가 앞서 있으면 `dropped`가 true예요 |
 
+## 상태 항목
+
+<Badge text="다음 릴리스" /> Mac과 Linux에서 보관소 소켓은 그 보관소 사이드바 아래의 [상태 항목](/ko/docs/guides/appearance/#상태-항목mac과-linux-)을 설정해요. 소켓은 자기 항목(`ext.<id>`)만 설정하고 지울 수 있고, `GET`은 앱과 플러그인 항목까지 모두 보여 줘요. 저장하지 않으니 ttl이 지나거나 앱을 끄면 사라져요. [`aidectl status-item`](/ko/docs/developers/aidectl/#status-item)이 이 경로를 써요.
+
+| 경로 | 하는 일 |
+| --- | --- |
+| `GET /status-items` | `{"items": [...], "shown": 8}`, `order` 다음 `id` 순서예요. 앞의 `shown`개가 레일에, 나머지는 … 안에 있어요 |
+| `PUT /status-items/{id}` | `{"text", "icon", "progress": {"start", "end"}, "tooltip", "action", "order", "ttl"}`(모두 선택이지만 텍스트, 아이콘, 링 중 하나는 있어야 해요): `200` `{"item"}`, 16개를 넘으면 `409` `too_many` |
+| `DELETE /status-items/{id}` | `200` `{"id", "cleared"}` |
+
 ## 제한
 
 - HTTP/1.1이고, 연결 하나에 요청 하나면 충분해요(`Connection: close`).

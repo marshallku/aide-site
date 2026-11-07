@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 A device plugin adds something to the AIDE app itself: a tab, a sheet you open on a note, a view in the
 desktop's right panel, a command, or a job that runs at a set time. It runs on the device, inside a
@@ -96,6 +96,7 @@ with `not allowed: …`.
 | `attachments:write`| Add images and documents to your notes                    | Adding new ones; an existing attachment is never changed             |
 | `sessions:read`    | Read your Claude Code, Codex and Grok sessions on this computer | Listing and reading them, never changing them (Mac and Linux) |
 | `ai:run`           | Ask this device's assistant, on your allowance            | Asking the assistant you set up for a note |
+| `status` <Badge text="Next release" /> | Show up to 3 items at the bottom of the sidebar | Small items on the rail, in this vault's windows (Mac and Linux) |
 
 What a plugin can never do:
 

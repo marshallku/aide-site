@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 기기 플러그인은 파일 최대 네 개로 된 폴더예요. AIDE는 이 폴더를 iPhone, Mac, Linux 앱의 샌드박스 웹 뷰에
 불러와요. 플러그인은 탭, 데스크톱 오른쪽 패널의 뷰, 노트 위에 뜨는 시트, 팔레트 명령, 예약 실행을 추가할 수
@@ -116,6 +116,7 @@ import { Aside, Steps } from "@astrojs/starlight/components";
 | `schedule`             | 이 컴퓨터(Mac, Linux)에서 AIDE가 열려 있는 동안 정해진 시각에 `schedules` 실행                                                 |
 | `attachments:read`     | 노트에 임베드된 이미지와 문서 읽기                                                                                             |
 | `attachments:write`    | 새 첨부 파일 추가(생성만). 읽기를 포함해요                                                                                     |
+| `status` <Badge text="다음 릴리스" /> | 이 보관소 창의 레일 아래에 항목 3개까지(Mac, Linux, [상태 항목](#상태-항목-) 참고) |
 
 접두사는 경로 단위 전체로 맞춰요. `notes:read:daily`는 `daily`와 `daily/2026-10-22`는 포함하지만 `daily-log`는
 포함하지 않아요. 필요한 만큼 가장 좁은 접두사를 요청하세요. 공개 인덱스 심사도 그걸 요구해요.
@@ -150,6 +151,8 @@ import { Aside, Steps } from "@astrojs/starlight/components";
 | `attachments.get`       | `{path}`                                                                       | `{path, mime, data}`(`data`는 base64) 또는 `null`                                                |
 | `attachments.put`       | `{path, data}`(`data`는 base64, ≤ 20 MB)                                       | `{path, mime}`                                                                                   |
 | `panel.open`            | `{id}`                                                                         | 오른쪽 패널에 플러그인의 패널 하나를 보여 줘요                                                   |
+| `status.set` | `{id, text?, icon?, progress?, tooltip?, command?, order?}` | 항목(`plugin.<plugin id>.<id>`) |
+| `status.clear` | `{id}` | `{cleared}` |
 
 세부 사항이에요.
 
@@ -207,6 +210,32 @@ import { Aside, Steps } from "@astrojs/starlight/components";
 
 `aide.instance`가 있으면 여러 기기에서 쓰는 플러그인이 기기마다 자기 노트를 둘 수 있어요. Recall이 복습 기록을
 이렇게 남겨요.
+
+## 상태 항목 <Badge text="다음 릴리스" />
+
+Mac과 Linux에서 `status` 기능이 있는 플러그인은 레일의 설정 위, 집중 타이머 링과 `aidectl status-item`이 띄운 항목
+옆에 작은 항목을 보여 줄 수 있어요.
+
+```js
+const start = Date.now() / 1000;
+await aide.call("status.set", {
+    id: "timer", // [a-z0-9-], 1–32자
+    text: "24:59", // 24자까지
+    icon: "timer", // AIDE 아이콘 세트의 이름
+    progress: { start, end: start + 1500 }, // AIDE가 시계를 보고 그리는 링(Unix 초)
+    tooltip: "Focus on the plan", // 200자까지
+    command: "toggle", // 클릭하면 실행할 내 명령
+    order: 300, // 0–1000(기본 500)
+});
+await aide.call("status.clear", { id: "timer" });
+```
+
+- 항목에는 텍스트, 아이콘, 링 중 하나는 있어야 해요. 링은 `start`에 가득 차 있다가 `end`부터 비어 있어서, 매초 다시
+  설정할 필요가 없어요.
+- 플러그인 하나는 보관소마다 항목을 3개까지 띄울 수 있어요. 항목은 마지막으로 설정한 페이지의 것이고, 그 페이지가
+  멈추거나 플러그인이 꺼지거나, `status`를 잃거나, 업데이트·삭제되면 사라져요. 계속 실행되는 탭이나 패널에서
+  설정하세요. 명령의 페이지는 명령이 끝나면 함께 끝나요.
+- 전체 항목이 여덟 개를 넘으면 나머지는 레일의 … 버튼 안에 들어가요.
 
 ## 예약
 

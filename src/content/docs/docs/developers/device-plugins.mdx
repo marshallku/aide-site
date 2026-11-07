@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 A device plugin is a folder of up to four files that AIDE loads into a sandboxed web view on the iPhone, the Mac
 and the Linux app. It can add a tab, a view in the desktop's right panel, a sheet on notes, palette commands and
@@ -118,6 +118,7 @@ A call outside the approved set fails with `not allowed: …`.
 | `schedule`             | Running its `schedules` at set times while AIDE is open on this computer (Mac, Linux)                                         |
 | `attachments:read`     | Reading the images and documents notes embed                                                                                   |
 | `attachments:write`    | Adding new attachments (create-only). Implies read                                                                             |
+| `status` <Badge text="Next release" /> | Up to 3 items at the bottom of the rail, in this vault's windows (Mac, Linux; see [Status items](#status-items-)) |
 
 A prefix matches whole path segments: `notes:read:daily` covers `daily` and `daily/2026-10-22`, not `daily-log`.
 Ask for the narrowest prefix that does the job; the public index's review asks for that too.
@@ -152,6 +153,8 @@ on the device or on a server: the app sends it to whichever holds them.
 | `attachments.get`       | `{path}`                                                                       | `{path, mime, data}` (`data` in base64) or `null`                                                |
 | `attachments.put`       | `{path, data}` (`data` in base64, ≤ 20 MB)                                     | `{path, mime}`                                                                                   |
 | `panel.open`            | `{id}`                                                                         | Shows the right panel on one of the plugin's panels                                              |
+| `status.set` | `{id, text?, icon?, progress?, tooltip?, command?, order?}` | The item, as `plugin.<plugin id>.<id>` |
+| `status.clear` | `{id}` | `{cleared}` |
 
 Some details:
 
@@ -210,6 +213,32 @@ Some details:
 
 `aide.instance` lets a plugin that writes from several devices give each device its own note, as Recall does with
 its review logs.
+
+## Status items <Badge text="Next release" />
+
+On the Mac and Linux, a plugin with the `status` capability shows small items on the rail, above
+Settings, beside the focus timer's ring and the items `aidectl status-item` sets:
+
+```js
+const start = Date.now() / 1000;
+await aide.call("status.set", {
+    id: "timer", // [a-z0-9-], 1–32 characters
+    text: "24:59", // up to 24 characters
+    icon: "timer", // a name from AIDE's icon set
+    progress: { start, end: start + 1500 }, // a ring AIDE draws from the clock (Unix seconds)
+    tooltip: "Focus on the plan", // up to 200 characters
+    command: "toggle", // one of your commands: what a click runs
+    order: 300, // 0–1000 (default 500)
+});
+await aide.call("status.clear", { id: "timer" });
+```
+
+- An item needs text, an icon or a ring. A ring is full at `start` and empty from `end` on, so
+  nothing has to update it every second.
+- A plugin has up to 3 items per vault. An item belongs to the page that set it last and goes away
+  when that page stops, or when the plugin is turned off, loses `status`, is updated or removed.
+  Set items from a tab or a panel, which keep running; a command's page ends with the command.
+- More than eight items in all put the rest under the rail's … button.
 
 ## Schedules
 

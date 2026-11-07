@@ -301,6 +301,22 @@ aidectl event tail [--json] [--all]
 명령 안에서 쓰면 실행의 원인을 함께 넘겨서, 트리거 연쇄가 끝없이 이어지지 않아요. `tail`은 이벤트를 일어나는 대로
 보여 줘요(지금부터, `--all`이면 앱이 보관한 가장 오래된 것부터). 놓친 이벤트가 있으면 알려 줘요.
 
+### status-item
+
+<Badge text="다음 릴리스" />
+
+```sh
+aidectl status-item set <id> <text> [--icon I] [--ring START END] [--tooltip T] [--action ID] [--order N] [--ttl 5m]
+aidectl status-item clear <id>
+aidectl status-item list [--json]
+```
+
+연결한 보관소의 창에서 AIDE 앱 사이드바 아래에 작은 항목([상태 항목](/ko/docs/guides/appearance/#상태-항목mac과-linux-))을
+보여 줘요. `--ring`은 `START`부터 `END`(Unix 초)까지 비어 가는 링을 그리고, `--action`은 클릭하면 실행할 액션 id,
+`--order`(0–1000)는 순서예요. 항목은 `--ttl`(적지 않으면 10분, 최대 24시간, 다시 설정하면 연장)이 지나거나 AIDE를 끄면
+사라져서, 스크립트가 멈춰도 남지 않아요. 보관소마다 16개까지예요. `list`는 앱과 플러그인 항목까지 보관소의 모든
+항목을 보여 줘요. `aidectl status`는 그대로예요.
+
 ### terminal
 
 <Badge text="다음 릴리스" />

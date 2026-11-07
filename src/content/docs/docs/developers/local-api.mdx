@@ -158,6 +158,16 @@ curl -s --unix-socket "$s" -X POST http://aide/browser/navigate -d '{"url": "htt
 | `POST /events` | `{"kind": "custom.<name>", "payload"}`: `202` `{"id"}`. Only `custom.*`; a payload over 8 KiB is `413` |
 | `GET /events?epoch=&after=&limit=` | `{"epoch", "events", "next", "dropped"}` from the last 500 events. `dropped` is true when `after` is gone, the app restarted, or `after` is ahead |
 
+## Status items
+
+<Badge text="Next release" /> On the Mac and Linux, a vault's socket sets the [status items](/docs/guides/appearance/#status-items-mac-and-linux-) at the bottom of that vault's sidebar. A socket sets and clears only its own items (`ext.<id>`); `GET` lists them all, the app's and plugins' included. Nothing is saved: an item goes when its ttl runs out or the app quits. [`aidectl status-item`](/docs/developers/aidectl/#status-item) uses these routes.
+
+| Route | What it does |
+| --- | --- |
+| `GET /status-items` | `{"items": [...], "shown": 8}`, sorted by `order` then `id`; the first `shown` are on the rail, the rest under … |
+| `PUT /status-items/{id}` | `{"text", "icon", "progress": {"start", "end"}, "tooltip", "action", "order", "ttl"}` (all optional, but an item needs text, an icon or a ring): `200` `{"item"}`; `409` `too_many` past 16 |
+| `DELETE /status-items/{id}` | `200` `{"id", "cleared"}` |
+
 ## Limits
 
 - HTTP/1.1, one request per connection is enough (`Connection: close`).

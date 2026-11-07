@@ -303,6 +303,24 @@ aidectl event tail [--json] [--all]
 so a chain of triggers stays bounded. `tail` prints events as they happen (from now; `--all` from
 the oldest the app keeps) and says so when some were missed.
 
+### status-item
+
+<Badge text="Next release" />
+
+```sh
+aidectl status-item set <id> <text> [--icon I] [--ring START END] [--tooltip T] [--action ID] [--order N] [--ttl 5m]
+aidectl status-item clear <id>
+aidectl status-item list [--json]
+```
+
+Shows a small item at the bottom of the AIDE app's sidebar ([Status items](/docs/guides/appearance/#status-items-mac-and-linux-)),
+in the windows of the vault it talks to. `--ring` draws a ring that empties from `START` to `END`
+(Unix seconds), `--action` is an action id a click runs, and `--order` (0–1000) places it. An item
+goes away after its `--ttl` (10 minutes unless you say, at most 24 hours; setting it again renews
+it) or when AIDE quits, so a script that stops doesn't leave one behind. A vault has up to 16 of
+these. `list` shows every item the vault has, the app's and plugins' included. `aidectl status`
+is unchanged.
+
 ### terminal
 
 <Badge text="Next release" />
