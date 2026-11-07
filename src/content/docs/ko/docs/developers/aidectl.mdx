@@ -325,6 +325,76 @@ aidectl terminal exec --pane "$pane" 'make test'
 aidectl terminal history --lines 500 > scrollback.txt
 ```
 
+### browser
+
+<Badge text="다음 릴리스" />
+
+```sh
+aidectl browser <command> [--tab T] [--json]
+```
+
+AIDE 앱의 [브라우저](/ko/docs/guides/browser/)를, 탭과 페이지를 다뤄요. 먼저 브라우저를 켜 두세요(**설정 › 코어 플러그인 › 브라우저**). 꺼져 있으면 모든 명령이 `plugin_off`로 실패해요.
+
+| 명령 | 하는 일 |
+| --- | --- |
+| `open <url>` | 새 탭에 페이지를 열고 보여 줘요. 키보드를 가져가지 않아요 |
+| `navigate <url>`, `back`, `forward`, `reload` | 탭을 이동해요 |
+| `state` | 탭의 주소, 제목, 뒤로·앞으로 갈 수 있는지 출력해요 |
+| `exec-js <code>` | 페이지에서 JavaScript를 실행하고 값을 출력해요 |
+| `get-content [--format text\|html]` | 페이지의 보이는 텍스트나 HTML을 출력해요 |
+| `screenshot [--path F]` | 보이는 페이지를 PNG로 `F`에 저장해요(없으면 base64) |
+| `query <selector>`, `query-all <selector> [--limit N]`, `get-styles <selector> <prop,prop…>` | 요소와 계산된 스타일을 읽어요 |
+| `click <selector>`, `fill <selector> <value>`, `scroll [--selector S] [--x X --y Y]` | 페이지를 조작해요. 비밀번호에는 쓰지 말고 [`aidectl secret fill`](#secret)을 쓰세요 |
+| `page-info` | 페이지의 주소, 제목, 크기, 스크롤 위치와 폼·링크·이미지·입력 칸·버튼 수를 출력해요 |
+| `net [--since T] [--filter S] [--limit N]` | 페이지의 요청이에요. 스크립트가 보낸 요청과 페이지 로드를 보여 줘요(stderr의 `coverage`가 알려 줘요) |
+| `console [--since T] [--level L] [--filter S] [--limit N]` | 페이지의 콘솔 메시지예요 |
+| `clear-log` | 기록한 요청과 콘솔 메시지를 지워요 |
+| `grab` | 브라우저에서 요소를 클릭할 때까지 최대 2분 기다렸다가 그 설명을 출력해요(클립보드에도 복사돼요) |
+| `protect [--off]` | 탭의 보호 모드를 켜거나 꺼요 |
+| `tabs` | 탭 목록이에요. id, 모드, 주소, 제목을 보여 주고, 보이는 탭에 `*`를 붙여요 |
+| `tab new [<url>] [--foreground]`, `tab select <tab>`, `tab close <tab>`, `tab move <tab> <i>` | 탭을 관리해요. 새 탭은 `--foreground`를 붙이지 않으면 뒤에서 열려요 |
+| `profile clear [--kinds cookies,storage,cache]` | 브라우저의 웹사이트 데이터를 지워요(`--kinds`가 없으면 전부) |
+
+`--tab`이 없으면 브라우저가 보여 주는 탭에서 동작해요. `--tab`을 쓰면 에이전트가 화면을 바꾸지 않고 뒤에 있는 탭에서 일할 수 있어요. `--json`은 앱의 응답을 JSON으로 출력해요.
+
+탭이 보호되는 동안 읽는 명령(`state`, `exec-js`, `get-content`, `screenshot`, `query`, `get-styles`, `page-info`, `net`, `console`, `scroll`, `grab`)은 `tab_protected`로 실패하고, `click`, `fill`, `navigate`는 실행됐다는 것만 알려 줘요. 다른 탭은 보호가 끝날 때까지 아무것도 불러오지 않아요.
+
+[`action`](#action)처럼 볼트를 열어 둔 AIDE 앱하고만 통신하고, 데스크톱 호스트나 서버와는 통신하지 않아요. 앱이 연 어느 볼트로든 같은 브라우저에 닿아요. Mac App Store 빌드에는 브라우저가 없어요. 앱이 거부하면 `code: message`와 함께 1로, 없는 탭이나 자격 증명이면 5로, 인자가 틀리면 2로 끝나요.
+
+```sh
+tab=$(aidectl browser tab new http://localhost:3000)
+aidectl browser click --tab "$tab" 'button[type=submit]'
+aidectl browser console --tab "$tab" --level error
+aidectl browser screenshot --path page.png
+```
+
+### secret
+
+<Badge text="다음 릴리스" />
+
+```sh
+aidectl secret <command> [--tab T] [--json]
+```
+
+[브라우저](/ko/docs/guides/browser/#비밀번호와-보호-모드)용 웹사이트 비밀번호예요. 키체인(Mac)이나 Secret Service(Linux)에 사이트별로 저장돼요. 비밀번호는 `aidectl`을 거치지 않아요.
+
+| 명령 | 하는 일 |
+| --- | --- |
+| `list [--origin O]` | 저장된 비밀번호 목록이에요. id, 사이트, 사용자 이름을 보여 주고 비밀번호는 보여 주지 않아요 |
+| `fill <credential>` | 보호된 탭의 비밀번호 칸에 채워요 |
+| `save <username>` | 보호된 탭에 직접 입력한 비밀번호를 저장해요 |
+| `delete <credential>` | 잊어요 |
+
+`fill`과 `save`는 보호된 탭이 필요하고(`requires_protected`), `fill`은 그 자격 증명의 사이트여야 해요(`origin_mismatch`).
+
+```sh
+aidectl browser open https://example.com/login
+aidectl browser protect
+aidectl secret fill "$(aidectl secret list --origin https://example.com --json | jq -r '.credentials[0].id')"
+aidectl browser click 'button[type=submit]'
+aidectl browser protect --off
+```
+
 ### mcp
 
 ```sh

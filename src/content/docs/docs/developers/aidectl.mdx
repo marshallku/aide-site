@@ -325,6 +325,76 @@ aidectl terminal exec --pane "$pane" 'make test'
 aidectl terminal history --lines 500 > scrollback.txt
 ```
 
+### browser
+
+<Badge text="Next release" />
+
+```sh
+aidectl browser <command> [--tab T] [--json]
+```
+
+Drives the AIDE app's [Browser](/docs/guides/browser/): its tabs and pages. Turn the Browser on first (**Settings › Core plugins › Browser**); while it's off every command fails with `plugin_off`.
+
+| Command | What it does |
+| --- | --- |
+| `open <url>` | Opens the page in a new tab and shows it. It never takes the keyboard |
+| `navigate <url>`, `back`, `forward`, `reload` | Moves the tab |
+| `state` | Prints the tab's address, title and whether it can go back or forward |
+| `exec-js <code>` | Runs JavaScript in the page and prints its value |
+| `get-content [--format text\|html]` | Prints the page's visible text, or its HTML |
+| `screenshot [--path F]` | The visible page as PNG, written to `F` (base64 without it) |
+| `query <selector>`, `query-all <selector> [--limit N]`, `get-styles <selector> <prop,prop…>` | Reads elements and their computed styles |
+| `click <selector>`, `fill <selector> <value>`, `scroll [--selector S] [--x X --y Y]` | Acts on the page. Not for passwords: use [`aidectl secret fill`](#secret) |
+| `page-info` | Prints the page's address, title, size, scroll position, and how many forms, links, images, inputs and buttons it has |
+| `net [--since T] [--filter S] [--limit N]` | The page's requests: what its scripts fetch and the pages it loads (`coverage` on stderr says so) |
+| `console [--since T] [--level L] [--filter S] [--limit N]` | The page's console messages |
+| `clear-log` | Drops the captured requests and console messages |
+| `grab` | Waits up to two minutes for you to click an element in the browser, then prints its description (also copied to your clipboard) |
+| `protect [--off]` | Turns protected mode on or off for the tab |
+| `tabs` | Lists the tabs: id, mode, address and title, `*` marking the one shown |
+| `tab new [<url>] [--foreground]`, `tab select <tab>`, `tab close <tab>`, `tab move <tab> <i>` | Manages tabs. A new tab opens in the background unless you add `--foreground` |
+| `profile clear [--kinds cookies,storage,cache]` | Clears the browser's website data (all of it without `--kinds`) |
+
+Without `--tab`, a command acts on the tab the browser shows; with it, an agent works in a background tab without changing what you see. `--json` prints the app's answer as JSON.
+
+While a tab is protected, reading commands (`state`, `exec-js`, `get-content`, `screenshot`, `query`, `get-styles`, `page-info`, `net`, `console`, `scroll`, `grab`) fail with `tab_protected`, and `click`, `fill` and `navigate` only say they ran. Every other tab loads nothing until protection ends.
+
+Like [`action`](#action), this talks only to the AIDE app that has the vault open, never to a desktop host or a server. Any vault the app has open reaches the same browser. The Mac App Store build has no browser. It exits 1 with `code: message` when the app refuses, 5 for a tab or credential that doesn't exist, and 2 for wrong arguments.
+
+```sh
+tab=$(aidectl browser tab new http://localhost:3000)
+aidectl browser click --tab "$tab" 'button[type=submit]'
+aidectl browser console --tab "$tab" --level error
+aidectl browser screenshot --path page.png
+```
+
+### secret
+
+<Badge text="Next release" />
+
+```sh
+aidectl secret <command> [--tab T] [--json]
+```
+
+Website passwords for the [Browser](/docs/guides/browser/#passwords-and-protected-mode), kept in the Keychain (Mac) or the Secret Service (Linux) and tied to their site. A password never passes through `aidectl`.
+
+| Command | What it does |
+| --- | --- |
+| `list [--origin O]` | Lists saved passwords: id, site, username. Never a password |
+| `fill <credential>` | Fills it into the protected tab's password field |
+| `save <username>` | Saves the password you typed into the protected tab |
+| `delete <credential>` | Forgets it |
+
+`fill` and `save` need a protected tab (`requires_protected`), on the credential's own site for `fill` (`origin_mismatch`).
+
+```sh
+aidectl browser open https://example.com/login
+aidectl browser protect
+aidectl secret fill "$(aidectl secret list --origin https://example.com --json | jq -r '.credentials[0].id')"
+aidectl browser click 'button[type=submit]'
+aidectl browser protect --off
+```
+
 ### mcp
 
 ```sh

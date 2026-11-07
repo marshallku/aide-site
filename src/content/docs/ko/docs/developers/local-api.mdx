@@ -110,6 +110,43 @@ curl -s --unix-socket "$s" http://aide/actions | jq -r '.actions[] | select(.ava
 curl -s --unix-socket "$s" -X POST http://aide/actions/today
 ```
 
+## 브라우저
+
+<Badge text="다음 릴리스" /> Mac과 Linux에서는 **설정 › 코어 플러그인**에서 켜 둔 [브라우저](/ko/docs/guides/browser/)도 앱의 소켓으로 다룰 수 있어요. 앱마다 브라우저는 하나라서, 앱의 어느 볼트 소켓으로든 같은 탭에 닿아요. 데스크톱 호스트의 소켓과 Mac App Store 빌드에는 이 경로가 없어요(`404`). [`aidectl browser`](/ko/docs/developers/aidectl/#browser)와 [`aidectl secret`](/ko/docs/developers/aidectl/#secret)이 이 경로를 써요.
+
+| 경로 | 하는 일 |
+| --- | --- |
+| `GET /browser/tabs` | `{"tabs": [{"id", "url", "title", "loading", "mode"}], "active"}`: `mode`는 `automation`이나 `protected`, `active`는 보이는 탭의 순서예요(탭이 없으면 `-1`). 보호된 탭이 있는 동안에는 주소와 제목이 비어 있어요 |
+| `POST /browser/{op}` | JSON 본문을 매개변수로 op를 실행하고(빈 본문은 `{}`) 결과와 함께 `200`으로 답해요 |
+
+본문의 `tab_id`로 탭을 고르고, 없으면 브라우저가 보여 주는 탭에서 동작해요. op는 다음과 같아요.
+
+- 탭: `tab/new`(`url`, `background: false`가 아니면 뒤에서 열려요), `tab/select`, `tab/close`, `tab/move`(`index`), `tab/protect`(`on`, `false`가 아니면 켜요).
+- 이동: `navigate`(`url`), `back`, `forward`, `reload`, `state`.
+- 페이지: `execute_js`(`code`), `get_content`(`format`: `text`나 `html`), `query`, `query_all`(`selector`, `limit`), `get_styles`(`selector`, `properties`), `click`, `fill`(`selector`, `value`), `scroll`(`selector`, 또는 `x`와 `y`), `page_info`, `screenshot`(`{"image_b64", "width", "height"}`).
+- 기록: `net`과 `console`(`since`, `filter`, `limit`, 콘솔은 `level`도)은 `{"records", "coverage"}`로 답해요. `clear_log`.
+- `profile/list`, `profile/clear`(`kinds`: `cookies`, `storage`, `cache`).
+- `grab`: 요소를 클릭할 때까지 최대 2분 기다렸다가 그 설명을 `{"prompt"}`로 답해요.
+- 비밀번호: `secret/list`(`origin`), `secret/fill`(`credential_id`), `secret/save`(`username`), `secret/delete`(`credential_id`). 비밀번호는 요청에도 응답에도 담기지 않아요.
+
+탭이 보호되는 동안 읽는 op는 `409` `tab_protected`로 답하고, 쓰는 op는 `{"status", "protected": true}`만 답해요. 오류에는 코드마다 정해진 메시지만 담기고, 페이지 텍스트는 담기지 않아요.
+
+| 상태 | `code` | 언제 |
+| --- | --- | --- |
+| `400` | `invalid_params` | 매개변수가 없거나 틀렸어요 |
+| `404` | `unknown_method`, `tab_closed`, `not_found` | 그런 op, 탭, 자격 증명이 없어요 |
+| `409` | `plugin_off` | 브라우저가 꺼져 있어요 |
+| `409` | `no_tab` | 열린 탭이 없어요 |
+| `409` | `tab_protected`, `requires_protected`, `origin_mismatch` | 보호된 탭이 있어서 거부했거나, 보호되지 않은 탭이나 다른 사이트에 비밀번호 op를 요청했어요 |
+| `409` | `purge_incomplete` | 사이트의 service worker나 캐시를 지우지 못해서 보호나 채우기를 거부했어요 |
+| `409` | `superseded`, `timeout`, `cancelled` | 다른 가져오기로 바뀌었거나, 시간이 지났거나, 끝난 가져오기예요 |
+| `500` | `js_error`, `snapshot_failed`, `fill_failed`, `secret_backend_unavailable` | 페이지 스크립트가 실패했거나, 스크린샷을 못 찍었거나(Linux에서 화면에 없는 탭), 페이지가 값을 받지 않았거나, 키체인·키링이 없어요 |
+
+```sh
+curl -s --unix-socket "$s" http://aide/browser/tabs
+curl -s --unix-socket "$s" -X POST http://aide/browser/navigate -d '{"url": "http://localhost:3000"}'
+```
+
 ## 제한
 
 - HTTP/1.1이고, 연결 하나에 요청 하나면 충분해요(`Connection: close`).

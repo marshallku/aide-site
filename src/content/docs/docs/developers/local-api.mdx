@@ -110,6 +110,43 @@ curl -s --unix-socket "$s" http://aide/actions | jq -r '.actions[] | select(.ava
 curl -s --unix-socket "$s" -X POST http://aide/actions/today
 ```
 
+## Browser
+
+<Badge text="Next release" /> On the Mac and Linux, the app's socket also drives its [Browser](/docs/guides/browser/), once it's turned on in **Settings › Core plugins**. There is one browser per app, so every vault socket of the app reaches the same tabs. A desktop host's socket and the Mac App Store build don't have these routes (`404`). [`aidectl browser`](/docs/developers/aidectl/#browser) and [`aidectl secret`](/docs/developers/aidectl/#secret) are built on them.
+
+| Route | What it does |
+| --- | --- |
+| `GET /browser/tabs` | `{"tabs": [{"id", "url", "title", "loading", "mode"}], "active"}`: `mode` is `automation` or `protected`, `active` the shown tab's index (`-1` with none). Addresses and titles are empty while a tab is protected |
+| `POST /browser/{op}` | Runs the op with the JSON body as its parameters (an empty body is `{}`) and answers `200` with its result |
+
+`tab_id` in the body names a tab; without it, an op acts on the tab the browser shows. The ops:
+
+- Tabs: `tab/new` (`url`, opens in the background unless `background: false`), `tab/select`, `tab/close`, `tab/move` (`index`), `tab/protect` (`on`, `true` unless `false`).
+- Moving: `navigate` (`url`), `back`, `forward`, `reload`, `state`.
+- The page: `execute_js` (`code`), `get_content` (`format`: `text` or `html`), `query`, `query_all` (`selector`, `limit`), `get_styles` (`selector`, `properties`), `click`, `fill` (`selector`, `value`), `scroll` (`selector`, or `x` and `y`), `page_info`, `screenshot` (`{"image_b64", "width", "height"}`).
+- Capture: `net` and `console` (`since`, `filter`, `limit`, and `level` for the console) answer `{"records", "coverage"}`; `clear_log`.
+- `profile/list`, `profile/clear` (`kinds`: `cookies`, `storage`, `cache`).
+- `grab`: waits up to two minutes for you to click an element and answers `{"prompt"}`, its description.
+- Passwords: `secret/list` (`origin`), `secret/fill` (`credential_id`), `secret/save` (`username`), `secret/delete` (`credential_id`). A password is never in a request or an answer.
+
+While a tab is protected, reading ops answer `409` `tab_protected`, writes answer only `{"status", "protected": true}`, and an error carries a fixed message for its code, never the page's text.
+
+| Status | `code` | When |
+| --- | --- | --- |
+| `400` | `invalid_params` | A parameter is missing or wrong |
+| `404` | `unknown_method`, `tab_closed`, `not_found` | No such op, tab, or credential |
+| `409` | `plugin_off` | The Browser is turned off |
+| `409` | `no_tab` | No tab is open |
+| `409` | `tab_protected`, `requires_protected`, `origin_mismatch` | Refused while a tab is protected; a password op on a tab that isn't, or on another site |
+| `409` | `purge_incomplete` | The site's service workers or caches couldn't be removed, so protection or the fill was refused |
+| `409` | `superseded`, `timeout`, `cancelled` | A Grab that another replaced, that ran out of time, or that ended |
+| `500` | `js_error`, `snapshot_failed`, `fill_failed`, `secret_backend_unavailable` | The page's script failed, no screenshot (on Linux, a tab not on screen), the page refused the value, no Keychain or keyring |
+
+```sh
+curl -s --unix-socket "$s" http://aide/browser/tabs
+curl -s --unix-socket "$s" -X POST http://aide/browser/navigate -d '{"url": "http://localhost:3000"}'
+```
+
 ## Limits
 
 - HTTP/1.1, one request per connection is enough (`Connection: close`).

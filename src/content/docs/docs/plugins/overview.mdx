@@ -23,6 +23,8 @@ Most of this page is about server plugins. Device plugins are covered in [Instal
 
 **Git**, also under **Core plugins** on the Mac (not the Mac App Store build) and Linux, is part of the app itself: it commits the vault open on that computer to its git repository and syncs it with the remote, with no server. See [Git](/docs/plugins/git/).
 
+**Browser** <Badge text="Next release" />, under **Core plugins** on the Mac (not the Mac App Store build) and Linux, is a web browser in the app that you and your coding agents share. See [Browser](/docs/guides/browser/).
+
 ## Where server plugins run
 
 Server plugins run in one process, the plugin runner, next to the server. Each plugin runs separately inside it, with its own token, its own saved state and its own schedule. If one plugin crashes, the runner starts it again after 30 seconds, and the other plugins keep running.
