@@ -247,6 +247,7 @@ curl -s --unix-socket "$s" "http://aide/search?q=postgres&limit=5" | jq -r '.not
 | `tab.close` | `id` | 탭 id를 주면 그 탭을 안의 모든 페인과 함께 닫고, 없으면 포커스된 페인을 닫아요 |
 | `tab.list`, `tab.info` | | `{count, current, tabs: [{id, index, title, selected, panes: [{id, title, focused, exited, cols, rows}]}]}` |
 | `tab.rename` | `id`, `title` | 탭에 이름을 붙여요 |
+| `tab.switch` <Badge text="다음 릴리스" /> | `index` | `tab.list`의 그 순서(0부터)에 있는 탭을 선택하고 `{tab}`을 돌려줘요. 그 자리에 탭이 없으면 `not_found`, 정수가 아니면 `invalid_params`예요 |
 | `split.horizontal` | `id` | 페인을 오른쪽으로 나누고 새 페인의 `{panel_id}`로 응답해요 |
 | `split.vertical` | `id` | 페인을 아래로 나누고 `{panel_id}`로 응답해요 |
 | `pane.focus_next`, `pane.focus_prev` | | 다음 또는 이전 페인으로 포커스를 옮겨요 |

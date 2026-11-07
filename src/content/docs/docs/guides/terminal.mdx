@@ -55,6 +55,9 @@ Linux) has a **Terminal** view: the same tabs and the same shells, next to whate
 shows, such as a note. While the main area is the Terminal section, the shells are there and the
 panel says so.
 
+Find <Badge text="Next release" /> goes on past the last match to the first, and says **No matches**
+when there are none, on the Mac and Linux.
+
 For the tab, pane, find and text-size keys, see [Keyboard shortcuts](/docs/guides/shortcuts/#terminal).
 
 ### Settings › Terminal
@@ -70,7 +73,10 @@ For the tab, pane, find and text-size keys, see [Keyboard shortcuts](/docs/guide
 | **Cursor** | **Block** | **Block**, **Bar** or **Underline**. |
 | **Blinking cursor** | On | |
 | **Use Option as Meta** (Mac) | On | <kbd>⌥</kbd> works as Meta/Alt in the shell instead of typing special characters. |
-| **Scrollback** | 10,000 lines | 1,000 to 100,000. |
+| **Option-Return sends Esc Return** (Mac) <Badge text="Next release" /> | On | <kbd>⌥</kbd><kbd>Return</kbd> sends Esc Return even with Use Option as Meta off, as a new line in Claude Code's prompt and many REPLs. A program using the kitty keyboard protocol gets its own encoding instead. |
+| **Option-Esc sends Esc Esc** (Mac) <Badge text="Next release" /> | Off | The same for <kbd>⌥</kbd><kbd>Esc</kbd>. |
+| **Programs can copy to the clipboard** (Mac) <Badge text="Next release" /> | On | Programs copy with OSC 52, as tmux and Neovim do over ssh. They can never read the clipboard. On Linux the terminal never lets them. |
+| **Scrollback** | 10,000 lines | 0 to 100,000. 0 keeps none <Badge text="Next release" />. |
 | **Draw with the GPU** (Mac) <Badge text="Next release" /> | On | Draws the terminal with Metal. Off draws it with Core Text. Applies to new tabs. |
 | **Font thickening** (Mac) <Badge text="Next release" /> | **Off** | **On**, **Off**, or **On non-Retina displays**: draws text a little heavier. |
 | **Color blending** (Mac) <Badge text="Next release" /> | **Native** | **Native** or **Linear**. Linear applies only when drawing with the GPU, and not over a wallpaper. |
@@ -140,7 +146,7 @@ going to the terminal.
 
 To use a comux on a server, right-click a tab and choose **Open remote comux…**. Enter a host from
 `~/.ssh/config` or `user@host`, and the comux command there if it isn't `comux`. It opens in a new
-tab over `ssh`, with that server's sessions in the sidebar.
+tab over `ssh`, with that server's sessions in the sidebar. <Badge text="Next release" /> It is also **Open remote comux…** in the command palette, an action (`terminal/open-remote-comux`) you can give a shortcut in [Keyboard shortcuts](/docs/guides/shortcuts/).
 
 Only the tab on screen (in the Terminal section or the right panel) gets AIDE's controls. A tab you
 can't see, or one without comux, shows comux as comux draws it itself. In a tab split into panes,

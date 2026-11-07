@@ -247,6 +247,7 @@ In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused p
 | `tab.close` | `id` | With a tab id, closes that tab and every pane in it; without one, closes the focused pane |
 | `tab.list`, `tab.info` | | `{count, current, tabs: [{id, index, title, selected, panes: [{id, title, focused, exited, cols, rows}]}]}` |
 | `tab.rename` | `id`, `title` | Names a tab |
+| `tab.switch` <Badge text="Next release" /> | `index` | Selects the tab at that index of `tab.list` (from 0); answers `{tab}`. No tab there is `not_found`, an index that isn't a whole number is `invalid_params` |
 | `split.horizontal` | `id` | Splits the pane to the right; answers `{panel_id}` of the new pane |
 | `split.vertical` | `id` | Splits the pane downward; answers `{panel_id}` |
 | `pane.focus_next`, `pane.focus_prev` | | Focuses the next or previous pane |
