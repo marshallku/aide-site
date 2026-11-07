@@ -5,6 +5,8 @@ sidebar:
     order: 12
 ---
 
+import { Badge } from "@astrojs/starlight/components";
+
 **Settings › Appearance** changes how AIDE looks on this device, with a live preview of the editor
 at the top of the page. **Settings › Language** picks the language of the app and of what plugins
 write for you.
@@ -45,6 +47,8 @@ images; with a folder, AIDE shows a random one.
 - **Rotate** shows another image of the folder on a timer: **Every** 1, 5, 15, 30 or 60 minutes, 3
   or 6 hours, or a day (on Linux, **Interval** in minutes).
 - **Dim** (**Tint** on Linux) sets how much of the window colour covers the image.
+- **Image opacity** <Badge text="Next release" /> sets how strongly the image itself shows, over the
+  window's own colour. It is 100 % until you lower it.
 - **Next wallpaper** shows another one now (on Linux beside **Shown now**, the image on screen).
 
 ## Window (Mac and Linux)
@@ -56,6 +60,25 @@ Under **Settings › Appearance › Window** on the Mac, or **Settings › Gener
 - **Open notes in a new tab** (off by default): a note clicked in a list, the calendar or the graph
   opens in a new tab. Without it, hold <kbd>⌘</kbd> (Mac) or <kbd>Ctrl</kbd> (Linux), or use the
   middle mouse button, to do the same.
+
+## Window opacity (Mac and Linux) <Badge text="Next release" />
+
+**Window opacity**, under **Settings › Appearance › Window** on the Mac and in the **Window** group
+of **Settings › Appearance** on Linux, lets what's behind AIDE show through its windows, as copad's
+`[window] opacity` did. It goes from 30 % to 100 % (opaque, the default), in 5 % steps, and every
+window follows at once.
+
+- The window's background, the panels and the main card become see-through. Text, icons and the
+  terminal's text stay solid, and a note's page takes the card's colour, so it stays readable.
+- Sheets, menus, popovers and Settings stay opaque.
+- With a wallpaper, the image and its dim lie over the see-through window.
+- **Mac:** below 100 %, **Blur behind the window** blurs what's behind it. While **Reduce
+  transparency** is on (System Settings › Accessibility › Display), windows stay opaque and keep
+  the value for later.
+- **Linux:** the compositor blurs, when it does. The setting is also `opacity` under `[window]` in
+  `config.toml`. While high contrast is on, windows stay opaque and keep the value for later.
+
+The iPhone and iPad have no window opacity: their windows can't show what's behind them.
 
 ## Language
 
