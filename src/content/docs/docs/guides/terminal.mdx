@@ -76,9 +76,27 @@ For the tab, pane, find and text-size keys, see [Keyboard shortcuts](/docs/guide
 | **Color blending** (Mac) <Badge text="Next release" /> | **Native** | **Native** or **Linear**. Linear applies only when drawing with the GPU, and not over a wallpaper. |
 | **Kitty keyboard protocol** <Badge text="Next release" /> | On | Programs that ask for it get every key with its modifiers. Applies to new tabs. |
 | **Images** <Badge text="Next release" /> | On | Programs can draw pictures with kitty graphics. On Linux, sixel too where the system's VTE has it, and pictures more than 200 lines up in the scrollback aren't drawn. Applies to new tabs. |
+| **Reopen tabs at launch** <Badge text="Next release" /> | On | Your tabs, splits and folders come back when AIDE starts. See [Tabs after a restart](#tabs-after-a-restart-). |
 
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
-are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`).
+are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`).
+
+### Tabs after a restart <Badge text="Next release" />
+
+When AIDE starts again, each vault's terminal comes back as you left it: the same tabs with their
+names, the same splits at the same sizes, the tab you were on, and each pane in the folder its shell
+was in. Each pane starts a new shell there. Programs that were running, the scrollback and the
+environment don't come back; keep long-running work in tmux or [comux](#comux-in-the-terminal-) for
+that. A folder that's gone opens at home instead.
+
+- The layout is saved a second after each change, a `cd` included, and again when the window closes
+  or AIDE quits, so a crash loses only the last few seconds.
+- Panes attached to a remote comux or an SSH host aren't kept.
+- On the Mac, when a vault has more than one window open, only the first one that showed its
+  terminal is kept. After that window closes, changes in the vault's other windows aren't saved
+  until AIDE starts again.
+- When you close every tab before quitting, the next start opens one fresh shell.
+- Turning **Reopen tabs at launch** off forgets the saved tabs.
 
 ### Keys and pictures <Badge text="Next release" />
 
