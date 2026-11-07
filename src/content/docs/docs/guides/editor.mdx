@@ -146,7 +146,7 @@ An embedded HTML file runs in a frame of its own, the width of the text:
 - A file that can't be found shows its name and **Not found**.
 
 <Aside type="caution" title="Linux">
-On Linux, an HTML embed shows only what the document carries inline: its own styles and scripts and `data:` images. Files it names beside it don't load, because WebKitGTK refuses that kind of load from a sandboxed frame. The Mac and the iPhone load them.
+An HTML embed also loads the files it names beside it, such as its images and stylesheets, on the Mac, the iPhone and Linux. On a Linux system with an older WebKitGTK, it may show only what the document carries inline: its own styles and scripts and `data:` images.
 </Aside>
 
 ## Tabs, panels and finding notes
