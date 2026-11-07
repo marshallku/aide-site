@@ -147,6 +147,17 @@ curl -s --unix-socket "$s" http://aide/browser/tabs
 curl -s --unix-socket "$s" -X POST http://aide/browser/navigate -d '{"url": "http://localhost:3000"}'
 ```
 
+## 트리거
+
+<Badge text="다음 릴리스" /> Mac과 Linux에서 코어 플러그인이 켜져 있으면 보관소 소켓으로 [트리거](/ko/docs/guides/triggers/)도 다룰 수 있어요. 꺼져 있으면 모든 경로가 `409` `plugin_off`로 답해요. 데스크톱 호스트의 소켓과 Mac App Store 빌드에는 없어요. [`aidectl trigger`](/ko/docs/developers/aidectl/#trigger)와 [`aidectl event`](/ko/docs/developers/aidectl/#event)가 이 경로를 써요.
+
+| 경로 | 하는 일 |
+| --- | --- |
+| `GET /triggers` | `{"file", "file_error", "paused_all", "triggers", "errors"}`: 트리거마다 소스, `enabled`, `paused`, `busy`, `next_fire`, 최근 실행 10개 |
+| `POST /triggers/{name}/run` | 지금 한 번 실행해요(`202`). `409` `paused` 또는 `busy`, `403` `not_privileged`, `404` `unknown_trigger` |
+| `POST /events` | `{"kind": "custom.<name>", "payload"}`: `202` `{"id"}`. `custom.*`만 받고, 8 KiB를 넘는 페이로드는 `413`이에요 |
+| `GET /events?epoch=&after=&limit=` | 최근 이벤트 500개에서 `{"epoch", "events", "next", "dropped"}`. `after`가 사라졌거나, 앱이 다시 시작됐거나, `after`가 앞서 있으면 `dropped`가 true예요 |
+
 ## 제한
 
 - HTTP/1.1이고, 연결 하나에 요청 하나면 충분해요(`Connection: close`).

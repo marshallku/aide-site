@@ -1,0 +1,115 @@
+---
+title: Triggers
+description: Run an action or a command when something happens in AIDE, or on a schedule, on the Mac and Linux.
+sidebar:
+    order: 16
+---
+
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+
+<Badge text="Next release" />
+
+Triggers run something for you when something happens: when a note appears in a folder, a
+terminal rings its bell, a focus ends, a calendar event is about to start, or on a schedule. Each
+trigger runs one action from the command palette or, if you allow it, a shell command. They work
+as copad's triggers did, in the same file format. Triggers are on the Mac and Linux, not on the
+iPhone or in the Mac App Store build.
+
+## Turn it on
+
+<Steps>
+
+1. Open **Settings › Core plugins** and turn on **Triggers**. It's off until you do.
+2. Open its page and press **Edit triggers file**. AIDE creates `triggers.toml` with an example
+   and opens it in your editor.
+3. Write your triggers and save. AIDE reads the file again as soon as you save.
+
+</Steps>
+
+The file is `~/.config/aide/triggers.toml` on Linux and
+`~/Library/Application Support/com.marshallku.aide/triggers.toml` on the Mac.
+
+## Writing a trigger
+
+```toml
+[[triggers]]
+name = "inbox-note"
+action = "today"
+vault = "Work"
+
+[triggers.when]
+event_kind = "note.created"
+
+[[triggers]]
+name = "morning"
+cron = "0 30 9 * * Mon-Fri"
+action = "today"
+
+[[triggers]]
+name = "today-log"
+when = { event_kind = "action.today.completed" }
+action = "spawn"
+allow_privileged = true
+params = { command = 'echo "$AIDE_EVENT_KIND" >> "$HOME/aide-today.log"' }
+```
+
+| Key | What it does |
+|---|---|
+| `name` | Required, unique in the file. |
+| `action` | An action id, as in [Keyboard shortcuts](/docs/guides/shortcuts/#action-ids), or `spawn` to run a command. |
+| `when` | The event: `event_kind` (an exact kind, `*`, or a kind followed by `.*` for everything under it), plus any payload field that must equal a value. |
+| `cron` | A schedule instead of `when`: six fields, `sec min hour day month weekday`, in local time. |
+| `condition` | An expression that must be true, such as `event.path != "inbox/skip" && context.app_focused`. |
+| `vault` | Only this vault's events, and run in its window. A path, or the name of one vault. |
+| `enabled` | `false` to keep it in the file but off. The switch on the page does the same. |
+| `allow_privileged` | Required for `spawn`. |
+| `params` | For `spawn`: `{ command = "…" }`, run with `/bin/sh`. |
+| `timeout` | How long a command may run, such as `"30s"` or `"5m"`. 10 minutes unless you say. |
+| `accept_external` | Lets `aidectl event emit` and the local API fire it. |
+
+A trigger with a mistake is shown with its error on the page; the others keep working. A file that
+doesn't parse keeps the last good set.
+
+## Events
+
+| Event | When |
+|---|---|
+| `app.started`, `vault.opened` | AIDE starts; a vault's first window opens. |
+| `action.<id>.completed`, `action.<id>.failed` | A command palette action ran. |
+| `note.created`, `note.changed` | A note appeared or changed (`path`). |
+| `terminal.bell`, `terminal.exited`, `terminal.title` | A terminal pane rang, its shell ended, or its title changed. |
+| `comux.notification` | comux sent a notification. |
+| `focus.ended` | A focus ended (`reason`: `elapsed`, `stopped`, `done`, `replaced`, `skipped`). |
+| `calendar.upcoming`, `calendar.started` | A calendar event starts in 10 minutes, or now. |
+| `custom.<name>` | Sent by `aidectl event emit`. |
+
+A command gets the event in its environment: `AIDE_TRIGGER`, `AIDE_EVENT_KIND`, `AIDE_EVENT_JSON`,
+`AIDE_CONTEXT_JSON` and `AIDE_VAULT`. Nothing from an event is ever put into the command line
+itself.
+
+## The Triggers page
+
+The page lists each trigger with what it listens for or its schedule, its action, its last runs
+and a switch. **Run now** runs a trigger once. Each run shows how it ended and, for a command,
+the last of its output.
+
+## Safety
+
+- A command runs only with `allow_privileged = true`. It runs in its own process group. Stopping
+  it, its timeout, and quitting AIDE end everything still in that group, including what it left
+  running in the background. A program that detaches itself on purpose (with `setsid`, say) keeps
+  running.
+- Only one run of a trigger at a time. An event that comes in meanwhile is skipped.
+- A trigger that fires more than 30 times in a minute is paused until you turn it on again. More
+  than 120 runs a minute across all triggers pauses them all, with **Resume** on the page.
+- A trigger that sets off another trigger can go only 8 steps deep.
+
+<Aside>
+    Events from outside AIDE fire only triggers with `accept_external = true`.
+</Aside>
+
+## From the terminal
+
+[`aidectl trigger`](/docs/developers/aidectl/#trigger) lists triggers and runs one, and
+[`aidectl event`](/docs/developers/aidectl/#event) sends `custom.*` events and follows events as they
+happen. The [local API](/docs/developers/local-api/#triggers) has the same routes.

@@ -274,6 +274,35 @@ aidectl action run today
 aidectl action list | grep plugin/
 ```
 
+### trigger
+
+<Badge text="Next release" />
+
+```sh
+aidectl trigger list [--json]
+aidectl trigger run <name>
+```
+
+Lists the [Triggers](/docs/guides/triggers/) of the AIDE app and runs one now. `list` prints each
+trigger with what it listens for or its schedule, whether it's on or paused, and its last run.
+`run` runs it once, skipping `when` and `condition`; it's refused while the trigger is off,
+paused, already running, or a command without `allow_privileged`. Both need the Triggers core
+plugin on.
+
+### event
+
+<Badge text="Next release" />
+
+```sh
+aidectl event emit <name> [--data JSON]
+aidectl event tail [--json] [--all]
+```
+
+`emit` sends `custom.<name>` with the JSON object as its payload. Only triggers with
+`accept_external = true` fire on it. Inside a trigger's command it passes the run's cause along,
+so a chain of triggers stays bounded. `tail` prints events as they happen (from now; `--all` from
+the oldest the app keeps) and says so when some were missed.
+
 ### terminal
 
 <Badge text="Next release" />

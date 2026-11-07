@@ -1,0 +1,111 @@
+---
+title: 트리거
+description: Mac과 Linux에서 AIDE에 무언가 일어나거나 정해 둔 시간이 되면 액션이나 명령을 실행해요.
+sidebar:
+    order: 16
+---
+
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+
+<Badge text="다음 릴리스" />
+
+트리거는 무언가 일어나면 대신 실행해 줘요. 폴더에 노트가 생기거나, 터미널이 벨을 울리거나, 집중이 끝나거나,
+캘린더 일정이 곧 시작되거나, 정해 둔 시간이 되면요. 트리거 하나는 명령 팔레트의 액션 하나를 실행하고, 허용하면
+셸 명령도 실행해요. copad의 트리거와 같은 방식, 같은 파일 형식이에요. Mac과 Linux에서 쓸 수 있고, iPhone과
+Mac App Store 빌드에는 없어요.
+
+## 켜기
+
+<Steps>
+
+1. **설정 › 코어 플러그인**에서 **트리거**를 켜세요. 켜기 전까지는 꺼져 있어요.
+2. 트리거 페이지에서 **트리거 파일 편집**을 누르세요. AIDE가 예시가 담긴 `triggers.toml`을 만들고 편집기로
+   열어요.
+3. 트리거를 쓰고 저장하세요. 저장하면 AIDE가 바로 다시 읽어요.
+
+</Steps>
+
+파일은 Linux에서 `~/.config/aide/triggers.toml`, Mac에서
+`~/Library/Application Support/com.marshallku.aide/triggers.toml`이에요.
+
+## 트리거 쓰기
+
+```toml
+[[triggers]]
+name = "inbox-note"
+action = "today"
+vault = "Work"
+
+[triggers.when]
+event_kind = "note.created"
+
+[[triggers]]
+name = "morning"
+cron = "0 30 9 * * Mon-Fri"
+action = "today"
+
+[[triggers]]
+name = "today-log"
+when = { event_kind = "action.today.completed" }
+action = "spawn"
+allow_privileged = true
+params = { command = 'echo "$AIDE_EVENT_KIND" >> "$HOME/aide-today.log"' }
+```
+
+| 키 | 하는 일 |
+|---|---|
+| `name` | 필수이고, 파일 안에서 겹치면 안 돼요. |
+| `action` | [키보드 단축키](/ko/docs/guides/shortcuts/#동작-id)에 나오는 액션 id, 또는 명령을 실행하는 `spawn`이에요. |
+| `when` | 이벤트예요. `event_kind`(정확한 종류, `*`, 또는 그 아래 모두를 뜻하는 `종류.*`)와 값이 같아야 하는 페이로드 필드를 적어요. |
+| `cron` | `when` 대신 쓰는 일정이에요. `초 분 시 일 월 요일` 여섯 칸이고, 이 컴퓨터의 시간 기준이에요. |
+| `condition` | 참이어야 하는 식이에요. 예: `event.path != "inbox/skip" && context.app_focused` |
+| `vault` | 이 보관소의 이벤트만 받고, 그 창에서 실행해요. 경로나 보관소 이름을 적어요. |
+| `enabled` | `false`면 파일에 남겨 두고 꺼요. 페이지의 스위치도 같은 일을 해요. |
+| `allow_privileged` | `spawn`에 필요해요. |
+| `params` | `spawn`용 `{ command = "…" }`이고, `/bin/sh`로 실행해요. |
+| `timeout` | 명령이 실행될 수 있는 시간이에요. 예: `"30s"`, `"5m"`. 적지 않으면 10분이에요. |
+| `accept_external` | `aidectl event emit`과 로컬 API가 이 트리거를 실행할 수 있게 해요. |
+
+잘못 쓴 트리거는 페이지에 오류와 함께 보이고, 나머지는 계속 동작해요. 파일을 읽을 수 없으면 마지막으로
+제대로 읽은 내용을 그대로 써요.
+
+## 이벤트
+
+| 이벤트 | 언제 |
+|---|---|
+| `app.started`, `vault.opened` | AIDE가 시작될 때, 보관소의 첫 창이 열릴 때 |
+| `action.<id>.completed`, `action.<id>.failed` | 명령 팔레트의 액션이 실행됐을 때 |
+| `note.created`, `note.changed` | 노트가 생기거나 바뀌었을 때(`path`) |
+| `terminal.bell`, `terminal.exited`, `terminal.title` | 터미널 페인이 벨을 울리거나, 셸이 끝나거나, 제목이 바뀌었을 때 |
+| `comux.notification` | comux가 알림을 보냈을 때 |
+| `focus.ended` | 집중이 끝났을 때(`reason`: `elapsed`, `stopped`, `done`, `replaced`, `skipped`) |
+| `calendar.upcoming`, `calendar.started` | 캘린더 일정이 10분 뒤에 시작하거나 지금 시작할 때 |
+| `custom.<name>` | `aidectl event emit`으로 보냈을 때 |
+
+명령은 이벤트를 환경 변수로 받아요. `AIDE_TRIGGER`, `AIDE_EVENT_KIND`, `AIDE_EVENT_JSON`,
+`AIDE_CONTEXT_JSON`, `AIDE_VAULT`예요. 이벤트 내용이 명령줄 자체에 끼워 들어가는 일은 없어요.
+
+## 트리거 페이지
+
+페이지에는 트리거마다 무엇을 기다리는지 또는 일정, 액션, 최근 실행 기록, 스위치가 보여요. **지금 실행**은 트리거를
+한 번 실행해요. 실행마다 어떻게 끝났는지와, 명령이라면 마지막 출력이 보여요.
+
+## 안전 장치
+
+- 명령은 `allow_privileged = true`일 때만 실행되고, 자기 프로세스 그룹에서 돌아요. 멈추거나, 시간이 다 되거나,
+  AIDE를 끄면 그 그룹에 남은 것은 백그라운드에 띄운 것까지 모두 끝나요. 일부러 떨어져 나간 프로그램(`setsid` 등)은
+  계속 실행돼요.
+- 트리거 하나는 한 번에 하나만 실행돼요. 그 사이에 들어온 이벤트는 건너뛰어요.
+- 1분에 30번 넘게 실행된 트리거는 다시 켤 때까지 멈춰요. 모든 트리거를 합쳐 1분에 120번을 넘으면 전부 멈추고,
+  페이지에 **계속**이 보여요.
+- 트리거가 다른 트리거를 실행하는 연쇄는 8단계까지만 이어져요.
+
+<Aside>
+    AIDE 밖에서 온 이벤트는 `accept_external = true`인 트리거만 실행해요.
+</Aside>
+
+## 터미널에서
+
+[`aidectl trigger`](/ko/docs/developers/aidectl/#trigger)로 트리거를 보고 실행할 수 있고,
+[`aidectl event`](/ko/docs/developers/aidectl/#event)로 `custom.*` 이벤트를 보내거나 이벤트를 실시간으로 볼 수 있어요.
+[로컬 API](/ko/docs/developers/local-api/#트리거)에도 같은 경로가 있어요.

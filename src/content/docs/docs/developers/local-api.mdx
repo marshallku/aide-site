@@ -147,6 +147,17 @@ curl -s --unix-socket "$s" http://aide/browser/tabs
 curl -s --unix-socket "$s" -X POST http://aide/browser/navigate -d '{"url": "http://localhost:3000"}'
 ```
 
+## Triggers
+
+<Badge text="Next release" /> On the Mac and Linux, a vault's socket also reaches its [Triggers](/docs/guides/triggers/) while the core plugin is on; otherwise every route answers `409` `plugin_off`. A desktop host's socket and the Mac App Store build don't have them. [`aidectl trigger`](/docs/developers/aidectl/#trigger) and [`aidectl event`](/docs/developers/aidectl/#event) are built on them.
+
+| Route | What it does |
+| --- | --- |
+| `GET /triggers` | `{"file", "file_error", "paused_all", "triggers", "errors"}`: each trigger with its source, `enabled`, `paused`, `busy`, `next_fire` and its last 10 runs |
+| `POST /triggers/{name}/run` | Runs it once now (`202`). `409` `paused` or `busy`, `403` `not_privileged`, `404` `unknown_trigger` |
+| `POST /events` | `{"kind": "custom.<name>", "payload"}`: `202` `{"id"}`. Only `custom.*`; a payload over 8 KiB is `413` |
+| `GET /events?epoch=&after=&limit=` | `{"epoch", "events", "next", "dropped"}` from the last 500 events. `dropped` is true when `after` is gone, the app restarted, or `after` is ahead |
+
 ## Limits
 
 - HTTP/1.1, one request per connection is enough (`Connection: close`).
