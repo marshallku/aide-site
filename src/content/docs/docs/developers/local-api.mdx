@@ -228,17 +228,19 @@ When no app has the vault open, there is no socket. `aidectl` then opens the fol
 
 ## Terminal socket
 
-<Badge text="Next release" /> Each running AIDE app on the Mac and Linux also serves its terminal on one more socket, so programs can read and type into its panes and open, split and close its tabs. It speaks the same protocol as copad's terminal socket, not HTTP, so copad's `coctl` and comux's notification click work against AIDE. [`aidectl terminal`](/docs/developers/aidectl/#terminal) is built on it. The Mac App Store build and the iPhone don't have it.
+<Badge text="Next release" /> AIDE's terminal is served on one more socket, so programs can read and type into its panes and open, split and close its tabs. It speaks the same protocol as copad's terminal socket, not HTTP, so copad's `coctl` and comux's notification click work against AIDE. [`aidectl terminal`](/docs/developers/aidectl/#terminal) is built on it. The Mac App Store build and the iPhone don't have it.
 
 ### Where it is
 
-- On the Mac: `/tmp/aide-<uid>/aide/gui-<pid>-<nonce>.sock`, in the same folder as the vault sockets.
-- On Linux: `$XDG_RUNTIME_DIR/aide/gui-<pid>-<nonce>.sock`. Without `XDG_RUNTIME_DIR` there is no terminal socket, and the app's log says so.
-- `<pid>` is the app's process id, so each running app has its own.
-- The folder is checked as for the vault sockets, the socket has mode `0600`, and only your user can connect.
-- The app removes its socket when it quits. When it starts, it removes any `gui-<pid>-*.sock` of yours whose process no longer runs.
+The terminal server, which runs your shells and outlives the app (see [Shells that outlive AIDE](/docs/guides/terminal/#shells-that-outlive-aide-)), serves it as `terminal.sock` in its own folder:
 
-Every pane's shell gets two variables: `COPAD_SOCKET`, the path of this socket, and `COPAD_PANEL_ID`, the pane's id.
+- On the Mac: `~/Library/Application Support/AIDE/mux/terminal.sock`.
+- On Linux: `$XDG_RUNTIME_DIR/aide-mux/terminal.sock`, or `/tmp/aide-mux-<uid>/terminal.sock` without `XDG_RUNTIME_DIR`.
+- The folder is yours alone (mode `0700`), the socket has mode `0600`, and only your user can connect.
+
+Every pane's shell gets `COPAD_SOCKET` and `AIDE_TERMINAL_SOCKET`, the path of this socket, and `COPAD_PANEL_ID` and `AIDE_MUX_PANE`, the pane's id.
+
+Reading and typing work with no AIDE window open. What only a window can do (`panel.focus`, `tab.switch`, `tab.new`) goes to the AIDE window that was in front last among those showing the pane's vault; with no such window it answers `no_window`. A request without a pane means the focused pane of the window in front; with no window, of the first vault with a tab.
 
 ### Requests and answers
 
@@ -256,8 +258,8 @@ In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused p
 
 | Method | Params | What it does |
 | --- | --- | --- |
-| `system.ping` | | Answers, to check the socket |
-| `panel.focus` | `panel_id` | Selects the pane and its tab, shows the Terminal section and brings the window forward; answers `{focused, raised}`. A pane this app doesn't have answers `focused: false`, not an error. Linux always answers `raised: false` |
+| `system.ping` | | Answers, to check the socket: `{status, app: "aide", server: "aide-mux", pid}` |
+| `panel.focus` | `panel_id` | Selects the pane and its tab, shows the Terminal section and brings the window forward; answers `{focused, raised}`. A pane the server doesn't have answers `focused: false`, not an error. Linux always answers `raised: false` |
 | `terminal.read` | `id`, `start_row`, `start_col`, `end_row`, `end_col` | The live screen as text, or part of it: both ends included, an end past the screen clamped |
 | `terminal.state` | `id` | Size, cursor, folder, title, and whether its shell has exited |
 | `terminal.exec` | `id`, `command` | Types `command` and a newline. It doesn't wait for the command |
@@ -266,7 +268,7 @@ In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused p
 | `terminal.context` | `id`, `history_lines` | State, screen and the rows above it |
 | `tab.new` | | Opens a tab; answers its pane's id |
 | `tab.close` | `id` | With a tab id, closes that tab and every pane in it; without one, closes the focused pane |
-| `tab.list`, `tab.info` | | `{count, current, tabs: [{id, index, title, selected, panes: [{id, title, focused, exited, cols, rows}]}]}` |
+| `tab.list`, `tab.info` | | `{count, current, tabs: [{id, index, title, selected, panes: [{id, title, focused, exited, cols, rows}]}]}`: the tabs of the windows in front-to-back order; with no window, every vault's tabs, and `current` is null |
 | `tab.rename` | `id`, `title` | Names a tab |
 | `tab.switch` <Badge text="Next release" /> | `index` | Selects the tab at that index of `tab.list` (from 0); answers `{tab}`. No tab there is `not_found`, an index that isn't a whole number is `invalid_params` |
 | `split.horizontal` | `id` | Splits the pane to the right; answers `{panel_id}` of the new pane |
@@ -287,7 +289,8 @@ Reading doesn't move the pane's scroll position.
 | `no_terminal` | No terminal is open (no window, or no tab) |
 | `exited` | `terminal.exec` or `terminal.feed` on a pane whose shell has ended; it can still be read |
 | `too_small` | The pane is too small to split |
-| `busy` | 16 clients are already connected |
+| `busy` | 16 clients are already connected, or `terminal.exec` or `terminal.feed` on a pane whose program isn't reading what it's sent |
+| `no_window` | `panel.focus`, `tab.switch` or `tab.new` with no AIDE window showing that pane's vault |
 | `frame_too_large` | The request line is longer than 64 KiB |
 
 ### Terminal socket limits

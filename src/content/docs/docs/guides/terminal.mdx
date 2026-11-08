@@ -21,6 +21,8 @@ The **Terminal** section in the sidebar is a row of tabs over a shell, filling t
   gives it your own name; **Close** or its × ends the shell.
 - With no tab open, the section says **No shells open**.
 - The shells keep running while you're elsewhere in AIDE. Coming back finds them as you left them.
+  <Badge text="Next release" /> They keep running after you quit AIDE too: see
+  [Shells that outlive AIDE](#shells-that-outlive-aide-).
 
 ### Split a tab into panes <Badge text="Next release" />
 
@@ -60,6 +62,41 @@ when there are none, on the Mac and Linux.
 
 For the tab, pane, find and text-size keys, see [Keyboard shortcuts](/docs/guides/shortcuts/#terminal).
 
+### Shells that outlive AIDE <Badge text="Next release" />
+
+Your shells run in AIDE's terminal server, a small program of its own, not in the app. Quitting
+AIDE, closing its window or AIDE closing unexpectedly leaves them running, with whatever runs in
+them: a build, an SSH session, an agent. When you open AIDE again, each tab and pane is back as you
+left it, still running, with its screen and scrollback.
+
+- On the Mac the terminal server comes inside the app and runs as a login item (it can show under
+  **System Settings › General › Login Items**). On Linux it's installed beside the app and runs as
+  the `aide-mux.service` systemd user service when your session has a user manager; otherwise AIDE
+  starts it on its own.
+- Each vault has its own set of tabs on the server. On the Mac, two windows of the same vault show
+  the same tabs.
+- The first time you quit with shells open, AIDE says once that **Your shells keep running**, and
+  where to turn that off.
+- On the Mac, while AIDE reaches the server, the Terminal section says **Starting the terminal…**.
+  If the server can't be reached, it says **The terminal server isn't running**, with the reason and
+  **Try again**.
+- A server left from an older (or newer) AIDE that this AIDE can't talk to says so: **The terminal
+  server is from an older AIDE**, with **Restart it**. Restarting asks first
+  (**Restart the terminal server?**), since its shells and the programs in them end.
+- With no AIDE window attached, the server keeps running as long as it has shells. It stops by
+  itself only after 7 days with no window and no shell running.
+
+To have quitting end your shells instead, turn off **Settings › Terminal › Keep shells running
+after AIDE quits**. Then:
+
+- Quitting AIDE asks first when a program other than the shell is running in a pane: **End the
+  running programs?** lists them, with **Quit** and **Cancel**. On the Mac, closing the last window
+  of a vault asks the same, with **Close**; on Linux, closing the window asks.
+- After you quit, the server ends the shells of the vaults this AIDE showed, unless another AIDE
+  (on another computer, say) still has them open. The layout is kept, and the next start opens it
+  with new shells.
+- A server with no window for 24 hours ends its shells and stops.
+
 ### Settings › Terminal
 
 | Setting | Default | What it does |
@@ -82,27 +119,29 @@ For the tab, pane, find and text-size keys, see [Keyboard shortcuts](/docs/guide
 | **Color blending** (Mac) <Badge text="Next release" /> | **Native** | **Native** or **Linear**. Linear applies only when drawing with the GPU, and not over a wallpaper. |
 | **Kitty keyboard protocol** <Badge text="Next release" /> | On | Programs that ask for it get every key with its modifiers. Applies to new tabs. |
 | **Images** <Badge text="Next release" /> | On | Programs can draw pictures with kitty graphics. On Linux, sixel too where the system's VTE has it, and pictures more than 200 lines up in the scrollback aren't drawn. Applies to new tabs. |
-| **Reopen tabs at launch** <Badge text="Next release" /> | On | Your tabs, splits and folders come back when AIDE starts. See [Tabs after a restart](#tabs-after-a-restart-). |
+| **Reopen tabs at launch** <Badge text="Next release" /> | On | After your computer restarts, your tabs, splits and folders come back as new shells. See [Tabs after a restart](#tabs-after-a-restart-). |
+| **Keep shells running after AIDE quits** <Badge text="Next release" /> | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide-). |
 
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
-are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`).
+are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`,
+`keep_running`). <Badge text="Next release" /> **Scrollback**, **Shell**, **Kitty keyboard protocol**,
+**Reopen tabs at launch** and **Keep shells running after AIDE quits** are also the terminal
+server's own: a change on one AIDE reaches the server, and the last change wins.
 
 ### Tabs after a restart <Badge text="Next release" />
 
-When AIDE starts again, each vault's terminal comes back as you left it: the same tabs with their
-names, the same splits at the same sizes, the tab you were on, and each pane in the folder its shell
-was in. Each pane starts a new shell there. Programs that were running, the scrollback and the
-environment don't come back; keep long-running work in tmux or [comux](#comux-in-the-terminal-) for
-that. A folder that's gone opens at home instead.
+The terminal server keeps each vault's layout: its tabs with their names, the splits at their sizes,
+the tab you were on, and the folder each pane's shell is in. When the server starts again, after
+your computer restarts say, the layout comes back with a new shell in each pane, in its folder.
+Programs that were running, the scrollback and the environment don't come back; a folder that's gone
+opens at home instead.
 
-- The layout is saved a second after each change, a `cd` included, and again when the window closes
-  or AIDE quits, so a crash loses only the last few seconds.
-- Panes attached to a remote comux or an SSH host aren't kept.
-- On the Mac, when a vault has more than one window open, only the first one that showed its
-  terminal is kept. After that window closes, changes in the vault's other windows aren't saved
-  until AIDE starts again.
-- When you close every tab before quitting, the next start opens one fresh shell.
-- Turning **Reopen tabs at launch** off forgets the saved tabs.
+- The layout is saved a second after each change, a `cd` included.
+- A tab you closed stays closed.
+- Panes attached to a remote comux aren't kept.
+- When you close every tab, the next start opens one fresh shell.
+- Turning **Reopen tabs at launch** off forgets the saved layouts.
+- The first time the new AIDE starts, the tabs an earlier AIDE had saved are taken over.
 
 ### Keys and pictures <Badge text="Next release" />
 
@@ -113,15 +152,18 @@ modifiers instead, while **Kitty keyboard protocol** is on.
 On Linux, dropping files on a tab types their paths, quoted for the shell. A dropped image from
 another app is saved first and its path typed; a dropped link is typed as text.
 
-The terminal sets `TERM=xterm-256color`, `COLORTERM=truecolor` and `TERM_PROGRAM=AIDE`, and
-otherwise passes on the environment AIDE was started with. A program in the terminal can copy to
-your clipboard but can't read it.
+The terminal sets `TERM=xterm-256color`, `COLORTERM=truecolor` and `TERM_PROGRAM=AIDE`. In the
+release, it otherwise passes on the environment AIDE was started with. <Badge text="Next release" />
+The terminal server starts each shell with your login shell's environment instead, read once when
+the server starts, so a shell never carries variables of the session AIDE happened to start in. A
+program in the terminal can copy to your clipboard but can't read it.
 
-<Badge text="Next release" /> Each pane's shell also gets `COPAD_SOCKET` and `COPAD_PANEL_ID`: the
-app's [terminal socket](/docs/developers/local-api/#terminal-socket) and that pane's id. With them,
-clicking comux's desktop notification brings forward the exact tab and pane it came from, and copad's
-`coctl` keeps working. [`aidectl terminal`](/docs/developers/aidectl/#terminal) uses the same socket
-to read, type into, split and list panes and tabs from a script.
+<Badge text="Next release" /> Each pane's shell also gets `COPAD_SOCKET` and `AIDE_TERMINAL_SOCKET`,
+the terminal server's [terminal socket](/docs/developers/local-api/#terminal-socket), and
+`COPAD_PANEL_ID` and `AIDE_MUX_PANE`, that pane's id. With them, clicking comux's desktop
+notification brings forward the exact tab and pane it came from, and copad's `coctl` keeps working.
+[`aidectl terminal`](/docs/developers/aidectl/#terminal) uses the same socket to read, type into,
+split and list panes and tabs from a script.
 
 ### comux in the terminal <Badge text="Next release" />
 
@@ -151,6 +193,57 @@ tab over `ssh`, with that server's sessions in the sidebar. <Badge text="Next re
 Only the tab on screen (in the Terminal section or the right panel) gets AIDE's controls. A tab you
 can't see, or one without comux, shows comux as comux draws it itself. In a tab split into panes,
 each pane runs its own comux, and the focused pane's comux gets the controls.
+
+### Open remote AIDE… <Badge text="Next release" />
+
+Open another computer's AIDE terminal sessions in this window, beside your own tabs, over SSH. The
+other computer can be a Mac or Linux machine where AIDE is installed and has been opened once.
+
+1. Right-click a tab and choose **Open remote AIDE…**, or run **Open remote AIDE…** from the
+   command palette (the action `terminal/open-remote-aide`, which you can give a shortcut in
+   [Keyboard shortcuts](/docs/guides/shortcuts/)).
+2. Enter a host from `~/.ssh/config` or `user@host`, or pick one of your `~/.ssh/config` hosts
+   under the field, and choose **Connect**.
+3. **Sessions on** the host (**Sessions on box**, say) lists its sessions with their tab count and tab names, and whether one
+   is already open in this window or another. Pick one.
+
+The session's tabs open after your own, each with a globe and the host's name before its title.
+
+- What you type, splits, new tabs (**+** or <kbd>⌘</kbd><kbd>T</kbd>, <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>T</kbd>
+  on Linux, while one of its tabs is selected), renames and closes happen on that computer, in that
+  session. The shells are that computer's, with its environment.
+- A session is open in one window at most. Opening it again brings that window and its tabs
+  forward.
+- **End session…**, beside a session in the list, ends its shells on that computer, after asking.
+- **Disconnect from** the host (**Disconnect from box**), in a remote tab's menu, closes its tabs here. Closing the window or
+  quitting AIDE does the same. None of these ends anything on the other computer, whatever **Keep
+  shells running after AIDE quits** says: its shells end only when you close a remote tab or pane
+  with its × or <kbd>⌘</kbd><kbd>W</kbd> (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> on Linux), or
+  end the session.
+- Remote tabs aren't part of this computer's layout and don't come back by themselves. The next
+  window offers what was open (**demo on box was open here**, with **Reconnect**); AIDE never connects
+  by itself, since SSH may need your key unlocked.
+
+If the connection drops, the tabs keep their last screen under **Disconnected from box** (the host's
+name), with **Reconnect**. Reconnecting shows the session as it is now, splits, renames and new tabs another
+AIDE made meanwhile included, with each pane's shell still running. A session that ended meanwhile
+says so (**demo isn't on box any more**), with **Close**.
+
+A pane shown on two computers has one size: the one you typed or clicked in last sizes it. On the
+other one the pane keeps that size, cut off or with empty space around it, and says who sizes it in its
+corner (**Sized by mac-mini**). Clicking or typing in the pane gives it this window's size again. This
+works the same for your own panes when another AIDE opens them.
+
+SSH is your system's `ssh`, with your own keys, agent and `~/.ssh/config`. AIDE never asks for a
+password and never relaxes host key checking:
+
+- A host whose key isn't in `known_hosts` is refused: connect to it once with `ssh` yourself to
+  check and accept its key.
+- A host whose key changed is refused with `ssh`'s own warning.
+- A host where AIDE hasn't been set up says **AIDE isn't set up on box: open AIDE there once**.
+
+The other computer treats the connection as remote: none of your local environment reaches its
+shells, and nothing running there can bring windows forward on this computer.
 
 <Aside type="note">
 The Terminal is part of the Mac app on the release page. A build for the Mac App Store, where the

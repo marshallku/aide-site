@@ -329,7 +329,7 @@ is unchanged.
 aidectl terminal <command> [--socket S] [--pane P] [--json]
 ```
 
-Reads and types into the AIDE app's terminal, and opens, splits, names and closes its tabs and panes. It talks to the app's [terminal socket](/docs/developers/local-api/#terminal-socket), not to a vault, so it needs no vault or server.
+Reads and types into AIDE's terminal, and opens, splits, names and closes its tabs and panes. It talks to the [terminal socket](/docs/developers/local-api/#terminal-socket), not to a vault, so it needs no vault or server. <Badge text="Next release" /> The socket is the terminal server's, which keeps your shells running, so reading and typing work even with no AIDE window open.
 
 | Command | What it does |
 | --- | --- |
@@ -354,8 +354,11 @@ Reading never moves the pane: `read` and `history` read the live screen even whe
 #### Which app it talks to
 
 - `--socket S` names the socket.
-- Else, inside one of the app's panes, `$COPAD_SOCKET` names it. If that app has quit, `aidectl` stops with `COPAD_SOCKET (…) answers nothing` instead of trying another app: name one with `--socket`.
+- Else, inside one of AIDE's panes, `$COPAD_SOCKET` names it. If nothing answers there, `aidectl` stops with `COPAD_SOCKET (…) answers nothing` instead of trying another: name one with `--socket`.
+- <Badge text="Next release" /> Else it uses the terminal server's socket, from any shell: `~/Library/Application Support/AIDE/mux/terminal.sock` on the Mac, `$XDG_RUNTIME_DIR/aide-mux/terminal.sock` on Linux (`/tmp/aide-mux-<uid>/terminal.sock` without `XDG_RUNTIME_DIR`). It's used only when its folder is yours alone and the server answers.
 - Else it uses the only AIDE app with a terminal running as your user. With none, it stops. With more than one, it doesn't guess: it lists their sockets and asks you to choose one with `--socket`.
+
+`focus`, `switch-tab` and `new-tab` need an AIDE window showing the terminal; with none, they stop with exit code 1.
 
 The Mac App Store build and the iPhone have no terminal socket.
 
