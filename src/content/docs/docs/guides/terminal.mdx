@@ -431,6 +431,43 @@ Left empty, AIDE runs `comux proxy --stdio` from your login shell.
 For a host that signs in with **A password, asked each time**, the comux screen asks for the
 password. If the server turns it down, it says so and asks again.
 
+### AIDE sessions on a host <Badge text="Next release" />
+
+If AIDE is installed on a host (a Mac or Linux machine where you've opened AIDE once), its row in the
+list has an **AIDE** button beside **comux**. It opens that computer's AIDE terminal sessions, the
+same ones its own Terminal shows, over the same sign-in, known hosts and keychain as a shell.
+Touching and holding the row offers **Open AIDE** too.
+
+1. Tap **AIDE**. **AIDE on** the host (**AIDE on box**, say) lists its sessions, each with its name
+   and tab count.
+2. Pick a session. Its tabs run across the top, with **+** for **New tab**, and the tab you pick
+   shows one pane at a time.
+3. Type. What you type, paste and tap goes to that pane's shell on the other computer.
+
+- A tab split into panes shows its focused pane; **Panes** in the bar lists the others to switch to.
+  The iPhone shows splits other computers make, but doesn't split itself.
+- The **Session** menu has **New tab**, **Rename tab…**, **Close pane** and **Reconnect**. **Close
+  pane** asks first, and names the program still running there. There's no way to end a whole
+  session from the iPhone.
+- Leaving the screen or the app only lets go of the session: its shells keep running on the other
+  computer. Coming back shows each pane as it is now.
+- A pane has one size. Opening it on the iPhone doesn't change it: if a computer sized it last,
+  the iPhone shows it at that size, cut off or with space around it, with **Sized by** that
+  computer (**Sized by mac-mini**) and **Fit to this phone**. Typing, pasting, tapping into the
+  pane or **Fit to this phone** gives it the iPhone's size until that computer takes it back.
+- Programs that use the mouse get your taps as clicks and a two-finger drag as the scroll wheel.
+- Pictures that programs draw in the terminal (kitty images) aren't shown on the iPhone.
+- A paste larger than the pane can take now is refused whole: **That paste is too large to send**.
+  When a program stops reading what you type, the pane says **Not responding** until it reads again.
+
+While it connects, the screen says **Connecting to box…**. If the connection drops, it says
+**Disconnected from box**, with **Reconnect**. A host where AIDE hasn't been set up says **AIDE isn't
+set up on box: open AIDE there once**, and one whose AIDE is older than the app says **AIDE on box is
+older than this app: update it there**.
+
+In the host's editor, the **AIDE** section has **AIDE command**: what runs on the host for its
+sessions. Left empty, AIDE runs the AIDE installed there.
+
 ### Agent notifications <Badge text="Next release" />
 
 **Agent notifications**, in the host editor's **comux** section, is on by default. The next time you
