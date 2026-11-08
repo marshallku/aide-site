@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem, Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 AIDE is released for the Mac and for Linux on x86_64 from the public
 [aide-releases](https://github.com/marshallku/aide-releases) repository. Each install also gives you
@@ -164,6 +164,15 @@ Some installs don't update from inside the app:
 To go back to an earlier release by hand, run the install script with `--version X.Y.Z`. If you use a
 desktop host, going back one release is safe: each release leaves the host's database in a state the
 previous release still runs on.
+
+## Licenses <Badge text="Next release" />
+
+AIDE includes software from others, each under its own license. **Settings › About › Licenses** (on
+Linux, the **About** group of **Settings › General**) lists what that app contains, with each
+component's version and license, and opens its license text. Each app lists its own: the iPhone's
+SwiftTerm and Citadel, the Mac's terminal engine, and on the Mac and Linux the desktop host's
+PostgreSQL and its libraries and the command-line tools, plus the editor's packages and the icons
+in all three. The list is part of the app, so it shows without a connection.
 
 ## Uninstall
 

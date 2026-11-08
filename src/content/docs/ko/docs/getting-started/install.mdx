@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem, Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 AIDE는 공개 저장소 [aide-releases](https://github.com/marshallku/aide-releases)에서 Mac용과 x86_64
 Linux용으로 배포돼요. 설치하면 명령줄 도구 `aidectl`과 [데스크톱 호스트](/ko/docs/self-hosting/desktop-host/)에
@@ -163,6 +163,14 @@ AIDE는 **시작하기** 화면으로 열려요. 여기서 노트를 둘 곳을 
 이전 릴리스로 직접 돌아가려면 설치 스크립트를 `--version X.Y.Z`로 실행하세요. 데스크톱 호스트를 쓰고
 있어도 한 릴리스 뒤로 돌아가는 건 안전해요. 릴리스마다 호스트의 데이터베이스를 이전 릴리스에서도 돌아가는
 상태로 남겨 두거든요.
+
+## 라이선스 <Badge text="다음 릴리스" />
+
+AIDE에는 다른 사람들의 소프트웨어가 들어 있고, 각각 자기 라이선스를 따라요. **설정 › 정보 › 라이선스**(Linux에서는
+**설정 › 일반**의 **정보** 그룹)에서 그 앱에 들어 있는 것을 버전, 라이선스와 함께 보고, 라이선스 전문을 열 수 있어요.
+앱마다 자기 것을 보여 줘요. iPhone은 SwiftTerm과 Citadel, Mac은 터미널 엔진, Mac과 Linux는 데스크톱 호스트의 PostgreSQL과
+그 라이브러리, 명령줄 도구가 들어 있고, 세 앱 모두 편집기의 패키지와 아이콘이 들어 있어요. 목록은 앱 안에 있어서 연결
+없이도 보여요.
 
 ## 제거
 
