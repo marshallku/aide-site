@@ -274,6 +274,10 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `split.horizontal` | `id` | 페인을 오른쪽으로 나누고 새 페인의 `{panel_id}`로 응답해요 |
 | `split.vertical` | `id` | 페인을 아래로 나누고 `{panel_id}`로 응답해요 |
 | `pane.focus_next`, `pane.focus_prev` | | 다음 또는 이전 페인으로 포커스를 옮겨요 |
+| `agent.list` <Badge text="다음 릴리스" /> | | 서버 페인의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트-): `{agents: [{pane, tab, session, agent}]}`, `agent`마다 `kind`, `state`, `unseen`, `wait`, `detail`, `context` |
+| `agent.notify` <Badge text="다음 릴리스" /> | `pane`, `kind`, `body` | 그 페인 안에서만: 에이전트가 작업을 마쳤거나(`kind: "done"`) 확인이 필요하다고(`"blocked"`) 알려요. `body`(1 KiB까지)가 알림 내용이 돼요. 훅이 부르는 메서드예요 |
+| `agent.report` <Badge text="다음 릴리스" /> | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | 그 페인 안에서만: 상태 줄에서 얻은 Claude Code의 컨텍스트와 비용이에요. 그 페인의 에이전트가 그 대화의 Claude Code일 때만 받아요 |
+| `agent.fill` <Badge text="다음 릴리스" /> | `pane`, `session_id` | 그 페인 안에서만: 그 Claude Code 대화의 `{used, window}`예요. AIDE가 확실하지 않으면 둘 다 null이에요. 자동 압축을 미루는 장치가 물어요 |
 
 읽어도 페인의 스크롤 위치는 바뀌지 않아요.
 
@@ -291,6 +295,8 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `too_small` | 페인이 나누기엔 너무 작음 |
 | `busy` | 이미 클라이언트 16개가 연결돼 있음, 또는 보낸 것을 읽지 않는 프로그램의 페인에 `terminal.exec`이나 `terminal.feed` |
 | `no_window` | 그 페인의 볼트를 보여 주는 AIDE 창이 없을 때 `panel.focus`, `tab.switch`, `tab.new` |
+| `not_in_pane` <Badge text="다음 릴리스" /> | 그 페인에서 실행되지 않는 프로그램이 `agent.notify`, `agent.report`, `agent.fill`을 보냄 |
+| `no_agent` <Badge text="다음 릴리스" /> | 그 페인에 에이전트가 없음 |
 | `frame_too_large` | 요청 줄이 64 KiB를 넘음 |
 
 ### 터미널 소켓의 제한

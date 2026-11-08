@@ -372,6 +372,42 @@ aidectl terminal exec --pane "$pane" 'make test'
 aidectl terminal history --lines 500 > scrollback.txt
 ```
 
+### agent
+
+<Badge text="다음 릴리스" />
+
+```sh
+aidectl agent list [--json]
+aidectl agent install-hooks [--claude] [--codex] [--yes] [--print] [--remove] [--pre-compact]
+```
+
+AIDE 터미널의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트-)를 다뤄요.
+
+`list`는 AIDE 창 없이도 터미널 서버에 페인마다 실행 중인 에이전트를 물어요. 에이전트마다 한 줄로 페인, 보관소의 세션,
+에이전트, 상태(아무도 보지 않은 작업 완료는 `done`, 마지막 읽기를 확인하지 못했으면 `(not updating)`), 컨텍스트가 얼마나
+찼는지, 지금 하는 단계를 보여 줘요. 없으면 `No agents.`라고 출력해요. `--json`은 서버의 답을 그대로 출력해요.
+
+```text
+PANE           SESSION  AGENT   STATE    CONTEXT  DETAIL
+1794000000001  work     claude  blocked  41%      Bash: Run the tests
+```
+
+`install-hooks`는 Claude Code와 Codex가 작업을 마치거나 확인이 필요한 순간 바로 AIDE에 알리도록 훅을 설정해요. 설정의
+**에이전트 훅 설정…**과 같은 일이에요. 먼저 파일마다 차이를 보여 주고, 그다음 `Apply? [y/N]`라고 물어요.
+
+| 플래그 | 하는 일 |
+| --- | --- |
+| `--claude`, `--codex` | 그 도구의 파일만 다뤄요. 둘 다 없으면 둘 다 다루고, 이 컴퓨터에 설정되지 않은 도구는 건너뛰어요 |
+| `--print` | 차이만 보여 줘요 |
+| `--yes` | 묻지 않고 적용해요. 터미널이 아니고 `--yes`도 없으면 차이만 보여 주고 1로 끝나요 |
+| `--remove` | AIDE가 넣은 항목을 다시 빼요. 넣은 그대로인 것만 빼고, 그사이 고친 항목은 메모와 함께 그대로 둬요 |
+| `--pre-compact` | [Claude Code의 자동 압축을 미루는 장치](/ko/docs/guides/terminal/#커밋할-때까지-claude-code의-자동-압축-미루기)도 넣어요. 추적 중인 변경이 커밋되지 않은 동안 압축을 미뤄요. 그냥 `install-hooks`는 이걸 넣지 않고, `--remove`는 이것도 빼요 |
+
+AIDE가 유지하는 링크(Mac은 `~/Library/Application Support/AIDE/bin/aide-mux`, Linux는 `~/.local/share/aide/bin/aide-mux`)로
+터미널 서버의 `hooks` 명령을 실행하니, 먼저 AIDE를 한 번 열어 두세요(또는 `AIDE_MUX_BIN`을 설정하세요). 썼거나, 바꿀
+내용이 없거나, 보여 주기만 했으면 0, 아무것도 쓰지 않았으면(거절, 터미널 없음, 차이를 본 뒤 파일이 바뀜, 쓰기 실패) 1,
+플래그가 틀리면 2로 끝나요.
+
 ### browser
 
 <Badge text="다음 릴리스" />

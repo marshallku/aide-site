@@ -78,6 +78,7 @@ doesn't parse keeps the last good set.
 | `action.<id>.completed`, `action.<id>.failed` | A command palette action ran. |
 | `note.created`, `note.changed` | A note appeared or changed (`path`). |
 | `terminal.bell`, `terminal.exited`, `terminal.title` | A terminal pane rang, its shell ended, or its title changed. |
+| `agent.state` <Badge text="Next release" /> | A [coding agent](/docs/guides/terminal/#coding-agents-) in one of the window's panes changed state: `tab`, `pane`, `kind` (`claude`, `codex`, …), `from` and `to`, and `wait` while it needs you. |
 | `comux.notification` | comux sent a notification. |
 | `focus.ended` | A focus ended (`reason`: `elapsed`, `stopped`, `done`, `replaced`, `skipped`). |
 | `calendar.upcoming`, `calendar.started` | A calendar event starts in 10 minutes, or now. |
@@ -86,6 +87,35 @@ doesn't parse keeps the last good set.
 A command gets the event in its environment: `AIDE_TRIGGER`, `AIDE_EVENT_KIND`, `AIDE_EVENT_JSON`,
 `AIDE_CONTEXT_JSON` and `AIDE_VAULT`. Nothing from an event is ever put into the command line
 itself.
+
+### `agent.state` <Badge text="Next release" />
+
+Each time a coding agent in a terminal pane changes what it shows, the window's vault gets one
+`agent.state`, whichever of its windows show the pane:
+
+```json
+{"tab": "4", "pane": "5", "kind": "claude", "from": "working", "to": "blocked",
+ "wait": {"kind": "approval", "what": "Bash: cargo test"}}
+```
+
+- `from` and `to` are `working`, `waiting`, `blocked` (needs you), `idle` or `done` (its turn ended
+  and nobody has looked yet). When you look at a done agent, it goes from `done` to `waiting`: an
+  event of its own.
+- `wait` is there only while `to` is `blocked` and the agent said what it waits for: `kind` is
+  `approval`, `question` or `other`, and `what` is what it asks.
+- An agent appearing or leaving isn't an event. A pane of a remote session (opened with **Open remote
+  AIDE…**) never sends one: those are the other computer's.
+
+Fields match like any other, so this runs only when Claude Code needs you:
+
+```toml
+[[triggers]]
+name = "claude-needs-me"
+when = { event_kind = "agent.state", kind = "claude", to = "blocked" }
+action = "spawn"
+allow_privileged = true
+params = { command = 'echo "$AIDE_EVENT_JSON" >> ~/agent-log' }
+```
 
 ## The Triggers page
 

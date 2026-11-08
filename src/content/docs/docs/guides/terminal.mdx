@@ -245,6 +245,126 @@ password and never relaxes host key checking:
 The other computer treats the connection as remote: none of your local environment reaches its
 shells, and nothing running there can bring windows forward on this computer.
 
+### Coding agents <Badge text="Next release" />
+
+AIDE knows when a coding agent runs in a pane, what it's doing, and when it finishes or needs you. You
+see it in the Agents list, on its tab and in the status items, and you get a notification when you
+aren't looking at it.
+
+AIDE recognises the program in front in a pane by its name: Claude Code (`claude`), Codex (`codex`),
+and `agy`, `grok`, `aider`, `cursor`, `gemini`, `opencode`, `droid`, `copilot`, `qwen` and `crush`.
+Claude Code's state comes from the session file it keeps; every other agent's is read from what's on
+its screen. For Claude Code and Codex, AIDE also reads their own logs for the step they're on (the
+command they run, the file they edit) and how full their context is. Nothing is sent anywhere to do
+this, and no program is started.
+
+An agent is in one of these states:
+
+| State | What it means |
+|---|---|
+| **Working** | It is busy with a turn. |
+| **Done** | Its turn ended while you weren't looking. It becomes **Waiting** once you look at the pane. |
+| **Waiting** | Its turn ended and you've seen it; it waits for your next prompt. |
+| **Needs you** | It asks you something: a permission or a question. |
+| **Idle** | An agent is in front, and nothing says what it's doing. |
+
+#### The Agents list
+
+The Terminal section has a panel of its own, beside the tabs, which **Toggle Panel** shows and hides
+as for your notes. Under **Agents** it lists the agents in this window's tabs, with the number that
+need you beside the heading. Each row shows the agent's state and how long it has been in it, the
+tab's name, and under it what it asks while it needs you, else the step it's on, else the last line
+it printed, with a small gauge of its context when AIDE knows it.
+
+- The agents that need you come first, then the rest in tab order.
+- A remote session's agents (see [Open remote AIDE…](#open-remote-aide-)) are listed under the
+  host's name.
+- A row that says **Not updating** is one AIDE couldn't read just now; it shows the last state it
+  knows.
+- Click a row to go to that agent: its tab is selected, its pane gets the keyboard and the window
+  comes forward. Looking at it this way turns **Done** into **Waiting**.
+- With none, the list says **No agents running**.
+
+A tab with an agent that is working, done or needs you shows a small mark next to its name: a dot
+while it works, a check when it's done, and a warning sign while it needs you. Point at the mark to
+read the agent and its state.
+
+The [status items](/docs/guides/appearance/#status-items-mac-and-linux-) at the bottom of the sidebar
+also count the agents that need you or are done.
+
+#### Notifications
+
+When an agent finishes or needs you, AIDE posts a notification, **Claude finished · build** or
+**Claude needs you · build** (the agent, then its tab), with what it asks when it's waiting on you, Codex's last message when it
+finishes, or else just **Turn finished** or **Waiting for you**. There is
+one notification for each time, however many AIDE windows show the pane, and none while you're
+looking at the pane: AIDE in front with that pane on screen. A notification for the same pane
+replaces the one before.
+
+Click it to go to the pane: AIDE selects its tab, gives the pane the keyboard, brings the window
+forward and marks the agent as seen. A pane closed since says **That terminal has closed**.
+
+The first notification asks for permission on the Mac. On Linux the desktop may keep the window from
+coming forward; the pane is selected all the same.
+
+#### Settings › Terminal › Agents
+
+These are the terminal server's own settings, so every AIDE that uses it shows the same: a change on
+one reaches the server, and the last change wins. On Linux they're also kept in `config.toml` under
+`[terminal]`.
+
+| Setting | Default | What it does |
+|---|---|---|
+| **Watch for coding agents** | On | Off, AIDE doesn't look for agents at all: the list stays empty, and there are no marks, status item or notifications (`agents`). |
+| **Notify when an agent finishes** | On | A notification when an agent's turn ends (`notify_done`). Off, it still shows as **Done**. |
+| **Notify when an agent needs you** | On | A notification when an agent asks you something (`notify_blocked`). |
+| **Remind after** | 10 min | **Off**, 5, 10 or 30 min: one more notification that long after an agent started needing you, if you haven't looked at it (`notify_remind`). |
+| **Send to your phone** | On | The same notifications on phones you connect, sealed so only they can read them (`push`). This is for the iPhone app and isn't available yet: until a phone is connected, nothing is sent. |
+| **Set up agent hooks…** | | Below. |
+
+If AIDE stops being able to read agents' files (a read that never returned), the group says **Agent
+detection stopped: a file read didn't return. Restart the terminal server to try again.** The agents
+it knows still follow what's on their screens.
+
+#### Set up agent hooks…
+
+Without hooks, AIDE notices an agent finishing or needing you within about a second, and waits a few
+seconds after a turn ends to be sure. With them, Claude Code and Codex tell AIDE the moment it
+happens, and Claude Code also reports how full its context is.
+
+**Set up agent hooks…** shows what it would change first, under **Set up agent hooks?**: each file,
+where it links to when it's a symlink, and the lines that change. Nothing is written until you choose
+**Apply**.
+
+- Claude Code's `~/.claude/settings.json` gets a `Stop` and a `Notification` hook, and its
+  `statusLine` runs through AIDE first. A status line you already have is kept and still runs, with
+  the same output.
+- Codex's `~/.codex/config.toml` (or `$CODEX_HOME/config.toml`) gets AIDE in its `notify` program,
+  which then runs the one you had.
+- A tool that isn't set up on this computer is skipped. Running it again says **Nothing to change.**
+- Each file is backed up beside itself first (`settings.json.aide-backup-<time>`), and a file that
+  changed since you saw the diff isn't written.
+
+The hooks only do anything in AIDE's own panes. Elsewhere, or inside comux, they run what you had
+and nothing else. [`aidectl agent install-hooks`](/docs/developers/aidectl/#agent) does the same from a
+terminal, and takes them out again with `--remove`.
+
+#### Hold Claude Code's auto-compaction until you commit
+
+AIDE can hold Claude Code's automatic compaction while the work tree has uncommitted changes to
+tracked files, so a compacted conversation doesn't lose track of work that isn't committed yet.
+Claude carries on uncompacted and asks again before its next request. It's added only with
+[`aidectl agent install-hooks --pre-compact`](/docs/developers/aidectl/#agent), as a `PreCompact`
+hook.
+
+- Claude Code compacts close to the end of its context by default, too late for this. Set
+  `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` (the percentage of the context at which it compacts, such as
+  `70`) in the environment Claude Code runs in. AIDE doesn't set it.
+- It holds only an automatic compaction, never `/compact`; only while there's room left (60,000
+  tokens beyond a tenth of the context); and at most 40 times in a row. Untracked files don't count.
+- Whenever it isn't sure (no AIDE pane, an old reading, `git` slow or failing, not a repository), it
+  lets Claude compact. It answers within a second and a half.
+
 <Aside type="note">
 The Terminal is part of the Mac app on the release page. A build for the Mac App Store, where the
 sandbox doesn't allow starting a shell, would leave it out.

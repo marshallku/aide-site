@@ -274,6 +274,10 @@ In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused p
 | `split.horizontal` | `id` | Splits the pane to the right; answers `{panel_id}` of the new pane |
 | `split.vertical` | `id` | Splits the pane downward; answers `{panel_id}` |
 | `pane.focus_next`, `pane.focus_prev` | | Focuses the next or previous pane |
+| `agent.list` <Badge text="Next release" /> | | The [coding agents](/docs/guides/terminal/#coding-agents-) in the server's panes: `{agents: [{pane, tab, session, agent}]}`, each `agent` with its `kind`, `state`, `unseen`, `wait`, `detail` and `context` |
+| `agent.notify` <Badge text="Next release" /> | `pane`, `kind`, `body` | From inside the pane only: its agent finished (`kind: "done"`) or needs you (`"blocked"`), with `body` (at most 1 KiB) as the notification's text. What the hooks call |
+| `agent.report` <Badge text="Next release" /> | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | From inside the pane only: Claude Code's context and cost, from its status line. Taken only while the pane's agent is Claude Code in that conversation |
+| `agent.fill` <Badge text="Next release" /> | `pane`, `session_id` | From inside the pane only: `{used, window}` for that Claude Code conversation, both null when AIDE isn't sure. What the auto-compaction gate asks |
 
 Reading doesn't move the pane's scroll position.
 
@@ -291,6 +295,8 @@ Reading doesn't move the pane's scroll position.
 | `too_small` | The pane is too small to split |
 | `busy` | 16 clients are already connected, or `terminal.exec` or `terminal.feed` on a pane whose program isn't reading what it's sent |
 | `no_window` | `panel.focus`, `tab.switch` or `tab.new` with no AIDE window showing that pane's vault |
+| `not_in_pane` <Badge text="Next release" /> | An `agent.notify`, `agent.report` or `agent.fill` from a program that isn't running in that pane |
+| `no_agent` <Badge text="Next release" /> | No agent in that pane |
 | `frame_too_large` | The request line is longer than 64 KiB |
 
 ### Terminal socket limits

@@ -69,6 +69,13 @@ items scripts set with [`aidectl status-item`](/docs/developers/aidectl/#status-
 run what it does; right-click the focus ring to pause, resume, skip the phase or stop. When there
 are more than fit, the rest are under **…**. Each vault's windows show only that vault's items.
 
+<Badge text="Next release" /> While a [coding agent](/docs/guides/terminal/#coding-agents-) in your
+terminal needs you or has finished without you looking, an item counts them, with the agent icon. Its
+tooltip says how many need you and how many are done (**1 needs you, 2 done**), and it turns to the
+warning colour while one needs you. Click it to go to the one that has needed you longest, else the
+one that finished first. It counts the agents of this window's vault, remote sessions' included, and
+goes away when none need you.
+
 Turn the row off with **Status items** under **Settings › Appearance › Window** on the Mac, or in the
 **Window** group of **Settings › Appearance** on Linux (`status_items` under `[window]` in
 `config.toml`).

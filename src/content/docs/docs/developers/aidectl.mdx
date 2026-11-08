@@ -376,6 +376,45 @@ aidectl terminal exec --pane "$pane" 'make test'
 aidectl terminal history --lines 500 > scrollback.txt
 ```
 
+### agent
+
+<Badge text="Next release" />
+
+```sh
+aidectl agent list [--json]
+aidectl agent install-hooks [--claude] [--codex] [--yes] [--print] [--remove] [--pre-compact]
+```
+
+The [coding agents](/docs/guides/terminal/#coding-agents-) in AIDE's terminal.
+
+`list` asks the terminal server which agents run in its panes, with no AIDE window needed: one row
+per agent with its pane, its vault's session, the agent, its state (`done` for a turn nobody has
+looked at, `(not updating)` when the last read couldn't be confirmed), how full its context is, and
+the step it's on. With none it prints `No agents.` `--json` prints the server's answer as it is.
+
+```text
+PANE           SESSION  AGENT   STATE    CONTEXT  DETAIL
+1794000000001  work     claude  blocked  41%      Bash: Run the tests
+```
+
+`install-hooks` sets up the hooks that let Claude Code and Codex tell AIDE the moment they finish or
+need you, as **Set up agent hooks…** in Settings does. It shows each file's diff first, then asks
+`Apply? [y/N]`.
+
+| Flag | What it does |
+| --- | --- |
+| `--claude`, `--codex` | Only that tool's file. Without either, both, skipping a tool that isn't set up here |
+| `--print` | Only shows the diff |
+| `--yes` | Applies without asking. Without a terminal and without `--yes`, it only shows the diff and exits 1 |
+| `--remove` | Takes AIDE's entries out again, only where they're exactly as written; one you edited since is left alone with a note |
+| `--pre-compact` | Also adds the [gate that holds Claude Code's auto-compaction](/docs/guides/terminal/#hold-claude-codes-auto-compaction-until-you-commit) while tracked changes are uncommitted. A plain `install-hooks` never adds it; `--remove` takes it out too |
+
+It runs the terminal server's own `hooks` command through the link AIDE keeps,
+`~/Library/Application Support/AIDE/bin/aide-mux` on the Mac and `~/.local/share/aide/bin/aide-mux`
+on Linux, so open AIDE once first (or set `AIDE_MUX_BIN`). It exits 0 when it wrote, there was
+nothing to change, or it only showed; 1 when nothing was written (you said no, no terminal, a file
+changed since the diff, a write that failed); 2 for wrong flags.
+
 ### browser
 
 <Badge text="Next release" />
