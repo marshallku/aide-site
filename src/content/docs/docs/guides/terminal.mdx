@@ -83,6 +83,13 @@ left it, still running, with its screen and scrollback.
 - A server left from an older (or newer) AIDE that this AIDE can't talk to says so: **The terminal
   server is from an older AIDE**, with **Restart it**. Restarting asks first
   (**Restart the terminal server?**), since its shells and the programs in them end.
+- <Badge text="Next release" /> After AIDE updates itself, the terminal server that was running
+  keeps running (your shells with it) until you restart it. A bar over the tabs says **The terminal
+  server is from an older AIDE (1.0.10). Restart it to use this version's.**, with **Restart it**,
+  which asks first as above, and a close that puts the bar away until you quit AIDE. Nothing restarts
+  by itself. On Linux, if the update couldn't put the new terminal server in place, the bar says
+  **This version's terminal server couldn't be installed** with the reason, and offers no restart.
+  While the update is still being installed, it says so, and **Restart it** appears once it's done.
 - With no AIDE window attached, the server keeps running as long as it has shells. It stops by
   itself only after 7 days with no window and no shell running.
 
