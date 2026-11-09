@@ -145,7 +145,6 @@ opens at home instead.
 
 - The layout is saved a second after each change, a `cd` included.
 - A tab you closed stays closed.
-- Panes attached to a remote comux aren't kept.
 - When you close every tab, the next start opens one fresh shell.
 - Turning **Reopen tabs at launch** off forgets the saved layouts.
 - The first time the new AIDE starts, the tabs an earlier AIDE had saved are taken over.
@@ -172,34 +171,11 @@ notification brings forward the exact tab and pane it came from, and copad's `co
 [`aidectl terminal`](/docs/developers/aidectl/#terminal) uses the same socket to read, type into,
 split and list panes and tabs from a script.
 
-### comux in the terminal <Badge text="Next release" />
+### comux and tmux
 
-On the Mac and on Linux, a tab running comux shows comux's sessions, spaces and agents in AIDE's own
-controls around the terminal, instead of comux drawing them as text:
-
-- A sidebar on the left: **Spaces** and **Agents**, each agent with its status (**working**,
-  **ready**, **blocked**, **idle** or **done**). Click a row to go there; rest the pointer on one to
-  preview its pane. Drag its edge to change its width; AIDE remembers it.
-- A top bar: where you are, the **Work graph** buttons and the bell. The bell shows how many
-  notifications are unread. Click it for **Notifications**: click one to go to its pane, **Dismiss**
-  one, or **Clear all**.
-- A status bar at the bottom: the session, its tabs, counters (**Bells**, **Waiting for you**,
-  **Agents running**, **Unread notifications**), usage gauges and the clock.
-- comux's pickers, prompts and confirms as a card over the tab. comux's own menus are a card too on
-  Linux; on the Mac they open as a regular menu at the pointer. Right-click a row or a chip for its
-  menu, such as **Jump to pane**, **Rename tab…** or **Rename session…**.
-
-**Work graph** opens a graph of every agent's work beside the terminal; **Every agent's work, across
-sessions** widens it to all sessions. The buttons never take the keyboard, so what you type keeps
-going to the terminal.
-
-To use a comux on a server, right-click a tab and choose **Open remote comux…**. Enter a host from
-`~/.ssh/config` or `user@host`, and the comux command there if it isn't `comux`. It opens in a new
-tab over `ssh`, with that server's sessions in the sidebar. <Badge text="Next release" /> It is also **Open remote comux…** in the command palette, an action (`terminal/open-remote-comux`) you can give a shortcut in [Keyboard shortcuts](/docs/guides/shortcuts/).
-
-Only the tab on screen (in the Terminal section or the right panel) gets AIDE's controls. A tab you
-can't see, or one without comux, shows comux as comux draws it itself. In a tab split into panes,
-each pane runs its own comux, and the focused pane's comux gets the controls.
+comux, tmux and other multiplexers run in a pane like any other program and draw their own screens.
+<Badge text="Next release" /> A comux in a pane can still bring its pane forward when you click one of
+its notifications, through the terminal socket above.
 
 ### Open remote AIDE… <Badge text="Next release" />
 

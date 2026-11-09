@@ -252,7 +252,9 @@ If something in these two tables can't be used (a shortcut without <kbd>Ctrl</kb
 <kbd>Super</kbd>, `action:` with no id, a command that's empty, the same shortcut twice, `actions`
 that isn't a list), AIDE keeps the shortcuts it had before and **Settings › Keyboard** shows
 **The keyboard settings have a problem: …** with what's wrong. A shortcut to an action id the
-window doesn't have does nothing.
+window doesn't have now does nothing. <Badge text="Next release" /> A shortcut to an action that no
+longer exists says **No action is called …** when you press it, and **Settings › Keyboard** lists it
+among the problems.
 
 On the Mac, the same shortcuts are kept in the app's settings; change them in **Settings ›
 Keyboard**.
@@ -293,7 +295,6 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `terminal/split-right`, `terminal/split-down` | Split right, Split down |
 | `terminal/next-pane`, `terminal/previous-pane` | Next pane, Previous pane |
 | `terminal/close-pane` | Close pane |
-| `terminal/open-remote-comux` <Badge text="Next release" /> | Open remote comux… (no shortcut until you give it one) |
 | `terminal/open-remote-aide` <Badge text="Next release" /> | Open remote AIDE… (no shortcut until you give it one) |
 
 Others come and go with what the window shows:

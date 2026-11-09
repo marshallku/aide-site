@@ -79,7 +79,6 @@ doesn't parse keeps the last good set.
 | `note.created`, `note.changed` | A note appeared or changed (`path`). |
 | `terminal.bell`, `terminal.exited`, `terminal.title` | A terminal pane rang, its shell ended, or its title changed. |
 | `agent.state` <Badge text="Next release" /> | A [coding agent](/docs/guides/terminal/#coding-agents-) in one of the window's panes changed state: `tab`, `pane`, `kind` (`claude`, `codex`, …), `from` and `to`, and `wait` while it needs you. |
-| `comux.notification` | comux sent a notification. |
 | `focus.ended` | A focus ended (`reason`: `elapsed`, `stopped`, `done`, `replaced`, `skipped`). |
 | `calendar.upcoming`, `calendar.started` | A calendar event starts in 10 minutes, or now. |
 | `custom.<name>` | Sent by `aidectl event emit`. |
