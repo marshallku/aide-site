@@ -83,13 +83,26 @@ left it, still running, with its screen and scrollback.
 - A server left from an older (or newer) AIDE that this AIDE can't talk to says so: **The terminal
   server is from an older AIDE**, with **Restart it**. Restarting asks first
   (**Restart the terminal server?**), since its shells and the programs in them end.
-- <Badge text="Next release" /> After AIDE updates itself, the terminal server that was running
-  keeps running (your shells with it) until you restart it. A bar over the tabs says **The terminal
-  server is from an older AIDE (1.0.10). Restart it to use this version's.**, with **Restart it**,
-  which asks first as above, and a close that puts the bar away until you quit AIDE. Nothing restarts
-  by itself. On Linux, if the update couldn't put the new terminal server in place, the bar says
-  **This version's terminal server couldn't be installed** with the reason, and offers no restart.
-  While the update is still being installed, it says so, and **Restart it** appears once it's done.
+- <Badge text="Next release" /> After AIDE updates itself, it updates the terminal server that was
+  running in place, the next time it connects to it. Your shells and the programs in them, such as an
+  agent mid-turn or a build, keep running in the same process with the same screen and scrollback:
+  their output pauses for a moment, usually well under a second, and nothing restarts. Nothing is
+  shown when that works.
+- If the update doesn't take, the old server keeps running with your shells, and a bar over the tabs
+  says **This version's terminal server couldn't take over** with the reason, and that the old
+  version keeps running, with **Try again** and a close that puts the bar away until you quit AIDE.
+- A terminal server from before servers could update in place says **This terminal server can't
+  update in place; restarting it ends its shells.**, with **Restart it**, which asks first as above.
+  Nothing restarts by itself.
+- A server that this AIDE can't talk to at all is asked to update in place first. Only if that
+  doesn't work does the Terminal section offer **Restart it**, and says why the update didn't work.
+- On Linux, if the update couldn't put the new terminal server in place, the bar says **This
+  version's terminal server couldn't be installed** with the reason, and offers nothing. While the
+  update is still being installed, it says so, and the server is updated once it's done.
+- Quitting AIDE to install an update never ends your shells, even with **Keep shells running after
+  AIDE quits** turned off, and doesn't ask about running programs.
+- <Badge text="Next release" /> On the iPhone, a host's AIDE sessions keep going while that host's
+  terminal server updates: a pane pauses for a moment and goes on, with no reconnect.
 - With no AIDE window attached, the server keeps running as long as it has shells. It stops by
   itself only after 7 days with no window and no shell running.
 

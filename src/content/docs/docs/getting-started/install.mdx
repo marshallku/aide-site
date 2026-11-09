@@ -147,8 +147,9 @@ When you choose **Update and restart**:
    10 seconds, the update is cancelled and nothing changes.
 3. AIDE quits, the new version replaces it, and the new version starts. `aidectl` and the desktop
    host's runtime are updated along with it, and so is the terminal server
-   <Badge text="Next release" />; the one already running keeps your shells until you restart it
-   (see [Shells that outlive AIDE](/docs/guides/terminal/#shells-that-outlive-aide-)).
+   <Badge text="Next release" />: the one already running is updated in place, your shells and the
+   programs in them going on (see [Shells that outlive AIDE](/docs/guides/terminal/#shells-that-outlive-aide-)).
+   Quitting for the update never ends a shell.
 4. If the new version doesn't show its window within 45 seconds, the previous version is put back
    and started, and it tells you: "AIDE X.Y.Z didn't start, so this version is back."
 
