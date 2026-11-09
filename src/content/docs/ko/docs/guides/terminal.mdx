@@ -323,7 +323,7 @@ AIDE가 에이전트의 파일을 더 이상 읽지 못하게 되면(끝나지 �
 
 #### 플러그인 스킬 <Badge text="다음 릴리스" />
 
-Mac에서는 켠 플러그인의 스킬을 Claude Code, Codex, Grok에게 줄 수 있어요. 스킬은 에이전트에게 `aidectl`로 플러그인을 쓰는
+Mac과 Linux에서는 켠 플러그인의 스킬을 Claude Code, Codex, Grok에게 줄 수 있어요. 스킬은 에이전트에게 `aidectl`로 플러그인을 쓰는
 법을 알려 주는 짧은 안내예요. **설정 › 터미널 › 플러그인 스킬**에서 **플러그인의 스킬을 코딩 에이전트에게 주기**를 켜기
 전에는 꺼져 있어요.
 
@@ -335,7 +335,8 @@ Mac에서는 켠 플러그인의 스킬을 Claude Code, Codex, Grok에게 줄 �
 - 켜면 먼저 **플러그인의 스킬을 코딩 에이전트에게 줄까요?** 아래에 무엇이 바뀌는지 보여 줘요. 스킬마다 들어갈 폴더와 그
   내용이에요. **적용**을 고르기 전에는 아무것도 쓰지 않고, **취소**하면 다시 꺼져요.
 - 그다음부터는 스킬이 플러그인과 함께 추가되고 빠져요. 브라우저를 켜면 `aide-browser`가 추가되고, 끄면 빠져요. 플러그인
-  화면에도 **Claude Code 및 Codex에 aide-browser 스킬을 추가해요.**처럼 나와요.
+  화면에도 **Claude Code 및 Codex에 aide-browser 스킬을 추가해요.**처럼 나와요. Linux에서는 **코어 플러그인** 페이지의
+  브라우저 아래와 서버 플러그인의 줄에 나와요.
 - 이 컴퓨터에 있는 스킬 폴더마다 목록에 나오고, 하나씩 뺄 수 있어요. **Claude Code의 스킬 폴더**(`~/.claude/skills` 또는
   `$CLAUDE_CONFIG_DIR/skills`), **Codex의 스킬 폴더**(`~/.codex/skills` 또는 `$CODEX_HOME/skills`), **Grok의 스킬
   폴더**(`~/.grok/skills`)예요. Grok에서 끄지 않았다면 Grok도 Claude Code의 폴더를 읽어서, 그 줄에 **(Grok도 읽어요)**가

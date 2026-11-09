@@ -363,9 +363,9 @@ hook.
 
 #### Plugin skills <Badge text="Next release" />
 
-On the Mac, AIDE can give Claude Code, Codex and Grok the skills of the plugins you turn on: short
-instructions that teach an agent how to use a plugin with `aidectl`. It's off until you turn on
-**Give plugins' skills to your coding agents** under **Settings › Terminal › Plugin skills**.
+On the Mac and on Linux, AIDE can give Claude Code, Codex and Grok the skills of the plugins you turn
+on: short instructions that teach an agent how to use a plugin with `aidectl`. It's off until you
+turn on **Give plugins' skills to your coding agents** under **Settings › Terminal › Plugin skills**.
 
 | Plugin | Skill | What it teaches |
 |---|---|---|
@@ -377,7 +377,8 @@ instructions that teach an agent how to use a plugin with `aidectl`. It's off un
   **Apply**; **Cancel** turns it off again.
 - After that, a skill comes and goes with its plugin. Turn the Browser on and `aide-browser` is
   added; turn it off and it's taken out. The plugin's own page says so: **Adds the skill aide-browser
-  for Claude Code and Codex.**
+  for Claude Code and Codex.** On Linux that line is under the Browser on the **Core plugins** page,
+  and in a server plugin's row.
 - Each skills folder that's on this computer is listed, and you can leave one out: **Claude Code's
   skills folder** (`~/.claude/skills`, or `$CLAUDE_CONFIG_DIR/skills`), **Codex's skills folder**
   (`~/.codex/skills`, or `$CODEX_HOME/skills`) and **Grok's skills folder** (`~/.grok/skills`). Grok
