@@ -348,6 +348,37 @@ hook.
 - Whenever it isn't sure (no AIDE pane, an old reading, `git` slow or failing, not a repository), it
   lets Claude compact. It answers within a second and a half.
 
+#### Plugin skills <Badge text="Next release" />
+
+On the Mac, AIDE can give Claude Code, Codex and Grok the skills of the plugins you turn on: short
+instructions that teach an agent how to use a plugin with `aidectl`. It's off until you turn on
+**Give plugins' skills to your coding agents** under **Settings › Terminal › Plugin skills**.
+
+| Plugin | Skill | What it teaches |
+|---|---|---|
+| **Browser** (core plugin) | `aide-browser` | Driving AIDE's browser with `aidectl browser` and `aidectl secret`. |
+| **GitHub**, **Jira**, **Linear** | `aide-github`, `aide-jira`, `aide-linear` | Reading your open work from the plugin's section of `work/now`. They only read; they can't change anything in the tool. |
+
+- Turning it on shows what would change first, under **Give plugins' skills to your coding agents?**:
+  each skill and the folder it goes to, with its text. Nothing is written until you choose
+  **Apply**; **Cancel** turns it off again.
+- After that, a skill comes and goes with its plugin. Turn the Browser on and `aide-browser` is
+  added; turn it off and it's taken out. The plugin's own page says so: **Adds the skill aide-browser
+  for Claude Code and Codex.**
+- Each skills folder that's on this computer is listed, and you can leave one out: **Claude Code's
+  skills folder** (`~/.claude/skills`, or `$CLAUDE_CONFIG_DIR/skills`), **Codex's skills folder**
+  (`~/.codex/skills`, or `$CODEX_HOME/skills`) and **Grok's skills folder** (`~/.grok/skills`). Grok
+  also reads Claude Code's folder unless you turned that off in Grok, so that row says **(also read
+  by Grok)**.
+- Each skill ends with a section **Where this works**: the vaults and servers where its plugin is on.
+  The agent passes `--vault` or `--server` on every `aidectl` command, and asks you which one when
+  there's more than one.
+- A skill you edited is left as you made it, and the list says **Edited by you in Claude Code: left
+  alone**. A skill of your own with the same name is never touched. Turning the switch off takes out
+  what AIDE added, except those.
+- A session that's already running may still remember a skill that was taken out. The plugin's own
+  commands refuse to act where the plugin is off, whatever the agent remembers.
+
 <Aside type="note">
 The Terminal is part of the Mac app on the release page. A build for the Mac App Store, where the
 sandbox doesn't allow starting a shell, would leave it out.
