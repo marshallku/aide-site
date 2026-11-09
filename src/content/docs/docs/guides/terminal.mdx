@@ -326,7 +326,7 @@ one reaches the server, and the last change wins. On Linux they're also kept in 
 | **Notify when an agent finishes** | On | A notification when an agent's turn ends (`notify_done`). Off, it still shows as **Done**. |
 | **Notify when an agent needs you** | On | A notification when an agent asks you something (`notify_blocked`). |
 | **Remind after** | 10 min | **Off**, 5, 10 or 30 min: one more notification that long after an agent started needing you, if you haven't looked at it (`notify_remind`). |
-| **Send to your phone** | On | The same notifications on phones you connect, sealed so only they can read them (`push`). This is for the iPhone app and isn't available yet: until a phone is connected, nothing is sent. |
+| **Send to your phone** | On | The same notifications on phones you connect, sealed so only they can read them (`push`). <Badge text="Next release" /> A phone connects by opening this computer's AIDE sessions in the iPhone app with its **Agent notifications** on: see [Agent notifications](#agent-notifications-). Until one has, nothing is sent. |
 | **Set up agent hooks…** | | Below. |
 
 If AIDE stops being able to read agents' files (a read that never returned), the group says **Agent
@@ -482,19 +482,31 @@ sessions. Left empty, AIDE runs the AIDE installed there.
 
 ### Agent notifications <Badge text="Next release" />
 
-**Agent notifications**, in the host editor's **comux** section, is on by default. The next time you
-open that host's comux, AIDE asks for permission to notify you and gives comux a key made for this
-iPhone. comux then sends its agents' notifications through a push relay to Apple's push service,
-sealed with that key: only this iPhone can read the title and text. The relay and Apple carry only
-a placeholder. If comux turns notifications down, or is too old for them, the section says so.
+**Agent notifications**, in its own section of the host editor, is on by default and covers both
+AIDE and comux on that host. The next time you open that host's AIDE sessions or its comux, AIDE
+asks for permission to notify you and gives the host a key made for this iPhone: the same key for
+its AIDE and its comux. They then send their agents' notifications through a push relay to Apple's
+push service, sealed with that key: only this iPhone can read the title and text. The relay and
+Apple carry only a placeholder. If either turns notifications down, or is too old for them, the
+section says so, such as **Update AIDE on this host to get notifications.**
 
-Tapping a notification opens the SSH section on that host's comux, at the agent's pane. A
-notification from the comux you're looking at doesn't show a banner. If its key is gone, the
-notification reads "Agent notification" and "Open AIDE to see it." If SSH is turned off, tapping it
-tells you to turn SSH on first.
+Tapping a notification opens the SSH section on that host:
 
-Turning the switch off, or deleting the host, deletes its key at once. comux is told to forget this
-iPhone the next time you connect to it.
+- One from the host's AIDE opens its AIDE sessions, connects, and shows the agent's session at its
+  tab and pane. If that pane has closed since, the list says **That terminal has closed**.
+- One from its comux opens that comux at the agent's pane.
+
+While you're looking at a pane of the host's AIDE sessions in the app, a notification for that pane
+shows no banner; another pane's still does. A notification from the comux you're looking at doesn't
+show a banner either. If its key is gone, the notification reads "Agent notification" and "Open
+AIDE to see it." If SSH is turned off, tapping it tells you to turn SSH on first.
+
+When Apple gives this iPhone a new push address, the next connection to each host registers the
+new one and then removes the old one.
+
+Turning the switch off, deleting the host, or changing its address or user deletes its key at once.
+The host's AIDE and comux are each told to forget this iPhone the next time you connect to it. Until
+then, a notification it still sends arrives as "Agent notification", and tapping it does nothing.
 
 ### Keys and passwords
 
