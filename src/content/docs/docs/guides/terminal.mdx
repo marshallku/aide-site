@@ -393,6 +393,29 @@ turn on **Give plugins' skills to your coding agents** under **Settings › Term
 - A session that's already running may still remember a skill that was taken out. The plugin's own
   commands refuse to act where the plugin is off, whatever the agent remembers.
 
+##### Skills in a community plugin <Badge text="Next release" />
+
+A [community plugin](/docs/plugins/device-plugins/) can bring up to three skills of its own. They're
+off until you agree to them on the plugin's page, also when it comes from the index.
+
+- Under **Skills for your coding agents**, turn on **Give its skills to your coding agents**. The line
+  under it names the skills and the agents that will read them. You can turn it on while installing,
+  too.
+- **Read them** shows each skill as your agents will see it, with "Your agents will read these
+  instructions and may follow them with your permissions." AIDE adds the **Where this works**
+  section at the end.
+- The page also flags what's worth a second look, without blocking it: a site the plugin doesn't ask
+  to connect to, `curl`, `wget`, `ssh` or `rm`, mentions of `~/.ssh`, `.env`, tokens, keys,
+  passwords or secrets, and `aidectl` commands beyond the access the plugin asks for.
+- You agree to the text. An update with the same text keeps your answer, and so does going back to
+  a version you agreed to. When an update changes the text, AIDE takes the skill out and the page
+  says **Its skills changed since you agreed: read them again.**
+- A skill is given only while its plugin runs: turning the plugin off, removing it or
+  **Restricted mode** takes it out. When two workspaces have the same skill with different text
+  (different versions of one plugin), neither is given, and the Plugin skills list says which.
+- AIDE gives your agents at most 16 skills.
+- The iPhone has no local agents: it installs such a plugin and leaves its skills out.
+
 <Aside type="note">
 The Terminal is part of the Mac app on the release page. A build for the Mac App Store, where the
 sandbox doesn't allow starting a shell, would leave it out.
