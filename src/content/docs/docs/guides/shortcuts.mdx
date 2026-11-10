@@ -88,6 +88,16 @@ In a table edited as a grid:
 On Linux, for a voice shortcut anywhere on the desktop, bind the command `aide-desktop --voice` in
 your desktop's keyboard settings.
 
+## Voice prompts <Badge text="Next release" />
+
+| Action | Mac | Linux |
+|---|---|---|
+| Say a prompt to the agent in a pane | The **Hold to talk** shortcut you set in **Settings › Voice prompt** (works in any app) | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>M</kbd> in AIDE (start, or stop) |
+| Throw the prompt away while it's recorded or tidied | <kbd>Esc</kbd> | <kbd>Esc</kbd> |
+
+On Linux, bind `aidectl action run voice-prompt/start` and `voice-prompt/stop` in your compositor
+for hold to talk anywhere: see [Voice prompts](/docs/guides/voice-prompts/#start-a-voice-prompt).
+
 ## Quick capture
 
 On the Mac, a global shortcut opens a small window over any app to jot something into Scratch:
@@ -290,6 +300,9 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `import-recording` | Import recording… |
 | `new-window` | New window (Mac) |
 | `voice` | Say a message to the assistant (Linux) |
+| `voice-prompt` <Badge text="Next release" /> | Say a prompt (on Linux, stops the one under way) |
+| `voice-prompt/start`, `voice-prompt/stop` <Badge text="Next release" /> | Start a voice prompt, Stop the voice prompt (Linux) |
+| `voice-prompt/last` <Badge text="Next release" /> | Show the last voice prompt |
 | `feature-tour` | What AIDE can do (Linux) |
 | `terminal/new-tab` | New terminal tab |
 | `terminal/split-right`, `terminal/split-down` | Split right, Split down |

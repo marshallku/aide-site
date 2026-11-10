@@ -86,6 +86,16 @@ Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 �
 Linux에서 데스크톱 어디서나 쓰는 음성 단축키를 원하면, 데스크톱 키보드 설정에서 `aide-desktop --voice` 명령에
 단축키를 지정하세요.
 
+## 음성 프롬프트 <Badge text="다음 릴리스" />
+
+| 동작 | Mac | Linux |
+|---|---|---|
+| 페인의 에이전트에게 프롬프트 말하기 | **설정 › 음성 프롬프트**에서 정한 **길게 눌러 말하기** 단축키(어느 앱에서든 동작해요) | AIDE 안에서 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>M</kbd>(시작 또는 멈춤) |
+| 녹음하거나 다듬는 중인 프롬프트 버리기 | <kbd>Esc</kbd> | <kbd>Esc</kbd> |
+
+Linux에서 어디서나 길게 눌러 말하려면 컴포지터에서 `aidectl action run voice-prompt/start`와 `voice-prompt/stop`을
+연결하세요. [음성 프롬프트](/ko/docs/guides/voice-prompts/#음성-프롬프트-시작하기)를 보세요.
+
 ## 빠른 메모
 
 Mac에서는 전역 단축키로 어느 앱 위에서든 작은 창을 열어 스크래치에 메모할 수 있어요. 기본값은
@@ -280,6 +290,9 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `import-recording` | 녹음 가져오기… |
 | `new-window` | 새 창(Mac) |
 | `voice` | 어시스턴트에게 말하기(Linux) |
+| `voice-prompt` <Badge text="다음 릴리스" /> | 프롬프트 말하기(Linux에서는 진행 중인 것을 멈춰요) |
+| `voice-prompt/start`, `voice-prompt/stop` <Badge text="다음 릴리스" /> | 음성 프롬프트 시작, 음성 프롬프트 멈추기(Linux) |
+| `voice-prompt/last` <Badge text="다음 릴리스" /> | 마지막 음성 프롬프트 보기 |
 | `feature-tour` | AIDE로 할 수 있는 것(Linux) |
 | `terminal/new-tab` | 새 터미널 탭 |
 | `terminal/split-right`, `terminal/split-down` | 오른쪽으로 분할, 아래로 분할 |

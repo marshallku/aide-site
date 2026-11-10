@@ -1,0 +1,270 @@
+---
+title: Voice prompts
+description: Say a prompt to the coding agent in a terminal pane; AIDE writes it down on the device, tidies it up and types it into the agent's box.
+sidebar:
+    order: 17
+---
+
+import { Aside, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
+
+<Badge text="Next release" />
+
+A voice prompt lets you talk to a [coding agent](/docs/guides/terminal/#coding-agents-) the way you
+would to a person, false starts and all, and gives the agent a prompt it can work from. You say it;
+AIDE writes it down on your device, drops what you took back, tidies the rest up with a model, and
+types it into the agent's pane. It doesn't press Enter for you unless you ask it to, so you read the
+prompt before it goes.
+
+Voice prompts are on the Mac, Linux and the iPhone, for agents running in AIDE's own terminal panes
+(on the iPhone, in a host's [AIDE sessions](/docs/guides/terminal/#aide-sessions-on-a-host-)).
+
+## Say a prompt
+
+1. Start it with one of the [triggers](#start-a-voice-prompt) below. The pill appears at the bottom
+   of the screen and names the agent it's for, such as **→ Claude · aide**.
+2. Talk. The pill shows **Listening…**, a level meter and the words as they're written down. Pause
+   whenever you like: a pause never ends a voice prompt.
+3. Stop: let go of the shortcut you're holding, or press it (or tap the mic) again if you tapped it to
+   start. The pill shows **Tidying with …**, then **Sent to Claude · aide** with the prompt.
+4. The prompt is now in the agent's box. Read it, edit it if you want, and press Enter.
+
+A voice prompt records for up to 5 minutes. If nothing is heard in the first 8 seconds, it ends with
+nothing sent. ✕ on the pill, or <kbd>Esc</kbd> while AIDE is in front, throws the prompt away while
+it's being recorded, written down or tidied; nothing is typed.
+
+Only one recording runs at a time: a voice prompt doesn't start while you're talking to the
+[assistant](/docs/guides/assistant/#voice) or recording a [meeting](/docs/guides/meetings/).
+
+## Which pane it goes to
+
+The agent is chosen when you start, and the prompt goes there even if you click elsewhere while you
+talk:
+
+- the focused pane of the AIDE window last in front, if an agent runs in it;
+- else that window's most recently focused pane with an agent;
+- else none. The prompt is still written down and tidied, and the pill offers it with **Copy**
+  (**No agent to send to.**).
+
+The pill names the target as the agent and the pane's folder, such as **Claude · aide**, or the
+agent and the tab's name when the pane has no folder (**Codex · build**). If that agent quits, another
+program takes its place, or the terminal server restarts or the connection drops, the target is gone
+and nothing is typed.
+
+## Start a voice prompt
+
+<Tabs>
+<TabItem label="Mac">
+
+- **Settings › Voice prompt › Hold to talk** sets a shortcut that works in any app (none by default).
+  Hold it and talk, and let go to stop; or press it once to start and again to stop. It can't be the
+  assistant's **Hold to talk** shortcut ("Hold to talk for the assistant uses it.").
+- **Say a prompt** and **Show the last voice prompt** are in the command palette and the menu bar.
+  **Say a prompt** has no shortcut of its own until you give it one in
+  [Settings › Keyboard](/docs/guides/shortcuts/#change-your-shortcuts).
+
+</TabItem>
+<TabItem label="Linux">
+
+- <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>M</kbd> in AIDE starts a voice prompt, or stops the one
+  under way. The command palette has **Say a prompt**, **Start a voice prompt**, **Stop the voice
+  prompt** and **Show the last voice prompt**, and **Settings › Keyboard** can give each its own
+  shortcut.
+- Outside AIDE, bind the actions in your compositor with
+  [`aidectl action run`](/docs/developers/aidectl/#action): `voice-prompt` (start or stop),
+  `voice-prompt/start`, `voice-prompt/stop` and `voice-prompt/last`. On Hyprland, `bind` to start
+  and `bindr` (on release) to stop gives you hold to talk anywhere:
+
+```ini
+# ~/.config/hypr/hyprland.conf
+bind = SUPER, M, exec, aidectl action run voice-prompt/start
+bindr = SUPER, M, exec, aidectl action run voice-prompt/stop
+bind = SUPER SHIFT, M, exec, aidectl action run voice-prompt/last
+```
+
+`aidectl action` talks to the AIDE app on this computer, so AIDE has to be running with the vault
+open.
+
+</TabItem>
+<TabItem label="iPhone">
+
+- The mic on the bar of an AIDE session pane: tap it to start and again to stop, or hold it while you
+  talk.
+- The Shortcuts action **Say a prompt to an agent** opens the last AIDE session pane you used and
+  starts listening.
+
+</TabItem>
+</Tabs>
+
+## What AIDE does with what you said
+
+### It writes it down on the device
+
+Speech is written down on the device: on the Mac and iPhone by Apple's on-device recognition, on
+Linux by whisper.cpp with a speech model on your computer (see [Speech model](#speech-model-linux)).
+The audio stays in memory while you talk and is never saved or sent.
+
+If the recognizer stops or fails partway, AIDE starts a fresh one and has it hear the kept audio
+again, so the words written down so far stay, in order and none twice. On Linux the pill says
+**Catching up…** while it's behind, and **Writing it down… N of M** after you stop; writing down
+that takes more than a minute ends with what it has. When some of what you said couldn't be
+written down, the prompt says **Part of what you said wasn't written down** and is never sent on its
+own.
+
+### It drops what you took back
+
+Fixed rules, the same on every device, look for what you take back while you talk:
+
+- Fillers such as "um", "uh", "음" or "어" are hidden.
+- "No wait", "scratch that", "아니 아니" or "아니다" strike the bit just before them: "make it red, no
+  wait, blue" keeps "blue".
+- "I mean", "말고" or "그게 아니라" are dimmed: they may or may not take something back, so the model
+  decides.
+- "Start over", "scratch all that", "처음부터 다시" or "다 지워" strike everything before them.
+
+You see the struck words crossed out in the pill as you talk. The rules are careful rather than
+clever: they sometimes strike less than you meant.
+
+### It tidies it up
+
+Then one call to a model turns what you said into a short prompt for the agent, in your language:
+only what you asked for, without fillers, false starts and asides, several requests as a numbered
+list. It keeps files, paths, names, numbers and commands exactly as you said them, and adds nothing
+you didn't say. Which model is **Settings › Voice prompt › Tidy up with** (see [Settings](#settings)).
+The model gets no tools.
+With **Include what's on the screen** on, it also gets the last lines of the pane, up to 6 KiB, only
+to understand what you mean; it's told to take nothing from them.
+
+AIDE checks the answer before using it. When it can't use one, it keeps what the rules made
+instead and says why on the pill:
+
+| The pill says | Why |
+|---|---|
+| **Not tidied: tidying up is off** | **Tidy up with** is **Off**. |
+| **Not tidied: no model is set up** | No model is set up or none could be reached. |
+| **Not tidied: this device's model can't take this language** | **On this device only**, and the device's model can't tidy this language. |
+| **Not tidied: too long for this device's model** | **On this device only**, and what you said is too long for it. |
+| **Not tidied: too long to tidy** | What you said is too long to send. |
+| **Not tidied: it sounds like a command** | What you said has something command-like in it (`rm`, `git push`, `--force`, a path with `/`), so no model is asked. |
+| **Not tidied: the answer held a command you didn't say** | The model's prompt has a command, or a file or name you didn't say. |
+| **Not tidied: the model's answer couldn't be used** | The answer wasn't in the expected form. |
+| **Not tidied: the model gave nothing back** | The answer was empty. |
+| **Not tidied: the model's answer was too long** | The answer was much longer than what you said. |
+| **Not tidied: took too long** | No answer within 15 seconds. |
+| **Not tidied: couldn't reach the model** | The call failed. |
+
+A tidied prompt can still be flagged:
+
+- **Check it: it names something you didn't say**: it has a name like `parseConfig` or `v2-beta`
+  that isn't in what you said or on the screen.
+- **Unclear: …**: the model wasn't sure what you meant, and says what.
+
+### It types it into the pane
+
+AIDE hands the prompt to the terminal server, which types it into the agent's box as one paste. The
+server first checks that it's still the same agent and that the agent isn't asking you something. It
+takes out anything that could end the paste early or press a key, and types the same prompt only
+once, even when you retry.
+
+Enter isn't pressed unless you turn on **Send when I stop**, and even then only for a prompt a
+model tidied with nothing flagged: not tidied, flagged, unclear or incomplete prompts always wait in
+the box for you.
+
+## The pill
+
+The pill shows how the prompt is doing, without taking the keyboard from the pane you're typing in.
+On the Mac it floats at the bottom centre of the screen with the target's window, over other apps
+too. On Linux it floats at the bottom of the screen where gtk4-layer-shell is installed (Hyprland,
+KDE and other wlroots desktops), and elsewhere it's a strip at the bottom of the AIDE window. On the
+iPhone it's a bar above the key bar of the AIDE session pane.
+
+| The pill says | What happened | What you can do |
+|---|---|---|
+| **Sent to Claude · aide** | The prompt is in the agent's box. | **Copy**, **Copy what I said**. It goes away after 8 seconds (longer while the pointer is over it); a flagged one stays until you close it. |
+| **Claude is asking something. Answer it first.** | The agent is waiting on a question or a permission, so nothing was typed. | Answer the agent, then **Insert anyway**; while it's still asking, the pill stays and says so. **Copy**. |
+| **The agent in that pane went away.** | The agent quit or something else runs there now. | **Copy**. |
+| **No agent to send to.** | No pane with an agent when you started. | **Copy**. |
+| **Update AIDE on … to insert prompts** | The computer running that pane has an older AIDE. Nothing was typed. | Update AIDE there. **Copy**. |
+| **Not sure it went in — check the pane.** | The connection went while the prompt was on its way. | Look at the pane. **Retry** for 5 minutes types it at most once; after that, **Insert again** sends it anew. **Copy**. |
+| **Couldn't insert: …** | The server refused it, such as "the prompt is too long" or "the program in that pane can't take a pasted prompt". | **Retry**, **Copy**. |
+| **Nothing to send** | Nothing was left to ask, such as when you took everything back. | **Use what I said** puts in what the rules made, else your words as written down. |
+| A reason, such as **Stopped writing down: …** | The recording failed. | **Dismiss**. |
+
+✕ closes the pill in any of these states.
+
+### The last prompt
+
+AIDE keeps the last prompt you sent, what you said and its target in memory for 30 minutes; it's
+never written to disk. **Show the last voice prompt** brings the pill back with **Insert** (into the
+pane that would be chosen now), **Copy** and **Copy what I said**, so closing the pill never loses
+it.
+
+## Settings
+
+**Settings › Voice prompt**, after **Assistant**:
+
+| Setting | Default | What it does |
+|---|---|---|
+| **Hold to talk** (Mac) | None | A shortcut that works in any app: hold to talk, or press to start and stop. |
+| **Tidy up with** | Automatic | Which model tidies what you said: **Automatic**, **On this device only** (Mac and iPhone), **The assistant's model** or **Off**. |
+| **Send when I stop** | Off | Presses Enter after typing a prompt, only when a model tidied it and nothing is flagged. |
+| **Include what's on the screen** | On | Sends up to 6 KiB of the pane's last lines with what you said, so the model understands what you refer to. |
+| **Language** | Automatic | The same setting as **Settings › Assistant › Voice › Language**: **Automatic**, **English** or **한국어**. Changing it on either page changes both. |
+| **Speech model** (Linux) | Standard | **Standard** or **Better Korean** (see below). |
+
+### Tidy up with
+
+- **Automatic**: on the Mac and iPhone, Apple's on-device model first, when Apple Intelligence is
+  on, it handles your language and what you said fits; then your Anthropic key on this device with `haiku`; then the
+  [assistant's](/docs/guides/assistant/#where-the-model-comes-from) Claude Code (with `haiku`), Codex
+  or Grok; then your server with `haiku`. Linux starts at the key. The footer says what Automatic
+  uses now.
+- **On this device only** (Mac and iPhone): Apple's on-device model, or no tidying when it can't.
+- **The assistant's model**: what **Settings › Assistant › Model from** uses, with its model.
+- **Off**: only the rules; nothing is sent.
+
+A program such as Claude Code or Codex runs for this with its tools off, in an empty folder; **Use my
+Claude Code setup** doesn't apply. A program that can't turn all its tools off is never used:
+Antigravity always, so when the assistant uses Antigravity, voice prompts use another choice and the
+footer names it.
+
+### Speech model (Linux)
+
+- **Standard**: the speech model the assistant already uses.
+- **Better Korean**: a larger model (about 574 MB) that writes Korean down better. Choose it, then
+  press **Download**: AIDE checks the file before keeping it, and a prompt can't start until it's
+  downloaded. On some computers it writes down more
+  slowly than you speak, and then it says **Slower than you speak on this computer**; you wait longer
+  after you stop.
+
+## What leaves your device
+
+- **The audio never does.** It's never saved or sent.
+- **The words you said**, and with **Include what's on the screen** up to 6 KiB of the pane's
+  screen, go only to the model **Tidy up with** picks. AIDE doesn't write them to disk.
+
+| Tidies with | Where it goes and what's kept |
+|---|---|
+| On this device, or **Off** | Nothing leaves the device. |
+| Anthropic API key | Anthropic; Anthropic's retention applies. |
+| Server | Anthropic, through your server; Anthropic's retention applies. |
+| Claude Code | Claude Code, run without saving its session. |
+| Codex | Codex, run as an ephemeral session. |
+| Grok | Grok, which keeps its sessions in `~/.grok/sessions`. The prompt is written to a file in a private temporary folder until the run ends; a crash can leave it there until the system clears it. |
+| Antigravity | Never used for voice prompts. |
+
+The footer under **Tidy up with** says the same for your current choice.
+
+## Limits
+
+<Aside type="caution">
+The terminal server checks that the agent is still there and isn't asking you something, but it
+can't see the future: if the agent opens a question or a permission dialog just before it reads the
+pasted text, that dialog could take it. That's why Enter isn't pressed by default, and why **Send
+when I stop** sends only clean, tidied prompts.
+</Aside>
+
+- Voice prompts go to agents in AIDE's own panes, never to another terminal app.
+- The rules can strike too little, or the wrong few words; the model reads the struck words too and
+  decides. Check a prompt before you press Enter.
+- A prompt that names commands is never tidied by a model, so it keeps your words as the rules left
+  them.
