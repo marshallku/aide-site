@@ -78,6 +78,7 @@ curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/
 | --- | --- |
 | 앱 | `~/.local/bin/aide-desktop` |
 | `aidectl` | `~/.local/bin/aidectl` |
+| 터미널 서버(`aide-mux`) | `~/.local/bin/aide-mux` |
 | 데스크톱 항목 | `~/.local/share/applications/com.marshallku.aide.desktop` |
 | D-Bus 서비스(알림과 링크를 위해 AIDE를 시작) | `~/.local/share/dbus-1/services/com.marshallku.aide.service` |
 | 아이콘 | `~/.local/share/icons/hicolor/scalable/apps/com.marshallku.aide.svg` |
@@ -86,6 +87,12 @@ curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/
 
 라이브러리가 빠져 있으면 스크립트가 그 이름과 위의 명령을 보여 줘요. AIDE는 데스크톱의 앱 실행기에서
 시작하세요. 데스크톱 항목은 `~/.local/bin`이 `PATH`에 있든 없든 동작해요.
+
+<Badge text="다음 릴리스" /> AIDE의 터미널 서버가 이미 실행 중이면 스크립트가 그 자리에서 업데이트해요.
+셸과 그 안의 프로그램은 계속 실행되고, 스크립트는 **Terminal server upgraded to X.Y.Z; its shells keep
+running**이라고 알려 줘요. 서버가 새 버전을 받지 못하면 셸과 함께 이전 버전으로 계속 실행되고, 설치는 그대로
+끝나요. 스크립트가 그 이유와, `~/.local/bin/aide-mux ctl upgrade`로 다시 시도할 수 있다는 것을 알려 줘요.
+실행 중인 서버가 없으면 아무것도 시작하지 않아요. 필요할 때 AIDE가 새 서버를 시작해요.
 
 </TabItem>
 </Tabs>

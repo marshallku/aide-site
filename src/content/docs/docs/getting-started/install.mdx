@@ -79,6 +79,7 @@ The script downloads `aide-X.Y.Z-x86_64-linux.tar.gz`, checks it against the rel
 | --- | --- |
 | The app | `~/.local/bin/aide-desktop` |
 | `aidectl` | `~/.local/bin/aidectl` |
+| The terminal server (`aide-mux`) | `~/.local/bin/aide-mux` |
 | Desktop entry | `~/.local/share/applications/com.marshallku.aide.desktop` |
 | D-Bus service (starts AIDE for notifications and links) | `~/.local/share/dbus-1/services/com.marshallku.aide.service` |
 | Icon | `~/.local/share/icons/hicolor/scalable/apps/com.marshallku.aide.svg` |
@@ -87,6 +88,13 @@ The script downloads `aide-X.Y.Z-x86_64-linux.tar.gz`, checks it against the rel
 
 If a library is missing, the script names it and prints the commands above. Start AIDE from your
 desktop's app launcher; the desktop entry works whether or not `~/.local/bin` is on your `PATH`.
+
+<Badge text="Next release" /> If AIDE's terminal server is already running, the script updates it in
+place: your shells and the programs in them keep running, and the script says **Terminal server
+upgraded to X.Y.Z; its shells keep running**. If the server can't take the new version, it keeps
+running the old one with your shells, the install still finishes, and the script says why and that
+`~/.local/bin/aide-mux ctl upgrade` tries again. With no server running, nothing is started; AIDE
+starts the new one when it needs it.
 
 </TabItem>
 </Tabs>
