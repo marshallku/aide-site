@@ -144,6 +144,56 @@ aidectl todos [--json]
 
 Every open todo across your notes, one per line, tab-separated: note id, line (0-based), note version, note path, text. `--json` adds `noteTitle`, `indent`, `due`, `scheduled` and `noteDate` (the day of the daily note it's in).
 
+### todo add
+
+<Badge text="Next release" />
+
+```sh
+aidectl todo add <title> [--memo TEXT|-] [--source URL] [--due YYYY-MM-DD] [--project P] [--today | --inbox]
+```
+
+Adds one open todo with a short title and its context in the [memo](/docs/guides/todos/#memos), so the line stays short. It goes to today's daily note under your todo heading (**Add under heading** in **Settings › Todos**), or with `--inbox` to the end of your inbox note. `--memo -` reads the memo from stdin. The line gets the due date (written the way **Write fields as** says), `[project:: …]`, `[source:: …]` and `[by:: …]`: the coding agent that added it when it runs in an AIDE terminal pane (`claude`, `codex`, `grok`), else `agent`.
+
+```sh
+aidectl todo add "Reply to Kim" --source https://acme.slack.com/archives/C1/p1 --memo "Kim asked in #proj-x about the launch date"
+```
+
+```markdown
+- [ ] Reply to Kim [source:: https://acme.slack.com/archives/C1/p1] [by:: agent]
+    > Kim asked in #proj-x about the launch date
+```
+
+The title is one line of up to 200 characters with no field in it (no date, priority, rule, time block or `[key:: value]`; `#tags` and `@names` are fine). The memo is at most 12 lines and 1000 characters. Anything else exits 2 with nothing written.
+
+### board
+
+<Badge text="Next release" />
+
+```sh
+aidectl board add <title> [--project P] [--agent A] [--step S]… [--note N] [--doing]
+aidectl board plan <card> --step S…
+aidectl board step <card> <n|title> done|doing|todo|skip
+aidectl board move <card> todo|doing|waiting|done|cancelled [--note N] [--skip-rest]
+aidectl board note <card> <text>
+aidectl board done <card> [--note N] [--skip-rest]
+aidectl board show <card> [--json]
+aidectl board list [--project P] [--mine] [--json]
+aidectl board link <card>
+```
+
+The [agent board](/docs/guides/agent-board/): coding agents keep their plan here as cards. You rarely run these yourself; the `aide-board` skill tells the agents when to.
+
+- `add` writes a new [card](/docs/guides/todos/#agent-cards) at the end of the project's note under the `board` folder and prints its id. The project is `--project`, else `AIDE_BOARD_PROJECT`, else the name of the git repository you're in, else `inbox`; its note is the project in lower case with anything other than letters and digits turned into `-`, so `../daily/foo` is `board/daily-foo.md`, never another folder. `--doing` starts it in progress. Inside an AIDE terminal pane the card names the pane's agent, unless `--agent` does.
+- `plan` gives the whole list of steps again. A step keeps its status by its exact title; a step you leave out that wasn't started is cancelled (`[-]`), and done or started ones stay.
+- `step` takes a step's number or its exact title. A title two steps share is refused with their numbers.
+- `move … waiting` adds your waiting tag (`#waiting`), and moving it on takes the tag out again.
+- `note` sets the card's status line, the first line of its memo; `""` removes it. At most three lines.
+- `done`, and `move … done`, refuse while any todo under the card is still open and name them, unless `--skip-rest` cancels those first. The card always gets its completion date.
+- `show` prints the card, its steps and its progress; `list` the open cards, `--mine` the one linked to the pane you run it in.
+- `link` (inside an AIDE terminal pane) links the pane to a card.
+
+Every change is made on the note as just read and saved only if nobody changed it meanwhile; if you ticked a step in the note at that moment, aidectl reads it again and makes its change on top of yours, never over it. A card you moved to a note outside the `board` folder is no card any more.
+
 ### toggle
 
 ```sh
@@ -547,7 +597,9 @@ The extension commands found (see below): name, description, path, tab-separated
 | 2 | Usage: a wrong flag or argument, or no vault or server configured |
 | 3 | Path taken (`put --create-only`) |
 | 4 | Conflict: the note moved on; nothing was written |
-| 5 | Not found: the note, the heading for `append`, or the action for `action run` |
+| 5 | Not found: the note, the heading for `append`, the action for `action run`, or the card for `board` |
+| 6 | `board step`: two steps have that title (say which number), or the plan changed meanwhile |
+| 7 | `board done`: todos under the card are still open |
 
 An extension command exits with its own code (128 plus the signal number when a signal ended it).
 

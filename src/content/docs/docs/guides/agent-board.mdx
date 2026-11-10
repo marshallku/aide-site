@@ -1,0 +1,41 @@
+---
+title: Agent board
+description: Coding agents in AIDE keep their plan as cards in your notes, so you can see what each one is doing and where it needs you.
+sidebar:
+    order: 15
+---
+
+import { Badge } from "@astrojs/starlight/components";
+
+<Badge text="Next release" />
+
+When Claude Code, Codex or Grok works on a task with more than one step, it writes its plan into your notes as a card: a short title, its steps, and a line that says what it's doing now. You see the work in your notes without reading the agent's terminal, and you can tick a step yourself at any time.
+
+## What a card looks like
+
+Cards are todos in the `board` folder, one note per project: an agent working in the `aide` repository writes to `board/aide.md`.
+
+```markdown
+- [/] Agent board plan [project:: aide] [agent:: claude] [card:: k7f2q] ➕ 2026-11-10
+    > Codex review, round 2
+    - [x] Survey Todos, editor, agents
+    - [/] Codex plan review
+    - [ ] Send to the owner
+```
+
+- The card's status is the agent's: `[ ]` to do, `[/]` doing, `[x]` done, `[-]` cancelled. A card waiting for you is open and tagged with your waiting tag (`#waiting`), with the agent's question on its status line.
+- Its steps are the todos right under it. A step the agent drops from its plan before starting it is cancelled, never deleted. A step that was started or finished, by you or the agent, stays as it is.
+- The agent can mark the card done only once no step under it is open: it finishes them, or cancels what's left on purpose. If you tick the card done yourself while steps are still open, they stay open.
+- The fields and the rules for cards (only the `board` folder counts, a card's id is unique, a card always gets its completion date and never repeats) are in [Agent cards](/docs/guides/todos/#agent-cards).
+
+You can edit the note as usual. An agent's change is always made on the note as it is now, so a tick you made a moment ago is kept.
+
+## How agents learn it
+
+The `aide-board` skill tells an agent when to add a card, how to keep its steps and status line current, when to move it to waiting, and how to finish it with a one-line outcome. On the Mac and Linux, AIDE gives it to your coding agents with the other [plugin skills](/docs/guides/terminal/#plugin-skills-) once **Give plugins' skills to your coding agents** is on.
+
+The agents use `aidectl board`; the [aidectl reference](/docs/developers/aidectl/#board) lists its commands. Run `aidectl board list` to see the open cards yourself, or `aidectl board show <card>` for one card and its steps.
+
+## Turning it off
+
+The board is on. A switch for it comes with the board's own screen in a later release. While the board is off, an agent's changes to cards are refused and AIDE doesn't give agents the skill; reading cards still works.

@@ -144,6 +144,56 @@ aidectl todos [--json]
 
 모든 노트의 열린 할 일을 한 줄에 하나씩, 탭으로 구분해 출력해요: 노트 id, 줄(0부터), 노트 버전, 노트 경로, 텍스트. `--json`은 `noteTitle`, `indent`, `due`, `scheduled`, `noteDate`(할 일이 들어 있는 데일리 노트의 날짜)를 더해요.
 
+### todo add
+
+<Badge text="다음 릴리스" />
+
+```sh
+aidectl todo add <title> [--memo TEXT|-] [--source URL] [--due YYYY-MM-DD] [--project P] [--today | --inbox]
+```
+
+짧은 제목에 맥락은 [메모](/ko/docs/guides/todos/#메모)로 담아 열린 할 일 하나를 더해요. 그래서 줄이 짧게 남아요. 오늘의 일일 노트에서 할 일 제목(**설정 › 할 일**의 **제목 아래에 추가**) 아래에 들어가고, `--inbox`면 인박스 노트 끝에 들어가요. `--memo -`는 메모를 stdin에서 읽어요. 줄에는 마감 날짜(**필드 작성 형식**대로), `[project:: …]`, `[source:: …]`, `[by:: …]`가 붙어요. `by`는 AIDE 터미널 패널에서 실행했다면 그 코딩 에이전트(`claude`, `codex`, `grok`), 아니면 `agent`예요.
+
+```sh
+aidectl todo add "Reply to Kim" --source https://acme.slack.com/archives/C1/p1 --memo "Kim asked in #proj-x about the launch date"
+```
+
+```markdown
+- [ ] Reply to Kim [source:: https://acme.slack.com/archives/C1/p1] [by:: agent]
+    > Kim asked in #proj-x about the launch date
+```
+
+제목은 필드가 없는 한 줄로 200자까지예요(날짜, 우선순위, 반복 규칙, 시간 블록, `[key:: value]`는 안 되고 `#태그`와 `@이름`은 괜찮아요). 메모는 12줄, 1000자까지예요. 그 밖에는 아무것도 쓰지 않고 2로 끝나요.
+
+### board
+
+<Badge text="다음 릴리스" />
+
+```sh
+aidectl board add <title> [--project P] [--agent A] [--step S]… [--note N] [--doing]
+aidectl board plan <card> --step S…
+aidectl board step <card> <n|title> done|doing|todo|skip
+aidectl board move <card> todo|doing|waiting|done|cancelled [--note N] [--skip-rest]
+aidectl board note <card> <text>
+aidectl board done <card> [--note N] [--skip-rest]
+aidectl board show <card> [--json]
+aidectl board list [--project P] [--mine] [--json]
+aidectl board link <card>
+```
+
+[에이전트 보드](/ko/docs/guides/agent-board/)예요. 코딩 에이전트가 자기 계획을 카드로 여기 적어 둬요. 직접 실행할 일은 드물고, 언제 무엇을 쓸지는 `aide-board` 스킬이 에이전트에게 알려 줘요.
+
+- `add`는 `board` 폴더 아래 그 프로젝트의 노트 끝에 새 [카드](/ko/docs/guides/todos/#에이전트-카드)를 쓰고 ID를 출력해요. 프로젝트는 `--project`, 없으면 `AIDE_BOARD_PROJECT`, 없으면 지금 있는 git 저장소의 이름, 그것도 없으면 `inbox`예요. 노트 이름은 프로젝트를 소문자로 바꾸고 글자와 숫자가 아닌 것은 `-`로 바꾼 것이라서 `../daily/foo`는 다른 폴더가 아니라 `board/daily-foo.md`가 돼요. `--doing`이면 진행 중으로 시작해요. AIDE 터미널 패널 안에서는 `--agent`가 없으면 그 패널의 에이전트를 카드에 적어요.
+- `plan`은 단계 목록 전체를 다시 줘요. 단계는 정확히 같은 제목으로 상태를 이어 가요. 빠진 단계 중 시작하지 않은 것은 취소(`[-]`)되고, 끝냈거나 시작한 단계는 그대로 남아요.
+- `step`은 단계 번호나 정확한 제목을 받아요. 두 단계가 같은 제목이면 번호를 알려 주며 거절해요.
+- `move … waiting`은 대기 태그(`#waiting`)를 붙이고, 다른 곳으로 옮기면 다시 떼요.
+- `note`는 카드의 상태 줄, 곧 메모의 첫 줄을 정해요. `""`면 지워요. 세 줄까지예요.
+- `done`과 `move … done`은 카드 아래 열린 할 일이 남아 있으면 그 할 일들을 알려 주며 거절해요. `--skip-rest`를 주면 먼저 그것들을 취소해요. 카드에는 항상 완료 날짜가 붙어요.
+- `show`는 카드와 단계, 진행 상황을 출력하고, `list`는 열린 카드를, `--mine`이면 실행한 패널에 연결된 카드를 보여 줘요.
+- `link`(AIDE 터미널 패널 안에서)는 그 패널을 카드에 연결해요.
+
+변경은 모두 방금 읽은 노트를 바탕으로 만들고, 그사이 아무도 노트를 바꾸지 않았을 때만 저장해요. 그 순간 노트에서 단계를 체크했다면 aidectl이 다시 읽고 그 위에 변경을 더해요. 덮어쓰지 않아요. `board` 폴더 밖의 노트로 옮긴 카드는 더 이상 카드가 아니에요.
+
 ### toggle
 
 ```sh
@@ -534,7 +584,9 @@ aidectl plugins list [--json]
 | 2 | 사용법: 잘못된 플래그나 인자, 또는 볼트나 서버가 설정되지 않음 |
 | 3 | 이미 있는 경로(`put --create-only`) |
 | 4 | 충돌: 노트가 그사이 바뀌어서 아무것도 쓰지 않음 |
-| 5 | 찾을 수 없음: 노트, `append`의 제목, 또는 `action run`의 동작 |
+| 5 | 찾을 수 없음: 노트, `append`의 제목, `action run`의 동작, 또는 `board`의 카드 |
+| 6 | `board step`: 두 단계가 같은 제목(번호로 말해 주세요), 또는 그사이 계획이 바뀜 |
+| 7 | `board done`: 카드 아래 할 일이 아직 열려 있음 |
 
 확장 명령은 자기 종료 코드로 끝나요(시그널로 끝났으면 128에 시그널 번호를 더한 값).
 
