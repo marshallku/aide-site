@@ -379,6 +379,7 @@ aidectl terminal history --lines 500 > scrollback.txt
 ```sh
 aidectl agent list [--json]
 aidectl agent install-hooks [--claude] [--codex] [--yes] [--print] [--remove] [--pre-compact]
+aidectl agent skills list | show <name> | sync [--print] | remove [--print]
 ```
 
 AIDE 터미널의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트-)를 다뤄요.
@@ -407,6 +408,36 @@ AIDE가 유지하는 링크(Mac은 `~/Library/Application Support/AIDE/bin/aide-
 터미널 서버의 `hooks` 명령을 실행하니, 먼저 AIDE를 한 번 열어 두세요(또는 `AIDE_MUX_BIN`을 설정하세요). 썼거나, 바꿀
 내용이 없거나, 보여 주기만 했으면 0, 아무것도 쓰지 않았으면(거절, 터미널 없음, 차이를 본 뒤 파일이 바뀜, 쓰기 실패) 1,
 플래그가 틀리면 2로 끝나요.
+
+#### 앱이 없는 컴퓨터의 에이전트 스킬
+
+`agent skills`는 AIDE 앱이 돌지 않는 컴퓨터(서버, SSH 호스트)의 코딩 에이전트에게 [AIDE 플러그인의 스킬](/ko/docs/guides/terminal/)을
+줘요. 데스크톱에서 앱의 **설정 › 터미널 › 플러그인 스킬**이 하는 일과 같아요. [설정 파일](#설정-파일)에 서버(`url=`)와
+**설정 › Claude 앱**의 토큰(`token=`, [MCP와 Claude 앱](/ko/docs/developers/mcp/) 참고)이 있어야 해요. 다른 토큰은 거부돼요.
+
+- `sync`는 서버에 어떤 플러그인이 켜져 있는지 묻고, 스킬이 있는 플러그인의 스킬을 Claude Code, Codex, Grok에게 줘요.
+  지금은 `aide-jira`, `aide-linear`, `aide-github`예요. 스킬의 내용은 aidectl에 들어 있고, 서버는 어떤 플러그인이
+  켜져 있는지만 알려 줘요. 각 스킬에는 그 서버에서 동작한다고 적혀요. 처음 `sync`하면 이 컴퓨터의 플러그인 스킬이 켜지고,
+  이 컴퓨터에 있는 모든 에이전트의 폴더에 써요. 서버에서 플러그인을 끄면 다음 `sync` 때 그 스킬이 빠져요.
+- `sync --print`는 아무것도 쓰지 않고 어떤 스킬을 줄지만 알려 줘요.
+- `remove`는 `sync`가 준 것을 빼요. `--print`는 무엇을 뺄지만 알려 줘요.
+- `list`는 AIDE가(aidectl이든 AIDE 앱이든) 에이전트의 폴더에 넣은 스킬을 스킬, 플러그인, 에이전트, 상태, 폴더로 한 줄씩
+  보여 줘요. `show <name>`은 에이전트가 읽는 그대로 스킬을 출력해요.
+
+`sync`가 준 스킬은 7일 동안 유지되니, cron으로 실행해 서버를 계속 따라가게 하세요.
+
+```sh
+17 * * * * aidectl agent skills sync >/dev/null
+```
+
+에이전트의 폴더는 AIDE의 터미널 서버인 aide-mux가 써요. AIDE가 있는 컴퓨터라면 앱과 함께 들어 있어요. 그 밖에서는 AIDE
+릴리스의 `aide-mux`를 `PATH`에 두거나 `AIDE_MUX_BIN`을 설정하세요. 없으면 `sync`가 그렇다고 알리고 아무것도 바꾸지 않아요.
+커뮤니티 플러그인의 스킬은 이 방법으로 오지 않아요. AIDE 앱에서 동의해야 해요. 서버를 읽지 못한 `sync`도 아무것도 바꾸지
+않아요.
+
+한 컴퓨터에서는 `sync`나 `remove`가 한 번에 하나만 돌아요. 다른 하나는 10초까지 기다린 뒤, 다른 실행이 진행 중이라고 알리고
+아무것도 바꾸지 않아요. 그 실행이 끝나면 다시 해 보세요. 스킬이 이름을 붙일 수 없는 서버는 아무것도 바꾸기 전에 거부해요.
+호스트가 100자를 넘거나, URL이 1024자를 넘거나, `` ` ``, `$`, `!`, `{`가 들어 있는 경우예요.
 
 ### browser
 

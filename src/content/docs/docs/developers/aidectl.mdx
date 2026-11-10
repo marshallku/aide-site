@@ -383,6 +383,7 @@ aidectl terminal history --lines 500 > scrollback.txt
 ```sh
 aidectl agent list [--json]
 aidectl agent install-hooks [--claude] [--codex] [--yes] [--print] [--remove] [--pre-compact]
+aidectl agent skills list | show <name> | sync [--print] | remove [--print]
 ```
 
 The [coding agents](/docs/guides/terminal/#coding-agents-) in AIDE's terminal.
@@ -414,6 +415,42 @@ It runs the terminal server's own `hooks` command through the link AIDE keeps,
 on Linux, so open AIDE once first (or set `AIDE_MUX_BIN`). It exits 0 when it wrote, there was
 nothing to change, or it only showed; 1 when nothing was written (you said no, no terminal, a file
 changed since the diff, a write that failed); 2 for wrong flags.
+
+#### Agent skills on a computer without the app
+
+`agent skills` gives the coding agents on a computer the AIDE app doesn't run on (a server, an SSH
+host) the [skills of AIDE's plugins](/docs/guides/terminal/), as the app's **Settings › Terminal ›
+Plugin skills** does on your Mac or Linux desktop. It needs a server in the [config file](#the-config-file)
+(`url=`) with a token from **Settings › Claude app** (`token=`; see
+[MCP and the Claude app](/docs/developers/mcp/)). Any other token is refused.
+
+- `sync` asks the server which plugins are on and gives Claude Code, Codex and Grok the skills of
+  those that have one: today `aide-jira`, `aide-linear` and `aide-github`. The skills' text comes
+  with aidectl itself; the server only says which plugins are on. Each skill says it works on that
+  server. The first `sync` turns Plugin skills on for this computer, with every agent's folder that
+  is here. A plugin turned off on the server takes its skill out at the next `sync`.
+- `sync --print` says which skills it would give, writing nothing.
+- `remove` takes out what `sync` gave. `--print` says what it would take out.
+- `list` shows the skills AIDE put in the agents' folders (from aidectl or an AIDE app), one row
+  each: the skill, its plugin, the agent, its state and the folder. `show <name>` prints a skill as
+  the agents read it.
+
+What `sync` gives lasts 7 days, so run it from cron to keep it following the server:
+
+```sh
+17 * * * * aidectl agent skills sync >/dev/null
+```
+
+The agents' folders are written by aide-mux, AIDE's terminal server: on a computer with AIDE it
+comes with the app; elsewhere, put the `aide-mux` of an AIDE release on your `PATH` (or set
+`AIDE_MUX_BIN`). Without it, `sync` says so and changes nothing. A community plugin's skills never
+come this way: they need your agreement in an AIDE app. A sync that can't read the server changes
+nothing.
+
+Only one `sync` or `remove` runs at a time on a computer: another waits up to 10 seconds, then
+says another one is running and changes nothing, so try it again when that one is done. A server
+a skill can't name is refused before anything changes: a host over 100 characters, a URL over
+1024, or one with `` ` ``, `$`, `!` or `{` in it.
 
 ### browser
 
