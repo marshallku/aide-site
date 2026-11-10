@@ -43,6 +43,9 @@ AIDE reads the fields of the Obsidian Tasks plugin (emoji) and of Dataview (`[ke
 | by | — | `[by:: aide]`: who added it (`aide` for the assistant, radar and the Claude app through AIDE) |
 | project <Badge text="Next release" /> | — | `[project:: AIDE app]`: what it's part of. Up to 60 letters, digits, spaces, `-`, `_`, `.` and `/`; no brackets, `:`, `#` or `@` |
 | source <Badge text="Next release" /> | — | `[source:: https://…]`: where it came from, such as a Slack message, a mail thread or an issue. Only `http://` and `https://` links |
+| agent <Badge text="Next release" /> | — | `[agent:: claude]`: which coding agent works on an [agent card](#agent-cards). `claude`, `codex` and `grok` read as themselves, any other name (up to 20 of `a`–`z`, `0`–`9` and `-`) as `agent` |
+| card <Badge text="Next release" /> | — | `[card:: k7f2q]`: an agent card's id, 5 to 12 of `a`–`z` and `0`–`9` |
+| updated <Badge text="Next release" /> | — | `[updated:: 2026-11-10T14:03Z]`: when the card was last written, in UTC to the minute |
 
 The editor highlights these fields as you type. Off the line you're editing, a todo's time block is tinted, its estimate shows as a timer chip and `[by:: aide]` as an **AI** chip, so what the assistant added stands out; put the cursor on the line to see them as written. Completing a todo with a recurrence rule creates its next occurrence: see [Recurring todos](#recurring-todos).
 
@@ -111,6 +114,30 @@ Undoing the completion never deletes the next occurrence: it stays, edited or no
 same todo again adds nothing when the line below is already that exact occurrence. Typing `[x]`
 yourself in the text doesn't add one; tick the checkbox instead.
 
+An [agent card](#agent-cards) never comes back as a second card: its next occurrence is a plain todo,
+without the card, agent and updated fields.
+
+### Agent cards
+
+<Badge text="Next release" /> An agent card is a todo that a coding agent keeps its work on: a todo with a `[card:: …]` field in a
+note under the `board` folder, such as `board/aide.md`. Its steps are the todos right under it, and
+the first line of its memo says what the agent is doing now:
+
+```markdown
+- [/] Agent board plan [project:: aide] [agent:: claude] [card:: k7f2q] ➕ 2026-11-10
+    > Codex review, round 2
+    - [x] Survey Todos, editor, agents
+    - [/] Codex plan review
+    - [ ] Send to the owner
+```
+
+- Only a todo at the top of its list counts. A subtask with a card field isn't a card, and neither is
+  a todo with one in a note outside `board/` (`boards/` and `board.md` are outside too).
+- When two cards share an id, the one in the note whose path comes first, then the one higher in
+  that note, is the card; the others are duplicates and are left alone.
+- A card always gets its completion date when it's done, whatever **Completion date** says.
+- The title leaves the card, agent and updated fields out, like the other fields.
+
 ### Memos
 
 A todo's memo is a quote indented under it, with no blank line between:
@@ -126,7 +153,7 @@ The memo shows under the todo's title on the Todos screen, and it moves with the
 
 ### Completion dates
 
-When you check a todo off, AIDE appends today's date, ` ✅ 2026-10-22` (or `[completion:: 2026-10-22]` if you write Dataview fields). Unchecking it removes the date again. **Completion date** in **Settings › Todos** decides when this happens; Review counts completed todos by that date.
+When you check a todo off, AIDE appends today's date, ` ✅ 2026-10-22` (or `[completion:: 2026-10-22]` if you write Dataview fields). Unchecking it removes the date again. **Completion date** in **Settings › Todos** decides when this happens; Review counts completed todos by that date. An [agent card](#agent-cards) always gets the date.
 
 ## The Todos screen
 
