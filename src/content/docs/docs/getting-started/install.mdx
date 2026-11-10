@@ -132,12 +132,32 @@ release when it starts and then every hour once the last check is a day old. You
 
 - **Check automatically** is on by default. Turned off, AIDE checks only when you choose
   **Check now**.
-- A version found by an automatic check is announced once with a notification, and an update button
-  appears on the desktop's sidebar rail while the new version is available or installing.
-- **Skip this version** stops the announcements for that version; **Check now** still finds it.
+- **Download automatically** <Badge text="Next release" />, below it, is on by default. A newer
+  version found by an automatic check is downloaded and checked in the background. Then the update
+  button on the desktop's sidebar rail says **AIDE X.Y.Z is ready**, and one notification says it's
+  installed the next time AIDE starts and that your terminal sessions keep running.
+- With **Download automatically** off, a version found by an automatic check is announced once with
+  a notification, and the update button appears on the rail while the new version is available or
+  installing.
+- **Skip this version** stops the announcements for that version and removes its download; **Check
+  now** still finds it.
 - **Release notes** opens the release on GitHub.
 
-When you choose **Update and restart**:
+### Installing a downloaded update <Badge text="Next release" />
+
+A downloaded update is installed without downloading it again, in one of two ways:
+
+- **The next time you start AIDE.** Before any window opens, a small **Updating AIDE…** window shows
+  while AIDE checks the download again and installs it, and then the new version starts. That launch
+  takes a few seconds longer.
+- **Restart now**, on the update button or in the Updates settings. It installs the update at once,
+  from step 2 below.
+
+AIDE never restarts by itself while you're using it. If the download changed on disk since, it isn't
+installed: AIDE removes it, says so, and downloads it again at the next automatic check. A version
+that didn't start (step 4) isn't downloaded or installed by itself again; a newer release is.
+
+When you choose **Update and restart** (with **Download automatically** off):
 
 <Steps>
 
