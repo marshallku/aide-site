@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE는 같은 단축키를 써요. Linux에서 <kbd>Ctrl</kbd>을 쓰는 자리에 Mac에서는 <kbd>⌘</kbd>를 써요.
 Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 단축키와 함께 명령 팔레트에 있어요.
@@ -126,7 +126,10 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 | 포커스된 페인 닫기(마지막 페인이면 탭) | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
 | 포커스된 페인을 오른쪽으로 분할 | <kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>D</kbd> |
 | 포커스된 페인을 아래로 분할 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> |
-| 다음 / 이전 페인 | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>N</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd> |
+| 다음 / 이전 페인 | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>N</kbd> / 없음 <Badge text="다음 릴리스" /> |
+| 왼쪽 / 아래 / 위 / 오른쪽 페인으로 이동 <Badge text="다음 릴리스" /> | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd>, 또는 <kbd>Ctrl</kbd><kbd>Shift</kbd>와 화살표 |
+| 구분선을 왼쪽 / 아래 / 위 / 오른쪽으로 <Badge text="다음 릴리스" /> | <kbd>⌃</kbd><kbd>⌘</kbd>와 화살표 | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd>와 화살표 |
+| 페인 확대 <Badge text="다음 릴리스" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd> |
 | 이전 / 다음 탭 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
 | 1–9번 탭으로 이동 | <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
 | 터미널에서 찾기 | <kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> |
@@ -142,6 +145,14 @@ Mac에서 터미널에 키보드 포커스가 있으면 <kbd>⌘</kbd><kbd>T</kb
 포커스된 페인을 닫아요. 페인이 하나뿐인 탭은 전처럼 닫혀요. 탭의 ×와 **닫기**는 지금처럼 탭 전체를 닫아요. 페인
 키는 터미널 페인에 키보드 포커스가 있을 때만 동작해요. [탭을 페인으로 나누기](/ko/docs/guides/terminal/#탭을-페인으로-나누기)를
 참고하세요.
+
+<Badge text="다음 릴리스" /> Mac에서 <kbd>⌥</kbd><kbd>⌘</kbd>와 화살표, <kbd>⌃</kbd><kbd>⌘</kbd>와 화살표,
+<kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd>은 이제 터미널에서 위의 페인 키라서, 더 이상 줄 안에서 이동하거나 스크롤하지 않아요.
+<kbd>⌘</kbd>와 화살표만 누르면 지금처럼 그렇게 해요.
+
+<Badge text="다음 릴리스" /> Linux에서 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd>는 이제 왼쪽 페인으로 가요.
+**이전 페인**은 단축키를 직접 주기 전까지 Linux 단축키가 없어요. **직전 페인**과 **페인 번호 보기**는 두 플랫폼
+모두 단축키가 없어요.
 
 <Aside type="note" title="Linux 터미널에서 양보하는 단축키">
 이 앱 단축키는 셸도 쓰는 키라서, 키보드 포커스가 터미널에 있는 동안에는 꺼지고 셸로 전달돼요:
@@ -208,7 +219,8 @@ Page Down, Insert, Delete, Backspace, Tab, Return, Esc, Space도 쓸 수 있어�
   <kbd>Ctrl</kbd>과 글자만 누르는 단축키, <kbd>Super</kbd> 단축키, 기능 키는 프로그램으로 가요.
 
 터미널 자체의 동작(**새 터미널 탭**, **오른쪽으로 분할**, **아래로 분할**, **다음 페인**, **이전 페인**,
-**페인 닫기**)은 어떤 단축키를 주든 터미널에 키보드 포커스가 있을 때만 실행돼요.
+**페인 닫기**, 그리고 페인 이동, 구분선, 확대, 페인 번호 동작)은 어떤 단축키를 주든 터미널에 키보드 포커스가 있을
+때만 실행돼요.
 
 ### 명령
 
@@ -297,6 +309,11 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `terminal/new-tab` | 새 터미널 탭 |
 | `terminal/split-right`, `terminal/split-down` | 오른쪽으로 분할, 아래로 분할 |
 | `terminal/next-pane`, `terminal/previous-pane` | 다음 페인, 이전 페인 |
+| `terminal/focus-left`, `terminal/focus-down`, `terminal/focus-up`, `terminal/focus-right` | 왼쪽, 아래, 위, 오른쪽 페인으로 이동 <Badge text="다음 릴리스" /> |
+| `terminal/last-pane` | 직전 페인 <Badge text="다음 릴리스" /> |
+| `terminal/pane-numbers` | 페인 번호 보기 <Badge text="다음 릴리스" /> |
+| `terminal/resize-left`, `terminal/resize-down`, `terminal/resize-up`, `terminal/resize-right` | 구분선을 왼쪽, 아래, 위, 오른쪽으로 <Badge text="다음 릴리스" /> |
+| `terminal/zoom-pane` | 페인 확대 <Badge text="다음 릴리스" /> |
 | `terminal/close-pane` | 페인 닫기 |
 | `terminal/open-remote-aide` | 원격 AIDE 열기…(직접 지정하기 전까지 단축키 없음) |
 

@@ -34,7 +34,7 @@ split and move between them from the keyboard or the **Go** menu:
 | **Split Right** | <kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>D</kbd> |
 | **Split Down** | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> |
 | **Next Pane** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>N</kbd> |
-| **Previous Pane** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd> |
+| **Previous Pane** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | none <Badge text="Next release" /> |
 | Close the focused pane | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
 
 - The keys work only while a terminal pane has the keyboard. **Go** › **Split Right**,
@@ -49,6 +49,36 @@ split and move between them from the keyboard or the **Go** menu:
 - <kbd>⌘</kbd><kbd>W</kbd> (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> on Linux) closes the focused
   pane and ends its shell; on the tab's last pane it closes the tab. The tab's × and **Close** still
   close the whole tab, with every pane in it.
+
+#### Move between panes, resize and zoom <Badge text="Next release" />
+
+From the keyboard, the **Go** menu or the command palette:
+
+| Action | Mac | Linux |
+|---|---|---|
+| **Focus the pane to the left / below / above / to the right** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd>, or <kbd>Ctrl</kbd><kbd>Shift</kbd> and the arrows |
+| **Move the divider left / down / up / right** | <kbd>⌃</kbd><kbd>⌘</kbd> and the arrows | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd> and the arrows |
+| **Zoom pane** | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd> |
+| **Last pane** | none | none |
+| **Show pane numbers** | none | none |
+
+- **Focus** goes to the pane next to the focused one on that side, the one that lines up with it
+  most. When two line up alike, the one you were in last wins. At the edge of the tab nothing
+  happens.
+- **Last pane** goes back to the pane you were in before.
+- **Move the divider** takes the divider nearest the focused pane that runs across that direction
+  (a vertical one for left and right, a horizontal one for up and down) and moves it that way, two
+  columns (or two rows) a press. A pane never gets smaller than 20 columns and 5 rows.
+- **Zoom pane** shows the focused pane alone, filling the tab, and its program gets the bigger size;
+  the tab says **Zoomed**. Press it again to see every pane. Splitting, closing a pane or moving to
+  another pane ends the zoom. A zoom isn't kept when AIDE or your computer restarts.
+- **Show pane numbers** puts a number on each pane for two seconds; type one to move to that pane.
+  <kbd>Esc</kbd> hides the numbers, and any other key hides them and goes to the pane.
+- On the Mac, <kbd>⌥</kbd><kbd>⌘</kbd> and <kbd>⌃</kbd><kbd>⌘</kbd> with an arrow and <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd>
+  are these pane keys now, so in a terminal they no longer move along the line or scroll. <kbd>⌘</kbd>
+  with an arrow alone still does.
+- These need the terminal server from the same release. An older one says **The terminal server is
+  too old for this. Restart it to update it.**
 
 ### Beside your notes
 
