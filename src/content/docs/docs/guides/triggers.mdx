@@ -5,9 +5,7 @@ sidebar:
     order: 17
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
-
-<Badge text="Next release" />
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 Triggers run something for you when something happens: when a note appears in a folder, a
 terminal rings its bell, a focus ends, a calendar event is about to start, or on a schedule. Each
@@ -78,7 +76,7 @@ doesn't parse keeps the last good set.
 | `action.<id>.completed`, `action.<id>.failed` | A command palette action ran. |
 | `note.created`, `note.changed` | A note appeared or changed (`path`). |
 | `terminal.bell`, `terminal.exited`, `terminal.title` | A terminal pane rang, its shell ended, or its title changed. |
-| `agent.state` <Badge text="Next release" /> | A [coding agent](/docs/guides/terminal/#coding-agents-) in one of the window's panes changed state: `tab`, `pane`, `kind` (`claude`, `codex`, …), `from` and `to`, and `wait` while it needs you. |
+| `agent.state` | A [coding agent](/docs/guides/terminal/#coding-agents) in one of the window's panes changed state: `tab`, `pane`, `kind` (`claude`, `codex`, …), `from` and `to`, and `wait` while it needs you. |
 | `focus.ended` | A focus ended (`reason`: `elapsed`, `stopped`, `done`, `replaced`, `skipped`). |
 | `calendar.upcoming`, `calendar.started` | A calendar event starts in 10 minutes, or now. |
 | `custom.<name>` | Sent by `aidectl event emit`. |
@@ -87,7 +85,7 @@ A command gets the event in its environment: `AIDE_TRIGGER`, `AIDE_EVENT_KIND`, 
 `AIDE_CONTEXT_JSON` and `AIDE_VAULT`. Nothing from an event is ever put into the command line
 itself.
 
-### `agent.state` <Badge text="Next release" />
+### `agent.state`
 
 Each time a coding agent in a terminal pane changes what it shows, the window's vault gets one
 `agent.state`, whichever of its windows show the pane:

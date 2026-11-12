@@ -5,12 +5,12 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE는 같은 단축키를 써요. Linux에서 <kbd>Ctrl</kbd>을 쓰는 자리에 Mac에서는 <kbd>⌘</kbd>를 써요.
 Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 단축키와 함께 명령 팔레트에 있어요.
 
-<Badge text="다음 릴리스" /> **설정 › 키보드**에서 어떤 단축키든 바꾸거나 끄고, 나만의 단축키를 더할 수 있어요.
+**설정 › 키보드**에서 어떤 단축키든 바꾸거나 끄고, 나만의 단축키를 더할 수 있어요.
 [단축키 바꾸기](#단축키-바꾸기)를 참고하세요.
 
 ## 창과 이동
@@ -86,7 +86,7 @@ Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 �
 Linux에서 데스크톱 어디서나 쓰는 음성 단축키를 원하면, 데스크톱 키보드 설정에서 `aide-desktop --voice` 명령에
 단축키를 지정하세요.
 
-## 음성 프롬프트 <Badge text="다음 릴리스" />
+## 음성 프롬프트
 
 | 동작 | Mac | Linux |
 |---|---|---|
@@ -123,10 +123,10 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 |---|---|---|
 | 새 탭 | <kbd>⌘</kbd><kbd>T</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>T</kbd> |
 | 탭 닫기 | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
-| 포커스된 페인 닫기(마지막 페인이면 탭) <Badge text="다음 릴리스" /> | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
-| 포커스된 페인을 오른쪽으로 분할 <Badge text="다음 릴리스" /> | <kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>D</kbd> |
-| 포커스된 페인을 아래로 분할 <Badge text="다음 릴리스" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> |
-| 다음 / 이전 페인 <Badge text="다음 릴리스" /> | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>N</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd> |
+| 포커스된 페인 닫기(마지막 페인이면 탭) | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
+| 포커스된 페인을 오른쪽으로 분할 | <kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>D</kbd> |
+| 포커스된 페인을 아래로 분할 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> |
+| 다음 / 이전 페인 | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>N</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd> |
 | 이전 / 다음 탭 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
 | 1–9번 탭으로 이동 | <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
 | 터미널에서 찾기 | <kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> |
@@ -138,9 +138,9 @@ Mac에서 터미널에 키보드 포커스가 있으면 <kbd>⌘</kbd><kbd>T</kb
 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd>, <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd>,
 <kbd>⌘</kbd><kbd>F</kbd>는 터미널 탭에 동작해요. 그 밖의 곳에서는 첫 번째 표에 적힌 대로 동작해요.
 
-<Badge text="다음 릴리스" /> <kbd>⌘</kbd><kbd>W</kbd>와 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd>는 탭 전체 대신
+<kbd>⌘</kbd><kbd>W</kbd>와 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd>는 탭 전체 대신
 포커스된 페인을 닫아요. 페인이 하나뿐인 탭은 전처럼 닫혀요. 탭의 ×와 **닫기**는 지금처럼 탭 전체를 닫아요. 페인
-키는 터미널 페인에 키보드 포커스가 있을 때만 동작해요. [탭을 페인으로 나누기](/ko/docs/guides/terminal/#탭을-페인으로-나누기-)를
+키는 터미널 페인에 키보드 포커스가 있을 때만 동작해요. [탭을 페인으로 나누기](/ko/docs/guides/terminal/#탭을-페인으로-나누기)를
 참고하세요.
 
 <Aside type="note" title="Linux 터미널에서 양보하는 단축키">
@@ -154,7 +154,7 @@ Mac에서 터미널에 키보드 포커스가 있으면 <kbd>⌘</kbd><kbd>T</kb
 
 ## 단축키 바꾸기
 
-<Badge text="다음 릴리스" /> Mac과 Linux에서 명령 팔레트가 실행하는 것은 모두 이름 있는 동작(action)이에요.
+Mac과 Linux에서 명령 팔레트가 실행하는 것은 모두 이름 있는 동작(action)이에요.
 **설정 › 키보드**에는 동작마다 지금 그 동작을 실행하는 단축키가 나와요. 여기서 동작에 새 단축키를 주거나,
 단축키를 끄거나, 셸 명령에 단축키를 붙일 수 있어요.
 
@@ -254,7 +254,7 @@ actions = ["new-scratch"]
 두 표에 쓸 수 없는 값이 있으면(<kbd>Ctrl</kbd>이나 <kbd>Super</kbd>가 없는 단축키, id가 없는 `action:`,
 비어 있는 명령, 두 번 나오는 단축키, 목록이 아닌 `actions`) AIDE는 전에 쓰던 단축키를 그대로 쓰고, **설정 ›
 키보드**에 **키보드 설정에 문제가 있어요: …**와 함께 무엇이 잘못됐는지 보여 줘요. 창에서 지금 쓸 수 없는 동작을
-가리키는 단축키는 아무 일도 하지 않아요. <Badge text="다음 릴리스" /> 더 이상 없는 동작을 가리키는 단축키는 누르면
+가리키는 단축키는 아무 일도 하지 않아요. 더 이상 없는 동작을 가리키는 단축키는 누르면
 **…라는 동작이 없어요**라고 알려 주고, **설정 › 키보드**의 문제 목록에도 나와요.
 
 Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보드**에서 바꾸세요.
@@ -290,15 +290,15 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `import-recording` | 녹음 가져오기… |
 | `new-window` | 새 창(Mac) |
 | `voice` | 어시스턴트에게 말하기(Linux) |
-| `voice-prompt` <Badge text="다음 릴리스" /> | 프롬프트 말하기(Linux에서는 진행 중인 것을 멈춰요) |
-| `voice-prompt/start`, `voice-prompt/stop` <Badge text="다음 릴리스" /> | 음성 프롬프트 시작, 음성 프롬프트 멈추기(Linux) |
-| `voice-prompt/last` <Badge text="다음 릴리스" /> | 마지막 음성 프롬프트 보기 |
+| `voice-prompt` | 프롬프트 말하기(Linux에서는 진행 중인 것을 멈춰요) |
+| `voice-prompt/start`, `voice-prompt/stop` | 음성 프롬프트 시작, 음성 프롬프트 멈추기(Linux) |
+| `voice-prompt/last` | 마지막 음성 프롬프트 보기 |
 | `feature-tour` | AIDE로 할 수 있는 것(Linux) |
 | `terminal/new-tab` | 새 터미널 탭 |
 | `terminal/split-right`, `terminal/split-down` | 오른쪽으로 분할, 아래로 분할 |
 | `terminal/next-pane`, `terminal/previous-pane` | 다음 페인, 이전 페인 |
 | `terminal/close-pane` | 페인 닫기 |
-| `terminal/open-remote-aide` <Badge text="다음 릴리스" /> | 원격 AIDE 열기…(직접 지정하기 전까지 단축키 없음) |
+| `terminal/open-remote-aide` | 원격 AIDE 열기…(직접 지정하기 전까지 단축키 없음) |
 
 창에 보이는 것에 따라 생기고 없어지는 id도 있어요.
 

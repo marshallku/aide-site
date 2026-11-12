@@ -5,7 +5,7 @@ sidebar:
     order: 3
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 Mac이나 Linux의 AIDE 앱은 보관소를 열어 두는 동안 그 보관소의 노트를 Unix 소켓으로 제공해요. 같은 컴퓨터에서 실행하는 프로그램이라면 서버도 토큰도 없이 평범한 HTTP로 노트를 읽고 쓸 수 있고, 서버가 주는 것과 같은 응답을 받아요. [`aidectl`](/ko/docs/developers/aidectl/)도 이 위에서 만들어졌어요. 이 페이지는 직접 호출하고 싶을 때를 위한 거예요.
 
@@ -83,7 +83,7 @@ Note는 `{id, path, kind, title, body, version, todos, updatedAt}`이고, 다른
 
 ## 동작
 
-<Badge text="다음 릴리스" /> 앱의 소켓은 이름 있는 동작, 즉 명령 팔레트가 실행하는 것을 id로 실행하기도 해요. id 목록은 [키보드 단축키](/ko/docs/guides/shortcuts/#동작-id)에 있어요. 데스크톱 호스트의 소켓에는 이 경로가 없어요(`404`).
+앱의 소켓은 이름 있는 동작, 즉 명령 팔레트가 실행하는 것을 id로 실행하기도 해요. id 목록은 [키보드 단축키](/ko/docs/guides/shortcuts/#동작-id)에 있어요. 데스크톱 호스트의 소켓에는 이 경로가 없어요(`404`).
 
 | 경로 | 하는 일 |
 | --- | --- |
@@ -112,7 +112,7 @@ curl -s --unix-socket "$s" -X POST http://aide/actions/today
 
 ## 브라우저
 
-<Badge text="다음 릴리스" /> Mac과 Linux에서는 **설정 › 코어 플러그인**에서 켜 둔 [브라우저](/ko/docs/guides/browser/)도 앱의 소켓으로 다룰 수 있어요. 앱마다 브라우저는 하나라서, 앱의 어느 볼트 소켓으로든 같은 탭에 닿아요. 데스크톱 호스트의 소켓과 Mac App Store 빌드에는 이 경로가 없어요(`404`). [`aidectl browser`](/ko/docs/developers/aidectl/#browser)와 [`aidectl secret`](/ko/docs/developers/aidectl/#secret)이 이 경로를 써요.
+Mac과 Linux에서는 **설정 › 코어 플러그인**에서 켜 둔 [브라우저](/ko/docs/guides/browser/)도 앱의 소켓으로 다룰 수 있어요. 앱마다 브라우저는 하나라서, 앱의 어느 볼트 소켓으로든 같은 탭에 닿아요. 데스크톱 호스트의 소켓과 Mac App Store 빌드에는 이 경로가 없어요(`404`). [`aidectl browser`](/ko/docs/developers/aidectl/#browser)와 [`aidectl secret`](/ko/docs/developers/aidectl/#secret)이 이 경로를 써요.
 
 | 경로 | 하는 일 |
 | --- | --- |
@@ -149,7 +149,7 @@ curl -s --unix-socket "$s" -X POST http://aide/browser/navigate -d '{"url": "htt
 
 ## 트리거
 
-<Badge text="다음 릴리스" /> Mac과 Linux에서 코어 플러그인이 켜져 있으면 보관소 소켓으로 [트리거](/ko/docs/guides/triggers/)도 다룰 수 있어요. 꺼져 있으면 모든 경로가 `409` `plugin_off`로 답해요. 데스크톱 호스트의 소켓과 Mac App Store 빌드에는 없어요. [`aidectl trigger`](/ko/docs/developers/aidectl/#trigger)와 [`aidectl event`](/ko/docs/developers/aidectl/#event)가 이 경로를 써요.
+Mac과 Linux에서 코어 플러그인이 켜져 있으면 보관소 소켓으로 [트리거](/ko/docs/guides/triggers/)도 다룰 수 있어요. 꺼져 있으면 모든 경로가 `409` `plugin_off`로 답해요. 데스크톱 호스트의 소켓과 Mac App Store 빌드에는 없어요. [`aidectl trigger`](/ko/docs/developers/aidectl/#trigger)와 [`aidectl event`](/ko/docs/developers/aidectl/#event)가 이 경로를 써요.
 
 | 경로 | 하는 일 |
 | --- | --- |
@@ -160,7 +160,7 @@ curl -s --unix-socket "$s" -X POST http://aide/browser/navigate -d '{"url": "htt
 
 ## 상태 항목
 
-<Badge text="다음 릴리스" /> Mac과 Linux에서 보관소 소켓은 그 보관소 사이드바 아래의 [상태 항목](/ko/docs/guides/appearance/#상태-항목mac과-linux-)을 설정해요. 소켓은 자기 항목(`ext.<id>`)만 설정하고 지울 수 있고, `GET`은 앱과 플러그인 항목까지 모두 보여 줘요. 저장하지 않으니 ttl이 지나거나 앱을 끄면 사라져요. [`aidectl status-item`](/ko/docs/developers/aidectl/#status-item)이 이 경로를 써요.
+Mac과 Linux에서 보관소 소켓은 그 보관소 사이드바 아래의 [상태 항목](/ko/docs/guides/appearance/#상태-항목mac과-linux)을 설정해요. 소켓은 자기 항목(`ext.<id>`)만 설정하고 지울 수 있고, `GET`은 앱과 플러그인 항목까지 모두 보여 줘요. 저장하지 않으니 ttl이 지나거나 앱을 끄면 사라져요. [`aidectl status-item`](/ko/docs/developers/aidectl/#status-item)이 이 경로를 써요.
 
 | 경로 | 하는 일 |
 | --- | --- |
@@ -228,11 +228,11 @@ curl -s --unix-socket "$s" "http://aide/search?q=postgres&limit=5" | jq -r '.not
 
 ## 터미널 소켓
 
-<Badge text="다음 릴리스" /> AIDE의 터미널은 소켓 하나로도 제공돼요. 프로그램이 이 소켓으로 페인을 읽고 입력하고, 탭을 열고 나누고 닫을 수 있어요. HTTP가 아니라 copad의 터미널 소켓과 같은 프로토콜을 쓰기 때문에, copad의 `coctl`과 comux의 알림 클릭이 AIDE에서도 동작해요. [`aidectl terminal`](/ko/docs/developers/aidectl/#terminal)은 이 소켓 위에 만들어졌어요. Mac App Store 빌드와 iPhone에는 없어요.
+AIDE의 터미널은 소켓 하나로도 제공돼요. 프로그램이 이 소켓으로 페인을 읽고 입력하고, 탭을 열고 나누고 닫을 수 있어요. HTTP가 아니라 copad의 터미널 소켓과 같은 프로토콜을 쓰기 때문에, copad의 `coctl`과 comux의 알림 클릭이 AIDE에서도 동작해요. [`aidectl terminal`](/ko/docs/developers/aidectl/#terminal)은 이 소켓 위에 만들어졌어요. Mac App Store 빌드와 iPhone에는 없어요.
 
 ### 위치
 
-셸을 실행하고 앱보다 오래 사는 터미널 서버([AIDE보다 오래 사는 셸](/ko/docs/guides/terminal/#aide보다-오래-사는-셸-))가 자기 폴더의 `terminal.sock`으로 제공해요.
+셸을 실행하고 앱보다 오래 사는 터미널 서버([AIDE보다 오래 사는 셸](/ko/docs/guides/terminal/#aide보다-오래-사는-셸))가 자기 폴더의 `terminal.sock`으로 제공해요.
 
 - Mac: `~/Library/Application Support/AIDE/mux/terminal.sock`이에요.
 - Linux: `$XDG_RUNTIME_DIR/aide-mux/terminal.sock`이에요. `XDG_RUNTIME_DIR`이 없으면 `/tmp/aide-mux-<uid>/terminal.sock`이에요.
@@ -270,14 +270,14 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `tab.close` | `id` | 탭 id를 주면 그 탭을 안의 모든 페인과 함께 닫고, 없으면 포커스된 페인을 닫아요 |
 | `tab.list`, `tab.info` | | `{count, current, tabs: [{id, index, title, selected, panes: [{id, title, focused, exited, cols, rows}]}]}`: 앞에서 뒤 순서의 창들의 탭이에요. 창이 없으면 모든 볼트의 탭이고 `current`는 null이에요 |
 | `tab.rename` | `id`, `title` | 탭에 이름을 붙여요 |
-| `tab.switch` <Badge text="다음 릴리스" /> | `index` | `tab.list`의 그 순서(0부터)에 있는 탭을 선택하고 `{tab}`을 돌려줘요. 그 자리에 탭이 없으면 `not_found`, 정수가 아니면 `invalid_params`예요 |
+| `tab.switch` | `index` | `tab.list`의 그 순서(0부터)에 있는 탭을 선택하고 `{tab}`을 돌려줘요. 그 자리에 탭이 없으면 `not_found`, 정수가 아니면 `invalid_params`예요 |
 | `split.horizontal` | `id` | 페인을 오른쪽으로 나누고 새 페인의 `{panel_id}`로 응답해요 |
 | `split.vertical` | `id` | 페인을 아래로 나누고 `{panel_id}`로 응답해요 |
 | `pane.focus_next`, `pane.focus_prev` | | 다음 또는 이전 페인으로 포커스를 옮겨요 |
-| `agent.list` <Badge text="다음 릴리스" /> | | 서버 페인의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트-): `{agents: [{pane, tab, session, agent}]}`, `agent`마다 `kind`, `state`, `unseen`, `wait`, `detail`, `context` |
-| `agent.notify` <Badge text="다음 릴리스" /> | `pane`, `kind`, `body` | 그 페인 안에서만: 에이전트가 작업을 마쳤거나(`kind: "done"`) 확인이 필요하다고(`"blocked"`) 알려요. `body`(1 KiB까지)가 알림 내용이 돼요. 훅이 부르는 메서드예요 |
-| `agent.report` <Badge text="다음 릴리스" /> | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | 그 페인 안에서만: 상태 줄에서 얻은 Claude Code의 컨텍스트와 비용이에요. 그 페인의 에이전트가 그 대화의 Claude Code일 때만 받아요 |
-| `agent.fill` <Badge text="다음 릴리스" /> | `pane`, `session_id` | 그 페인 안에서만: 그 Claude Code 대화의 `{used, window}`예요. AIDE가 확실하지 않으면 둘 다 null이에요. 자동 압축을 미루는 장치가 물어요 |
+| `agent.list` | | 서버 페인의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트): `{agents: [{pane, tab, session, agent}]}`, `agent`마다 `kind`, `state`, `unseen`, `wait`, `detail`, `context` |
+| `agent.notify` | `pane`, `kind`, `body` | 그 페인 안에서만: 에이전트가 작업을 마쳤거나(`kind: "done"`) 확인이 필요하다고(`"blocked"`) 알려요. `body`(1 KiB까지)가 알림 내용이 돼요. 훅이 부르는 메서드예요 |
+| `agent.report` | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | 그 페인 안에서만: 상태 줄에서 얻은 Claude Code의 컨텍스트와 비용이에요. 그 페인의 에이전트가 그 대화의 Claude Code일 때만 받아요 |
+| `agent.fill` | `pane`, `session_id` | 그 페인 안에서만: 그 Claude Code 대화의 `{used, window}`예요. AIDE가 확실하지 않으면 둘 다 null이에요. 자동 압축을 미루는 장치가 물어요 |
 
 읽어도 페인의 스크롤 위치는 바뀌지 않아요.
 
@@ -295,8 +295,8 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `too_small` | 페인이 나누기엔 너무 작음 |
 | `busy` | 이미 클라이언트 16개가 연결돼 있음, 또는 보낸 것을 읽지 않는 프로그램의 페인에 `terminal.exec`이나 `terminal.feed` |
 | `no_window` | 그 페인의 볼트를 보여 주는 AIDE 창이 없을 때 `panel.focus`, `tab.switch`, `tab.new` |
-| `not_in_pane` <Badge text="다음 릴리스" /> | 그 페인에서 실행되지 않는 프로그램이 `agent.notify`, `agent.report`, `agent.fill`을 보냄 |
-| `no_agent` <Badge text="다음 릴리스" /> | 그 페인에 에이전트가 없음 |
+| `not_in_pane` | 그 페인에서 실행되지 않는 프로그램이 `agent.notify`, `agent.report`, `agent.fill`을 보냄 |
+| `no_agent` | 그 페인에 에이전트가 없음 |
 | `frame_too_large` | 요청 줄이 64 KiB를 넘음 |
 
 ### 터미널 소켓의 제한

@@ -5,10 +5,6 @@ sidebar:
     order: 15
 ---
 
-import { Badge } from "@astrojs/starlight/components";
-
-<Badge text="Next release" />
-
 When Claude Code, Codex or Grok works on a task with more than one step, it writes its plan into your notes as a card: a short title, its steps, and a line that says what it's doing now. You see the work in your notes without reading the agent's terminal, and you can tick a step yourself at any time.
 
 ## What a card looks like
@@ -32,7 +28,7 @@ You can edit the note as usual. An agent's change is always made on the note as 
 
 ## How agents learn it
 
-The `aide-board` skill tells an agent when to add a card, how to keep its steps and status line current, when to move it to waiting, and how to finish it with a one-line outcome. On the Mac and Linux, AIDE gives it to your coding agents with the other [plugin skills](/docs/guides/terminal/#plugin-skills-) once **Give plugins' skills to your coding agents** is on.
+The `aide-board` skill tells an agent when to add a card, how to keep its steps and status line current, when to move it to waiting, and how to finish it with a one-line outcome. On the Mac and Linux, AIDE gives it to your coding agents with the other [plugin skills](/docs/guides/terminal/#plugin-skills) once **Give plugins' skills to your coding agents** is on.
 
 The agents use `aidectl board`; the [aidectl reference](/docs/developers/aidectl/#board) lists its commands. Run `aidectl board list` to see the open cards yourself, or `aidectl board show <card>` for one card and its steps.
 

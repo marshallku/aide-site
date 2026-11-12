@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 A device plugin is a folder of up to four files that AIDE loads into a sandboxed web view on the iPhone, the Mac
 and the Linux app. It can add a tab, a view in the desktop's right panel, a sheet on notes, palette commands and
@@ -118,7 +118,7 @@ A call outside the approved set fails with `not allowed: …`.
 | `schedule`             | Running its `schedules` at set times while AIDE is open on this computer (Mac, Linux)                                         |
 | `attachments:read`     | Reading the images and documents notes embed                                                                                   |
 | `attachments:write`    | Adding new attachments (create-only). Implies read                                                                             |
-| `status` <Badge text="Next release" /> | Up to 3 items at the bottom of the rail, in this vault's windows (Mac, Linux; see [Status items](#status-items-)) |
+| `status` | Up to 3 items at the bottom of the rail, in this vault's windows (Mac, Linux; see [Status items](#status-items)) |
 
 A prefix matches whole path segments: `notes:read:daily` covers `daily` and `daily/2026-10-22`, not `daily-log`.
 Ask for the narrowest prefix that does the job; the public index's review asks for that too.
@@ -214,7 +214,7 @@ Some details:
 `aide.instance` lets a plugin that writes from several devices give each device its own note, as Recall does with
 its review logs.
 
-## Status items <Badge text="Next release" />
+## Status items
 
 On the Mac and Linux, a plugin with the `status` capability shows small items on the rail, above
 Settings, beside the focus timer's ring and the items `aidectl status-item` sets:

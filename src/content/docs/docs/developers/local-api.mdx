@@ -5,7 +5,7 @@ sidebar:
     order: 3
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 While the AIDE app on the Mac or Linux has a vault open, it serves that vault's notes on a Unix socket. Any program you run on the same computer can read and write notes there with plain HTTP, with no server and no token, and gets the same answers a server would give. [`aidectl`](/docs/developers/aidectl/) is built on it; this page is for when you want to call it yourself.
 
@@ -83,7 +83,7 @@ Errors are `{"error": {"code": "…", "message": "…"}}`. A `version_conflict` 
 
 ## Actions
 
-<Badge text="Next release" /> The app's socket also runs its named actions: what the command palette runs, by id. [Keyboard shortcuts](/docs/guides/shortcuts/#action-ids) lists the ids. A desktop host's socket doesn't have these routes (`404`).
+The app's socket also runs its named actions: what the command palette runs, by id. [Keyboard shortcuts](/docs/guides/shortcuts/#action-ids) lists the ids. A desktop host's socket doesn't have these routes (`404`).
 
 | Route | What it does |
 | --- | --- |
@@ -112,7 +112,7 @@ curl -s --unix-socket "$s" -X POST http://aide/actions/today
 
 ## Browser
 
-<Badge text="Next release" /> On the Mac and Linux, the app's socket also drives its [Browser](/docs/guides/browser/), once it's turned on in **Settings › Core plugins**. There is one browser per app, so every vault socket of the app reaches the same tabs. A desktop host's socket and the Mac App Store build don't have these routes (`404`). [`aidectl browser`](/docs/developers/aidectl/#browser) and [`aidectl secret`](/docs/developers/aidectl/#secret) are built on them.
+On the Mac and Linux, the app's socket also drives its [Browser](/docs/guides/browser/), once it's turned on in **Settings › Core plugins**. There is one browser per app, so every vault socket of the app reaches the same tabs. A desktop host's socket and the Mac App Store build don't have these routes (`404`). [`aidectl browser`](/docs/developers/aidectl/#browser) and [`aidectl secret`](/docs/developers/aidectl/#secret) are built on them.
 
 | Route | What it does |
 | --- | --- |
@@ -149,7 +149,7 @@ curl -s --unix-socket "$s" -X POST http://aide/browser/navigate -d '{"url": "htt
 
 ## Triggers
 
-<Badge text="Next release" /> On the Mac and Linux, a vault's socket also reaches its [Triggers](/docs/guides/triggers/) while the core plugin is on; otherwise every route answers `409` `plugin_off`. A desktop host's socket and the Mac App Store build don't have them. [`aidectl trigger`](/docs/developers/aidectl/#trigger) and [`aidectl event`](/docs/developers/aidectl/#event) are built on them.
+On the Mac and Linux, a vault's socket also reaches its [Triggers](/docs/guides/triggers/) while the core plugin is on; otherwise every route answers `409` `plugin_off`. A desktop host's socket and the Mac App Store build don't have them. [`aidectl trigger`](/docs/developers/aidectl/#trigger) and [`aidectl event`](/docs/developers/aidectl/#event) are built on them.
 
 | Route | What it does |
 | --- | --- |
@@ -160,7 +160,7 @@ curl -s --unix-socket "$s" -X POST http://aide/browser/navigate -d '{"url": "htt
 
 ## Status items
 
-<Badge text="Next release" /> On the Mac and Linux, a vault's socket sets the [status items](/docs/guides/appearance/#status-items-mac-and-linux-) at the bottom of that vault's sidebar. A socket sets and clears only its own items (`ext.<id>`); `GET` lists them all, the app's and plugins' included. Nothing is saved: an item goes when its ttl runs out or the app quits. [`aidectl status-item`](/docs/developers/aidectl/#status-item) uses these routes.
+On the Mac and Linux, a vault's socket sets the [status items](/docs/guides/appearance/#status-items-mac-and-linux) at the bottom of that vault's sidebar. A socket sets and clears only its own items (`ext.<id>`); `GET` lists them all, the app's and plugins' included. Nothing is saved: an item goes when its ttl runs out or the app quits. [`aidectl status-item`](/docs/developers/aidectl/#status-item) uses these routes.
 
 | Route | What it does |
 | --- | --- |
@@ -228,11 +228,11 @@ When no app has the vault open, there is no socket. `aidectl` then opens the fol
 
 ## Terminal socket
 
-<Badge text="Next release" /> AIDE's terminal is served on one more socket, so programs can read and type into its panes and open, split and close its tabs. It speaks the same protocol as copad's terminal socket, not HTTP, so copad's `coctl` and comux's notification click work against AIDE. [`aidectl terminal`](/docs/developers/aidectl/#terminal) is built on it. The Mac App Store build and the iPhone don't have it.
+AIDE's terminal is served on one more socket, so programs can read and type into its panes and open, split and close its tabs. It speaks the same protocol as copad's terminal socket, not HTTP, so copad's `coctl` and comux's notification click work against AIDE. [`aidectl terminal`](/docs/developers/aidectl/#terminal) is built on it. The Mac App Store build and the iPhone don't have it.
 
 ### Where it is
 
-The terminal server, which runs your shells and outlives the app (see [Shells that outlive AIDE](/docs/guides/terminal/#shells-that-outlive-aide-)), serves it as `terminal.sock` in its own folder:
+The terminal server, which runs your shells and outlives the app (see [Shells that outlive AIDE](/docs/guides/terminal/#shells-that-outlive-aide)), serves it as `terminal.sock` in its own folder:
 
 - On the Mac: `~/Library/Application Support/AIDE/mux/terminal.sock`.
 - On Linux: `$XDG_RUNTIME_DIR/aide-mux/terminal.sock`, or `/tmp/aide-mux-<uid>/terminal.sock` without `XDG_RUNTIME_DIR`.
@@ -270,14 +270,14 @@ In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused p
 | `tab.close` | `id` | With a tab id, closes that tab and every pane in it; without one, closes the focused pane |
 | `tab.list`, `tab.info` | | `{count, current, tabs: [{id, index, title, selected, panes: [{id, title, focused, exited, cols, rows}]}]}`: the tabs of the windows in front-to-back order; with no window, every vault's tabs, and `current` is null |
 | `tab.rename` | `id`, `title` | Names a tab |
-| `tab.switch` <Badge text="Next release" /> | `index` | Selects the tab at that index of `tab.list` (from 0); answers `{tab}`. No tab there is `not_found`, an index that isn't a whole number is `invalid_params` |
+| `tab.switch` | `index` | Selects the tab at that index of `tab.list` (from 0); answers `{tab}`. No tab there is `not_found`, an index that isn't a whole number is `invalid_params` |
 | `split.horizontal` | `id` | Splits the pane to the right; answers `{panel_id}` of the new pane |
 | `split.vertical` | `id` | Splits the pane downward; answers `{panel_id}` |
 | `pane.focus_next`, `pane.focus_prev` | | Focuses the next or previous pane |
-| `agent.list` <Badge text="Next release" /> | | The [coding agents](/docs/guides/terminal/#coding-agents-) in the server's panes: `{agents: [{pane, tab, session, agent}]}`, each `agent` with its `kind`, `state`, `unseen`, `wait`, `detail` and `context` |
-| `agent.notify` <Badge text="Next release" /> | `pane`, `kind`, `body` | From inside the pane only: its agent finished (`kind: "done"`) or needs you (`"blocked"`), with `body` (at most 1 KiB) as the notification's text. What the hooks call |
-| `agent.report` <Badge text="Next release" /> | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | From inside the pane only: Claude Code's context and cost, from its status line. Taken only while the pane's agent is Claude Code in that conversation |
-| `agent.fill` <Badge text="Next release" /> | `pane`, `session_id` | From inside the pane only: `{used, window}` for that Claude Code conversation, both null when AIDE isn't sure. What the auto-compaction gate asks |
+| `agent.list` | | The [coding agents](/docs/guides/terminal/#coding-agents) in the server's panes: `{agents: [{pane, tab, session, agent}]}`, each `agent` with its `kind`, `state`, `unseen`, `wait`, `detail` and `context` |
+| `agent.notify` | `pane`, `kind`, `body` | From inside the pane only: its agent finished (`kind: "done"`) or needs you (`"blocked"`), with `body` (at most 1 KiB) as the notification's text. What the hooks call |
+| `agent.report` | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | From inside the pane only: Claude Code's context and cost, from its status line. Taken only while the pane's agent is Claude Code in that conversation |
+| `agent.fill` | `pane`, `session_id` | From inside the pane only: `{used, window}` for that Claude Code conversation, both null when AIDE isn't sure. What the auto-compaction gate asks |
 
 Reading doesn't move the pane's scroll position.
 
@@ -295,8 +295,8 @@ Reading doesn't move the pane's scroll position.
 | `too_small` | The pane is too small to split |
 | `busy` | 16 clients are already connected, or `terminal.exec` or `terminal.feed` on a pane whose program isn't reading what it's sent |
 | `no_window` | `panel.focus`, `tab.switch` or `tab.new` with no AIDE window showing that pane's vault |
-| `not_in_pane` <Badge text="Next release" /> | An `agent.notify`, `agent.report` or `agent.fill` from a program that isn't running in that pane |
-| `no_agent` <Badge text="Next release" /> | No agent in that pane |
+| `not_in_pane` | An `agent.notify`, `agent.report` or `agent.fill` from a program that isn't running in that pane |
+| `no_agent` | No agent in that pane |
 | `frame_too_large` | The request line is longer than 64 KiB |
 
 ### Terminal socket limits

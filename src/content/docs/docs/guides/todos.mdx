@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { Badge, LinkCard } from "@astrojs/starlight/components";
+import { LinkCard } from "@astrojs/starlight/components";
 
 A todo in AIDE is a checkbox line in a note, so there's no separate todo database: `- [ ] Call the bank` in any note is a todo, and the Todos screen gathers every open one from all your notes. Checking it off anywhere changes that line in its note.
 
@@ -41,11 +41,11 @@ AIDE reads the fields of the Obsidian Tasks plugin (emoji) and of Dataview (`[ke
 | recurrence | `🔁 every week` | `[repeat:: every week]` |
 | estimate | — | `[estimate:: 25m]`, `1h`, `1h30m` or plain minutes |
 | by | — | `[by:: aide]`: who added it (`aide` for the assistant, radar and the Claude app through AIDE) |
-| project <Badge text="Next release" /> | — | `[project:: AIDE app]`: what it's part of. Up to 60 letters, digits, spaces, `-`, `_`, `.` and `/`; no brackets, `:`, `#` or `@` |
-| source <Badge text="Next release" /> | — | `[source:: https://…]`: where it came from, such as a Slack message, a mail thread or an issue. Only `http://` and `https://` links |
-| agent <Badge text="Next release" /> | — | `[agent:: claude]`: which coding agent works on an [agent card](#agent-cards). `claude`, `codex` and `grok` read as themselves, any other name (up to 20 of `a`–`z`, `0`–`9` and `-`) as `agent` |
-| card <Badge text="Next release" /> | — | `[card:: k7f2q]`: an agent card's id, 5 to 12 of `a`–`z` and `0`–`9` |
-| updated <Badge text="Next release" /> | — | `[updated:: 2026-11-10T14:03Z]`: when the card was last written, in UTC to the minute |
+| project | — | `[project:: AIDE app]`: what it's part of. Up to 60 letters, digits, spaces, `-`, `_`, `.` and `/`; no brackets, `:`, `#` or `@` |
+| source | — | `[source:: https://…]`: where it came from, such as a Slack message, a mail thread or an issue. Only `http://` and `https://` links |
+| agent | — | `[agent:: claude]`: which coding agent works on an [agent card](#agent-cards). `claude`, `codex` and `grok` read as themselves, any other name (up to 20 of `a`–`z`, `0`–`9` and `-`) as `agent` |
+| card | — | `[card:: k7f2q]`: an agent card's id, 5 to 12 of `a`–`z` and `0`–`9` |
+| updated | — | `[updated:: 2026-11-10T14:03Z]`: when the card was last written, in UTC to the minute |
 
 The editor highlights these fields as you type. Off the line you're editing, a todo's time block is tinted, its estimate shows as a timer chip and `[by:: aide]` as an **AI** chip, so what the assistant added stands out; put the cursor on the line to see them as written. Completing a todo with a recurrence rule creates its next occurrence: see [Recurring todos](#recurring-todos).
 
@@ -55,7 +55,7 @@ Off the line you're editing, every field shows as a chip, the way the Todos scre
 
 - **Due** says Today, Tomorrow, Yesterday, a weekday or the date: red once it's past, orange today, blue later. **Scheduled** and **start** read the same way, in blue.
 - **Priority** shows its flag and name (Highest, High, Medium, Low, Lowest) in the Todos screen's colours. **Repeat** shows its rule; **done**, **cancelled** and **created** show their date.
-- **Project** <Badge text="Next release" /> shows its name. **Source** <Badge text="Next release" /> shows where the link goes (Slack, Gmail, GitHub, or the site's address); click it to open the link, whether or not you're editing.
+- **Project** shows its name. **Source** shows where the link goes (Slack, Gmail, GitHub, or the site's address); click it to open the link, whether or not you're editing.
 - Only a field's first occurrence becomes a chip. A value AIDE can't read, such as `[due:: someday]`, shows as written in the warning colour.
 
 While you're editing a note, click a chip to change it:
@@ -119,7 +119,7 @@ without the card, agent and updated fields.
 
 ### Agent cards
 
-<Badge text="Next release" /> An agent card is a todo that a coding agent keeps its work on: a todo with a `[card:: …]` field in a
+An agent card is a todo that a coding agent keeps its work on: a todo with a `[card:: …]` field in a
 note under the `board` folder, such as `board/aide.md`. Its steps are the todos right under it, and
 the first line of its memo says what the agent is doing now:
 
@@ -193,7 +193,7 @@ Click a todo to open its note at that line. Its menu (right-click on the Mac and
 
 **Focus for** runs a timer for the todo's estimate, else its time block's length, else 25 minutes. A bar on top of the list shows the todo's title and the time left, with **Done**, which checks the todo off, and **Stop**. When the time is up you get a notification, even with AIDE closed. One focus runs at a time per vault, and it survives relaunching the app. Nothing is written to the note until you press **Done**.
 
-#### Pomodoro <Badge text="Next release" />
+#### Pomodoro
 
 Turn on **Pomodoro** under **Settings › Todos › Focus** to follow each focus with a break, as copad's
 pomodoro did:
@@ -209,7 +209,7 @@ pomodoro did:
   closed. On Linux it comes while AIDE runs, and a break that ended while it was closed is told once
   when it starts again.
 - On the Mac and Linux, the focus also shows as a ring at the bottom of the sidebar
-  ([status items](/docs/guides/appearance/#status-items-mac-and-linux-)), whose right-click menu
+  ([status items](/docs/guides/appearance/#status-items-mac-and-linux)), whose right-click menu
   pauses, skips and stops it.
 - Changes in Settings apply from the next focus, on this device.
 - On the Mac and Linux, the command palette has **Pause or resume the focus**, **Skip to the next

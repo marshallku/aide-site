@@ -5,9 +5,7 @@ sidebar:
     order: 17
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
-
-<Badge text="다음 릴리스" />
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 트리거는 무언가 일어나면 대신 실행해 줘요. 폴더에 노트가 생기거나, 터미널이 벨을 울리거나, 집중이 끝나거나,
 캘린더 일정이 곧 시작되거나, 정해 둔 시간이 되면요. 트리거 하나는 명령 팔레트의 액션 하나를 실행하고, 허용하면
@@ -77,7 +75,7 @@ params = { command = 'echo "$AIDE_EVENT_KIND" >> "$HOME/aide-today.log"' }
 | `action.<id>.completed`, `action.<id>.failed` | 명령 팔레트의 액션이 실행됐을 때 |
 | `note.created`, `note.changed` | 노트가 생기거나 바뀌었을 때(`path`) |
 | `terminal.bell`, `terminal.exited`, `terminal.title` | 터미널 페인이 벨을 울리거나, 셸이 끝나거나, 제목이 바뀌었을 때 |
-| `agent.state` <Badge text="다음 릴리스" /> | 창의 페인에 있는 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트-)의 상태가 바뀌었을 때: `tab`, `pane`, `kind`(`claude`, `codex`, …), `from`과 `to`, 확인을 기다리는 동안은 `wait` |
+| `agent.state` | 창의 페인에 있는 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트)의 상태가 바뀌었을 때: `tab`, `pane`, `kind`(`claude`, `codex`, …), `from`과 `to`, 확인을 기다리는 동안은 `wait` |
 | `focus.ended` | 집중이 끝났을 때(`reason`: `elapsed`, `stopped`, `done`, `replaced`, `skipped`) |
 | `calendar.upcoming`, `calendar.started` | 캘린더 일정이 10분 뒤에 시작하거나 지금 시작할 때 |
 | `custom.<name>` | `aidectl event emit`으로 보냈을 때 |
@@ -85,7 +83,7 @@ params = { command = 'echo "$AIDE_EVENT_KIND" >> "$HOME/aide-today.log"' }
 명령은 이벤트를 환경 변수로 받아요. `AIDE_TRIGGER`, `AIDE_EVENT_KIND`, `AIDE_EVENT_JSON`,
 `AIDE_CONTEXT_JSON`, `AIDE_VAULT`예요. 이벤트 내용이 명령줄 자체에 끼워 들어가는 일은 없어요.
 
-### `agent.state` <Badge text="다음 릴리스" />
+### `agent.state`
 
 터미널 페인의 코딩 에이전트가 보여 주는 상태가 바뀔 때마다, 그 페인을 보여 주는 창이 몇 개든 창의 보관소에
 `agent.state`가 한 번 와요.

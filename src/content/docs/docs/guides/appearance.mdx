@@ -5,8 +5,6 @@ sidebar:
     order: 12
 ---
 
-import { Badge } from "@astrojs/starlight/components";
-
 **Settings › Appearance** changes how AIDE looks on this device, with a live preview of the editor
 at the top of the page. **Settings › Language** picks the language of the app and of what plugins
 write for you.
@@ -47,7 +45,7 @@ images; with a folder, AIDE shows a random one.
 - **Rotate** shows another image of the folder on a timer: **Every** 1, 5, 15, 30 or 60 minutes, 3
   or 6 hours, or a day (on Linux, **Interval** in minutes).
 - **Dim** (**Tint** on Linux) sets how much of the window colour covers the image.
-- **Image opacity** <Badge text="Next release" /> sets how strongly the image itself shows, over the
+- **Image opacity** sets how strongly the image itself shows, over the
   window's own colour. It is 100 % until you lower it.
 - **Next wallpaper** shows another one now (on Linux beside **Shown now**, the image on screen).
 
@@ -61,7 +59,7 @@ Under **Settings › Appearance › Window** on the Mac, or **Settings › Gener
   opens in a new tab. Without it, hold <kbd>⌘</kbd> (Mac) or <kbd>Ctrl</kbd> (Linux), or use the
   middle mouse button, to do the same.
 
-## Status items (Mac and Linux) <Badge text="Next release" />
+## Status items (Mac and Linux)
 
 At the bottom of the sidebar, above Settings, AIDE shows small status items: the focus timer's ring
 while a focus or break runs, items your [device plugins](/docs/plugins/device-plugins/) show, and
@@ -69,7 +67,7 @@ items scripts set with [`aidectl status-item`](/docs/developers/aidectl/#status-
 run what it does; right-click the focus ring to pause, resume, skip the phase or stop. When there
 are more than fit, the rest are under **…**. Each vault's windows show only that vault's items.
 
-<Badge text="Next release" /> While a [coding agent](/docs/guides/terminal/#coding-agents-) in your
+While a [coding agent](/docs/guides/terminal/#coding-agents) in your
 terminal needs you or has finished without you looking, an item counts them, with the agent icon. Its
 tooltip says how many need you and how many are done (**1 needs you, 2 done**), and it turns to the
 warning colour while one needs you. Click it to go to the one that has needed you longest, else the
@@ -80,7 +78,7 @@ Turn the row off with **Status items** under **Settings › Appearance › Windo
 **Window** group of **Settings › Appearance** on Linux (`status_items` under `[window]` in
 `config.toml`).
 
-## Window opacity (Mac and Linux) <Badge text="Next release" />
+## Window opacity (Mac and Linux)
 
 **Window opacity**, under **Settings › Appearance › Window** on the Mac and in the **Window** group
 of **Settings › Appearance** on Linux, lets what's behind AIDE show through its windows, as copad's

@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 A device plugin adds something to the AIDE app itself: a tab, a sheet you open on a note, a view in the
 desktop's right panel, a command, or a job that runs at a set time. It runs on the device, inside a
@@ -96,7 +96,7 @@ with `not allowed: …`.
 | `attachments:write`| Add images and documents to your notes                    | Adding new ones; an existing attachment is never changed             |
 | `sessions:read`    | Read your Claude Code, Codex and Grok sessions on this computer | Listing and reading them, never changing them (Mac and Linux) |
 | `ai:run`           | Ask this device's assistant, on your allowance            | Asking the assistant you set up for a note |
-| `status` <Badge text="Next release" /> | Show up to 3 items at the bottom of the sidebar | Small items on the rail, in this vault's windows (Mac and Linux) |
+| `status` | Show up to 3 items at the bottom of the sidebar | Small items on the rail, in this vault's windows (Mac and Linux) |
 
 What a plugin can never do:
 
@@ -136,7 +136,7 @@ Choose an installed plugin in the list to see:
   skipped.
 - **Skills for your coding agents**, on the Mac and Linux, for a plugin that brings skills for
   Claude Code, Codex and Grok: off until you agree to them, with **Read them** to see their text
-  first. See [Skills in a community plugin](/docs/guides/terminal/). <Badge text="Next release" />
+  first. See [Skills in a community plugin](/docs/guides/terminal/).
 - **Access you approved**, and **Source**, the address it came from.
   **Report a problem** there opens a new issue on the plugin's repository.
 - **Go back to the previous version** and **Remove**.

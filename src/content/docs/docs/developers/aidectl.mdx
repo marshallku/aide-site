@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 `aidectl` reads and writes your AIDE notes from a terminal, a script, an editor or a status bar. It goes through AIDE's own note rules, so a write never overwrites an edit it didn't see. It knows nothing about any particular workflow: you compose `get`, `put`, `append` and `toggle` yourself.
 
@@ -146,8 +146,6 @@ Every open todo across your notes, one per line, tab-separated: note id, line (0
 
 ### todo add
 
-<Badge text="Next release" />
-
 ```sh
 aidectl todo add <title> [--memo TEXT|-] [--source URL] [--due YYYY-MM-DD] [--project P] [--today | --inbox]
 ```
@@ -166,8 +164,6 @@ aidectl todo add "Reply to Kim" --source https://acme.slack.com/archives/C1/p1 -
 The title is one line of up to 200 characters with no field in it (no date, priority, rule, time block or `[key:: value]`; `#tags` and `@names` are fine). The memo is at most 12 lines and 1000 characters. Anything else exits 2 with nothing written.
 
 ### board
-
-<Badge text="Next release" />
 
 ```sh
 aidectl board add <title> [--project P] [--agent A] [--step S]… [--note N] [--doing]
@@ -296,8 +292,6 @@ Opens the AIDE app at that place, through `open` on macOS or `xdg-open` on Linux
 
 ### action
 
-<Badge text="Next release" />
-
 ```sh
 aidectl action list [--json]
 aidectl action run <id>
@@ -326,8 +320,6 @@ aidectl action list | grep plugin/
 
 ### trigger
 
-<Badge text="Next release" />
-
 ```sh
 aidectl trigger list [--json]
 aidectl trigger run <name>
@@ -341,8 +333,6 @@ plugin on.
 
 ### event
 
-<Badge text="Next release" />
-
 ```sh
 aidectl event emit <name> [--data JSON]
 aidectl event tail [--json] [--all]
@@ -355,15 +345,13 @@ the oldest the app keeps) and says so when some were missed.
 
 ### status-item
 
-<Badge text="Next release" />
-
 ```sh
 aidectl status-item set <id> <text> [--icon I] [--ring START END] [--tooltip T] [--action ID] [--order N] [--ttl 5m]
 aidectl status-item clear <id>
 aidectl status-item list [--json]
 ```
 
-Shows a small item at the bottom of the AIDE app's sidebar ([Status items](/docs/guides/appearance/#status-items-mac-and-linux-)),
+Shows a small item at the bottom of the AIDE app's sidebar ([Status items](/docs/guides/appearance/#status-items-mac-and-linux)),
 in the windows of the vault it talks to. `--ring` draws a ring that empties from `START` to `END`
 (Unix seconds), `--action` is an action id a click runs, and `--order` (0–1000) places it. An item
 goes away after its `--ttl` (10 minutes unless you say, at most 24 hours; setting it again renews
@@ -373,13 +361,11 @@ is unchanged.
 
 ### terminal
 
-<Badge text="Next release" />
-
 ```sh
 aidectl terminal <command> [--socket S] [--pane P] [--json]
 ```
 
-Reads and types into AIDE's terminal, and opens, splits, names and closes its tabs and panes. It talks to the [terminal socket](/docs/developers/local-api/#terminal-socket), not to a vault, so it needs no vault or server. <Badge text="Next release" /> The socket is the terminal server's, which keeps your shells running, so reading and typing work even with no AIDE window open.
+Reads and types into AIDE's terminal, and opens, splits, names and closes its tabs and panes. It talks to the [terminal socket](/docs/developers/local-api/#terminal-socket), not to a vault, so it needs no vault or server. The socket is the terminal server's, which keeps your shells running, so reading and typing work even with no AIDE window open.
 
 | Command | What it does |
 | --- | --- |
@@ -393,7 +379,7 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `new-tab` | Opens a new tab and prints its pane id |
 | `close-tab [<tab>]` | Closes that tab with every pane in it; without a tab id, closes the focused pane |
 | `rename <tab> <title>` | Names a tab; an empty title clears the name |
-| `switch-tab <index>` <Badge text="Next release" /> | Selects a tab by its index in `tabs`, counting from 0 |
+| `switch-tab <index>` | Selects a tab by its index in `tabs`, counting from 0 |
 | `split right\|down` | Splits the pane and prints the new pane's id |
 | `focus <pane>` | Brings that pane forward: its tab, the Terminal section and the window |
 
@@ -405,7 +391,7 @@ Reading never moves the pane: `read` and `history` read the live screen even whe
 
 - `--socket S` names the socket.
 - Else, inside one of AIDE's panes, `$COPAD_SOCKET` names it. If nothing answers there, `aidectl` stops with `COPAD_SOCKET (…) answers nothing` instead of trying another: name one with `--socket`.
-- <Badge text="Next release" /> Else it uses the terminal server's socket, from any shell: `~/Library/Application Support/AIDE/mux/terminal.sock` on the Mac, `$XDG_RUNTIME_DIR/aide-mux/terminal.sock` on Linux (`/tmp/aide-mux-<uid>/terminal.sock` without `XDG_RUNTIME_DIR`). It's used only when its folder is yours alone and the server answers.
+- Else it uses the terminal server's socket, from any shell: `~/Library/Application Support/AIDE/mux/terminal.sock` on the Mac, `$XDG_RUNTIME_DIR/aide-mux/terminal.sock` on Linux (`/tmp/aide-mux-<uid>/terminal.sock` without `XDG_RUNTIME_DIR`). It's used only when its folder is yours alone and the server answers.
 - Else it uses the only AIDE app with a terminal running as your user. With none, it stops. With more than one, it doesn't guess: it lists their sockets and asks you to choose one with `--socket`.
 
 `focus`, `switch-tab` and `new-tab` need an AIDE window showing the terminal; with none, they stop with exit code 1.
@@ -428,15 +414,13 @@ aidectl terminal history --lines 500 > scrollback.txt
 
 ### agent
 
-<Badge text="Next release" />
-
 ```sh
 aidectl agent list [--json]
 aidectl agent install-hooks [--claude] [--codex] [--yes] [--print] [--remove] [--pre-compact]
 aidectl agent skills list | show <name> | sync [--print] | remove [--print]
 ```
 
-The [coding agents](/docs/guides/terminal/#coding-agents-) in AIDE's terminal.
+The [coding agents](/docs/guides/terminal/#coding-agents) in AIDE's terminal.
 
 `list` asks the terminal server which agents run in its panes, with no AIDE window needed: one row
 per agent with its pane, its vault's session, the agent, its state (`done` for a turn nobody has
@@ -504,8 +488,6 @@ a skill can't name is refused before anything changes: a host over 100 character
 
 ### browser
 
-<Badge text="Next release" />
-
 ```sh
 aidectl browser <command> [--tab T] [--json]
 ```
@@ -546,8 +528,6 @@ aidectl browser screenshot --path page.png
 ```
 
 ### secret
-
-<Badge text="Next release" />
 
 ```sh
 aidectl secret <command> [--tab T] [--json]

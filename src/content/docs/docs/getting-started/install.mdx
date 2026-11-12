@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Tabs, TabItem, Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
 
 AIDE is released for the Mac and for Linux on x86_64 from the public
 [aide-releases](https://github.com/marshallku/aide-releases) repository. Each install also gives you
@@ -89,7 +89,7 @@ The script downloads `aide-X.Y.Z-x86_64-linux.tar.gz`, checks it against the rel
 If a library is missing, the script names it and prints the commands above. Start AIDE from your
 desktop's app launcher; the desktop entry works whether or not `~/.local/bin` is on your `PATH`.
 
-<Badge text="Next release" /> If AIDE's terminal server is already running, the script updates it in
+If AIDE's terminal server is already running, the script updates it in
 place: your shells and the programs in them keep running, and the script says **Terminal server
 upgraded to X.Y.Z; its shells keep running**. If the server can't take the new version, it keeps
 running the old one with your shells, the install still finishes, and the script says why and that
@@ -140,7 +140,7 @@ release when it starts and then every hour once the last check is a day old. You
 
 - **Check automatically** is on by default. Turned off, AIDE checks only when you choose
   **Check now**.
-- **Download automatically** <Badge text="Next release" />, below it, is on by default. A newer
+- **Download automatically**, below it, is on by default. A newer
   version found by an automatic check is downloaded and checked in the background. Then the update
   button on the desktop's sidebar rail says **AIDE X.Y.Z is ready**, and one notification says it's
   installed the next time AIDE starts and that your terminal sessions keep running.
@@ -151,7 +151,7 @@ release when it starts and then every hour once the last check is a day old. You
   now** still finds it.
 - **Release notes** opens the release on GitHub.
 
-### Installing a downloaded update <Badge text="Next release" />
+### Installing a downloaded update
 
 A downloaded update is installed without downloading it again, in one of two ways:
 
@@ -174,9 +174,9 @@ When you choose **Update and restart** (with **Download automatically** off):
 2. Your open notes stop taking edits and are saved as drafts. If one can't be saved within
    10 seconds, the update is cancelled and nothing changes.
 3. AIDE quits, the new version replaces it, and the new version starts. `aidectl` and the desktop
-   host's runtime are updated along with it, and so is the terminal server
-   <Badge text="Next release" />: the one already running is updated in place, your shells and the
-   programs in them going on (see [Shells that outlive AIDE](/docs/guides/terminal/#shells-that-outlive-aide-)).
+   host's runtime are updated along with it, and so is the terminal server:
+   the one already running is updated in place, your shells and the
+   programs in them going on (see [Shells that outlive AIDE](/docs/guides/terminal/#shells-that-outlive-aide)).
    Quitting for the update never ends a shell.
 4. If the new version doesn't show its window within 45 seconds, the previous version is put back
    and started, and it tells you: "AIDE X.Y.Z didn't start, so this version is back."
@@ -196,7 +196,7 @@ To go back to an earlier release by hand, run the install script with `--version
 desktop host, going back one release is safe: each release leaves the host's database in a state the
 previous release still runs on.
 
-## Licenses <Badge text="Next release" />
+## Licenses
 
 AIDE includes software from others, each under its own license. **Settings › About › Licenses** (on
 Linux, the **About** group of **Settings › General**) lists what that app contains, with each

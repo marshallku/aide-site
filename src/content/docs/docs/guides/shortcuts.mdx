@@ -5,13 +5,13 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 AIDE on the Mac and Linux has the same shortcuts, with <kbd>⌘</kbd> on the Mac where Linux uses
 <kbd>Ctrl</kbd>. On the Mac each one is also in the menu bar, and every command is in the command
 palette with its shortcut.
 
-<Badge text="Next release" /> You can change any of them, turn them off and add your own in **Settings › Keyboard**: see
+You can change any of them, turn them off and add your own in **Settings › Keyboard**: see
 [Change your shortcuts](#change-your-shortcuts).
 
 ## Window and navigation
@@ -88,7 +88,7 @@ In a table edited as a grid:
 On Linux, for a voice shortcut anywhere on the desktop, bind the command `aide-desktop --voice` in
 your desktop's keyboard settings.
 
-## Voice prompts <Badge text="Next release" />
+## Voice prompts
 
 | Action | Mac | Linux |
 |---|---|---|
@@ -125,10 +125,10 @@ While a terminal has the keyboard, these act on its tabs and panes:
 |---|---|---|
 | New tab | <kbd>⌘</kbd><kbd>T</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>T</kbd> |
 | Close tab | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
-| Close the focused pane (the tab, on its last pane) <Badge text="Next release" /> | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
-| Split the focused pane right <Badge text="Next release" /> | <kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>D</kbd> |
-| Split the focused pane down <Badge text="Next release" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> |
-| Next / previous pane <Badge text="Next release" /> | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>N</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd> |
+| Close the focused pane (the tab, on its last pane) | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
+| Split the focused pane right | <kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>D</kbd> |
+| Split the focused pane down | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> |
+| Next / previous pane | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>N</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd> |
 | Previous / next tab | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
 | Go to tab 1–9 | <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
 | Find in terminal | <kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> |
@@ -140,10 +140,10 @@ On the Mac, a terminal with the keyboard keeps <kbd>⌘</kbd><kbd>T</kbd>, <kbd>
 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd>, <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd>
 and <kbd>⌘</kbd><kbd>F</kbd> for its tabs; anywhere else they do what the first table says.
 
-<Badge text="Next release" /> <kbd>⌘</kbd><kbd>W</kbd> and <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd>
+<kbd>⌘</kbd><kbd>W</kbd> and <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd>
 close the focused pane instead of the whole tab; a tab with one pane closes as before. The tab's ×
 and **Close** still close the whole tab. The pane keys act only while a terminal pane has the
-keyboard. See [Split a tab into panes](/docs/guides/terminal/#split-a-tab-into-panes-).
+keyboard. See [Split a tab into panes](/docs/guides/terminal/#split-a-tab-into-panes).
 
 <Aside type="note" title="Shortcuts that step aside in a terminal on Linux">
 These app shortcuts are also keys a shell uses, so they're off while the keyboard is in a
@@ -157,7 +157,7 @@ included, keep working. Click outside the terminal to use them again.
 
 ## Change your shortcuts
 
-<Badge text="Next release" /> On the Mac and Linux, everything the command palette runs is a named
+On the Mac and Linux, everything the command palette runs is a named
 action, and **Settings › Keyboard** lists each one with the shortcut that runs it now. There you
 give an action a new shortcut, turn one off, and put shell commands on shortcuts of their own.
 
@@ -262,7 +262,7 @@ If something in these two tables can't be used (a shortcut without <kbd>Ctrl</kb
 <kbd>Super</kbd>, `action:` with no id, a command that's empty, the same shortcut twice, `actions`
 that isn't a list), AIDE keeps the shortcuts it had before and **Settings › Keyboard** shows
 **The keyboard settings have a problem: …** with what's wrong. A shortcut to an action id the
-window doesn't have now does nothing. <Badge text="Next release" /> A shortcut to an action that no
+window doesn't have now does nothing. A shortcut to an action that no
 longer exists says **No action is called …** when you press it, and **Settings › Keyboard** lists it
 among the problems.
 
@@ -300,15 +300,15 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `import-recording` | Import recording… |
 | `new-window` | New window (Mac) |
 | `voice` | Say a message to the assistant (Linux) |
-| `voice-prompt` <Badge text="Next release" /> | Say a prompt (on Linux, stops the one under way) |
-| `voice-prompt/start`, `voice-prompt/stop` <Badge text="Next release" /> | Start a voice prompt, Stop the voice prompt (Linux) |
-| `voice-prompt/last` <Badge text="Next release" /> | Show the last voice prompt |
+| `voice-prompt` | Say a prompt (on Linux, stops the one under way) |
+| `voice-prompt/start`, `voice-prompt/stop` | Start a voice prompt, Stop the voice prompt (Linux) |
+| `voice-prompt/last` | Show the last voice prompt |
 | `feature-tour` | What AIDE can do (Linux) |
 | `terminal/new-tab` | New terminal tab |
 | `terminal/split-right`, `terminal/split-down` | Split right, Split down |
 | `terminal/next-pane`, `terminal/previous-pane` | Next pane, Previous pane |
 | `terminal/close-pane` | Close pane |
-| `terminal/open-remote-aide` <Badge text="Next release" /> | Open remote AIDE… (no shortcut until you give it one) |
+| `terminal/open-remote-aide` | Open remote AIDE… (no shortcut until you give it one) |
 
 Others come and go with what the window shows:
 

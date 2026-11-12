@@ -5,10 +5,6 @@ sidebar:
     order: 15
 ---
 
-import { Badge } from "@astrojs/starlight/components";
-
-<Badge text="다음 릴리스" />
-
 Claude Code, Codex, Grok이 여러 단계가 있는 일을 하면 자기 계획을 노트에 카드로 적어요. 짧은 제목, 단계들, 그리고 지금 하는 일을 말하는 한 줄이에요. 에이전트의 터미널을 읽지 않아도 노트에서 진행 상황을 볼 수 있고, 언제든 직접 단계를 체크할 수 있어요.
 
 ## 카드의 모습
@@ -32,7 +28,7 @@ Claude Code, Codex, Grok이 여러 단계가 있는 일을 하면 자기 계획�
 
 ## 에이전트가 배우는 방법
 
-`aide-board` 스킬이 에이전트에게 언제 카드를 더할지, 단계와 상태 줄을 어떻게 최신으로 둘지, 언제 대기로 옮길지, 한 줄짜리 결과로 어떻게 끝낼지 알려 줘요. Mac과 Linux에서는 **플러그인의 스킬을 코딩 에이전트에게 주기**를 켜면 AIDE가 다른 [플러그인 스킬](/ko/docs/guides/terminal/#플러그인-스킬-)과 함께 이 스킬을 코딩 에이전트에게 줘요.
+`aide-board` 스킬이 에이전트에게 언제 카드를 더할지, 단계와 상태 줄을 어떻게 최신으로 둘지, 언제 대기로 옮길지, 한 줄짜리 결과로 어떻게 끝낼지 알려 줘요. Mac과 Linux에서는 **플러그인의 스킬을 코딩 에이전트에게 주기**를 켜면 AIDE가 다른 [플러그인 스킬](/ko/docs/guides/terminal/#플러그인-스킬)과 함께 이 스킬을 코딩 에이전트에게 줘요.
 
 에이전트는 `aidectl board`를 써요. 명령은 [aidectl 참고서](/ko/docs/developers/aidectl/#board)에 있어요. 열린 카드를 직접 보려면 `aidectl board list`를, 카드 하나와 그 단계를 보려면 `aidectl board show <card>`를 실행하세요.
 

@@ -37,6 +37,7 @@
     --success: #1f7a35;
     --warning: #b25000;
     --danger: #d70015;
+    --info: #30b0c7;
     --editor-bg: #ffffff;
     --editor-fg: #1c1c1e;
     --editor-muted: #8e8e93;
@@ -58,6 +59,7 @@
     --success: #30d158;
     --warning: #ff9f0a;
     --danger: #ff453a;
+    --info: #40c8e0;
     --editor-bg: #1c1c1e;
     --editor-fg: #f2f2f7;
     --editor-muted: #8e8e93;
@@ -80,6 +82,7 @@
         --success: #30d158;
         --warning: #ff9f0a;
         --danger: #ff453a;
+        --info: #40c8e0;
         --editor-bg: #1c1c1e;
         --editor-fg: #f2f2f7;
         --editor-muted: #8e8e93;

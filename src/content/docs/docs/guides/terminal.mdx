@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 On the Mac and Linux, AIDE has a terminal of its own, so you can keep a shell next to your notes. On
 the iPhone, which has no local shell, the SSH section opens terminals to your servers instead.
@@ -21,10 +21,10 @@ The **Terminal** section in the sidebar is a row of tabs over a shell, filling t
   gives it your own name; **Close** or its × ends the shell.
 - With no tab open, the section says **No shells open**.
 - The shells keep running while you're elsewhere in AIDE. Coming back finds them as you left them.
-  <Badge text="Next release" /> They keep running after you quit AIDE too: see
-  [Shells that outlive AIDE](#shells-that-outlive-aide-).
+  They keep running after you quit AIDE too: see
+  [Shells that outlive AIDE](#shells-that-outlive-aide).
 
-### Split a tab into panes <Badge text="Next release" />
+### Split a tab into panes
 
 A tab can hold more than one shell side by side. Each part is a pane, with its own shell, and you
 split and move between them from the keyboard or the **Go** menu:
@@ -57,12 +57,12 @@ Linux) has a **Terminal** view: the same tabs and the same shells, next to whate
 shows, such as a note. While the main area is the Terminal section, the shells are there and the
 panel says so.
 
-Find <Badge text="Next release" /> goes on past the last match to the first, and says **No matches**
+Find goes on past the last match to the first, and says **No matches**
 when there are none, on the Mac and Linux.
 
 For the tab, pane, find and text-size keys, see [Keyboard shortcuts](/docs/guides/shortcuts/#terminal).
 
-### Shells that outlive AIDE <Badge text="Next release" />
+### Shells that outlive AIDE
 
 Your shells run in AIDE's terminal server, a small program of its own, not in the app. Quitting
 AIDE, closing its window or AIDE closing unexpectedly leaves them running, with whatever runs in
@@ -83,7 +83,7 @@ left it, still running, with its screen and scrollback.
 - A server left from an older (or newer) AIDE that this AIDE can't talk to says so: **The terminal
   server is from an older AIDE**, with **Restart it**. Restarting asks first
   (**Restart the terminal server?**), since its shells and the programs in them end.
-- <Badge text="Next release" /> After AIDE updates itself, it updates the terminal server that was
+- After AIDE updates itself, it updates the terminal server that was
   running in place, the next time it connects to it. Your shells and the programs in them, such as an
   agent mid-turn or a build, keep running in the same process with the same screen and scrollback:
   their output pauses for a moment, usually well under a second, and nothing restarts. Nothing is
@@ -101,7 +101,7 @@ left it, still running, with its screen and scrollback.
   update is still being installed, it says so, and the server is updated once it's done.
 - Quitting AIDE to install an update never ends your shells, even with **Keep shells running after
   AIDE quits** turned off, and doesn't ask about running programs.
-- <Badge text="Next release" /> On the iPhone, a host's AIDE sessions keep going while that host's
+- On the iPhone, a host's AIDE sessions keep going while that host's
   terminal server updates: a pane pauses for a moment and goes on, with no reconnect.
 - With no AIDE window attached, the server keeps running as long as it has shells. It stops by
   itself only after 7 days with no window and no shell running.
@@ -130,25 +130,25 @@ after AIDE quits**. Then:
 | **Cursor** | **Block** | **Block**, **Bar** or **Underline**. |
 | **Blinking cursor** | On | |
 | **Use Option as Meta** (Mac) | On | <kbd>⌥</kbd> works as Meta/Alt in the shell instead of typing special characters. |
-| **Option-Return sends Esc Return** (Mac) <Badge text="Next release" /> | On | <kbd>⌥</kbd><kbd>Return</kbd> sends Esc Return even with Use Option as Meta off, as a new line in Claude Code's prompt and many REPLs. A program using the kitty keyboard protocol gets its own encoding instead. |
-| **Option-Esc sends Esc Esc** (Mac) <Badge text="Next release" /> | Off | The same for <kbd>⌥</kbd><kbd>Esc</kbd>. |
-| **Programs can copy to the clipboard** (Mac) <Badge text="Next release" /> | On | Programs copy with OSC 52, as tmux and Neovim do over ssh. They can never read the clipboard. On Linux the terminal never lets them. |
-| **Scrollback** | 10,000 lines | 0 to 100,000. 0 keeps none <Badge text="Next release" />. |
-| **Draw with the GPU** (Mac) <Badge text="Next release" /> | On | Draws the terminal with Metal. Off draws it with Core Text. Applies to new tabs. |
-| **Font thickening** (Mac) <Badge text="Next release" /> | **Off** | **On**, **Off**, or **On non-Retina displays**: draws text a little heavier. |
-| **Color blending** (Mac) <Badge text="Next release" /> | **Native** | **Native** or **Linear**. Linear applies only when drawing with the GPU, and not over a wallpaper. |
-| **Kitty keyboard protocol** <Badge text="Next release" /> | On | Programs that ask for it get every key with its modifiers. Applies to new tabs. |
-| **Images** <Badge text="Next release" /> | On | Programs can draw pictures with kitty graphics. On Linux, sixel too where the system's VTE has it, and pictures more than 200 lines up in the scrollback aren't drawn. Applies to new tabs. |
-| **Reopen tabs at launch** <Badge text="Next release" /> | On | After your computer restarts, your tabs, splits and folders come back as new shells. See [Tabs after a restart](#tabs-after-a-restart-). |
-| **Keep shells running after AIDE quits** <Badge text="Next release" /> | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide-). |
+| **Option-Return sends Esc Return** (Mac) | On | <kbd>⌥</kbd><kbd>Return</kbd> sends Esc Return even with Use Option as Meta off, as a new line in Claude Code's prompt and many REPLs. A program using the kitty keyboard protocol gets its own encoding instead. |
+| **Option-Esc sends Esc Esc** (Mac) | Off | The same for <kbd>⌥</kbd><kbd>Esc</kbd>. |
+| **Programs can copy to the clipboard** (Mac) | On | Programs copy with OSC 52, as tmux and Neovim do over ssh. They can never read the clipboard. On Linux the terminal never lets them. |
+| **Scrollback** | 10,000 lines | 0 to 100,000. 0 keeps none. |
+| **Draw with the GPU** (Mac) | On | Draws the terminal with Metal. Off draws it with Core Text. Applies to new tabs. |
+| **Font thickening** (Mac) | **Off** | **On**, **Off**, or **On non-Retina displays**: draws text a little heavier. |
+| **Color blending** (Mac) | **Native** | **Native** or **Linear**. Linear applies only when drawing with the GPU, and not over a wallpaper. |
+| **Kitty keyboard protocol** | On | Programs that ask for it get every key with its modifiers. Applies to new tabs. |
+| **Images** | On | Programs can draw pictures with kitty graphics. On Linux, sixel too where the system's VTE has it, and pictures more than 200 lines up in the scrollback aren't drawn. Applies to new tabs. |
+| **Reopen tabs at launch** | On | After your computer restarts, your tabs, splits and folders come back as new shells. See [Tabs after a restart](#tabs-after-a-restart). |
+| **Keep shells running after AIDE quits** | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide). |
 
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
 are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`,
-`keep_running`). <Badge text="Next release" /> **Scrollback**, **Shell**, **Kitty keyboard protocol**,
+`keep_running`). **Scrollback**, **Shell**, **Kitty keyboard protocol**,
 **Reopen tabs at launch** and **Keep shells running after AIDE quits** are also the terminal
 server's own: a change on one AIDE reaches the server, and the last change wins.
 
-### Tabs after a restart <Badge text="Next release" />
+### Tabs after a restart
 
 The terminal server keeps each vault's layout: its tabs with their names, the splits at their sizes,
 the tab you were on, and the folder each pane's shell is in. When the server starts again, after
@@ -162,7 +162,7 @@ opens at home instead.
 - Turning **Reopen tabs at launch** off forgets the saved layouts.
 - The first time the new AIDE starts, the tabs an earlier AIDE had saved are taken over.
 
-### Keys and pictures <Badge text="Next release" />
+### Keys and pictures
 
 Keys with no text, such as <kbd>Home</kbd>, <kbd>F5</kbd> or the arrows, reach programs the way
 xterm sends them. A program that asks for the kitty keyboard protocol gets every key with its
@@ -171,13 +171,12 @@ modifiers instead, while **Kitty keyboard protocol** is on.
 On Linux, dropping files on a tab types their paths, quoted for the shell. A dropped image from
 another app is saved first and its path typed; a dropped link is typed as text.
 
-The terminal sets `TERM=xterm-256color`, `COLORTERM=truecolor` and `TERM_PROGRAM=AIDE`. In the
-release, it otherwise passes on the environment AIDE was started with. <Badge text="Next release" />
-The terminal server starts each shell with your login shell's environment instead, read once when
+The terminal sets `TERM=xterm-256color`, `COLORTERM=truecolor` and `TERM_PROGRAM=AIDE`.
+The terminal server starts each shell with your login shell's environment, read once when
 the server starts, so a shell never carries variables of the session AIDE happened to start in. A
 program in the terminal can copy to your clipboard but can't read it.
 
-<Badge text="Next release" /> Each pane's shell also gets `COPAD_SOCKET` and `AIDE_TERMINAL_SOCKET`,
+Each pane's shell also gets `COPAD_SOCKET` and `AIDE_TERMINAL_SOCKET`,
 the terminal server's [terminal socket](/docs/developers/local-api/#terminal-socket), and
 `COPAD_PANEL_ID` and `AIDE_MUX_PANE`, that pane's id. With them, clicking comux's desktop
 notification brings forward the exact tab and pane it came from, and copad's `coctl` keeps working.
@@ -187,10 +186,10 @@ split and list panes and tabs from a script.
 ### comux and tmux
 
 comux, tmux and other multiplexers run in a pane like any other program and draw their own screens.
-<Badge text="Next release" /> A comux in a pane can still bring its pane forward when you click one of
+A comux in a pane can still bring its pane forward when you click one of
 its notifications, through the terminal socket above.
 
-### Open remote AIDE… <Badge text="Next release" />
+### Open remote AIDE…
 
 Open another computer's AIDE terminal sessions in this window, beside your own tabs, over SSH. The
 other computer can be a Mac or Linux machine where AIDE is installed and has been opened once.
@@ -241,7 +240,7 @@ password and never relaxes host key checking:
 The other computer treats the connection as remote: none of your local environment reaches its
 shells, and nothing running there can bring windows forward on this computer.
 
-### Coding agents <Badge text="Next release" />
+### Coding agents
 
 AIDE knows when a coding agent runs in a pane, what it's doing, and when it finishes or needs you. You
 see it in the Agents list, on its tab and in the status items, and you get a notification when you
@@ -273,7 +272,7 @@ tab's name, and under it what it asks while it needs you, else the step it's on,
 it printed, with a small gauge of its context when AIDE knows it.
 
 - The agents that need you come first, then the rest in tab order.
-- A remote session's agents (see [Open remote AIDE…](#open-remote-aide-)) are listed under the
+- A remote session's agents (see [Open remote AIDE…](#open-remote-aide)) are listed under the
   host's name.
 - A row that says **Not updating** is one AIDE couldn't read just now; it shows the last state it
   knows.
@@ -285,7 +284,7 @@ A tab with an agent that is working, done or needs you shows a small mark next t
 while it works, a check when it's done, and a warning sign while it needs you. Point at the mark to
 read the agent and its state.
 
-The [status items](/docs/guides/appearance/#status-items-mac-and-linux-) at the bottom of the sidebar
+The [status items](/docs/guides/appearance/#status-items-mac-and-linux) at the bottom of the sidebar
 also count the agents that need you or are done.
 
 #### Notifications
@@ -315,7 +314,7 @@ one reaches the server, and the last change wins. On Linux they're also kept in 
 | **Notify when an agent finishes** | On | A notification when an agent's turn ends (`notify_done`). Off, it still shows as **Done**. |
 | **Notify when an agent needs you** | On | A notification when an agent asks you something (`notify_blocked`). |
 | **Remind after** | 10 min | **Off**, 5, 10 or 30 min: one more notification that long after an agent started needing you, if you haven't looked at it (`notify_remind`). |
-| **Send to your phone** | On | The same notifications on phones you connect, sealed so only they can read them (`push`). <Badge text="Next release" /> A phone connects by opening this computer's AIDE sessions in the iPhone app with its **Agent notifications** on: see [Agent notifications](#agent-notifications-). Until one has, nothing is sent. |
+| **Send to your phone** | On | The same notifications on phones you connect, sealed so only they can read them (`push`). A phone connects by opening this computer's AIDE sessions in the iPhone app with its **Agent notifications** on: see [Agent notifications](#agent-notifications). Until one has, nothing is sent. |
 | **Set up agent hooks…** | | Below. |
 
 If AIDE stops being able to read agents' files (a read that never returned), the group says **Agent
@@ -361,7 +360,7 @@ hook.
 - Whenever it isn't sure (no AIDE pane, an old reading, `git` slow or failing, not a repository), it
   lets Claude compact. It answers within a second and a half.
 
-#### Plugin skills <Badge text="Next release" />
+#### Plugin skills
 
 On the Mac and on Linux, AIDE can give Claude Code, Codex and Grok the skills of the plugins you turn
 on: short instructions that teach an agent how to use a plugin with `aidectl`. It's off until you
@@ -394,7 +393,7 @@ turn on **Give plugins' skills to your coding agents** under **Settings › Term
 - A session that's already running may still remember a skill that was taken out. The plugin's own
   commands refuse to act where the plugin is off, whatever the agent remembers.
 
-##### Skills in a community plugin <Badge text="Next release" />
+##### Skills in a community plugin
 
 A [community plugin](/docs/plugins/device-plugins/) can bring up to three skills of its own. They're
 off until you agree to them on the plugin's page, also when it comes from the index.
@@ -452,7 +451,7 @@ menu with **Run startup command**, **Disconnect** and **Reconnect**. Sessions st
 move around the app, and switching between notes on the device and a server doesn't close them;
 turning SSH off does.
 
-### AIDE sessions on a host <Badge text="Next release" />
+### AIDE sessions on a host
 
 If AIDE is installed on a host (a Mac or Linux machine where you've opened AIDE once), its row in the
 list has an **AIDE** button beside it. It opens that computer's AIDE terminal sessions, the
@@ -502,7 +501,7 @@ In the host's editor, the **AIDE** section has **AIDE command**: what runs on th
 sessions. Left empty, AIDE runs the AIDE installed there. The section also has **Agent
 notifications** (below).
 
-### Agent notifications <Badge text="Next release" />
+### Agent notifications
 
 **Agent notifications**, in the host editor's **AIDE** section, is on by default. The next time you
 open that host's AIDE sessions, AIDE asks for permission to notify you and gives the host's AIDE a
@@ -538,7 +537,7 @@ notification it still sends arrives as "Agent notification", and tapping it does
   `~/.ssh/authorized_keys` on the server.
 - **Import a key…**: an ED25519 private key in OpenSSH format (`BEGIN OPENSSH PRIVATE KEY`),
   unencrypted or with a passphrase.
-- **New Secure Enclave key…** <Badge text="Next release" />: where the iPhone or iPad has a Secure
+- **New Secure Enclave key…**: where the iPhone or iPad has a Secure
   Enclave, it makes a P-256 key there. Its private half can't be read out, not even by AIDE, and it
   works only on that device. Copy or share its public key the same way.
 
