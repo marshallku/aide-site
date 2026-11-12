@@ -175,22 +175,49 @@ after AIDE quits**. Then:
 | **Color blending** (Mac) | **Native** | **Native** or **Linear**. Linear applies only when drawing with the GPU, and not over a wallpaper. |
 | **Kitty keyboard protocol** | On | Programs that ask for it get every key with its modifiers. Applies to new tabs. |
 | **Images** | On | Programs can draw pictures with kitty graphics. On Linux, sixel too where the system's VTE has it, and pictures more than 200 lines up in the scrollback aren't drawn. Applies to new tabs. |
-| **Reopen tabs at launch** | On | After your computer restarts, your tabs, splits and folders come back as new shells. See [Tabs after a restart](#tabs-after-a-restart). |
+| **Reopen tabs at launch** | On | After your computer restarts, your tabs, splits and folders come back. See [Tabs after a restart](#tabs-after-a-restart). |
+| **Bring back agents in their conversation** <Badge text="Next release" /> | On | Claude Code and Codex start again where they were. Off, their panes come back as shells. |
+| **Programs to bring back** <Badge text="Next release" /> | Editors and other full-screen programs | The programs that run again after a restart, by name, separated by spaces. **Reset** sets the default list again. |
 | **Keep shells running after AIDE quits** | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide). |
 
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
 are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`,
-`keep_running`). **Scrollback**, **Shell**, **Kitty keyboard protocol**,
-**Reopen tabs at launch** and **Keep shells running after AIDE quits** are also the terminal
-server's own: a change on one AIDE reaches the server, and the last change wins.
+`keep_running`, and in the next release `restore_agent_sessions` and `restore_processes`, a list of
+names; without it the default list applies). **Scrollback**, **Shell**, **Kitty keyboard protocol**,
+**Reopen tabs at launch**, **Keep shells running after AIDE quits** and the two restore settings are
+also the terminal server's own: a change on one AIDE reaches the server, and the last change wins.
 
 ### Tabs after a restart
 
 The terminal server keeps each vault's layout: its tabs with their names, the splits at their sizes,
 the tab you were on, and the folder each pane's shell is in. When the server starts again, after
 your computer restarts say, the layout comes back with a new shell in each pane, in its folder.
-Programs that were running, the scrollback and the environment don't come back; a folder that's gone
-opens at home instead.
+The scrollback and the environment don't come back; a folder that's gone opens at home instead.
+
+<Badge text="Next release" /> Some programs come back too, as tmux-resurrect brings them back:
+
+- **Claude Code and Codex** start again in the conversation they had, with the options that still
+  apply: `claude --resume <conversation> --dangerously-skip-permissions`, say, or
+  `codex resume <conversation>`. What you first typed after `claude` isn't sent again. An agent
+  whose conversation AIDE doesn't know, one run with `-p` or a one-shot subcommand such as `codex exec`, and every agent while
+  **Bring back agents in their conversation** is off, comes back as a shell.
+- **Editors and other full-screen programs** on **Programs to bring back** run again as they were
+  started, with their files: Neovim, Vim, Emacs in the terminal, nano, Helix, less, man, htop,
+  btop, top, lazygit, tig, yazi, ranger and nnn by default. The agents (Claude Code, Codex and the
+  others AIDE knows) are on the list too; take a name off to bring that program back as a shell.
+- **Anything else**, such as a server, a watcher or a REPL, comes back as a shell in its folder, so
+  nothing with side effects starts by itself. Add its name to the list if you want it run again.
+
+AIDE notices these programs while **Watch for coding agents** is on. Each program runs in its
+pane's shell, so quitting it leaves you at a prompt. Only what the program
+had in front of the pane is kept, and only when its keyboard and screen were the pane's: a
+program at the end of a pipe (`git log | less`) or writing into one comes back as a shell. What
+the program held itself, such as unsaved changes, undo history, its splits or where you were in a
+file, isn't kept; an editor may say it found a swap file.
+
+To do this, AIDE keeps each of these panes' command lines on your computer, readable only by you,
+beside the saved layout. A password or token you typed on such a command line is kept with it; take
+the program off the list, or turn **Reopen tabs at launch** off, if that matters.
 
 - The layout is saved a second after each change, a `cd` included.
 - A tab you closed stays closed.
