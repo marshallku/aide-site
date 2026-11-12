@@ -5,7 +5,7 @@ sidebar:
     order: 3
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 While the AIDE app on the Mac or Linux has a vault open, it serves that vault's notes on a Unix socket. Any program you run on the same computer can read and write notes there with plain HTTP, with no server and no token, and gets the same answers a server would give. [`aidectl`](/docs/developers/aidectl/) is built on it; this page is for when you want to call it yourself.
 
@@ -274,7 +274,8 @@ In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused p
 | `split.horizontal` | `id` | Splits the pane to the right; answers `{panel_id}` of the new pane |
 | `split.vertical` | `id` | Splits the pane downward; answers `{panel_id}` |
 | `pane.focus_next`, `pane.focus_prev` | | Focuses the next or previous pane |
-| `agent.list` | | The [coding agents](/docs/guides/terminal/#coding-agents) in the server's panes: `{agents: [{pane, tab, session, agent}]}`, each `agent` with its `kind`, `state`, `unseen`, `wait`, `detail` and `context` |
+| `agent.list` | | The [coding agents](/docs/guides/terminal/#coding-agents) in the server's panes: `{agents: [{pane, tab, session, agent}]}`, each `agent` with its `kind`, `state`, `unseen`, `wait`, `detail` and `context`. <Badge text="Next release" /> A pane linked to a board card also has `link {vault, card, gen, finished, at}` |
+| `agent.card` <Badge text="Next release" /> | `pane`, `vault`, `card` | From inside the pane only: links the pane to a [board card](/docs/guides/terminal/#cards-linked-to-panes), or unlinks it with `card: null`. What `aidectl board add` and `link` call |
 | `agent.notify` | `pane`, `kind`, `body` | From inside the pane only: its agent finished (`kind: "done"`) or needs you (`"blocked"`), with `body` (at most 1 KiB) as the notification's text. What the hooks call |
 | `agent.report` | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | From inside the pane only: Claude Code's context and cost, from its status line. Taken only while the pane's agent is Claude Code in that conversation |
 | `agent.fill` | `pane`, `session_id` | From inside the pane only: `{used, window}` for that Claude Code conversation, both null when AIDE isn't sure. What the auto-compaction gate asks |

@@ -5,7 +5,7 @@ sidebar:
     order: 3
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 Mac이나 Linux의 AIDE 앱은 보관소를 열어 두는 동안 그 보관소의 노트를 Unix 소켓으로 제공해요. 같은 컴퓨터에서 실행하는 프로그램이라면 서버도 토큰도 없이 평범한 HTTP로 노트를 읽고 쓸 수 있고, 서버가 주는 것과 같은 응답을 받아요. [`aidectl`](/ko/docs/developers/aidectl/)도 이 위에서 만들어졌어요. 이 페이지는 직접 호출하고 싶을 때를 위한 거예요.
 
@@ -274,7 +274,8 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `split.horizontal` | `id` | 페인을 오른쪽으로 나누고 새 페인의 `{panel_id}`로 응답해요 |
 | `split.vertical` | `id` | 페인을 아래로 나누고 `{panel_id}`로 응답해요 |
 | `pane.focus_next`, `pane.focus_prev` | | 다음 또는 이전 페인으로 포커스를 옮겨요 |
-| `agent.list` | | 서버 페인의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트): `{agents: [{pane, tab, session, agent}]}`, `agent`마다 `kind`, `state`, `unseen`, `wait`, `detail`, `context` |
+| `agent.list` | | 서버 페인의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트): `{agents: [{pane, tab, session, agent}]}`, `agent`마다 `kind`, `state`, `unseen`, `wait`, `detail`, `context`. <Badge text="다음 릴리스" /> 보드 카드에 연결된 페인에는 `link {vault, card, gen, finished, at}`도 있어요 |
+| `agent.card` <Badge text="다음 릴리스" /> | `pane`, `vault`, `card` | 그 페인 안에서만: 페인을 [보드 카드](/ko/docs/guides/terminal/#패널에-연결된-카드)에 연결하거나 `card: null`로 연결을 끊어요. `aidectl board add`와 `link`가 부르는 메서드예요 |
 | `agent.notify` | `pane`, `kind`, `body` | 그 페인 안에서만: 에이전트가 작업을 마쳤거나(`kind: "done"`) 확인이 필요하다고(`"blocked"`) 알려요. `body`(1 KiB까지)가 알림 내용이 돼요. 훅이 부르는 메서드예요 |
 | `agent.report` | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | 그 페인 안에서만: 상태 줄에서 얻은 Claude Code의 컨텍스트와 비용이에요. 그 페인의 에이전트가 그 대화의 Claude Code일 때만 받아요 |
 | `agent.fill` | `pane`, `session_id` | 그 페인 안에서만: 그 Claude Code 대화의 `{used, window}`예요. AIDE가 확실하지 않으면 둘 다 null이에요. 자동 압축을 미루는 장치가 물어요 |
