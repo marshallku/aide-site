@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { LinkCard } from "@astrojs/starlight/components";
+import { Badge, LinkCard } from "@astrojs/starlight/components";
 
 A todo in AIDE is a checkbox line in a note, so there's no separate todo database: `- [ ] Call the bank` in any note is a todo, and the Todos screen gathers every open one from all your notes. Checking it off anywhere changes that line in its note.
 
@@ -74,6 +74,18 @@ Also read from a todo's text:
 - **Time block**, as the Day Planner plugin writes it: `09:00 - 10:30` or `9:00` at the start of the text. A block whose end is before its start ends the next day.
 - **Tags**: `#tag`, which must contain something other than digits (`#2026` isn't a tag).
 - **Contexts and people**: `@name`.
+
+#### Calm todo lines <Badge text="Next release" />
+
+Off the line you're editing, a todo reads the same way it will on every screen:
+
+- Its chips come **after the title**, at the end of the line as on the Todos screen and the board, always in the same order: the time block, due, scheduled, start, estimate, the agent working on it, its progress, its project, where it came from, a meeting it came from and its repeat rule.
+- What doesn't help you decide is hidden: the **created**, **done** and **cancelled** dates (the checkbox already says it's done), who added it (`[by:: …]`), and an agent card's id and last update. Put the cursor on the line to see everything as written.
+- **Priority** colours the checkbox's ring instead of taking a chip: pink for highest, red for high, orange for medium, grey for low. You change it on the line, or add it with **+**.
+- A todo with subtasks shows its **progress**, such as **2/4**: the subtasks done out of the subtasks directly under it, cancelled ones left out. An [agent card](#agent-cards) shows its agent (**Claude**, **Codex**, **Grok** or **Agent**) too. A card's project isn't shown in that project's own board note.
+- A long todo shows **two lines at most**: its title ends in **…** where its chips still fit, so you always see them. Click **…**, put the cursor on the todo, select across it, or find a word in it, and it shows in full; while reading, click it. Links in it stay links.
+- A todo's [memo](#memos) folds to its first line, smaller and muted, with **+3 lines** (or however many) after it. Put the cursor on the todo or in the memo, or click **+3 lines**, to see it all.
+- None of this happens in code (fenced or indented), the frontmatter or HTML: a todo-shaped line there shows exactly as written.
 
 ```markdown
 - [ ] 09:00 - 10:00 Write the quarterly report ⏫ 📅 2026-10-24 #work
@@ -149,7 +161,7 @@ A todo's memo is a quote indented under it, with no blank line between:
     > Account ends in 1234.
 ```
 
-The memo shows under the todo's title on the Todos screen, and it moves with the todo when the todo moves to another day.
+The memo shows under the todo's title on the Todos screen, and it moves with the todo when the todo moves to another day. <Badge text="Next release" /> In the editor, a memo folds to its first line until you put the cursor on its todo (see **Calm todo lines** above).
 
 ### Completion dates
 
