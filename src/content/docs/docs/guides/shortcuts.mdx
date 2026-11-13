@@ -138,6 +138,8 @@ While a terminal has the keyboard, these act on its tabs and panes:
 | Copy / paste | <kbd>⌘</kbd><kbd>C</kbd> / <kbd>⌘</kbd><kbd>V</kbd> (the Edit menu) | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>C</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>V</kbd> |
 | Bigger / smaller text | <kbd>⌘</kbd><kbd>=</kbd> / <kbd>⌘</kbd><kbd>-</kbd> | <kbd>Ctrl</kbd><kbd>=</kbd> / <kbd>Ctrl</kbd><kbd>-</kbd> |
 | Text size back to the setting | <kbd>⌘</kbd><kbd>0</kbd> | <kbd>Ctrl</kbd><kbd>0</kbd> |
+| New space… <Badge text="Next release" /> | <kbd>⌃</kbd><kbd>⌘</kbd><kbd>N</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd> |
+| Next / previous space <Badge text="Next release" /> | <kbd>⌃</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌃</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>]</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>[</kbd> |
 
 On the Mac, a terminal with the keyboard keeps <kbd>⌘</kbd><kbd>T</kbd>, <kbd>⌘</kbd><kbd>W</kbd>,
 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd>, <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd>
@@ -221,8 +223,8 @@ The keys you press in a terminal belong to the program running there, so your sh
   <kbd>Ctrl</kbd> letters, <kbd>Super</kbd> shortcuts and function keys go to the program.
 
 The terminal's own actions (**New terminal tab**, **Split right**, **Split down**, **Next pane**,
-**Previous pane**, **Close pane**, and the focus, divider, zoom and pane-number ones) run only while
-a terminal has the keyboard, whatever shortcut you give them.
+**Previous pane**, **Close pane**, the focus, divider, zoom and pane-number ones, and the space
+actions) run only while a terminal has the keyboard, whatever shortcut you give them.
 
 ### Commands
 
@@ -324,6 +326,9 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `terminal/resize-left`, `terminal/resize-down`, `terminal/resize-up`, `terminal/resize-right` | Move the divider left, down, up, right <Badge text="Next release" /> |
 | `terminal/zoom-pane` | Zoom pane <Badge text="Next release" /> |
 | `terminal/close-pane` | Close pane |
+| `terminal/new-space` | New space… <Badge text="Next release" /> |
+| `terminal/next-space`, `terminal/previous-space` | Next space, Previous space <Badge text="Next release" /> |
+| `terminal/rename-space`, `terminal/end-space` | Rename space…, End space… (no shortcut until you give it one) <Badge text="Next release" /> |
 | `terminal/open-remote-aide` | Open remote AIDE… (no shortcut until you give it one) |
 
 Others come and go with what the window shows:

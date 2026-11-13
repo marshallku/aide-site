@@ -136,6 +136,51 @@ On the iPhone, a host's **AIDE on** screen shows the same limits as one line und
 An agent can read them too, before it starts a big task: `aidectl agent usage` (see
 [aidectl](/docs/developers/aidectl/#agent)).
 
+### Spaces
+
+<Badge text="Next release" />
+
+A space is a set of tabs of its own, started in a folder you pick, such as one per project. Each
+window shows one space at a time and switches between them; the shells of the others keep running.
+
+- Your vault's own tabs are its first space, named after the vault.
+- **Spaces** at the top of the section's panel lists them, each with its git branch and how many
+  tabs it has. Click one to show it.
+- The menu at the start of the tab row shows the space you're in and its branch. Open it to switch,
+  or for **New space…**, **Rename space…** and **End space…**.
+- Every window on the computer lists the same spaces, and each window remembers the one it showed
+  for its vault the next time it opens.
+
+To make one:
+
+1. Press <kbd>⌃</kbd><kbd>⌘</kbd><kbd>N</kbd> (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd> on Linux),
+   or choose **New space…**. A folder browser opens on the folder of the tab you're in.
+2. Type to narrow the folders (start with `.` to see hidden ones), or type a path starting with `/`
+   or `~/` and press <kbd>Return</kbd> to go there. <kbd>↑</kbd> and <kbd>↓</kbd> move,
+   <kbd>Return</kbd> or <kbd>→</kbd> enter a folder, <kbd>←</kbd> (or <kbd>Delete</kbd> with nothing
+   typed) goes up.
+3. Choose **. (this folder)**, the first row, to start the space in the folder you're in.
+4. Give it a name. The folder's name is filled in. Press <kbd>Return</kbd>.
+
+The new space opens with a shell in its folder, and its new tabs start there too. Splits start in the
+folder of the pane you split.
+
+| Action | Mac | Linux |
+|---|---|---|
+| **New space…** | <kbd>⌃</kbd><kbd>⌘</kbd><kbd>N</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd> |
+| **Next space** | <kbd>⌃</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>]</kbd> |
+| **Previous space** | <kbd>⌃</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>[</kbd> |
+
+- The keys work while a terminal pane has the keyboard. **Rename space…** and **End space…** have no
+  key; give them one in **Settings › Keyboard**.
+- **End space…** asks first and names the programs still running there; its shells end. Ending the
+  space you're in shows your vault's space again. If another window or computer ends the space on
+  screen, the window goes back to your vault's space and says **The space … was ended.**
+- With **Keep shells running after AIDE quits** off and **Reopen tabs at launch** on, quitting ends
+  the spaces' shells but keeps their tabs. The spaces stay in the list as **Not running**, AIDE opens
+  on the space you were in, and showing one starts its shells again in its folders.
+- The branch is read from the folder's git files; it follows a `git checkout` within a few seconds.
+
 ### Shells that outlive AIDE
 
 Your shells run in AIDE's terminal server, a small program of its own, not in the app. Quitting
@@ -584,8 +629,11 @@ Touching and holding the row offers **Open AIDE** too.
 - A tab split into panes shows its focused pane; **Panes** in the bar lists the others to switch to.
   The iPhone shows splits other computers make, but doesn't split itself.
 - The **Session** menu has **New tab**, **Rename tab…**, **Close pane** and **Reconnect**. **Close
-  pane** asks first, and names the program still running there. There's no way to end a whole
-  session from the iPhone.
+  pane** asks first, and names the program still running there.
+- <Badge text="Next release" /> The list includes the host's [spaces](#spaces), each with its git
+  branch. **+** makes one: type the folder's whole path on the host (the folders its shells are in
+  are offered), and its name, which is filled in from the folder. Swipe a row for **Rename**; a
+  space also has **End**, which asks first. A vault's own session can't be ended from the iPhone.
 - Leaving the screen or the app only lets go of the session: its shells keep running on the other
   computer. Coming back shows each pane as it is now.
 - A pane has one size. Opening it on the iPhone doesn't change it: if a computer sized it last,

@@ -136,6 +136,8 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 | 복사 / 붙여넣기 | <kbd>⌘</kbd><kbd>C</kbd> / <kbd>⌘</kbd><kbd>V</kbd>(편집 메뉴) | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>C</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>V</kbd> |
 | 글자 크게 / 작게 | <kbd>⌘</kbd><kbd>=</kbd> / <kbd>⌘</kbd><kbd>-</kbd> | <kbd>Ctrl</kbd><kbd>=</kbd> / <kbd>Ctrl</kbd><kbd>-</kbd> |
 | 글자 크기를 설정값으로 되돌리기 | <kbd>⌘</kbd><kbd>0</kbd> | <kbd>Ctrl</kbd><kbd>0</kbd> |
+| 새 스페이스… <Badge text="다음 릴리스" /> | <kbd>⌃</kbd><kbd>⌘</kbd><kbd>N</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd> |
+| 다음 / 이전 스페이스 <Badge text="다음 릴리스" /> | <kbd>⌃</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌃</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>]</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>[</kbd> |
 
 Mac에서 터미널에 키보드 포커스가 있으면 <kbd>⌘</kbd><kbd>T</kbd>, <kbd>⌘</kbd><kbd>W</kbd>,
 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd>, <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd>,
@@ -219,8 +221,8 @@ Page Down, Insert, Delete, Backspace, Tab, Return, Esc, Space도 쓸 수 있어�
   <kbd>Ctrl</kbd>과 글자만 누르는 단축키, <kbd>Super</kbd> 단축키, 기능 키는 프로그램으로 가요.
 
 터미널 자체의 동작(**새 터미널 탭**, **오른쪽으로 분할**, **아래로 분할**, **다음 페인**, **이전 페인**,
-**페인 닫기**, 그리고 페인 이동, 구분선, 확대, 페인 번호 동작)은 어떤 단축키를 주든 터미널에 키보드 포커스가 있을
-때만 실행돼요.
+**페인 닫기**, 그리고 페인 이동, 구분선, 확대, 페인 번호, 스페이스 동작)은 어떤 단축키를 주든 터미널에 키보드 포커스가
+있을 때만 실행돼요.
 
 ### 명령
 
@@ -315,6 +317,9 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `terminal/resize-left`, `terminal/resize-down`, `terminal/resize-up`, `terminal/resize-right` | 구분선을 왼쪽, 아래, 위, 오른쪽으로 <Badge text="다음 릴리스" /> |
 | `terminal/zoom-pane` | 페인 확대 <Badge text="다음 릴리스" /> |
 | `terminal/close-pane` | 페인 닫기 |
+| `terminal/new-space` | 새 스페이스… <Badge text="다음 릴리스" /> |
+| `terminal/next-space`, `terminal/previous-space` | 다음 스페이스, 이전 스페이스 <Badge text="다음 릴리스" /> |
+| `terminal/rename-space`, `terminal/end-space` | 스페이스 이름 변경…, 스페이스 끝내기…(단축키를 주기 전까지는 없음) <Badge text="다음 릴리스" /> |
 | `terminal/open-remote-aide` | 원격 AIDE 열기…(직접 지정하기 전까지 단축키 없음) |
 
 창에 보이는 것에 따라 생기고 없어지는 id도 있어요.
