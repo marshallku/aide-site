@@ -314,6 +314,46 @@ the program off the list, or turn **Reopen tabs at launch** off, if that matters
 - Turning **Reopen tabs at launch** off forgets the saved layouts.
 - The first time the new AIDE starts, the tabs an earlier AIDE had saved are taken over.
 
+### Reopen a past conversation
+
+<Badge text="Next release" /> Claude Code, Codex and Grok keep every conversation on your computer, so one you closed days ago can
+be opened again, or forked into a new one, as comux's resume picker does.
+
+1. In a terminal, press <kbd>⌥</kbd><kbd>⌘</kbd><kbd>R</kbd> on the Mac or
+   <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>R</kbd> on Linux, or choose **Resume a conversation…** in the
+   command palette.
+2. The list shows your conversations, newest first: the prompt that started each one, then the
+   agent, its folder and how long ago it was last used. Type in **Filter conversations** to find one
+   by its words, folder or id; older ones are found too, and **Show older** loads more.
+3. Press <kbd>Enter</kbd> (<kbd>Return</kbd> on the Mac) to resume the selected one, or
+   <kbd>⌥</kbd><kbd>Return</kbd> (<kbd>Alt</kbd><kbd>Enter</kbd> on Linux) to fork it. A right-click
+   on a row offers **Resume** and **Fork this conversation** too.
+
+- **Resume** opens a new tab running the agent in that conversation (`claude --resume <id>`,
+  `codex resume <id>`, `grok --resume <id>`) in the conversation's folder: in the
+  [space](#spaces) working in that folder when there is one, else in the space you're in, and the
+  window shows it. If the folder is gone, it opens in the space's folder, or your home folder when the space has none, and says so.
+- A conversation a pane already has is marked **●**, in whichever space, and resuming it goes to
+  that pane instead of starting it twice. Right after a resume, until AIDE sees the agent running, the row says
+  **Starting…**.
+- **Fork** starts a new conversation from that one (`claude --resume <id> --fork-session`,
+  `codex fork <id>`), in a new tab, even when the conversation is open.
+- Runs nobody typed into, such as `claude -p` and `codex exec`, are hidden; **Show automated runs**
+  lists them too. **Rescan** reads the conversations again.
+- The list reads Claude Code's, Codex's and Grok's own conversation files and nothing leaves your
+  computer. agy's conversations aren't listed.
+
+To fork the agent in a pane you're looking at, right-click its row in the Agents list, or choose
+**Fork this conversation** in the command palette: the fork keeps the agent's options, such as
+`--dangerously-skip-permissions`, and opens in a new tab beside it.
+
+[Agent cards](#cards-linked-to-panes) follow the conversation:
+
+- Resuming a conversation whose pane had a card links that card to the new pane again, when it is
+  the only card last linked to that conversation and it isn't done. Otherwise the list says why it
+  wasn't: **Not linked: Fix the login is done**, or **Not linked again: 2 cards were on it**.
+- A fork is a new conversation, so it starts with no card: **The fork isn't linked to Fix the login**.
+
 ### Keys and pictures
 
 Keys with no text, such as <kbd>Home</kbd>, <kbd>F5</kbd> or the arrows, reach programs the way
@@ -644,6 +684,10 @@ Touching and holding the row offers **Open AIDE** too.
 - Pictures that programs draw in the terminal (kitty images) aren't shown on the iPhone.
 - A paste larger than the pane can take now is refused whole: **That paste is too large to send**.
   When a program stops reading what you type, the pane says **Not responding** until it reads again.
+
+<Badge text="Next release" /> **Resume a conversation** over the sessions lists the host's past
+conversations, as [the Mac and Linux do](#reopen-a-past-conversation). Tap one to resume it in a new tab
+on the host; touch and hold it to **Fork this conversation**.
 
 Coding agents in the host's panes show here too, as the host's AIDE reports them:
 

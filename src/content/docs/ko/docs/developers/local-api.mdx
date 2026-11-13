@@ -278,6 +278,9 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `agent.card` <Badge text="다음 릴리스" /> | `pane`, `vault`, `card` | 그 페인 안에서만: 페인을 [보드 카드](/ko/docs/guides/terminal/#패널에-연결된-카드)에 연결하거나 `card: null`로 연결을 끊어요. `aidectl board add`와 `link`가 부르는 메서드예요 |
 | `agent.notify` | `pane`, `kind`, `body` | 그 페인 안에서만: 에이전트가 작업을 마쳤거나(`kind: "done"`) 확인이 필요하다고(`"blocked"`) 알려요. `body`(1 KiB까지)가 알림 내용이 돼요. 훅이 부르는 메서드예요 |
 | `agent.report` | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | 그 페인 안에서만: 상태 줄에서 얻은 Claude Code의 컨텍스트와 비용이에요. 그 페인의 에이전트가 그 대화의 Claude Code일 때만 받아요 |
+| `conversation.list` <Badge text="다음 릴리스" /> | `dir`, `all`, `query`, `after`, `limit`, `rescan` | 지난 Claude Code, Codex, Grok 대화를 최근 것부터: `{items: [{tool, id, title, cwd, mtime, age, interactive, open, starting, card, relink}], more, truncated}`. `dir`은 그 폴더나 그 아래의 대화만, `query`는 프롬프트, 폴더, id에 그 글자들이 순서대로 들어 있는 대화만 남겨요. `after`는 앞 페이지의 마지막 항목(`{mtime, tool, id}`), `limit`은 1–1000(기본 200)이에요. `open`은 그 대화가 열려 있는 페인(`{session, tab, pane}`), `truncated`는 대화가 너무 많아 다 읽지 못했다는 뜻이에요 |
+| `conversation.resume` <Badge text="다음 릴리스" /> | `conversation`, `tool`, `pane`, `focus` | 대화를 새 탭에서 열어요. 그 폴더에서 작업하는 스페이스, 없으면 `pane`의 세션(없으면 포커스된 페인의 세션)에서요: `{session, tab, pane, moved, shown}`, 이미 열려 있으면 `{open: {session, tab, pane}}`. `focus: true`면 새 탭이나 이미 열린 페인을 그 창에 보여 줘요 |
+| `conversation.fork` <Badge text="다음 릴리스" /> | `pane` 또는 `conversation`, `tool`, `focus` | `pane`의 에이전트(둘 다 없으면 포커스된 페인)나 지난 `conversation`에서 새 대화를 새 탭에서 시작해요. `unlinked`는 포크한 대화와 연결되지 않은 보드 카드예요 |
 | `agent.fill` | `pane`, `session_id` | 그 페인 안에서만: 그 Claude Code 대화의 `{used, window}`예요. AIDE가 확실하지 않으면 둘 다 null이에요. 자동 압축을 미루는 장치가 물어요 |
 | `usage.get` <Badge text="다음 릴리스" /> | `refresh` | [상태 표시줄](/ko/docs/guides/terminal/#상태-표시줄-)에 나오는 Claude와 Codex 요금제 한도예요. `{usage, refreshing}`으로 답하고, `usage`는 `{claude?: {five_hour?, seven_day?, stale?}, codex?: {five_hour?, weekly?, stale?}, at, problems: [{provider, text}]}`예요. 한도마다 `{used, resets_at?}`이고 `used`는 퍼센트, `resets_at`은 Unix 초, `at`은 Unix 밀리초예요. 꺼 두었거나 지난 3시간 동안 읽은 게 없는 서비스는 빠져요. `stale: true`는 마지막으로 읽기에 실패해서 이전 값을 보여 주는 것이고, 이유는 `problems`에 있어요. 앱이 연결돼 있는 동안 서버가 60초마다 읽고, `refresh: true`는 지금 새로 읽어 달라는 요청이고, `refreshing: true`는 이 요청이 새로 읽기를 시작했다는 뜻이에요. 새 값은 다시 물어보세요. 처음 읽기 전에는 `usage`가 null이에요. `aidectl agent usage`가 불러요 |
 
@@ -299,6 +302,8 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `no_window` | 그 페인의 볼트를 보여 주는 AIDE 창이 없을 때 `panel.focus`, `tab.switch`, `tab.new` |
 | `not_in_pane` | 그 페인에서 실행되지 않는 프로그램이 `agent.notify`, `agent.report`, `agent.fill`을 보냄 |
 | `no_agent` | 그 페인에 에이전트가 없음 |
+| `unknown_conversation` <Badge text="다음 릴리스" /> | 그 id의 대화가 없거나, 페인의 에이전트 대화를 아직 알 수 없음 |
+| `lookup_incomplete` <Badge text="다음 릴리스" /> | 그 id를 찾기에는 대화가 너무 많음. 다시 시도하세요 |
 | `frame_too_large` | 요청 줄이 64 KiB를 넘음 |
 
 ### 터미널 소켓의 제한

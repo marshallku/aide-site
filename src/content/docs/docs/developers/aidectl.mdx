@@ -396,6 +396,9 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `switch-tab <index>` | Selects a tab by its index in `tabs`, counting from 0 |
 | `split right\|down` | Splits the pane and prints the new pane's id |
 | `focus <pane>` | Brings that pane forward: its tab, the Terminal section and the window |
+| `conversations [--dir D \| --here] [--all] [--query Q] [--rescan]` <Badge text="Next release" /> | Lists past Claude Code, Codex and Grok conversations, newest first: id, agent, age, folder, the first prompt, and **● pane N** when a pane has it. `--dir` (or `--here`, this folder) keeps those in that folder or under it; `--all` adds runs nobody typed into |
+| `resume <id> [--tool T] [--focus]` <Badge text="Next release" /> | Opens that conversation in a new tab, in the space working in its folder, else in the session of the pane it runs in, and prints the new pane's id; one a pane already has prints that pane's id instead |
+| `fork [<id>] [--tool T] [--focus]` <Badge text="Next release" /> | Starts a new conversation from the agent in this pane (or `--pane`), or from a past conversation, in a new tab, and prints its pane id |
 
 `read`, `state`, `exec`, `feed`, `history`, `context` and `split` act on the pane `--pane` names, else on the focused pane. A pane's id is in `tabs`, and a pane's own shell has it in `$COPAD_PANEL_ID`. `--json` prints the app's answer as JSON instead of text.
 
@@ -410,6 +413,8 @@ Reading never moves the pane: `read` and `history` read the live screen even whe
 
 `focus`, `switch-tab` and `new-tab` need an AIDE window showing the terminal; with none, they stop with exit code 1.
 
+`resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
+
 The Mac App Store build and the iPhone have no terminal socket.
 
 | What happened | Exit code |
@@ -417,13 +422,15 @@ The Mac App Store build and the iPhone have no terminal socket.
 | Done | 0 |
 | No app to talk to, a `$COPAD_SOCKET` or `--socket` that doesn't answer, or the app refused (a shell that has exited, a pane too small to split) | 1 |
 | Several apps running and no `--socket`, or wrong arguments (a `read` range the app refuses, say) | 2 |
-| No pane or tab with that id | 5 |
+| No pane or tab with that id, no such conversation, or no agent in the pane to fork | 5 |
 
 ```sh
 aidectl terminal tabs
 pane=$(aidectl terminal split right)
 aidectl terminal exec --pane "$pane" 'make test'
 aidectl terminal history --lines 500 > scrollback.txt
+aidectl terminal conversations --here
+pane=$(aidectl terminal resume 3b6a1f0e-5d2c-4e8a-9f1b-7c4d2e8a6b10)
 ```
 
 ### agent
