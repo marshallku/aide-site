@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 `aidectl`은 터미널, 스크립트, 에디터, 상태 표시줄에서 AIDE 노트를 읽고 써요. AIDE의 노트 규칙을 그대로 따르기 때문에, 보지 못한 편집을 덮어쓰는 일은 없어요. 특정 작업 방식은 정해 두지 않았어요. `get`, `put`, `append`, `toggle`을 직접 조합해서 쓰면 돼요.
 
@@ -32,9 +32,19 @@ import { Aside } from "@astrojs/starlight/components";
 | --- | --- | --- |
 | 명령 앞의 플래그 | `--vault DIR` | `--server URL` |
 | 환경 변수 | `AIDE_VAULT` | `AIDE_URL` |
+| 실행 중인 AIDE 터미널 패널 <Badge text="다음 릴리스" /> | 창의 폴더 | 창의 서버 |
+| 맨 앞의 AIDE 창 <Badge text="다음 릴리스" /> | 창의 폴더 | 창의 서버 |
 | 설정 파일 | `vault=` | `url=` |
 
 한 출처는 볼트나 서버 중 하나만 지정해요. 둘 다 지정하면 사용법 오류로 멈춰요. 서버 토큰은 `AIDE_TOKEN`에서, 없으면 설정 파일의 `token=`에서 가져와요.
+
+**AIDE 터미널 패널 안에서는** <Badge text="다음 릴리스" /> 플래그도 토큰도 필요 없어요. `aidectl`은 그 패널이 속한 창의 노트를 내 권한으로 써요. 패널 안의 코딩 에이전트는 자기가 일하는 보관소의 보드를 관리해요. 서버를 보여 주는 창이면 앱이 자기 로그인으로 요청을 넘겨줘요.
+- 패널 안에서 문제가 생기면 무엇을 하면 되는지 알려 주는 오류가 나요. 그곳에서는 맨 앞의 창이나 설정 파일로 넘어가지 않아요. 아직 노트 위치를 알리지 않은 창(이번 릴리스 전에 연 창)은 한 번 포커스해 주세요. 같은 보관소의 사본 두 개가 한 세션을 보여 주면 `--vault`를 지정해 달라고 해요.
+- 패널 밖에서는 앱이 실행 중일 때 맨 마지막으로 앞에 있던 AIDE 창이 다음 순서예요.
+- `aidectl where`는 다음 명령이 어떤 노트에 닿을지와 그 이유를 보여 줘요.
+- 패널은 자기를 띄운 AIDE의 `aidectl`을 써요. 셸 시작 파일이 실행된 뒤 그 `aidectl`을 `PATH` 맨 앞에 두고,
+  `$AIDECTL`에 전체 경로를 넣어 둬요. 그래서 Homebrew나 `~/.local/bin`의 예전 `aidectl`이 대신 실행되지 않아요.
+  `aidectl where`는 실행된 바이너리도 알려 줘요. 예전 것이면 `$AIDECTL`로 실행하세요.
 
 ```sh
 aidectl --vault ~/Notes daily
@@ -66,6 +76,8 @@ vault=~/Notes
 ### 서버용 토큰
 
 직접 운영하는 서버에서는 호출하는 쪽이 건드려도 되는 범위로 제한한 플러그인 토큰을 쓰세요. 서버의 `aide plugin-token` 명령으로 발급해요. 토큰과 범위는 [서버 플러그인 만들기](/ko/docs/developers/server-plugins/)에서 설명해요.
+
+<Badge text="다음 릴리스" /> 토큰의 범위가 허용하지 않는 요청은 빠진 범위(예: `notes:write:board`)와 그 범위를 얻는 방법을 알려 줘요. AIDE 터미널 패널 안에서 `aidectl`을 실행하거나, **설정 › Claude**에서 Claude를 다시 연결하거나, 그 범위로 토큰을 발급하세요. `board:write`는 보드가 켜져 있는 동안 보드 폴더가 어디로 옮겨 가든 그 아래에 써요. 읽기 전용 에이전트도 보드는 쓸 수 있어요.
 
 ## 노트와 경로
 
@@ -453,6 +465,10 @@ AIDE가 유지하는 링크(Mac은 `~/Library/Application Support/AIDE/bin/aide-
   지금은 `aide-jira`, `aide-linear`, `aide-github`예요. 스킬의 내용은 aidectl에 들어 있고, 서버는 어떤 플러그인이
   켜져 있는지만 알려 줘요. 각 스킬에는 그 서버에서 동작한다고 적혀요. 처음 `sync`하면 이 컴퓨터의 플러그인 스킬이 켜지고,
   이 컴퓨터에 있는 모든 에이전트의 폴더에 써요. 서버에서 플러그인을 끄면 다음 `sync` 때 그 스킬이 빠져요.
+- <Badge text="다음 릴리스" /> 보드가 켜져 있는데 토큰이 보드에 쓸 수 없으면(`board:write`도, 보드 폴더의 `notes:write`도 없으면)
+  `sync`가 그렇게 알려 줘요. 그 토큰을 AIDE 터미널 패널 밖에서 쓰는 에이전트는 카드를 관리할 수 없어요. 패널
+  안에서는 `aidectl`이 그 창의 노트를 쓰고, 아니면 **Settings › Claude**에서 Claude를 다시 연결하세요. 읽기 전용
+  에이전트도 보드는 쓸 수 있어요.
 - `sync --print`는 아무것도 쓰지 않고 어떤 스킬을 줄지만 알려 줘요.
 - `remove`는 `sync`가 준 것을 빼요. `--print`는 무엇을 뺄지만 알려 줘요.
 - `list`는 AIDE가(aidectl이든 AIDE 앱이든) 에이전트의 폴더에 넣은 스킬을 스킬, 플러그인, 에이전트, 상태, 폴더로 한 줄씩

@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 `aidectl` reads and writes your AIDE notes from a terminal, a script, an editor or a status bar. It goes through AIDE's own note rules, so a write never overwrites an edit it didn't see. It knows nothing about any particular workflow: you compose `get`, `put`, `append` and `toggle` yourself.
 
@@ -32,9 +32,20 @@ It takes the first of these that names a target:
 | --- | --- | --- |
 | Flags before the command | `--vault DIR` | `--server URL` |
 | Environment | `AIDE_VAULT` | `AIDE_URL` |
+| The AIDE terminal pane it runs in <Badge text="Next release" /> | the window's folder | the window's server |
+| The AIDE window in front <Badge text="Next release" /> | the window's folder | the window's server |
 | Config file | `vault=` | `url=` |
 
 Each source names a vault or a server, not both; one that names both stops with a usage error. A server's token comes from `AIDE_TOKEN`, else from `token=` in the config file.
+
+**Inside an AIDE terminal pane** <Badge text="Next release" />, `aidectl` needs no flag and no token: it uses the notes of the window the pane belongs to, with your rights there. A coding agent in a pane keeps the board of the vault it works in. On a window that shows a server, the app passes the requests on with its own sign-in.
+- In a pane, anything that goes wrong is an error that says what to do; `aidectl` never falls back to the window in front or the config file there. A window that hasn't said where its notes are yet (open before this release) needs to be focused once. A session shown by two copies of the same vault asks for `--vault`.
+- Outside a pane, the AIDE window last in front is next, while its app runs.
+- `aidectl where` prints which notes the next command would reach, and why.
+- A pane runs its own AIDE's `aidectl`: after your shell's startup files run, the pane puts that
+  copy first on `PATH` and sets `$AIDECTL` to its full path, so an older copy from Homebrew or
+  `~/.local/bin` isn't the one that answers. `aidectl where` also names the binary that ran; if
+  it's an old one, run `$AIDECTL` instead.
 
 ```sh
 aidectl --vault ~/Notes daily
@@ -66,6 +77,8 @@ vault=~/Notes
 ### A token for a server
 
 On your own server, use a plugin token scoped to what the caller may touch, minted with the server's `aide plugin-token` command; [Build a server plugin](/docs/developers/server-plugins/) explains tokens and scopes.
+
+<Badge text="Next release" /> A request the token's scopes don't cover names the scope it lacks (`notes:write:board`, say) and where to get it: run `aidectl` in an AIDE terminal pane, connect Claude again in **Settings › Claude**, or mint a token with that scope. `board:write` writes under the board folder while the board is on, wherever the folder moves; read-only agents can still use the board.
 
 ## Notes and paths
 
@@ -463,6 +476,10 @@ Plugin skills** does on your Mac or Linux desktop. It needs a server in the [con
   with aidectl itself; the server only says which plugins are on. Each skill says it works on that
   server. The first `sync` turns Plugin skills on for this computer, with every agent's folder that
   is here. A plugin turned off on the server takes its skill out at the next `sync`.
+- <Badge text="Next release" /> When the board is on and the token can't write it (it has neither
+  `board:write` nor `notes:write` on the board's folder), `sync` says so: an agent using that token
+  outside an AIDE terminal pane can't keep its cards. In a pane, `aidectl` uses that window's notes;
+  or connect Claude again in **Settings › Claude**, since read-only agents can still use the board.
 - `sync --print` says which skills it would give, writing nothing.
 - `remove` takes out what `sync` gave. `--print` says what it would take out.
 - `list` shows the skills AIDE put in the agents' folders (from aidectl or an AIDE app), one row

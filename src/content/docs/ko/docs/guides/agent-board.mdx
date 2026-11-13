@@ -32,7 +32,7 @@ Claude Code, Codex, Grok이 여러 단계가 있는 일을 하면 자기 계획�
 
 `aide-board` 스킬이 에이전트에게 언제 카드를 더할지, 단계와 상태 줄을 어떻게 최신으로 둘지, 언제 대기로 옮길지, 한 줄짜리 결과로 어떻게 끝낼지 알려 줘요. Mac과 Linux에서는 **플러그인의 스킬을 코딩 에이전트에게 주기**를 켜면 AIDE가 다른 [플러그인 스킬](/ko/docs/guides/terminal/#플러그인-스킬)과 함께 이 스킬을 코딩 에이전트에게 줘요.
 
-<Badge text="다음 릴리스" /> AIDE 터미널 패널 안에서는 카드가 에이전트의 패널에 연결되고, 카드 링크 `aide://card/<vault>/<card>`가 그 패널을 열어요([패널에 연결된 카드](/ko/docs/guides/terminal/#패널에-연결된-카드) 참고). 에이전트는 `aidectl board`를 써요. 명령은 [aidectl 참고서](/ko/docs/developers/aidectl/#board)에 있어요. 열린 카드를 직접 보려면 `aidectl board list`를, 카드 하나와 그 단계를 보려면 `aidectl board show <card>`를 실행하세요.
+<Badge text="다음 릴리스" /> AIDE 터미널 패널 안에서는 카드가 에이전트의 패널에 연결되고, 카드 링크 `aide://card/<vault>/<card>`가 그 패널을 열어요([패널에 연결된 카드](/ko/docs/guides/terminal/#패널에-연결된-카드) 참고). 에이전트는 `aidectl board`를 써요. 명령은 [aidectl 참고서](/ko/docs/developers/aidectl/#board)에 있어요. <Badge text="다음 릴리스" /> 패널 안에서는 플래그도 토큰도 필요 없어요. `aidectl`이 그 패널의 창 노트를 쓰고, 읽기 전용 에이전트도 보드는 쓸 수 있어요. 열린 카드를 직접 보려면 `aidectl board list`를, 카드 하나와 그 단계를 보려면 `aidectl board show <card>`를 실행하세요.
 
 ## 끄기
 
