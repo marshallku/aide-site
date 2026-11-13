@@ -185,7 +185,7 @@ aidectl board move <card> todo|doing|waiting|done|cancelled [--note N] [--skip-r
 aidectl board note <card> <text>
 aidectl board done <card> [--note N] [--skip-rest]
 aidectl board show <card> [--json]
-aidectl board list [--project P] [--mine] [--json]
+aidectl board list [--project P] [--mine] [--done] [--json]
 aidectl board link <card>
 ```
 
@@ -198,6 +198,7 @@ aidectl board link <card>
 - `note`는 카드의 상태 줄, 곧 메모의 첫 줄을 정해요. `""`면 지워요. 세 줄까지예요.
 - `done`과 `move … done`은 카드 아래 열린 할 일이 남아 있으면 그 할 일들을 알려 주며 거절해요. `--skip-rest`를 주면 먼저 그것들을 취소해요. 카드에는 항상 완료 날짜가 붙어요.
 - `show`는 카드와 단계, 진행 상황을 출력하고, `list`는 열린 카드를, `--mine`이면 실행한 패널에 연결된 카드를 보여 줘요.
+- <Badge text="다음 릴리스" /> `--json`이면 `show`와 `list`가 각 카드의 `column`을 [보드](/ko/docs/guides/todos/#보드)가 그리는 대로 알려 줘요: `todo`, `doing`, `waiting`, `done`(어느 열에도 없으면 비어 있어요). `list --done`은 대신 보드의 **완료** 열을 보여 줘요. 이번 주에 끝낸 카드와, 아래에 열린 단계가 남은 완료되거나 취소된 카드예요(`open`이 몇 개인지 알려 줘요).
 - `link`(AIDE 터미널 패널 안에서)는 그 패널을 카드에 연결해요.
 
 변경은 모두 방금 읽은 노트를 바탕으로 만들고, 그사이 아무도 노트를 바꾸지 않았을 때만 저장해요. 그 순간 노트에서 단계를 체크했다면 aidectl이 다시 읽고 그 위에 변경을 더해요. 덮어쓰지 않아요. `board` 폴더 밖의 노트로 옮긴 카드는 더 이상 카드가 아니에요.
@@ -432,7 +433,7 @@ AIDE 터미널의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이�
 
 `list`는 AIDE 창 없이도 터미널 서버에 페인마다 실행 중인 에이전트를 물어요. 에이전트마다 한 줄로 페인, 보관소의 세션,
 에이전트, 상태(아무도 보지 않은 작업 완료는 `done`, 마지막 읽기를 확인하지 못했으면 `(not updating)`), 컨텍스트가 얼마나
-찼는지, 지금 하는 단계를 보여 줘요. 없으면 `No agents.`라고 출력해요. `--json`은 서버의 답을 그대로 출력해요.
+찼는지, 지금 하는 단계를 보여 줘요. 없으면 `No agents.`라고 출력해요. `--json`은 서버의 답을 각 페인의 보드 카드 연결과 함께 그대로 출력해요. <Badge text="다음 릴리스" /> AIDE 터미널 페인 안에서는 그 페인의 터미널 서버에 물어요.
 
 ```text
 PANE           SESSION  AGENT   STATE    CONTEXT  DETAIL

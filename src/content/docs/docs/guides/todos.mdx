@@ -180,6 +180,8 @@ The **Todos** screen shows the number of open todos and switches between **Today
 
 **All** groups every open todo the way your [view preset](#view-presets) says.
 
+<Badge text="Next release" /> With the [agent board](/docs/guides/agent-board/) on, the switch is **Today**, **Board** and **All**. Your coding agents' work (their cards, the steps under them, and any todo with an `agent` field and what's under it) stays off **Today** and **All**, and out of what the assistant plans with; **All** ends with a line such as **3 agent cards on the Board**, which opens the board showing only the agents' cards.
+
 A todo counts as today's when it's in today's daily note or its due (or scheduled) date is today.
 
 ### Adding todos
@@ -200,6 +202,33 @@ Click a todo to open its note at that line. Its menu (right-click on the Mac and
 - **Set time…**: how long it should take, as `25m`, `1h` or `1h30m`. AIDE writes it as `[estimate:: …]` and shows it as a timer chip.
 - **Schedule…** (today's todos): a start and an end, such as `09:00` and `10:30`; the end can be left out. AIDE writes it as the todo's time block. **Remove** takes it away.
 - **Focus for 25m**: starts a focus timer for the todo.
+
+### The Board
+
+<Badge text="Next release" /> **Board** shows your todos and your coding agents' cards in four columns, so you can see at a glance what is being worked on and where you're needed:
+
+- **To do**: open todos and cards. Your own todos tagged with your someday tag stay in **All** instead.
+- **Doing**: in progress (`[/]`).
+- **Waiting**: open and tagged with your waiting tag (`#waiting`), such as a card whose agent asked you something.
+- **Done**: done this week (the week starts on the day **Settings › Journal** says), and a done or cancelled card that still has open steps under it, whatever its day, with **2 steps still open**.
+
+A todo's open subtasks ride on it instead of being cards of their own, and a card's steps always ride on the card. The line under the title counts what matters now, such as **2 working · 1 needs you · 4 done this week**; click a figure to show only those cards, and again to show all. Under it, **All**, **Agents** and **Mine** pick whose work shows, and a chip for each project shows only that project's lane. Your choices are remembered on the device.
+
+Each project is a lane across the columns: projects with an agent card in progress come first, then the others, then **No project**, which starts folded when it holds more than 10. Click a lane's name to fold it. In a column, cards that need you come first, then overdue ones, then by priority, due date and age.
+
+A card shows its title on two lines, then its agent (**Claude**, **Codex**, **Grok** or **Agent**) and its progress, such as **2/4**, and one line of what's happening. While the agent's terminal pane is open in AIDE, the card shows what the pane is doing, the same way everywhere:
+
+- a filled dot and **Working**, with what it's running (**Bash: Run the tests**);
+- a warning sign and **Needs you: Approve** or **Needs you: Answer**, with what it's asking;
+- an hourglass and how long it has been idle (**Idle 12m**).
+
+The board never moves a card because of this: the column is what the note says. Without an open pane, a card in **Doing** says when the agent last wrote it and its status line, such as **Updated 2h ago · Running the Linux e2e**.
+
+Click a card to see its details beside the board (in the right panel's **Card** view on the Mac and Linux, in a sheet on the iPhone): its column, agent and project, what its pane is doing with **Open pane**, its **Plan** with a checkbox for each step you can tick, its status, where it came from, and its note with **Open note**. Double-click a card to open its note at the card. On the Mac and Linux, with a card selected, the arrow keys move between cards, <kbd>Return</kbd> shows its details, <kbd>O</kbd> opens its pane and <kbd>⌘</kbd><kbd>Return</kbd> (<kbd>Ctrl</kbd><kbd>Return</kbd> on Linux) opens its note.
+
+On the iPhone the board shows one column at a time, **Doing** first; the bar under the summary switches columns and shows how many cards each holds. The iPhone shows what a pane is doing only for the computers whose AIDE terminal it's connected to.
+
+Moving cards from the board comes in a later release; for now, change a todo's status in its note or with its menu in **Today** and **All**.
 
 ### Focus timer
 
@@ -298,6 +327,7 @@ In Eisenhower, a todo is important when its priority is high or highest, and urg
 | **Old todos when carrying** | **Leave them where they are**, **Keep carrying** | Leave them where they are |
 | **Someday tag** | a tag name, without `#` | `someday` |
 | **Weekly tidy** | **The day before the week starts**, **Off**, or a day of the week | The day before the week starts |
+| **Agent board** <Badge text="Next release" /> | on or off | on |
 
 **Except on that day's daily** leaves out the date when you complete a todo in the daily note of that same day, where the note's date already says when.
 

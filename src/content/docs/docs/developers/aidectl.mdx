@@ -186,7 +186,7 @@ aidectl board move <card> todo|doing|waiting|done|cancelled [--note N] [--skip-r
 aidectl board note <card> <text>
 aidectl board done <card> [--note N] [--skip-rest]
 aidectl board show <card> [--json]
-aidectl board list [--project P] [--mine] [--json]
+aidectl board list [--project P] [--mine] [--done] [--json]
 aidectl board link <card>
 ```
 
@@ -199,6 +199,7 @@ The [agent board](/docs/guides/agent-board/): coding agents keep their plan here
 - `note` sets the card's status line, the first line of its memo; `""` removes it. At most three lines.
 - `done`, and `move … done`, refuse while any todo under the card is still open and name them, unless `--skip-rest` cancels those first. The card always gets its completion date.
 - `show` prints the card, its steps and its progress; `list` the open cards, `--mine` the one linked to the pane you run it in.
+- <Badge text="Next release" /> With `--json`, `show` and `list` say each card's `column` as [the Board](/docs/guides/todos/#the-board) draws it: `todo`, `doing`, `waiting` or `done` (empty when it's on no column). `list --done` lists the board's **Done** column instead: cards done this week, and done or cancelled cards with open steps under them (their `open` count says how many).
 - `link` (inside an AIDE terminal pane) links the pane to a card.
 
 Every change is made on the note as just read and saved only if nobody changed it meanwhile; if you ticked a step in the note at that moment, aidectl reads it again and makes its change on top of yours, never over it. A card you moved to a note outside the `board` folder is no card any more.
@@ -438,7 +439,9 @@ The [coding agents](/docs/guides/terminal/#coding-agents) in AIDE's terminal.
 `list` asks the terminal server which agents run in its panes, with no AIDE window needed: one row
 per agent with its pane, its vault's session, the agent, its state (`done` for a turn nobody has
 looked at, `(not updating)` when the last read couldn't be confirmed), how full its context is, and
-the step it's on. With none it prints `No agents.` `--json` prints the server's answer as it is.
+the step it's on. With none it prints `No agents.` `--json` prints the server's answer as it is,
+with each pane's board card link. <Badge text="Next release" /> Inside an AIDE terminal pane it asks
+that pane's own terminal server.
 
 ```text
 PANE           SESSION  AGENT   STATE    CONTEXT  DETAIL

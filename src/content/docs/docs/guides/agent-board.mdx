@@ -34,6 +34,10 @@ The `aide-board` skill tells an agent when to add a card, how to keep its steps 
 
 <Badge text="Next release" /> In an AIDE terminal pane, the card is linked to the agent's pane, and its link `aide://card/<vault>/<card>` opens that pane (see [Cards linked to panes](/docs/guides/terminal/#cards-linked-to-panes)). The agents use `aidectl board`; the [aidectl reference](/docs/developers/aidectl/#board) lists its commands. <Badge text="Next release" /> In a pane they need no flag or token: `aidectl` uses the pane's window's notes, and read-only agents can still use the board. Run `aidectl board list` to see the open cards yourself, or `aidectl board show <card>` for one card and its steps.
 
+## Where you see it
+
+<Badge text="Next release" /> Cards show on **Todos › Board**, in columns with a lane per project, each with what its agent's terminal pane is doing right now: see [The Board](/docs/guides/todos/#the-board). Agents' work stays off **Today** and **All**. A card's link opens its pane when one is open in this window, else the board with the card selected. When the board is off, or the card isn't on it (one finished long ago, say), the link opens the card's note instead.
+
 ## Turning it off
 
-The board is on. A switch for it comes with the board's own screen in a later release. While the board is off, an agent's changes to cards are refused and AIDE doesn't give agents the skill; reading cards still works.
+The board is on. <Badge text="Next release" /> Turn it off with **Settings › Todos › Agent board**. While the board is off, an agent's changes to cards are refused, AIDE doesn't give agents the skill, there's no **Board** in **Todos**, and agents' todos show in **All** like any other; reading cards still works.
