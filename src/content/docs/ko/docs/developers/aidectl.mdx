@@ -425,6 +425,7 @@ aidectl terminal history --lines 500 > scrollback.txt
 
 ```sh
 aidectl agent list [--json]
+aidectl agent usage [--refresh] [--json]
 aidectl agent install-hooks [--claude] [--codex] [--yes] [--print] [--remove] [--pre-compact]
 aidectl agent skills list | show <name> | sync [--print] | remove [--print]
 ```
@@ -438,6 +439,19 @@ AIDE 터미널의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이�
 ```text
 PANE           SESSION  AGENT   STATE    CONTEXT  DETAIL
 1794000000001  work     claude  blocked  41%      Bash: Run the tests
+```
+
+<Badge text="다음 릴리스" /> `usage`는 터미널 서버가 마지막으로 읽은 Claude와 Codex 요금제 한도를 출력해요. 터미널의
+[상태 표시줄](/ko/docs/guides/terminal/#상태-표시줄-)이 보여 주는 것과 같아요. 한도마다 한 줄로 얼마나 썼는지,
+초기화까지 얼마나 남았는지 보여 주고, 마지막 읽기가 실패했으면 `stale`과 그 이유를 아래에 붙여요. 에이전트는 큰 작업을
+시작하기 전에 이걸 확인할 수 있어요. `--refresh`는 서버에 다시 읽어 달라고 해요(최대 15초에 한 번). 새로 읽은 값은 다음에
+물을 때 보여요. 첫 읽기 전에는 `No usage reading yet.`이라고 출력해요. `--json`은 서버의 답을 그대로 출력해요. AIDE 터미널 페인 안에서는 `list`처럼 그 페인의 터미널 서버에 물어요.
+
+```text
+PROVIDER  WINDOW  USED  RESETS IN  NOTE
+claude    5h      92%   2h13m
+claude    wk      27%   3d04h
+codex     wk      45%   -
 ```
 
 `install-hooks`는 Claude Code와 Codex가 작업을 마치거나 확인이 필요한 순간 바로 AIDE에 알리도록 훅을 설정해요. 설정의

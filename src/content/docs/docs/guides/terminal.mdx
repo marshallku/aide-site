@@ -92,6 +92,50 @@ when there are none, on the Mac and Linux.
 
 For the tab, pane, find and text-size keys, see [Keyboard shortcuts](/docs/guides/shortcuts/#terminal).
 
+### The status bar <Badge text="Next release" />
+
+Under the panes, the Terminal section has a status bar on the Mac and Linux. It shows how much of
+your Claude and Codex plan limits you've used: Claude's 5-hour and weekly limits, and Codex's. The
+terminal server reads them for every AIDE on the computer, from Claude Code's own sign-in and Codex's
+newest session, about once a minute while AIDE is open.
+
+- Each page shows one limit, such as `claude 5h ━━━╌╌╌╌╌ 34% ⟳ 2h13m`: a gauge, the percentage and
+  how long until it resets. The gauge turns yellow from 70% and red from 90%. `1/4` after it says
+  which page you're on.
+- Click it, or scroll over it, for the next page.
+- Right-click it for **Refresh** and **Status bar settings…**.
+- When a limit can't be read right now, the last reading stays, marked `~` (`~claude`), for up to
+  3 hours.
+- When the window is narrow, the gauges go first, then the whole readout.
+
+Change it in **Settings › Terminal › Status bar**:
+
+| Setting | Default | What it does |
+|---|---|---|
+| **Show status bar** | On | Off hides the bar. |
+| **Usage** | **Gauges** | **Gauges**, **Percentages**, or **Off** to hide the readout. |
+| **Layout** | **Pages** | **Pages** shows one page at a time; **One row** shows every limit at once, without reset times. |
+| **Each page shows** | **One window** | **One window** (one limit), **One provider** (Claude's, then Codex's), or **Usage, then resets**. |
+| **Resets** | **Time left** | **Time left** (`⟳ 2h13m`), **Clock time** (`⟳ 14:32`, or `⟳ Wed 09:00` a day or more ahead), or **Off**. |
+| **Next page every** | Off | Turns the page by itself every so many seconds (up to 600). |
+| **Gauge width** | 8 | 4 to 20 characters. |
+| **Claude, 5 hours**, **Claude, weekly**, **Codex, 5 hours**, **Codex, weekly** | On | Which limits it shows. |
+
+On Linux the same settings are also in `config.toml` under `[terminal.status_bar]` (`show`, `usage`,
+`usage_layout`, `usage_page_unit`, `usage_reset`, `usage_rotate_secs`, `usage_bar_width`,
+`usage_windows`), with the names and values comux used.
+
+To stop reading one of them at all, set `usage` in the terminal server's `config.json`
+(`~/Library/Application Support/AIDE/aide-mux/config.json` on the Mac,
+`~/.local/state/aide-mux/config.json` on Linux), for example `"usage": {"codex": false}`. Nothing is
+then read for it, and the bar doesn't show it.
+
+On the iPhone, a host's **AIDE on** screen shows the same limits as one line under its title, such as
+`Claude 5h 34% · wk 27% · Codex wk 45%`.
+
+An agent can read them too, before it starts a big task: `aidectl agent usage` (see
+[aidectl](/docs/developers/aidectl/#agent)).
+
 ### Shells that outlive AIDE
 
 Your shells run in AIDE's terminal server, a small program of its own, not in the app. Quitting

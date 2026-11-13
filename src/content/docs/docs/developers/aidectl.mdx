@@ -430,6 +430,7 @@ aidectl terminal history --lines 500 > scrollback.txt
 
 ```sh
 aidectl agent list [--json]
+aidectl agent usage [--refresh] [--json]
 aidectl agent install-hooks [--claude] [--codex] [--yes] [--print] [--remove] [--pre-compact]
 aidectl agent skills list | show <name> | sync [--print] | remove [--print]
 ```
@@ -446,6 +447,21 @@ that pane's own terminal server.
 ```text
 PANE           SESSION  AGENT   STATE    CONTEXT  DETAIL
 1794000000001  work     claude  blocked  41%      Bash: Run the tests
+```
+
+<Badge text="Next release" /> `usage` prints Claude's and Codex's plan limits as the terminal server last read
+them, the same ones the terminal's [status bar](/docs/guides/terminal/#the-status-bar-) shows: one row per
+limit with how much is used and how long until it resets, marked `stale` when the last read failed, and
+why underneath. An agent can check it before it starts a big task. `--refresh` asks the server to read
+them again (at most every 15 seconds); the new reading shows the next time you ask. Before the first
+reading it prints `No usage reading yet.` `--json` prints the server's answer as it is. Inside an AIDE
+terminal pane it asks that pane's own terminal server, as `list` does.
+
+```text
+PROVIDER  WINDOW  USED  RESETS IN  NOTE
+claude    5h      92%   2h13m
+claude    wk      27%   3d04h
+codex     wk      45%   -
 ```
 
 `install-hooks` sets up the hooks that let Claude Code and Codex tell AIDE the moment they finish or

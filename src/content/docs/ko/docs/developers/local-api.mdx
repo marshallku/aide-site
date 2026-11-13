@@ -279,6 +279,7 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `agent.notify` | `pane`, `kind`, `body` | 그 페인 안에서만: 에이전트가 작업을 마쳤거나(`kind: "done"`) 확인이 필요하다고(`"blocked"`) 알려요. `body`(1 KiB까지)가 알림 내용이 돼요. 훅이 부르는 메서드예요 |
 | `agent.report` | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | 그 페인 안에서만: 상태 줄에서 얻은 Claude Code의 컨텍스트와 비용이에요. 그 페인의 에이전트가 그 대화의 Claude Code일 때만 받아요 |
 | `agent.fill` | `pane`, `session_id` | 그 페인 안에서만: 그 Claude Code 대화의 `{used, window}`예요. AIDE가 확실하지 않으면 둘 다 null이에요. 자동 압축을 미루는 장치가 물어요 |
+| `usage.get` <Badge text="다음 릴리스" /> | `refresh` | [상태 표시줄](/ko/docs/guides/terminal/#상태-표시줄-)에 나오는 Claude와 Codex 요금제 한도예요. `{usage, refreshing}`으로 답하고, `usage`는 `{claude?: {five_hour?, seven_day?, stale?}, codex?: {five_hour?, weekly?, stale?}, at, problems: [{provider, text}]}`예요. 한도마다 `{used, resets_at?}`이고 `used`는 퍼센트, `resets_at`은 Unix 초, `at`은 Unix 밀리초예요. 꺼 두었거나 지난 3시간 동안 읽은 게 없는 서비스는 빠져요. `stale: true`는 마지막으로 읽기에 실패해서 이전 값을 보여 주는 것이고, 이유는 `problems`에 있어요. 앱이 연결돼 있는 동안 서버가 60초마다 읽고, `refresh: true`는 지금 새로 읽어 달라는 요청이고, `refreshing: true`는 이 요청이 새로 읽기를 시작했다는 뜻이에요. 새 값은 다시 물어보세요. 처음 읽기 전에는 `usage`가 null이에요. `aidectl agent usage`가 불러요 |
 
 읽어도 페인의 스크롤 위치는 바뀌지 않아요.
 
