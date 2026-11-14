@@ -202,6 +202,7 @@ Click a todo to open its note at that line. Its menu (right-click on the Mac and
 - **Set time…**: how long it should take, as `25m`, `1h` or `1h30m`. AIDE writes it as `[estimate:: …]` and shows it as a timer chip.
 - **Schedule…** (today's todos): a start and an end, such as `09:00` and `10:30`; the end can be left out. AIDE writes it as the todo's time block. **Remove** takes it away.
 - **Focus for 25m**: starts a focus timer for the todo.
+- <Badge text="Next release" /> **Give to an agent** (a todo that isn't under another open todo, with the [agent board](/docs/guides/agent-board/) on): the todo becomes a card for your coding agents. It moves, with its memo and subtasks, to its project's board note (such as `board/aide.md`, or `board/inbox.md` with no project), and the line where it was becomes `[>]`. It leaves **Today** and **All** and shows on the Board in the column its status gives it (**To do** for a todo you haven't started) until an agent picks it up. A repeating todo can't be given.
 
 ### The Board
 
@@ -228,7 +229,9 @@ Click a card to see its details beside the board (in the right panel's **Card** 
 
 On the iPhone the board shows one column at a time, **Doing** first; the bar under the summary switches columns and shows how many cards each holds. The iPhone shows what a pane is doing only for the computers whose AIDE terminal it's connected to.
 
-Moving cards from the board comes in a later release; for now, change a todo's status in its note or with its menu in **Today** and **All**.
+<Badge text="Next release" /> To move a card, drag it onto another column on the Mac and Linux. Dropping it in another project's lane also sets its project (**No project** takes it out). Every platform also has **Move to** in the card's menu (right-click on the Mac and Linux, touch and hold on the iPhone) and in its details, with the other columns; it's the iPhone's way to move a card. Moving to **Waiting** adds your waiting tag, moving to **To do**, **Doing** or **Done** takes it off, and **Done** completes the todo as checking it does. When a todo still has open subtasks, **Done** asks first: **Complete all** completes them and the todo, **Cancel** leaves it as it was. If the note changed meanwhile, nothing is written and the board reads it again.
+
+The card's menu and details also have **Give to an agent** for a todo of yours that isn't a card yet, as in **Today** and **All**.
 
 ### Focus timer
 

@@ -187,6 +187,7 @@ aidectl board done <card> [--note N] [--skip-rest]
 aidectl board show <card> [--json]
 aidectl board list [--project P] [--mine] [--done] [--json]
 aidectl board link <card>
+aidectl board adopt <path>:<line> [--text T] [--agent A] [--project P]
 ```
 
 [에이전트 보드](/ko/docs/guides/agent-board/)예요. 코딩 에이전트가 자기 계획을 카드로 여기 적어 둬요. 직접 실행할 일은 드물고, 언제 무엇을 쓸지는 `aide-board` 스킬이 에이전트에게 알려 줘요.
@@ -200,6 +201,7 @@ aidectl board link <card>
 - `show`는 카드와 단계, 진행 상황을 출력하고, `list`는 열린 카드를, `--mine`이면 실행한 패널에 연결된 카드를 보여 줘요.
 - <Badge text="다음 릴리스" /> `--json`이면 `show`와 `list`가 각 카드의 `column`을 [보드](/ko/docs/guides/todos/#보드)가 그리는 대로 알려 줘요: `todo`, `doing`, `waiting`, `done`(어느 열에도 없으면 비어 있어요). `list --done`은 대신 보드의 **완료** 열을 보여 줘요. 이번 주에 끝낸 카드와, 아래에 열린 단계가 남은 완료되거나 취소된 카드예요(`open`이 몇 개인지 알려 줘요).
 - `link`(AIDE 터미널 패널 안에서)는 그 패널을 카드에 연결해요.
+- <Badge text="다음 릴리스" /> `adopt`는 앱의 **에이전트에게 맡기기**처럼 내 할 일 하나를 카드로 만들어요. 그 노트의 그 줄(`show`가 출력하는 것처럼 1부터 세요)에 있는 할 일이 메모와 하위 할 일과 함께 `board` 폴더 아래 그 프로젝트의 노트로 옮겨지고, 원래 있던 줄은 `[>]`가 돼요. `--text`(`todos`가 출력하는 할 일의 텍스트)가 지금 그 줄과 같아야 하고, 다르면 아무것도 하지 않아요(종료 코드 5). `--project`는 옮기면서 프로젝트를 정하고, `--agent`는 에이전트를 정해요. 없으면 패널의 에이전트, 그것도 없으면 `agent`예요. 카드 ID를 출력하고, 터미널 패널 안이면 그 패널을 연결해요. 열린 할 일의 하위 할 일은 부모와 함께 가야 하고(종료 코드 6), 반복하는 할 일이나 카드는 맡길 수 없어요(종료 코드 2). 앱에서 맡긴 카드는 에이전트가 맡기 전까지 에이전트가 `agent`예요.
 
 변경은 모두 방금 읽은 노트를 바탕으로 만들고, 그사이 아무도 노트를 바꾸지 않았을 때만 저장해요. 그 순간 노트에서 단계를 체크했다면 aidectl이 다시 읽고 그 위에 변경을 더해요. 덮어쓰지 않아요. `board` 폴더 밖의 노트로 옮긴 카드는 더 이상 카드가 아니에요.
 

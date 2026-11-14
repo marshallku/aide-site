@@ -38,6 +38,10 @@ The `aide-board` skill tells an agent when to add a card, how to keep its steps 
 
 <Badge text="Next release" /> Cards show on **Todos › Board**, in columns with a lane per project, each with what its agent's terminal pane is doing right now: see [The Board](/docs/guides/todos/#the-board). Agents' work stays off **Today** and **All**. A card's link opens its pane when one is open in this window, else the board with the card selected. When the board is off, or the card isn't on it (one finished long ago, say), the link opens the card's note instead.
 
+## Giving work to an agent
+
+<Badge text="Next release" /> To hand one of your todos to a coding agent, choose **Give to an agent** in its menu in **Today** or **All**, or in a card's menu on the Board. It becomes a card in its project's board note with the agent `agent`, in the column its status gives it: **To do** for a todo you haven't started. Ask an agent in a terminal pane to pick up the work you handed over: with the skill it finds those cards with `aidectl board list`, links its pane with `aidectl board link` and moves the card to **Doing** as it starts. An agent you ask to take one of your todos directly can make it a card itself with `aidectl board adopt`. You move cards yourself too: see [The Board](/docs/guides/todos/#the-board).
+
 ## Turning it off
 
 The board is on. <Badge text="Next release" /> Turn it off with **Settings › Todos › Agent board**. While the board is off, an agent's changes to cards are refused, AIDE doesn't give agents the skill, there's no **Board** in **Todos**, and agents' todos show in **All** like any other; reading cards still works.

@@ -188,6 +188,7 @@ aidectl board done <card> [--note N] [--skip-rest]
 aidectl board show <card> [--json]
 aidectl board list [--project P] [--mine] [--done] [--json]
 aidectl board link <card>
+aidectl board adopt <path>:<line> [--text T] [--agent A] [--project P]
 ```
 
 The [agent board](/docs/guides/agent-board/): coding agents keep their plan here as cards. You rarely run these yourself; the `aide-board` skill tells the agents when to.
@@ -201,6 +202,7 @@ The [agent board](/docs/guides/agent-board/): coding agents keep their plan here
 - `show` prints the card, its steps and its progress; `list` the open cards, `--mine` the one linked to the pane you run it in.
 - <Badge text="Next release" /> With `--json`, `show` and `list` say each card's `column` as [the Board](/docs/guides/todos/#the-board) draws it: `todo`, `doing`, `waiting` or `done` (empty when it's on no column). `list --done` lists the board's **Done** column instead: cards done this week, and done or cancelled cards with open steps under them (their `open` count says how many).
 - `link` (inside an AIDE terminal pane) links the pane to a card.
+- <Badge text="Next release" /> `adopt` makes one of your todos a card, as **Give to an agent** in the app does: the todo at that line of that note (1-based, as `show` prints it) moves, with its memo and subtasks, to its project's note under the `board` folder, and the line where it was becomes `[>]`. `--text` (the todo's text as `todos` prints it) must still be what the line reads, or nothing happens (exit 5). `--project` sets its project on the way; `--agent` names the agent, else the pane's, else `agent`. It prints the card's id and, inside a terminal pane, links the pane. A subtask of an open todo goes with its parent (exit 6), and a repeating todo or a card can't be adopted (exit 2). Cards you handed over from the app have the agent `agent` until an agent picks them up.
 
 Every change is made on the note as just read and saved only if nobody changed it meanwhile; if you ticked a step in the note at that moment, aidectl reads it again and makes its change on top of yours, never over it. A card you moved to a note outside the `board` folder is no card any more.
 
