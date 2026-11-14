@@ -240,7 +240,7 @@ AIDE의 터미널은 소켓 하나로도 제공돼요. 프로그램이 이 소�
 
 페인마다 셸은 이 소켓의 경로인 `COPAD_SOCKET`과 `AIDE_TERMINAL_SOCKET`, 그 페인의 id인 `COPAD_PANEL_ID`와 `AIDE_MUX_PANE`을 받아요.
 
-AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 있는 일(`panel.focus`, `tab.switch`, `tab.new`)은 그 페인의 볼트를 보여 주는 창 가운데 마지막으로 앞에 있던 AIDE 창으로 가고, 그런 창이 없으면 `no_window`로 응답해요. 페인을 지정하지 않은 요청은 앞에 있는 창의 포커스된 페인을, 창이 없으면 탭이 있는 첫 볼트의 페인을 뜻해요.
+AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 있는 일(`panel.focus`, `tab.switch`, `tab.new`)은 그 페인의 볼트를 보여 주는 창 가운데 마지막으로 앞에 있던 AIDE 창으로 가고, 그런 창이 없으면 `no_window`로 응답해요. <Badge text="다음 릴리스" /> 어느 창도 보여 주지 않는 [스페이스](/ko/docs/guides/terminal/#스페이스)의 페인이면 앞에 있는 창이 그 스페이스로 바뀌고, 바꿀 수 있는 창이 없을 때만 `no_window`예요. 페인을 지정하지 않은 요청은 앞에 있는 창의 포커스된 페인을, 창이 없으면 탭이 있는 첫 볼트의 페인을 뜻해요.
 
 ### 요청과 응답
 
@@ -274,13 +274,18 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `split.horizontal` | `id` | 페인을 오른쪽으로 나누고 새 페인의 `{panel_id}`로 응답해요 |
 | `split.vertical` | `id` | 페인을 아래로 나누고 `{panel_id}`로 응답해요 |
 | `pane.focus_next`, `pane.focus_prev` | | 다음 또는 이전 페인으로 포커스를 옮겨요 |
-| `agent.list` | | 서버 페인의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트): `{agents: [{pane, tab, session, agent}]}`, `agent`마다 `kind`, `state`, `unseen`, `wait`, `detail`, `context`. <Badge text="다음 릴리스" /> 보드 카드에 연결된 페인에는 `link {vault, card, gen, finished, at}`도 있어요 |
+| `agent.list` | | 서버 페인의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트): `{agents: [{pane, tab, session, agent}]}`, `agent`마다 `kind`, `state`, `unseen`, `wait`, `detail`, `context`. <Badge text="다음 릴리스" /> 보드 카드에 연결된 페인에는 `link {vault, card, gen, finished, at}`도 있어요. <Badge text="다음 릴리스" /> 항목마다 페인이 일하는 git 체크아웃 `checkout`(같은 체크아웃의 에이전트는 같은 파일을 고쳐요)도 있고, `agent`마다 상태가 마지막으로 바뀐 때(Unix 밀리초) `changed`가 있어요 |
 | `agent.card` <Badge text="다음 릴리스" /> | `pane`, `vault`, `card` | 그 페인 안에서만: 페인을 [보드 카드](/ko/docs/guides/terminal/#패널에-연결된-카드)에 연결하거나 `card: null`로 연결을 끊어요. `aidectl board add`와 `link`가 부르는 메서드예요 |
 | `agent.notify` | `pane`, `kind`, `body` | 그 페인 안에서만: 에이전트가 작업을 마쳤거나(`kind: "done"`) 확인이 필요하다고(`"blocked"`) 알려요. `body`(1 KiB까지)가 알림 내용이 돼요. 훅이 부르는 메서드예요 |
 | `agent.report` | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | 그 페인 안에서만: 상태 줄에서 얻은 Claude Code의 컨텍스트와 비용이에요. 그 페인의 에이전트가 그 대화의 Claude Code일 때만 받아요 |
 | `conversation.list` <Badge text="다음 릴리스" /> | `dir`, `all`, `query`, `after`, `limit`, `rescan` | 지난 Claude Code, Codex, Grok 대화를 최근 것부터: `{items: [{tool, id, title, cwd, mtime, age, interactive, open, starting, card, relink}], more, truncated}`. `dir`은 그 폴더나 그 아래의 대화만, `query`는 프롬프트, 폴더, id에 그 글자들이 순서대로 들어 있는 대화만 남겨요. `after`는 앞 페이지의 마지막 항목(`{mtime, tool, id}`), `limit`은 1–1000(기본 200)이에요. `open`은 그 대화가 열려 있는 페인(`{session, tab, pane}`), `truncated`는 대화가 너무 많아 다 읽지 못했다는 뜻이에요 |
 | `conversation.resume` <Badge text="다음 릴리스" /> | `conversation`, `tool`, `pane`, `focus` | 대화를 새 탭에서 열어요. 그 폴더에서 작업하는 스페이스, 없으면 `pane`의 세션(없으면 포커스된 페인의 세션)에서요: `{session, tab, pane, moved, shown}`, 이미 열려 있으면 `{open: {session, tab, pane}}`. `focus: true`면 새 탭이나 이미 열린 페인을 그 창에 보여 줘요 |
 | `conversation.fork` <Badge text="다음 릴리스" /> | `pane` 또는 `conversation`, `tool`, `focus` | `pane`의 에이전트(둘 다 없으면 포커스된 페인)나 지난 `conversation`에서 새 대화를 새 탭에서 시작해요. `unlinked`는 포크한 대화와 연결되지 않은 보드 카드예요 |
+| `space.list` <Badge text="다음 릴리스" /> | | 모든 스페이스: `{spaces: [{id, name, kind, dir, branch, vault, project, created, dormant, windows, tabs, programs, agents}]}`, 실행 중인 것이 먼저예요. `windows`는 보여 주는 창 수, `programs`는 셸 앞에서 실행 중인 프로그램, `agents`는 상태별 수예요 |
+| `space.new` <Badge text="다음 릴리스" /> | `dir`, `name`, `project`, `pane`, `show` | `dir`(있는 폴더의 절대 경로)에서 일하는 스페이스를 만들어요: `{session}`. `pane`의 볼트 것이 되고, `pane`이 없으면 어느 볼트 것도 아니에요. `show: true`면 창이 보여 주고, `shown`(못 보여 주면 `show_error`도)이 보여 줬는지 알려 줘요. 스페이스는 어느 쪽이든 만들어져요 |
+| `space.show` <Badge text="다음 릴리스" /> | `session`, `pane` | 그 스페이스(`pane`이 있으면 그 페인도)를 창에 보여 줘요. 보여 주는 창이 없으면 앞에 있는 창이 그 스페이스로 바뀌고, 그 창을 앞으로 가져와요: `{shown, raised}`. `raised: false`면 창은 바뀌었지만 뒤에 남았다는 뜻이에요. Mac에서 다른 앱 뒤에 있는 창은 AIDE로 전환할 때까지 그래요. Linux는 항상 `raised: false`로 응답해요. 그 스페이스에 없는 페인은 `not_found`예요 |
+| `space.rename` <Badge text="다음 릴리스" /> | `session`, `name` | 스페이스 이름을 바꿔요 |
+| `space.end` <Badge text="다음 릴리스" /> | `session`, `force` | 스페이스와 그 셸을 끝내요. 셸에서 프로그램이 실행 중이면 그 프로그램 이름과 함께 `busy`로 답해요. `force: true`면 그래도 끝내요 |
 | `agent.fill` | `pane`, `session_id` | 그 페인 안에서만: 그 Claude Code 대화의 `{used, window}`예요. AIDE가 확실하지 않으면 둘 다 null이에요. 자동 압축을 미루는 장치가 물어요 |
 | `usage.get` <Badge text="다음 릴리스" /> | `refresh` | [상태 표시줄](/ko/docs/guides/terminal/#상태-표시줄-)에 나오는 Claude와 Codex 요금제 한도예요. `{usage, refreshing}`으로 답하고, `usage`는 `{claude?: {five_hour?, seven_day?, stale?}, codex?: {five_hour?, weekly?, stale?}, at, problems: [{provider, text}]}`예요. 한도마다 `{used, resets_at?}`이고 `used`는 퍼센트, `resets_at`은 Unix 초, `at`은 Unix 밀리초예요. 꺼 두었거나 지난 3시간 동안 읽은 게 없는 서비스는 빠져요. `stale: true`는 마지막으로 읽기에 실패해서 이전 값을 보여 주는 것이고, 이유는 `problems`에 있어요. 앱이 연결돼 있는 동안 서버가 60초마다 읽고, `refresh: true`는 지금 새로 읽어 달라는 요청이고, `refreshing: true`는 이 요청이 새로 읽기를 시작했다는 뜻이에요. 새 값은 다시 물어보세요. 처음 읽기 전에는 `usage`가 null이에요. `aidectl agent usage`가 불러요 |
 
@@ -298,8 +303,8 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `no_terminal` | 열린 터미널이 없음(창이나 탭이 없음) |
 | `exited` | 셸이 끝난 페인에 `terminal.exec`나 `terminal.feed`를 보냄. 읽기는 여전히 돼요 |
 | `too_small` | 페인이 나누기엔 너무 작음 |
-| `busy` | 이미 클라이언트 16개가 연결돼 있음, 또는 보낸 것을 읽지 않는 프로그램의 페인에 `terminal.exec`이나 `terminal.feed` |
-| `no_window` | 그 페인의 볼트를 보여 주는 AIDE 창이 없을 때 `panel.focus`, `tab.switch`, `tab.new` |
+| `busy` | 이미 클라이언트 16개가 연결돼 있음, 또는 보낸 것을 읽지 않는 프로그램의 페인에 `terminal.exec`이나 `terminal.feed`, 또는(<Badge text="다음 릴리스" />) 프로그램이 실행 중인 스페이스에 `space.end` |
+| `no_window` | 그 페인의 볼트를 보여 주는 AIDE 창이 없을 때 `panel.focus`, `tab.switch`, `tab.new`(<Badge text="다음 릴리스" /> 어느 창도 보여 주지 않는 스페이스라면, 그리로 바꿀 수 있는 창이 없을 때) |
 | `not_in_pane` | 그 페인에서 실행되지 않는 프로그램이 `agent.notify`, `agent.report`, `agent.fill`을 보냄 |
 | `no_agent` | 그 페인에 에이전트가 없음 |
 | `unknown_conversation` <Badge text="다음 릴리스" /> | 그 id의 대화가 없거나, 페인의 에이전트 대화를 아직 알 수 없음 |

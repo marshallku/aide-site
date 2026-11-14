@@ -109,7 +109,9 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   its × shows on the tab on screen and when you point at another. **+** opens a new tab.
 - On the right: `ZOOM` while the tab on screen has a pane zoomed, then the agents in every space,
   each count after its mark from the Agents list (working, needs you, and done: finished, and you
-  haven't looked yet), the usage readout, and the clock.
+  haven't looked yet), the usage readout, and the clock. Click the needs-you count to
+  [jump to the agent that needs you](#jump-to-an-agent-), the done count to jump to the one that
+  finished last, and the working count to show the Agents list.
 
 Press <kbd>⌥</kbd><kbd>1</kbd> to <kbd>⌥</kbd><kbd>9</kbd> on the Mac, or
 <kbd>Alt</kbd><kbd>1</kbd> to <kbd>Alt</kbd><kbd>9</kbd> on Linux, to show a tab by its number;
@@ -496,6 +498,13 @@ tab's name, and under it what it asks while it needs you, else the step it's on,
 it printed, with a small gauge of its context when AIDE knows it.
 
 - The agents that need you come first, then the rest in tab order.
+- <Badge text="Next release" /> It lists the agents in every [space](#spaces), not only the one on
+  screen: once you have more than one space, each has a heading with its name, the space on screen
+  first, then the spaces with an agent that needs you. Clicking an agent in another space switches
+  the window to that space first.
+- <Badge text="Next release" /> Agents working in the same git checkout (the same folder of a
+  repository, a linked worktree counting as its own) show the git mark and how many share it, as a
+  reminder that they edit the same files.
 - A remote session's agents (see [Open remote AIDE…](#open-remote-aide)) are listed under the
   host's name.
 - A row that says **Not updating** is one AIDE couldn't read just now; it shows the last state it
@@ -503,6 +512,18 @@ it printed, with a small gauge of its context when AIDE knows it.
 - Click a row to go to that agent: its tab is selected, its pane gets the keyboard and the window
   comes forward. Looking at it this way turns **Done** into **Waiting**.
 - With none, the list says **No agents running**.
+
+#### Jump to an agent <Badge text="Next release" />
+
+Two commands take you to an agent wherever it is, switching the window to its space when needed:
+
+| Command | Mac | Linux | Goes to |
+|---|---|---|---|
+| **Jump to the agent that needs you** | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>B</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd> | The agent that has needed you longest. Press it again from there for the next one. |
+| **Jump to the newest finished agent** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd> | none (in the command palette) | The agent that most recently finished or started needing you, and that you haven't looked at. Press it again for the one before. |
+
+With nothing to go to, the Terminal section says **No agent needs you** or **Nothing unread**. The
+counts on the [status bar](#the-status-bar-) do the same when you click them.
 
 A tab with an agent that is working, done or needs you shows a small mark next to its name: a dot
 while it works, a check when it's done, and a warning sign while it needs you. Point at the mark to
@@ -522,6 +543,8 @@ replaces the one before.
 
 Click it to go to the pane: AIDE selects its tab, gives the pane the keyboard, brings the window
 forward and marks the agent as seen. A pane closed since says **That terminal has closed**.
+<Badge text="Next release" /> An agent in a space no window shows gets a notification too, and its
+click switches the window in front to that space.
 
 The first notification asks for permission on the Mac. On Linux the desktop may keep the window from
 coming forward; the pane is selected all the same.

@@ -394,6 +394,11 @@ AIDE의 터미널을 읽고 입력하고, 탭과 페인을 열고 나누고 이�
 | `conversations [--dir D \| --here] [--all] [--query Q] [--rescan]` <Badge text="다음 릴리스" /> | 지난 Claude Code, Codex, Grok 대화를 최근 것부터 보여 줘요: id, 에이전트, 지난 시간, 폴더, 첫 프롬프트, 그리고 어느 페인에 열려 있으면 **● pane N**. `--dir`(또는 지금 폴더인 `--here`)은 그 폴더나 그 아래의 대화만, `--all`은 아무도 입력하지 않은 실행까지 보여 줘요 |
 | `resume <id> [--tool T] [--focus]` <Badge text="다음 릴리스" /> | 그 대화를 새 탭에서 열고(그 폴더에서 작업하는 스페이스, 없으면 명령을 실행한 페인의 세션) 새 페인의 id를 출력해요. 이미 열려 있으면 그 페인의 id를 출력해요 |
 | `fork [<id>] [--tool T] [--focus]` <Badge text="다음 릴리스" /> | 이 페인(또는 `--pane`)의 에이전트나 지난 대화에서 새 대화를 새 탭에서 시작하고 그 페인의 id를 출력해요 |
+| `space list` <Badge text="다음 릴리스" /> | 모든 [스페이스](/ko/docs/guides/terminal/#스페이스)를 보여 줘요: id, 이름(창이 보여 주면 **on screen**, 레이아웃을 남기고 끝났으면 **not running**), 폴더, 브랜치, 탭 수, 상태별 에이전트 수 |
+| `space new <dir> [--name N] [--project P] [--show]` <Badge text="다음 릴리스" /> | 그 폴더에서 일하는 스페이스를 만들고 id를 출력해요. 페인에서 실행하면 그 페인의 볼트 것이 돼요. `--show`면 창이 그 스페이스를 보여 주고, 보여 줄 창이 없으면 stderr로 알려 줘요. 스페이스는 어느 쪽이든 만들어져요 |
+| `space show <id> [--pane P]` <Badge text="다음 릴리스" /> | 그 스페이스(와 그 안의 페인)를 창에 보여 줘요. 보여 주는 창이 없으면 앞에 있는 창이 그 스페이스로 바뀌어요 |
+| `space rename <id> <name>` <Badge text="다음 릴리스" /> | 스페이스 이름을 바꿔요 |
+| `space end <id> [--force]` <Badge text="다음 릴리스" /> | 스페이스와 그 셸을 끝내요. 셸에서 프로그램이 실행 중이면 그 프로그램 이름을 알려 주고 멈춰요. `--force`면 그래도 끝내요 |
 
 `read`, `state`, `exec`, `feed`, `history`, `context`, `split`은 `--pane`으로 지정한 페인에, 없으면 포커스된 페인에 동작해요. 페인 id는 `tabs`에 나오고, 페인의 셸 안에서는 `$COPAD_PANEL_ID`에 들어 있어요. `--json`을 주면 앱의 응답을 글자 대신 JSON으로 출력해요.
 
@@ -406,7 +411,9 @@ AIDE의 터미널을 읽고 입력하고, 탭과 페인을 열고 나누고 이�
 - 없으면 어느 셸에서든 터미널 서버의 소켓을 써요. Mac은 `~/Library/Application Support/AIDE/mux/terminal.sock`, Linux는 `$XDG_RUNTIME_DIR/aide-mux/terminal.sock`(`XDG_RUNTIME_DIR`이 없으면 `/tmp/aide-mux-<uid>/terminal.sock`)이에요. 그 폴더가 나만 쓸 수 있는 폴더이고 서버가 응답할 때만 써요.
 - 그것도 없으면, 내 사용자로 실행 중인 터미널 있는 AIDE 앱이 하나뿐일 때 그 앱을 써요. 하나도 없으면 멈추고, 둘 이상이면 짐작하지 않고 소켓 목록을 보여 주면서 `--socket`으로 고르라고 해요.
 
-`focus`, `switch-tab`, `new-tab`은 터미널을 보여 주는 AIDE 창이 있어야 해요. 없으면 종료 코드 1로 멈춰요.
+`focus`, `switch-tab`, `new-tab`은 터미널을 보여 주는 AIDE 창이 있어야 해요. 없으면 종료 코드 1로 멈춰요. <Badge text="다음 릴리스" /> `focus`와 `space show`는 어느 창도 보여 주지 않는 페인이나 스페이스에도 닿아요. 앞에 있는 창이 그 스페이스로 바뀌어요.
+
+보드 카드에서 일하는 페인을 어디에 있든 보여 주려면: `aidectl agent list`가 에이전트마다 페인과 연결된 카드를 알려 주고, `aidectl terminal focus <pane>`이 그 페인을 앞으로 가져와요. Mac에서 최소화된 창은 다시 앞으로 나오지만, 다른 앱 뒤에 있는 창은 그 페인으로 바뀌고 앞으로 나오겠다고 요청만 해요. AIDE로 전환할 때까지 macOS가 뒤에 둬요.
 
 `resume`과 `fork`는 `--focus`를 주지 않으면 창을 움직이지 않아요. 그래서 에이전트가 화면을 가져가지 않고 대화를 열 수 있어요. `--tool`(`claude`, `codex`, `grok`)은 두 에이전트에 같은 id가 있을 때만 필요해요. 에이전트의 페인에 [에이전트 카드](/ko/docs/guides/terminal/#패널에-연결된-카드)가 연결돼 있었다면 `fork`는 포크한 대화가 그 카드와 연결되지 않는다고 stderr에 알려 줘요.
 
@@ -417,7 +424,7 @@ Mac App Store 빌드와 iPhone에는 터미널 소켓이 없어요.
 | 완료 | 0 |
 | 통신할 앱이 없거나, `$COPAD_SOCKET`이나 `--socket`이 응답하지 않거나, 앱이 거절함(셸이 끝난 페인, 나누기엔 너무 작은 페인) | 1 |
 | 앱이 여러 개 실행 중인데 `--socket`이 없거나, 인자가 잘못됨(예: 앱이 거절한 `read` 범위) | 2 |
-| 그 id의 페인이나 탭이 없음, 그런 대화가 없음, 또는 포크할 에이전트가 페인에 없음 | 5 |
+| 그 id의 페인이나 탭, 스페이스가 없음, 그런 대화가 없음, 또는 포크할 에이전트가 페인에 없음 | 5 |
 
 ```sh
 aidectl terminal tabs
@@ -426,6 +433,8 @@ aidectl terminal exec --pane "$pane" 'make test'
 aidectl terminal history --lines 500 > scrollback.txt
 aidectl terminal conversations --here
 pane=$(aidectl terminal resume 3b6a1f0e-5d2c-4e8a-9f1b-7c4d2e8a6b10)
+space=$(aidectl terminal space new ~/dev/site --name site --show)
+aidectl terminal space end "$space"
 ```
 
 ### agent
