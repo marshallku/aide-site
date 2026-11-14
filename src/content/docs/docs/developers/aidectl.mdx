@@ -184,7 +184,8 @@ aidectl board plan <card> --step S…
 aidectl board step <card> <n|title> done|doing|todo|skip
 aidectl board move <card> todo|doing|waiting|done|cancelled [--note N] [--skip-rest]
 aidectl board note <card> <text>
-aidectl board done <card> [--note N] [--skip-rest]
+aidectl board done <card> [--note N] [--skip-rest] [--ref R]… [--repo DIR]
+aidectl board ref <card> <commit|url>… [--repo DIR]
 aidectl board show <card> [--json]
 aidectl board list [--project P] [--mine] [--done] [--json]
 aidectl board link <card>
@@ -199,7 +200,9 @@ The [agent board](/docs/guides/agent-board/): coding agents keep their plan here
 - `move … waiting` adds your waiting tag (`#waiting`), and moving it on takes the tag out again.
 - `note` sets the card's status line, the first line of its memo; `""` removes it. At most three lines.
 - `done`, and `move … done`, refuse while any todo under the card is still open and name them, unless `--skip-rest` cancels those first. The card always gets its completion date.
+- <Badge text="Next release" /> `ref` adds what landed to the card as [refs](/docs/guides/todos/#agent-cards): a commit (a short or full hash) or a URL such as a pull request. `done --ref` adds them while it finishes the card, in the same change, so a refused `done` adds nothing. A commit is looked up by its hash in the git checkout you run it in (`--repo` for another one), never as a branch or tag name, and written as its GitHub page when the checkout's `origin` is on github.com, else as the full hash; one it can't find, or a hash several commits share, exits 2. Outside a checkout the hash is written as given. A ref the card has already isn't added again; a card holds at most 50.
 - `show` prints the card, its steps and its progress; `list` the open cards, `--mine` the one linked to the pane you run it in.
+- <Badge text="Next release" /> `show` prints the card's refs too, and with `--json` both `show` and `list` give them as `refs`.
 - <Badge text="Next release" /> With `--json`, `show` and `list` say each card's `column` as [the Board](/docs/guides/todos/#the-board) draws it: `todo`, `doing`, `waiting` or `done` (empty when it's on no column). `list --done` lists the board's **Done** column instead: cards done this week, and done or cancelled cards with open steps under them (their `open` count says how many).
 - `link` (inside an AIDE terminal pane) links the pane to a card.
 - <Badge text="Next release" /> `adopt` makes one of your todos a card, as **Give to an agent** in the app does: the todo at that line of that note (1-based, as `show` prints it) moves, with its memo and subtasks, to its project's note under the `board` folder, and the line where it was becomes `[>]`. `--text` (the todo's text as `todos` prints it) must still be what the line reads, or nothing happens (exit 5). `--project` sets its project on the way; `--agent` names the agent, else the pane's, else `agent`. It prints the card's id and, inside a terminal pane, links the pane. A subtask of an open todo goes with its parent (exit 6), and a repeating todo or a card can't be adopted (exit 2). Cards you handed over from the app have the agent `agent` until an agent picks them up.

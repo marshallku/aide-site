@@ -24,6 +24,7 @@ Cards are todos in the `board` folder, one note per project: an agent working in
 - The card's status is the agent's: `[ ]` to do, `[/]` doing, `[x]` done, `[-]` cancelled. A card waiting for you is open and tagged with your waiting tag (`#waiting`), with the agent's question on its status line.
 - Its steps are the todos right under it. A step the agent drops from its plan before starting it is cancelled, never deleted. A step that was started or finished, by you or the agent, stays as it is.
 - The agent can mark the card done only once no step under it is open: it finishes them, or cancels what's left on purpose. If you tick the card done yourself while steps are still open, they stay open.
+- <Badge text="Next release" /> When the work lands, the agent adds what landed under the card: a commit or a URL such as a pull request, each on a `- ref:: …` line. A finished card says which pull request or commit closed it, and Details on the Board lists them as links.
 - The fields and the rules for cards (only the `board` folder counts, a card's id is unique, a card always gets its completion date and never repeats) are in [Agent cards](/docs/guides/todos/#agent-cards).
 
 You can edit the note as usual. An agent's change is always made on the note as it is now, so a tick you made a moment ago is kept.

@@ -149,6 +149,10 @@ the first line of its memo says what the agent is doing now:
   that note, is the card; the others are duplicates and are left alone.
 - A card always gets its completion date when it's done, whatever **Completion date** says.
 - The title leaves the card, agent and updated fields out, like the other fields.
+- <Badge text="Next release" /> **Refs** say what landed for a card: list items right under it that
+  read `- ref:: <commit or URL>`, such as `- ref:: https://github.com/you/app/pull/42`. A commit is a
+  hash of 7 to 40 hex digits; a URL starts with `http://` or `https://`. They aren't todos, so
+  ticking, moving or replanning the card leaves them as they are.
 
 ### Memos
 
@@ -225,7 +229,7 @@ A card shows its title on two lines, then its agent (**Claude**, **Codex**, **Gr
 
 The board never moves a card because of this: the column is what the note says. Without an open pane, a card in **Doing** says when the agent last wrote it and its status line, such as **Updated 2h ago · Running the Linux e2e**.
 
-Click a card to see its details beside the board (in the right panel's **Card** view on the Mac and Linux, in a sheet on the iPhone): its column, agent and project, what its pane is doing with **Open pane**, its **Plan** with a checkbox for each step you can tick, its status, where it came from, and its note with **Open note**. Double-click a card to open its note at the card. On the Mac and Linux, with a card selected, the arrow keys move between cards, <kbd>Return</kbd> shows its details, <kbd>O</kbd> opens its pane and <kbd>⌘</kbd><kbd>Return</kbd> (<kbd>Ctrl</kbd><kbd>Return</kbd> on Linux) opens its note.
+Click a card to see its details beside the board (in the right panel's **Card** view on the Mac and Linux, in a sheet on the iPhone): its column, agent and project, what its pane is doing with **Open pane**, its **Plan** with a checkbox for each step you can tick, its status, <Badge text="Next release" /> **Landed** with the card's refs, where it came from, and its note with **Open note**. A pull request or issue on GitHub shows as `owner/repo#42` and a commit as `owner/repo@1a2b3c4`; any other link shows its host and path. Each opens in your browser. A bare commit hash shows its first 7 digits as text. Double-click a card to open its note at the card. On the Mac and Linux, with a card selected, the arrow keys move between cards, <kbd>Return</kbd> shows its details, <kbd>O</kbd> opens its pane and <kbd>⌘</kbd><kbd>Return</kbd> (<kbd>Ctrl</kbd><kbd>Return</kbd> on Linux) opens its note.
 
 On the iPhone the board shows one column at a time, **Doing** first; the bar under the summary switches columns and shows how many cards each holds. The iPhone shows what a pane is doing only for the computers whose AIDE terminal it's connected to.
 
