@@ -258,7 +258,7 @@ In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused p
 
 | Method | Params | What it does |
 | --- | --- | --- |
-| `system.ping` | | Answers, to check the socket: `{status, app: "aide", server: "aide-mux", pid}`. <Badge text="Next release" /> Also `features`, what the socket does beyond these methods (`space-panes`, `space-notes`, `tab-in-space`): ask before you rely on a param an older server would ignore |
+| `system.ping` | | Answers, to check the socket: `{status, app: "aide", server: "aide-mux", pid}`. <Badge text="Next release" /> Also `features`, what the socket does beyond these methods (`space-panes`, `space-notes`, `tab-in-space`, and <Badge text="Next release" /> `marks`): ask before you rely on a param an older server would ignore |
 | `panel.focus` | `panel_id` | Selects the pane and its tab, shows the Terminal section and brings the window forward; answers `{focused, raised}`. A pane the server doesn't have answers `focused: false`, not an error. Linux always answers `raised: false` |
 | `terminal.read` | `id`, `start_row`, `start_col`, `end_row`, `end_col` | The live screen as text, or part of it: both ends included, an end past the screen clamped |
 | `terminal.state` | `id` | Size, cursor, folder, title, and whether its shell has exited |
@@ -286,6 +286,9 @@ In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused p
 | `space.show` <Badge text="Next release" /> | `session`, `pane` | Shows the space, and the pane when given, in a window: the one showing it, else the window in front switches to it, and brings that window forward: `{shown, raised}`. `raised: false` means the window switched but stayed behind, as a Mac window behind another app does until you switch to AIDE; Linux always answers `raised: false`. A pane that isn't in that space is `not_found` |
 | `space.rename` <Badge text="Next release" /> | `session`, `name` | Names a space |
 | `space.end` <Badge text="Next release" /> | `session`, `force` | Ends a space and its shells. While a program runs in one, it answers `busy` naming the programs, unless `force: true` |
+| `mark.list` <Badge text="Next release" /> | | The marks, slots 1 to 9 every window shares: `{marks: [{slot, session, tab, id}]}`, or `{slot, session, dormant: true}` while the slot's space has ended with its layout kept |
+| `mark.set`, `mark.clear` <Badge text="Next release" /> | `slot`, `id` (`mark.set` only) | Names the pane `id` (else the focused one) in that slot, or empties it: `{slot, id}`. A slot other than 1 to 9 is `invalid_params` |
+| `mark.goto` <Badge text="Next release" /> | `slot` | Shows the slot's pane as `panel.focus` does, the space brought back first when it had ended: `{slot, session, id, raised}`; an empty slot is `no_mark` |
 | `agent.fill` | `pane`, `session_id` | From inside the pane only: `{used, window}` for that Claude Code conversation, both null when AIDE isn't sure. What the auto-compaction gate asks |
 | `usage.get` <Badge text="Next release" /> | `refresh` | Your Claude and Codex plan limits, as the [status bar](/docs/guides/terminal/#the-status-bar-) shows them: `{usage, refreshing}`, where `usage` is `{claude?: {five_hour?, seven_day?, stale?}, codex?: {five_hour?, weekly?, stale?}, at, problems: [{provider, text}]}`, each limit `{used, resets_at?}` with `used` a percentage and `resets_at` in Unix seconds, and `at` in Unix milliseconds. A provider is missing while it's turned off or nothing of it was read in the last 3 hours; `stale: true` is the last good value, kept because the last read failed, with the reason in `problems`. The server reads every 60 s while an app is connected; `refresh: true` asks for a new reading now, and `refreshing: true` says this request started one; ask again for the new value. `usage` is null before the first reading. What `aidectl agent usage` calls |
 
@@ -308,6 +311,7 @@ Reading doesn't move the pane's scroll position.
 | `not_in_pane` | An `agent.notify`, `agent.report` or `agent.fill` from a program that isn't running in that pane |
 | `no_agent` | No agent in that pane |
 | `unknown_conversation` <Badge text="Next release" /> | No conversation with that id, or the pane's agent's conversation isn't known yet |
+| `no_mark` <Badge text="Next release" /> | `mark.goto` on a slot no pane holds |
 | `lookup_incomplete` <Badge text="Next release" /> | There were too many conversations to look through for that id; try again |
 | `frame_too_large` | The request line is longer than 64 KiB |
 

@@ -142,6 +142,8 @@ While a terminal has the keyboard, these act on its tabs and panes:
 | Next / previous space <Badge text="Next release" /> | <kbd>⌃</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌃</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>]</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>[</kbd> |
 | Jump to the agent that needs you <Badge text="Next release" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>B</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd> |
 | Jump to the newest finished agent <Badge text="Next release" /> | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd> | none |
+| Switch space, tab or agent… <Badge text="Next release" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd> |
+| Move tab left / right <Badge text="Next release" /> | none | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Down</kbd> |
 
 On the Mac, a terminal with the keyboard keeps <kbd>⌘</kbd><kbd>T</kbd>, <kbd>⌘</kbd><kbd>W</kbd>,
 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd>, <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd>
@@ -225,8 +227,9 @@ The keys you press in a terminal belong to the program running there, so your sh
   <kbd>Ctrl</kbd> letters, <kbd>Super</kbd> shortcuts and function keys go to the program.
 
 The terminal's own actions (**New terminal tab**, **Split right**, **Split down**, **Next pane**,
-**Previous pane**, **Close pane**, the focus, divider, zoom and pane-number ones, and the space
-actions) run only while a terminal has the keyboard, whatever shortcut you give them.
+**Previous pane**, **Close pane**, the focus, divider, zoom and pane-number ones, the space
+actions, and <Badge text="Next release" /> the switcher, history, mark and move-tab ones) run only
+while a terminal has the keyboard, whatever shortcut you give them.
 
 ### Commands
 
@@ -332,6 +335,11 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `terminal/next-space`, `terminal/previous-space` | Next space, Previous space <Badge text="Next release" /> |
 | `terminal/rename-space`, `terminal/end-space` | Rename space…, End space… (no shortcut until you give it one) <Badge text="Next release" /> |
 | `terminal/jump-blocked`, `terminal/jump-unread` | Jump to the agent that needs you, Jump to the newest finished agent <Badge text="Next release" /> |
+| `terminal/switcher`, `terminal/tab-list` | Switch space, tab or agent…, List tabs… <Badge text="Next release" /> |
+| `terminal/nav-back`, `terminal/nav-forward`, `terminal/nav-last` | Back to the previous place, Forward to the next place, Last place (no shortcut until you give it one) <Badge text="Next release" /> |
+| `terminal/mark`, `terminal/goto-mark` | Mark this pane…, Go to a mark… (no shortcut until you give it one) <Badge text="Next release" /> |
+| `terminal/move-tab-left`, `terminal/move-tab-right` | Move tab left, Move tab right <Badge text="Next release" /> |
+| `terminal/open-project-space` | Open this project's space (no shortcut until you give it one) <Badge text="Next release" /> |
 | `terminal/open-remote-aide` | Open remote AIDE… (no shortcut until you give it one) |
 
 Others come and go with what the window shows:

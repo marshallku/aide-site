@@ -140,6 +140,8 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 | 다음 / 이전 스페이스 <Badge text="다음 릴리스" /> | <kbd>⌃</kbd><kbd>⌘</kbd><kbd>]</kbd> / <kbd>⌃</kbd><kbd>⌘</kbd><kbd>[</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>]</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>[</kbd> |
 | 확인이 필요한 에이전트로 이동 <Badge text="다음 릴리스" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>B</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd> |
 | 가장 최근에 끝난 에이전트로 이동 <Badge text="다음 릴리스" /> | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd> | 없음 |
+| 스페이스, 탭, 에이전트로 전환… <Badge text="다음 릴리스" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd> |
+| 탭을 왼쪽으로 / 오른쪽으로 <Badge text="다음 릴리스" /> | 없음 | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Down</kbd> |
 
 Mac에서 터미널에 키보드 포커스가 있으면 <kbd>⌘</kbd><kbd>T</kbd>, <kbd>⌘</kbd><kbd>W</kbd>,
 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd>, <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd>,
@@ -223,7 +225,7 @@ Page Down, Insert, Delete, Backspace, Tab, Return, Esc, Space도 쓸 수 있어�
   <kbd>Ctrl</kbd>과 글자만 누르는 단축키, <kbd>Super</kbd> 단축키, 기능 키는 프로그램으로 가요.
 
 터미널 자체의 동작(**새 터미널 탭**, **오른쪽으로 분할**, **아래로 분할**, **다음 페인**, **이전 페인**,
-**페인 닫기**, 그리고 페인 이동, 구분선, 확대, 페인 번호, 스페이스 동작)은 어떤 단축키를 주든 터미널에 키보드 포커스가
+**페인 닫기**, 그리고 페인 이동, 구분선, 확대, 페인 번호, 스페이스 동작, <Badge text="다음 릴리스" /> 전환, 기록, 표시, 탭 옮기기 동작)은 어떤 단축키를 주든 터미널에 키보드 포커스가
 있을 때만 실행돼요.
 
 ### 명령
@@ -323,6 +325,11 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `terminal/next-space`, `terminal/previous-space` | 다음 스페이스, 이전 스페이스 <Badge text="다음 릴리스" /> |
 | `terminal/rename-space`, `terminal/end-space` | 스페이스 이름 변경…, 스페이스 끝내기…(단축키를 주기 전까지는 없음) <Badge text="다음 릴리스" /> |
 | `terminal/jump-blocked`, `terminal/jump-unread` | 확인이 필요한 에이전트로 이동, 가장 최근에 끝난 에이전트로 이동 <Badge text="다음 릴리스" /> |
+| `terminal/switcher`, `terminal/tab-list` | 스페이스, 탭, 에이전트로 전환…, 탭 목록… <Badge text="다음 릴리스" /> |
+| `terminal/nav-back`, `terminal/nav-forward`, `terminal/nav-last` | 이전 위치로, 다음 위치로, 직전 위치(직접 주기 전까지 단축키 없음) <Badge text="다음 릴리스" /> |
+| `terminal/mark`, `terminal/goto-mark` | 이 페인 표시하기…, 표시한 곳으로 가기…(직접 주기 전까지 단축키 없음) <Badge text="다음 릴리스" /> |
+| `terminal/move-tab-left`, `terminal/move-tab-right` | 탭을 왼쪽으로, 탭을 오른쪽으로 <Badge text="다음 릴리스" /> |
+| `terminal/open-project-space` | 이 프로젝트의 스페이스 열기(직접 주기 전까지 단축키 없음) <Badge text="다음 릴리스" /> |
 | `terminal/open-remote-aide` | 원격 AIDE 열기…(직접 지정하기 전까지 단축키 없음) |
 
 창에 보이는 것에 따라 생기고 없어지는 id도 있어요.

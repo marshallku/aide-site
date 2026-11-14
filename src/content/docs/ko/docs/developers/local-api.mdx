@@ -258,7 +258,7 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 
 | 메서드 | 파라미터 | 하는 일 |
 | --- | --- | --- |
-| `system.ping` | | 소켓이 살아 있는지 확인하는 응답을 해요: `{status, app: "aide", server: "aide-mux", pid}`. <Badge text="다음 릴리스" /> `features`도 있어요. 이 메서드들 말고 소켓이 하는 일(`space-panes`, `space-notes`, `tab-in-space`)이에요. 오래된 서버가 무시할 파라미터에 기대기 전에 먼저 물어보세요 |
+| `system.ping` | | 소켓이 살아 있는지 확인하는 응답을 해요: `{status, app: "aide", server: "aide-mux", pid}`. <Badge text="다음 릴리스" /> `features`도 있어요. 이 메서드들 말고 소켓이 하는 일(`space-panes`, `space-notes`, `tab-in-space`, <Badge text="다음 릴리스" /> `marks`)이에요. 오래된 서버가 무시할 파라미터에 기대기 전에 먼저 물어보세요 |
 | `panel.focus` | `panel_id` | 그 페인과 탭을 고르고, 터미널 섹션을 보여 주고, 창을 앞으로 가져와요. `{focused, raised}`로 응답해요. 서버에 없는 페인이면 오류가 아니라 `focused: false`예요. Linux는 항상 `raised: false`로 응답해요 |
 | `terminal.read` | `id`, `start_row`, `start_col`, `end_row`, `end_col` | 지금 화면, 또는 그 일부를 글자로 줘요. 양 끝을 포함하고, 화면을 넘는 끝은 화면 끝으로 맞춰요 |
 | `terminal.state` | `id` | 크기, 커서, 폴더, 제목, 셸이 끝났는지 |
@@ -286,6 +286,9 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `space.show` <Badge text="다음 릴리스" /> | `session`, `pane` | 그 스페이스(`pane`이 있으면 그 페인도)를 창에 보여 줘요. 보여 주는 창이 없으면 앞에 있는 창이 그 스페이스로 바뀌고, 그 창을 앞으로 가져와요: `{shown, raised}`. `raised: false`면 창은 바뀌었지만 뒤에 남았다는 뜻이에요. Mac에서 다른 앱 뒤에 있는 창은 AIDE로 전환할 때까지 그래요. Linux는 항상 `raised: false`로 응답해요. 그 스페이스에 없는 페인은 `not_found`예요 |
 | `space.rename` <Badge text="다음 릴리스" /> | `session`, `name` | 스페이스 이름을 바꿔요 |
 | `space.end` <Badge text="다음 릴리스" /> | `session`, `force` | 스페이스와 그 셸을 끝내요. 셸에서 프로그램이 실행 중이면 그 프로그램 이름과 함께 `busy`로 답해요. `force: true`면 그래도 끝내요 |
+| `mark.list` <Badge text="다음 릴리스" /> | | 모든 창이 함께 쓰는 1부터 9까지의 표시: `{marks: [{slot, session, tab, id}]}`, 스페이스가 레이아웃을 남긴 채 끝났으면 `{slot, session, dormant: true}` |
+| `mark.set`, `mark.clear` <Badge text="다음 릴리스" /> | `slot`, `id`(`mark.set`만) | 그 번호에 페인 `id`(없으면 포커스된 페인)를 표시하거나 비워요: `{slot, id}`. 1부터 9가 아닌 번호는 `invalid_params` |
+| `mark.goto` <Badge text="다음 릴리스" /> | `slot` | 그 번호의 페인을 `panel.focus`처럼 보여 줘요. 스페이스가 끝났으면 먼저 다시 살려요: `{slot, session, id, raised}`. 빈 번호는 `no_mark` |
 | `agent.fill` | `pane`, `session_id` | 그 페인 안에서만: 그 Claude Code 대화의 `{used, window}`예요. AIDE가 확실하지 않으면 둘 다 null이에요. 자동 압축을 미루는 장치가 물어요 |
 | `usage.get` <Badge text="다음 릴리스" /> | `refresh` | [상태 표시줄](/ko/docs/guides/terminal/#상태-표시줄-)에 나오는 Claude와 Codex 요금제 한도예요. `{usage, refreshing}`으로 답하고, `usage`는 `{claude?: {five_hour?, seven_day?, stale?}, codex?: {five_hour?, weekly?, stale?}, at, problems: [{provider, text}]}`예요. 한도마다 `{used, resets_at?}`이고 `used`는 퍼센트, `resets_at`은 Unix 초, `at`은 Unix 밀리초예요. 꺼 두었거나 지난 3시간 동안 읽은 게 없는 서비스는 빠져요. `stale: true`는 마지막으로 읽기에 실패해서 이전 값을 보여 주는 것이고, 이유는 `problems`에 있어요. 앱이 연결돼 있는 동안 서버가 60초마다 읽고, `refresh: true`는 지금 새로 읽어 달라는 요청이고, `refreshing: true`는 이 요청이 새로 읽기를 시작했다는 뜻이에요. 새 값은 다시 물어보세요. 처음 읽기 전에는 `usage`가 null이에요. `aidectl agent usage`가 불러요 |
 
@@ -308,6 +311,7 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `not_in_pane` | 그 페인에서 실행되지 않는 프로그램이 `agent.notify`, `agent.report`, `agent.fill`을 보냄 |
 | `no_agent` | 그 페인에 에이전트가 없음 |
 | `unknown_conversation` <Badge text="다음 릴리스" /> | 그 id의 대화가 없거나, 페인의 에이전트 대화를 아직 알 수 없음 |
+| `no_mark` <Badge text="다음 릴리스" /> | 페인이 없는 번호에 `mark.goto` |
 | `lookup_incomplete` <Badge text="다음 릴리스" /> | 그 id를 찾기에는 대화가 너무 많음. 다시 시도하세요 |
 | `frame_too_large` | 요청 줄이 64 KiB를 넘음 |
 

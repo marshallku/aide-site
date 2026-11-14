@@ -215,6 +215,45 @@ folder of the pane you split.
   on the space you were in, and showing one starts its shells again in its folders.
 - The branch is read from the folder's git files; it follows a `git checkout` within a few seconds.
 
+#### Switch, go back, mark <Badge text="Next release" />
+
+Get back to where you just were, to a pane you marked, or to any tab by a few letters of its name
+(comux's <kbd>Ctrl</kbd><kbd>f</kbd>, `;` and marks):
+
+- **Switch space, tab or agent…** (<kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd>, <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd>
+  on Linux) opens a list of your spaces, agents and tabs. Type to narrow it the way **Open a note…**
+  does; <kbd>←</kbd> and <kbd>→</kbd> switch between **Spaces**, **Agents** and **Tabs** (turn on
+  **All spaces** for every space's tabs), <kbd>↑</kbd> and <kbd>↓</kbd> move, <kbd>Return</kbd> goes
+  there and <kbd>F2</kbd> renames a space. Under the list, the selected one's last lines show.
+- **List tabs…** opens the same list on **Tabs** with the tab you were on before selected, so it
+  and then <kbd>Return</kbd> flip between two tabs.
+- **Back to the previous place**, **Forward to the next place** and **Last place** walk the places
+  this window has been, across spaces and tabs, like a browser's history. **Last place** goes back
+  and forth between the last two.
+- **Mark this pane…** asks for a digit, 1 to 9, and keeps the pane under it; **Go to a mark…**
+  lists your marks and shows the one whose digit you press, switching space if it has to. Marks are
+  your computer's, so every window and `aidectl terminal mark` share them, and they come back
+  after a restart. A space that ended keeps its marks for when you show it again.
+- **Move tab left** and **Move tab right** move the tab you're on along the bar
+  (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> and <kbd>Page Down</kbd> on Linux).
+
+Only the switcher and Linux's move-tab keys have a shortcut; give the others one in
+**Settings › Keyboard**, or run them from the command palette. Marks and the switcher's preview
+need the terminal server from this version: an older one shows **The terminal server needs
+updating** until it restarts.
+
+#### Spaces and projects <Badge text="Next release" />
+
+A space made for a project (`aidectl terminal space new --project`, or **Open space** below) joins
+that project's todos:
+
+- The space menu, and a space's menu in **Spaces**, have **Show todos**: **Todos › Board** opens on
+  that project's lane alone. It's there while the agent board is on.
+- On the board, right-click a project's filter chip for **Open space**. A project's note (one with
+  `type: project`, or in a `projects/` folder) has **Open this project's space** in the command
+  palette. Either shows the newest space with that project, or opens **New space…** with the project
+  filled in.
+
 ### Shells that outlive AIDE
 
 Your shells run in AIDE's terminal server, a small program of its own, not in the app. Quitting

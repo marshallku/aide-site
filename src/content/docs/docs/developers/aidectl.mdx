@@ -410,6 +410,10 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `space show <id> [--pane P]` <Badge text="Next release" /> | Shows that space (and that pane in it) in a window, switching the window in front to it when no window shows it |
 | `space rename <id> <name>` <Badge text="Next release" /> | Names a space |
 | `space end <id> [--force]` <Badge text="Next release" /> | Ends a space and its shells. While a program runs in one of them it refuses, naming the programs, unless `--force` |
+| `mark list` <Badge text="Next release" /> | Lists the [marks](/docs/guides/terminal/#switch-go-back-mark-), slots 1 to 9 that every AIDE window shares: each slot's space, tab and pane, or **(not running)** while its space has ended with its layout kept |
+| `mark set <slot>` <Badge text="Next release" /> | Marks this pane (or `--pane`) as that slot and prints the slot and pane; the slot's earlier pane loses it |
+| `mark clear <slot>` <Badge text="Next release" /> | Empties that slot |
+| `mark goto <slot>` <Badge text="Next release" /> | Shows the slot's pane in a window, as `focus` does, bringing its space back first when it had ended, and prints the space and pane |
 
 `read`, `state`, `exec`, `feed`, `history`, `context` and `split` act on the pane `--pane` names, else on the focused pane. A pane's id is in `tabs`, and a pane's own shell has it in `$COPAD_PANEL_ID`. `--json` prints the app's answer as JSON instead of text.
 
@@ -422,11 +426,11 @@ Reading never moves the pane: `read` and `history` read the live screen even whe
 - Else it uses the terminal server's socket, from any shell: `~/Library/Application Support/AIDE/mux/terminal.sock` on the Mac, `$XDG_RUNTIME_DIR/aide-mux/terminal.sock` on Linux (`/tmp/aide-mux-<uid>/terminal.sock` without `XDG_RUNTIME_DIR`). It's used only when its folder is yours alone and the server answers.
 - Else it uses the only AIDE app with a terminal running as your user. With none, it stops. With more than one, it doesn't guess: it lists their sockets and asks you to choose one with `--socket`.
 
-`focus`, `switch-tab` and `new-tab` (without `--space` or `--cwd`) need an AIDE window showing the terminal; with none, they stop with exit code 1. <Badge text="Next release" /> `focus` and `space show` reach a pane or space no window shows: the window in front switches to its space.
+`focus`, `switch-tab` and `new-tab` (without `--space` or `--cwd`) need an AIDE window showing the terminal; with none, they stop with exit code 1. <Badge text="Next release" /> `focus`, `space show` and `mark goto` reach a pane or space no window shows: the window in front switches to its space.
 
 To show the owner the pane working on a board card, wherever it is: `aidectl agent list` names each agent's pane and the card it's linked to, and `aidectl terminal focus <pane>` brings that pane forward. On the Mac a minimized window comes back to the front, but a window behind another app only switches to the pane and asks to come forward: macOS leaves it behind until you switch to AIDE.
 
-`resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. <Badge text="Next release" /> Nor do `space new` and `new-tab --space`: an agent can start a space for a card and work in it alone, while you stay where you are. When the terminal server is older than `aidectl` (it hasn't restarted since an update), `new-tab --space`/`--cwd` and every `space new` stop with exit code 1 before doing anything. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
+`resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. <Badge text="Next release" /> Nor do `space new` and `new-tab --space`: an agent can start a space for a card and work in it alone, while you stay where you are. When the terminal server is older than `aidectl` (it hasn't restarted since an update), `new-tab --space`/`--cwd`, every `space new` and every `mark` stop with exit code 1 before doing anything. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
 
 The Mac App Store build and the iPhone have no terminal socket.
 
@@ -435,7 +439,7 @@ The Mac App Store build and the iPhone have no terminal socket.
 | Done | 0 |
 | No app to talk to, a `$COPAD_SOCKET` or `--socket` that doesn't answer, or the app refused (a shell that has exited, a pane too small to split) | 1 |
 | Several apps running and no `--socket`, or wrong arguments (a `read` range the app refuses, say) | 2 |
-| No pane, tab or space with that id, no such conversation, or no agent in the pane to fork | 5 |
+| No pane, tab or space with that id, no such conversation, no agent in the pane to fork, or (<Badge text="Next release" />) an empty mark slot | 5 |
 
 ```sh
 aidectl terminal tabs
@@ -448,6 +452,8 @@ set -- $(aidectl terminal space new ~/dev/site --name site)   # $1 the space, $2
 aidectl terminal exec --pane "$2" 'aidectl board list'
 aidectl terminal new-tab --space "$1" --cwd ~/dev/site/docs
 aidectl terminal space end "$1"
+aidectl terminal mark set 1        # this pane, slot 1
+aidectl terminal mark goto 1
 ```
 
 ### agent
