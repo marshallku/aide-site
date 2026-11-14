@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem, Aside, Steps, Badge } from "@astrojs/starlight/components";
 
 AIDE is released for the Mac and for Linux on x86_64 from the public
 [aide-releases](https://github.com/marshallku/aide-releases) repository. Each install also gives you
@@ -43,6 +43,11 @@ The script:
 - links `~/.local/bin/aidectl` to the `aidectl` inside the app, so the app's updates bring it along.
 
 If `~/.local/bin` isn't on your `PATH`, the script says so. Add it to run `aidectl` by name.
+
+<Badge text="Next release" /> When the app starts, it moves a `~/.local/bin/aidectl` link that points into
+another copy of AIDE, such as an old download, to the `aidectl` in the app you started. It leaves a
+file or a link to anything else alone (a Homebrew `aidectl`, your own script), and it doesn't create
+the link when it's missing.
 
 </TabItem>
 <TabItem label="Linux">
@@ -95,6 +100,11 @@ upgraded to X.Y.Z; its shells keep running**. If the server can't take the new v
 running the old one with your shells, the install still finishes, and the script says why and that
 `~/.local/bin/aide-mux ctl upgrade` tries again. With no server running, nothing is started; AIDE
 starts the new one when it needs it.
+
+<Badge text="Next release" /> When the app starts, it moves a `~/.local/bin/aidectl` link that points into
+another install of AIDE (a folder with its own `aide-desktop`) to the `aidectl` beside the app you
+started. It leaves a file or a link to anything else alone, and it doesn't create the link when it's
+missing.
 
 </TabItem>
 </Tabs>

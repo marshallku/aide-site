@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem, Aside, Steps, Badge } from "@astrojs/starlight/components";
 
 AIDE는 공개 저장소 [aide-releases](https://github.com/marshallku/aide-releases)에서 Mac용과 x86_64
 Linux용으로 배포돼요. 설치하면 명령줄 도구 `aidectl`과 [데스크톱 호스트](/ko/docs/self-hosting/desktop-host/)에
@@ -43,6 +43,10 @@ curl -fsSL https://github.com/marshallku/aide-releases/releases/latest/download/
 
 `~/.local/bin`이 `PATH`에 없으면 스크립트가 알려 줘요. `aidectl`을 이름만으로 실행하려면 `PATH`에
 추가하세요.
+
+<Badge text="다음 릴리스" /> 앱이 시작될 때, 예전에 받은 앱처럼 다른 AIDE 복사본을 가리키는
+`~/.local/bin/aidectl` 링크를 지금 시작한 앱의 `aidectl`로 옮겨요. 파일이거나 다른 것(Homebrew의
+`aidectl`, 직접 만든 스크립트)을 가리키는 링크는 그대로 두고, 링크가 없을 때 새로 만들지도 않아요.
 
 </TabItem>
 <TabItem label="Linux">
@@ -93,6 +97,10 @@ AIDE의 터미널 서버가 이미 실행 중이면 스크립트가 그 자리�
 running**이라고 알려 줘요. 서버가 새 버전을 받지 못하면 셸과 함께 이전 버전으로 계속 실행되고, 설치는 그대로
 끝나요. 스크립트가 그 이유와, `~/.local/bin/aide-mux ctl upgrade`로 다시 시도할 수 있다는 것을 알려 줘요.
 실행 중인 서버가 없으면 아무것도 시작하지 않아요. 필요할 때 AIDE가 새 서버를 시작해요.
+
+<Badge text="다음 릴리스" /> 앱이 시작될 때, 다른 AIDE 설치(자기 `aide-desktop`이 있는 폴더)를 가리키는
+`~/.local/bin/aidectl` 링크를 지금 시작한 앱 옆의 `aidectl`로 옮겨요. 파일이거나 다른 것을 가리키는
+링크는 그대로 두고, 링크가 없을 때 새로 만들지도 않아요.
 
 </TabItem>
 </Tabs>
