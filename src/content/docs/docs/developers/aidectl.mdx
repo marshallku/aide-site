@@ -391,6 +391,7 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `context [--history-lines N]` | The rows above the screen (50 unless you say), then the screen |
 | `tabs` | Lists every tab and its panes: tab id, pane id, title, and whether the pane is on screen, focused or exited |
 | `new-tab` | Opens a new tab and prints its pane id |
+| `new-tab [--space S] [--cwd D] [--show]` <Badge text="Next release" /> | Opens the tab in that space (else the space of the pane it runs in), in that folder (else the space's folder), and prints its pane id. No window is needed, and a window showing that space stays on its tab unless `--show` |
 | `close-tab [<tab>]` | Closes that tab with every pane in it; without a tab id, closes the focused pane |
 | `rename <tab> <title>` | Names a tab; an empty title clears the name |
 | `switch-tab <index>` | Selects a tab by its index in `tabs`, counting from 0 |
@@ -399,8 +400,8 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `conversations [--dir D \| --here] [--all] [--query Q] [--rescan]` <Badge text="Next release" /> | Lists past Claude Code, Codex and Grok conversations, newest first: id, agent, age, folder, the first prompt, and **● pane N** when a pane has it. `--dir` (or `--here`, this folder) keeps those in that folder or under it; `--all` adds runs nobody typed into |
 | `resume <id> [--tool T] [--focus]` <Badge text="Next release" /> | Opens that conversation in a new tab, in the space working in its folder, else in the session of the pane it runs in, and prints the new pane's id; one a pane already has prints that pane's id instead |
 | `fork [<id>] [--tool T] [--focus]` <Badge text="Next release" /> | Starts a new conversation from the agent in this pane (or `--pane`), or from a past conversation, in a new tab, and prints its pane id |
-| `space list` <Badge text="Next release" /> | Lists every [space](/docs/guides/terminal/#spaces): id, name (**on screen** when a window shows it, **not running** when it's ended with its layout kept), folder, branch, tabs, and its agents by state |
-| `space new <dir> [--name N] [--project P] [--show]` <Badge text="Next release" /> | Makes a space working in that folder and prints its id. Run in a pane, it belongs to that pane's vault. With `--show`, a window shows it; when none can, it says so on stderr, and the space is made all the same |
+| `space list` <Badge text="Next release" /> | Lists every [space](/docs/guides/terminal/#spaces): id, name (**on screen** when a window shows it, **not running** when it's ended with its layout kept), folder, branch, tabs, its agents by state, and its panes, those of a space no window shows included |
+| `space new <dir> [--name N] [--project P] [--vault V] [--show]` <Badge text="Next release" /> | Makes a space working in that folder and prints its id and its first pane's id on one line. Run in a pane, it belongs to that pane's vault and uses that pane's notes, so `aidectl` works in its panes before any window shows it. `--vault` names a folder vault for its notes instead; a folder AIDE hasn't opened as a vault is refused. Nothing moves on screen; with `--show`, a window shows it, and when none can, it says so on stderr, and the space is made all the same |
 | `space show <id> [--pane P]` <Badge text="Next release" /> | Shows that space (and that pane in it) in a window, switching the window in front to it when no window shows it |
 | `space rename <id> <name>` <Badge text="Next release" /> | Names a space |
 | `space end <id> [--force]` <Badge text="Next release" /> | Ends a space and its shells. While a program runs in one of them it refuses, naming the programs, unless `--force` |
@@ -416,11 +417,11 @@ Reading never moves the pane: `read` and `history` read the live screen even whe
 - Else it uses the terminal server's socket, from any shell: `~/Library/Application Support/AIDE/mux/terminal.sock` on the Mac, `$XDG_RUNTIME_DIR/aide-mux/terminal.sock` on Linux (`/tmp/aide-mux-<uid>/terminal.sock` without `XDG_RUNTIME_DIR`). It's used only when its folder is yours alone and the server answers.
 - Else it uses the only AIDE app with a terminal running as your user. With none, it stops. With more than one, it doesn't guess: it lists their sockets and asks you to choose one with `--socket`.
 
-`focus`, `switch-tab` and `new-tab` need an AIDE window showing the terminal; with none, they stop with exit code 1. <Badge text="Next release" /> `focus` and `space show` reach a pane or space no window shows: the window in front switches to its space.
+`focus`, `switch-tab` and `new-tab` (without `--space` or `--cwd`) need an AIDE window showing the terminal; with none, they stop with exit code 1. <Badge text="Next release" /> `focus` and `space show` reach a pane or space no window shows: the window in front switches to its space.
 
 To show the owner the pane working on a board card, wherever it is: `aidectl agent list` names each agent's pane and the card it's linked to, and `aidectl terminal focus <pane>` brings that pane forward. On the Mac a minimized window comes back to the front, but a window behind another app only switches to the pane and asks to come forward: macOS leaves it behind until you switch to AIDE.
 
-`resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
+`resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. <Badge text="Next release" /> Nor do `space new` and `new-tab --space`: an agent can start a space for a card and work in it alone, while you stay where you are. When the terminal server is older than `aidectl` (it hasn't restarted since an update), `new-tab --space`/`--cwd` and every `space new` stop with exit code 1 before doing anything. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
 
 The Mac App Store build and the iPhone have no terminal socket.
 
@@ -438,8 +439,10 @@ aidectl terminal exec --pane "$pane" 'make test'
 aidectl terminal history --lines 500 > scrollback.txt
 aidectl terminal conversations --here
 pane=$(aidectl terminal resume 3b6a1f0e-5d2c-4e8a-9f1b-7c4d2e8a6b10)
-space=$(aidectl terminal space new ~/dev/site --name site --show)
-aidectl terminal space end "$space"
+set -- $(aidectl terminal space new ~/dev/site --name site)   # $1 the space, $2 its first pane
+aidectl terminal exec --pane "$2" 'aidectl board list'
+aidectl terminal new-tab --space "$1" --cwd ~/dev/site/docs
+aidectl terminal space end "$1"
 ```
 
 ### agent
@@ -456,13 +459,15 @@ The [coding agents](/docs/guides/terminal/#coding-agents) in AIDE's terminal.
 `list` asks the terminal server which agents run in its panes, with no AIDE window needed: one row
 per agent with its pane, its vault's session, the agent, its state (`done` for a turn nobody has
 looked at, `(not updating)` when the last read couldn't be confirmed), how full its context is, and
-the step it's on. With none it prints `No agents.` `--json` prints the server's answer as it is,
+the step it's on. <Badge text="Next release" /> It also names the board card each pane is linked to
+(`(finished)` once the card is done) and the git checkout it works in; a pane whose agent left still
+shows its card. With none it prints `No agents.` `--json` prints the server's answer as it is,
 with each pane's board card link. <Badge text="Next release" /> Inside an AIDE terminal pane it asks
 that pane's own terminal server.
 
 ```text
-PANE           SESSION  AGENT   STATE    CONTEXT  DETAIL
-1794000000001  work     claude  blocked  41%      Bash: Run the tests
+PANE           SESSION  AGENT   STATE    CONTEXT  CARD      CHECKOUT           DETAIL
+1794000000001  work     claude  blocked  41%      a1b2c3d4  /home/me/dev/aide  Bash: Run the tests
 ```
 
 <Badge text="Next release" /> `usage` prints Claude's and Codex's plan limits as the terminal server last read
