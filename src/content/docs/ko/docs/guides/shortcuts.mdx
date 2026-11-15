@@ -169,6 +169,62 @@ Mac에서 터미널에 키보드 포커스가 있으면 <kbd>⌘</kbd><kbd>T</kb
 다시 쓰려면 터미널 바깥을 클릭하세요.
 </Aside>
 
+### 프리픽스 키 <Badge text="다음 릴리스" />
+
+comux나 tmux의 <kbd>Ctrl</kbd><kbd>B</kbd>에 손이 익었다면 터미널에 프리픽스 키를 정해 두세요. 프리픽스를 눌렀다 떼고
+키를 하나 더 누르는 방식이에요. **설정 › 키보드 › 터미널 프리픽스**에서 **없음**을 클릭하고 쓰고 싶은 키를
+누르면 돼요. **지우기**를 누르면 다시 꺼져요. 정하기 전까지는 꺼져 있어요. 프리픽스는 <kbd>Ctrl</kbd>(Mac에서는 <kbd>⌃</kbd>)에 글자, <kbd>Space</kbd>,
+<kbd>[</kbd>, <kbd>\\</kbd>, <kbd>]</kbd> 중 하나를 더한 키예요. 다른 키는 받지 않아요.
+
+터미널에 키보드 포커스가 있으면 프리픽스는 프로그램에 가지 않아요. 상태 표시줄에 `^B`(<kbd>Ctrl</kbd><kbd>B</kbd>일 때)가
+보이고, 다음 키가 아래 중 하나를 해요.
+
+| 프리픽스 다음 키 | 하는 일 |
+|---|---|
+| <kbd>%</kbd> / <kbd>"</kbd> | 오른쪽으로 분할 / 아래로 분할 |
+| <kbd>o</kbd> | 다음 페인 |
+| <kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd> 또는 화살표 | 왼쪽 / 아래 / 위 / 오른쪽 페인으로 이동 |
+| <kbd>`</kbd> | 직전 페인 |
+| <kbd>q</kbd> | 페인 번호 보기 |
+| <kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> | 구분선을 왼쪽 / 아래 / 위 / 오른쪽으로 |
+| <kbd>z</kbd> | 페인 확대 |
+| <kbd>x</kbd> | 페인 닫기 |
+| <kbd>c</kbd> | 새 터미널 탭 |
+| <kbd>C</kbd> | 새 스페이스… |
+| <kbd>$</kbd> / <kbd>X</kbd> | 스페이스 이름 변경… / 스페이스 끝내기… |
+| <kbd>)</kbd> / <kbd>(</kbd> | 다음 스페이스 / 이전 스페이스 |
+| <kbd>;</kbd> 또는 <kbd>Tab</kbd> | 직전 위치 |
+| <kbd>&lt;</kbd> / <kbd>&gt;</kbd> | 이전 위치로 / 다음 위치로 |
+| <kbd>m</kbd> / <kbd>'</kbd> | 이 페인 표시하기… / 표시한 곳으로 가기… |
+| <kbd>f</kbd> 또는 <kbd>w</kbd> | 탭 목록… |
+| <kbd>Shift</kbd><kbd>←</kbd> / <kbd>Shift</kbd><kbd>→</kbd> | 탭을 왼쪽으로 / 탭을 오른쪽으로 |
+| <kbd>!</kbd> | 확인이 필요한 에이전트로 이동 |
+| <kbd>u</kbd> | 가장 최근에 끝난 에이전트로 이동 |
+| <kbd>R</kbd> | 대화 다시 열기… |
+| <kbd>?</kbd> | **터미널 키**: 터미널 동작과 각 동작의 프리픽스 키를 보여 주는 **설정 › 키보드** |
+
+- 프리픽스를 두 번 누르면 프리픽스 자체가 프로그램으로 가요. 안에서 tmux나 readline을 쓸 때 필요해요.
+- <kbd>Esc</kbd>나 표에 없는 키는 아무 일도 하지 않고 프리픽스만 풀려요.
+- <kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd>을 누른 뒤에는 누를 때마다 0.5초 동안 이 네 키가 프리픽스 없이도 동작해요.
+  그래서 프리픽스 <kbd>H</kbd> <kbd>H</kbd> <kbd>H</kbd>로 구분선을 세 번 옮길 수 있어요.
+- 입력기가 글자를 조합하는 중에는 프리픽스가 켜지지 않아요. Linux에서는 터미널이 잡고 있는 조합을 AIDE가 볼 수
+  없어서, 한글이나 가나를 입력하는 키를 누르면 프리픽스가 풀리고 그 키는 프로그램으로 가요.
+- 터미널 바깥을 클릭하거나 창을 떠나도 풀려요.
+
+키는 US 키보드에서의 위치로 맞추기 때문에 어떤 자판이나 입력 소스에서도 동작해요. Linux에서는
+`config.toml`에서 표를 바꿀 수 있어요.
+
+```toml
+[keybindings.prefix]
+prefix = "ctrl+b"                    # 설정 › 키보드 › 터미널 프리픽스가 쓰는 값
+"|" = "action:terminal/split-right"  # 동작에 키 하나 더 주기
+z = "none"                           # 표에서 키 빼기
+```
+
+키는 입력한 그대로의 문자 하나(`%`, `H`, `|`)이거나 `ctrl`, `alt`, `shift`를 붙인 이름 있는 키(`shift+left`,
+`tab`)예요. comux의 `C-o`, `M-1`, `S-Left`도 돼요. 키와 `action:<id>` 또는 `none`이 아닌 항목은
+**설정 › 키보드**에 문제로 나오고 빠져요. Mac에서는 이 표가 프리픽스와 함께 앱 설정에 저장돼요.
+
 ## 단축키 바꾸기
 
 Mac과 Linux에서 명령 팔레트가 실행하는 것은 모두 이름 있는 동작(action)이에요.
@@ -330,6 +386,7 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `terminal/mark`, `terminal/goto-mark` | 이 페인 표시하기…, 표시한 곳으로 가기…(직접 주기 전까지 단축키 없음) <Badge text="다음 릴리스" /> |
 | `terminal/move-tab-left`, `terminal/move-tab-right` | 탭을 왼쪽으로, 탭을 오른쪽으로 <Badge text="다음 릴리스" /> |
 | `terminal/open-project-space` | 이 프로젝트의 스페이스 열기(직접 주기 전까지 단축키 없음) <Badge text="다음 릴리스" /> |
+| `terminal/key-help` | 터미널 키: 터미널 동작을 보여 주는 **설정 › 키보드**(직접 주기 전까지 단축키 없음, 프리픽스의 <kbd>?</kbd>) <Badge text="다음 릴리스" /> |
 | `terminal/open-remote-aide` | 원격 AIDE 열기…(직접 지정하기 전까지 단축키 없음) |
 
 창에 보이는 것에 따라 생기고 없어지는 id도 있어요.

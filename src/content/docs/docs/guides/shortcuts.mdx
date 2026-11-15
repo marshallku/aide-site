@@ -172,6 +172,64 @@ terminal and reach the shell instead: <kbd>Ctrl</kbd><kbd>P</kbd>, <kbd>Ctrl</kb
 included, keep working. Click outside the terminal to use them again.
 </Aside>
 
+### The prefix key <Badge text="Next release" />
+
+If your hands know comux's or tmux's <kbd>Ctrl</kbd><kbd>B</kbd>, give the terminal a prefix key: press it, let go,
+then press one more key. Set it in **Settings › Keyboard › Terminal prefix**: click **None** and
+press the key you want; **Clear** turns it off again. It's off until you set one. The prefix is <kbd>Ctrl</kbd> (on the Mac <kbd>⌃</kbd>) with a
+letter, <kbd>Space</kbd>, <kbd>[</kbd>, <kbd>\\</kbd> or <kbd>]</kbd>; anything else isn't taken.
+
+While a terminal has the keyboard, the prefix doesn't reach the program: the status bar shows `^B`
+(for <kbd>Ctrl</kbd><kbd>B</kbd>) until the next key, which does one of these:
+
+| Key after the prefix | Does |
+|---|---|
+| <kbd>%</kbd> / <kbd>"</kbd> | Split right / Split down |
+| <kbd>o</kbd> | Next pane |
+| <kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd>, or the arrows | Focus the pane to the left / below / above / to the right |
+| <kbd>`</kbd> | Last pane |
+| <kbd>q</kbd> | Show pane numbers |
+| <kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> | Move the divider left / down / up / right |
+| <kbd>z</kbd> | Zoom pane |
+| <kbd>x</kbd> | Close pane |
+| <kbd>c</kbd> | New terminal tab |
+| <kbd>C</kbd> | New space… |
+| <kbd>$</kbd> / <kbd>X</kbd> | Rename space… / End space… |
+| <kbd>)</kbd> / <kbd>(</kbd> | Next space / Previous space |
+| <kbd>;</kbd> or <kbd>Tab</kbd> | Last place |
+| <kbd>&lt;</kbd> / <kbd>&gt;</kbd> | Back to the previous place / Forward to the next place |
+| <kbd>m</kbd> / <kbd>'</kbd> | Mark this pane… / Go to a mark… |
+| <kbd>f</kbd> or <kbd>w</kbd> | List tabs… |
+| <kbd>Shift</kbd><kbd>←</kbd> / <kbd>Shift</kbd><kbd>→</kbd> | Move tab left / Move tab right |
+| <kbd>!</kbd> | Jump to the agent that needs you |
+| <kbd>u</kbd> | Jump to the newest finished agent |
+| <kbd>R</kbd> | Resume a conversation… |
+| <kbd>?</kbd> | **Terminal keys**: **Settings › Keyboard** with the terminal's actions, each with its prefix key |
+
+- The prefix pressed twice sends it to the program, for a tmux or readline inside.
+- <kbd>Esc</kbd>, or a key that isn't in the table, does nothing and the prefix lets go.
+- After <kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> or <kbd>L</kbd>, those four keep working without the prefix for half
+  a second after each press, so prefix <kbd>H</kbd> <kbd>H</kbd> <kbd>H</kbd> moves the divider three times.
+- While an input method is composing, the prefix doesn't arm. On Linux AIDE can't see a
+  composition the terminal is holding; a key that types Hangul or kana there cancels the prefix and
+  goes to the program.
+- Clicking outside the terminal, or leaving the window, lets go of it too.
+
+The keys are matched where they are on a US keyboard, so they work with any layout or input
+source. On Linux you can change the table in `config.toml`:
+
+```toml
+[keybindings.prefix]
+prefix = "ctrl+b"                    # Settings › Keyboard › Terminal prefix writes this
+"|" = "action:terminal/split-right"  # another key for an action
+z = "none"                           # a key taken out of the table
+```
+
+A key is one character as you type it (`%`, `H`, `|`), or a named key with `ctrl`, `alt` or
+`shift` (`shift+left`, `tab`); comux's `C-o`, `M-1` and `S-Left` work too. An entry that isn't a key
+with `action:<id>` or `none` is listed in **Settings › Keyboard** and left out. On the Mac the table
+is kept in the app's settings with the prefix.
+
 ## Change your shortcuts
 
 On the Mac and Linux, everything the command palette runs is a named
@@ -340,6 +398,7 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `terminal/mark`, `terminal/goto-mark` | Mark this pane…, Go to a mark… (no shortcut until you give it one) <Badge text="Next release" /> |
 | `terminal/move-tab-left`, `terminal/move-tab-right` | Move tab left, Move tab right <Badge text="Next release" /> |
 | `terminal/open-project-space` | Open this project's space (no shortcut until you give it one) <Badge text="Next release" /> |
+| `terminal/key-help` | Terminal keys: **Settings › Keyboard** on the terminal's actions (no shortcut until you give it one; the prefix's <kbd>?</kbd>) <Badge text="Next release" /> |
 | `terminal/open-remote-aide` | Open remote AIDE… (no shortcut until you give it one) |
 
 Others come and go with what the window shows:

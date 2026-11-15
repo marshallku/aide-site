@@ -107,7 +107,8 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   a program rang the bell there since you last looked. A tab on another computer starts with its
   host, as `box:3:zsh`. Click a tab to show it, double-click to rename it, right-click for its menu;
   its × shows on the tab on screen and when you point at another. **+** opens a new tab.
-- On the right: `ZOOM` while the tab on screen has a pane zoomed, then the agents in every space,
+- On the right: `ZOOM` while the tab on screen has a pane zoomed, <Badge text="Next release" /> `^B` while the
+  [prefix key](/docs/guides/shortcuts/#the-prefix-key-) waits for its next key, then the agents in every space,
   each count after its mark from the Agents list (working, needs you, and done: finished, and you
   haven't looked yet), the usage readout, and the clock. Click the needs-you count to
   [jump to the agent that needs you](#jump-to-an-agent-), the done count to jump to the one that
@@ -473,6 +474,9 @@ split and list panes and tabs from a script.
 ### comux and tmux
 
 comux, tmux and other multiplexers run in a pane like any other program and draw their own screens.
+<Badge text="Next release" /> To drive AIDE's own panes with comux's <kbd>Ctrl</kbd><kbd>B</kbd> keys, set a
+[prefix key](/docs/guides/shortcuts/#the-prefix-key-); pressed twice, it still reaches a comux or
+tmux running in a pane.
 A comux in a pane can still bring its pane forward when you click one of
 its notifications, through the terminal socket above.
 
