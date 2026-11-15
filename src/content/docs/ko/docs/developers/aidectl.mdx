@@ -485,9 +485,15 @@ AIDE 터미널의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이�
 에이전트, 상태(아무도 보지 않은 작업 완료는 `done`, 마지막 읽기를 확인하지 못했으면 `(not updating)`), 컨텍스트가 얼마나
 찼는지, 지금 하는 단계를 보여 줘요. 각 페인이 연결된 보드 카드(카드가 끝나면 `(finished)`)와 일하는 git 체크아웃도 보여 줘요. 에이전트가 떠난 페인도 카드는 계속 보여요. 없으면 `No agents.`라고 출력해요. `--json`은 서버의 답을 각 페인의 보드 카드 연결과 함께 그대로 출력해요. AIDE 터미널 페인 안에서는 그 페인의 터미널 서버에 물어요.
 
+<Badge text="다음 릴리스" /> 에이전트가 누가 막혀 있는지 물을 수 있도록 `list`는 [에이전트 개요](/ko/docs/guides/terminal/#에이전트-개요)가
+보여 주는 것도 알려 줘요. 확인이 필요한 에이전트가 묻는 것은 DETAIL에(`Approve: Bash: make test`, 또는 **대기**에 있는 카드의 질문),
+10분 동안 진행이 없는 작업 중 에이전트는 상태 뒤에 `(no progress for 12m)`, 체크아웃의 변경은 DIFF에(`+120 −14 · 6 files`,
+`No changes`), 보드를 읽을 수 있으면 카드의 제목과 단계(`Fix login · 2/5`, 읽을 수 없으면 카드 id)가 나와요. `--json`은
+`attention`, `stalled`, 항목마다 `diff`를 더하고, 보드가 아는 연결 옆에 `title`, `done`, `total`, `column`, `note`가 있는 `card`를 더해요.
+
 ```text
-PANE           SESSION  AGENT   STATE    CONTEXT  CARD      CHECKOUT           DETAIL
-1794000000001  work     claude  blocked  41%      a1b2c3d4  /home/me/dev/aide  Bash: Run the tests
+PANE           SESSION  AGENT   STATE    CONTEXT  CARD             CHECKOUT           DIFF                 DETAIL
+1794000000001  work     claude  blocked  41%      Fix login · 2/5  /home/me/dev/aide  +120 −14 · 6 files   Approve: Bash: make test
 ```
 
 `usage`는 터미널 서버가 마지막으로 읽은 Claude와 Codex 요금제 한도를 출력해요. 터미널의

@@ -112,7 +112,7 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   each count after its mark from the Agents list (working, needs you, and done: finished, and you
   haven't looked yet), the usage readout, and the clock. Click the needs-you count to
   [jump to the agent that needs you](#jump-to-an-agent), the done count to jump to the one that
-  finished last, and the working count to show the Agents list.
+  finished last, and the working count to open the [agent overview](#agent-overview).
 
 Press <kbd>⌥</kbd><kbd>1</kbd> to <kbd>⌥</kbd><kbd>9</kbd> on the Mac, or
 <kbd>Alt</kbd><kbd>1</kbd> to <kbd>Alt</kbd><kbd>9</kbd> on Linux, to show a tab by its number;
@@ -629,6 +629,36 @@ Two commands take you to an agent wherever it is, switching the window to its sp
 
 With nothing to go to, the Terminal section says **No agent needs you** or **Nothing unread**. The
 counts on the [status bar](#the-status-bar) do the same when you click them.
+
+#### Agent overview
+
+<Badge text="Next release" /> The agent overview lists every agent at once, so you can see which one
+needs you and why without going through the tabs. On the Mac and Linux, click the working count on
+the [status bar](#the-status-bar) or choose **Agent overview** (<kbd>⇧</kbd><kbd>⌘</kbd><kbd>A</kbd> on
+the Mac, <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>A</kbd> on Linux). The same list is on
+**Todos › Board** under **Agents**, on the iPhone too (see [The Board](/docs/guides/todos/#the-board)).
+
+It covers the agents in every space and on every computer the window is connected to, grouped as
+**Needs you**, **Done**, **Stalled**, **Working**, **Waiting**, **Idle** and **Agent left**. Each row
+shows:
+
+- the agent, and the [card](/docs/guides/agent-board/) its pane works on with its steps, such as
+  **Fix login · 2/5**;
+- what it asks while it needs you, such as **Approve: Bash: make test**, else what it's doing. A card
+  an agent moved to **Waiting** with a question shows that question, even after the agent has quit;
+- **No progress for 12m** when an agent has been working for 10 minutes without writing anything to
+  its conversation (or, for an agent AIDE reads only from its screen, printing anything): it may be
+  stuck, or running something long;
+- its space and checkout, how full its context is, what it has cost, and what its checkout changed
+  against the last commit, such as **+120 −14 · 6 files** (new files count too; **No changes** for
+  none);
+- **Same files as aide-wt: src/a.rs, src/b.rs** when another agent's worktree of the same repository
+  changed some of the same files, a sign that their work may conflict.
+
+Each row has **Open pane**, **Open card** while it works on a card, and **Peek**, which shows the
+pane's last lines and keeps them current, so you can check on an agent without leaving where you
+are. In the terminal's overview, <kbd>↑</kbd> and <kbd>↓</kbd> pick a row, <kbd>Return</kbd> opens its
+pane, and <kbd>Esc</kbd> closes the overview. With no agents it says **No agents are running.**
 
 A tab with an agent that is working, done or needs you shows a small mark next to its name: a dot
 while it works, a check when it's done, and a warning sign while it needs you. Point at the mark to

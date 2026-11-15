@@ -495,9 +495,17 @@ shows its card. With none it prints `No agents.` `--json` prints the server's an
 with each pane's board card link. Inside an AIDE terminal pane it asks
 that pane's own terminal server.
 
+<Badge text="Next release" /> So an agent can ask who's stuck, `list` also says what the
+[agent overview](/docs/guides/terminal/#agent-overview) says: what a blocked agent asks in DETAIL
+(`Approve: Bash: make test`, or the question on its card in **Waiting**), `(no progress for 12m)` after
+the state of a working agent that has made no progress for 10 minutes, its checkout's changes under
+DIFF (`+120 −14 · 6 files`, `No changes`), and the card's title and steps when the board can be read
+(`Fix login · 2/5`; the card id when it can't). `--json` adds `attention`, `stalled` and each entry's
+`diff`, and a `card` with `title`, `done`, `total`, `column` and `note` beside a link the board knows.
+
 ```text
-PANE           SESSION  AGENT   STATE    CONTEXT  CARD      CHECKOUT           DETAIL
-1794000000001  work     claude  blocked  41%      a1b2c3d4  /home/me/dev/aide  Bash: Run the tests
+PANE           SESSION  AGENT   STATE    CONTEXT  CARD             CHECKOUT           DIFF                 DETAIL
+1794000000001  work     claude  blocked  41%      Fix login · 2/5  /home/me/dev/aide  +120 −14 · 6 files   Approve: Bash: make test
 ```
 
 `usage` prints Claude's and Codex's plan limits as the terminal server last read
