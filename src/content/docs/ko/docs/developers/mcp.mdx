@@ -98,6 +98,8 @@ MCP로 Claude가 보는 건 도구가 돌려준 것뿐이에요. 검색하거나
 | `update_note` | 쓰기 | 마지막으로 읽은 버전으로 노트 본문을 다시 쓰거나 다른 경로로 옮기기 | `id`, `version`(필수), `body`, `path` |
 | `propose_plan` | 쓰기 | 할 일 변경 제안하기. 받아들이기 전에는 아무것도 적용되지 않아요 | `reply`, `operations`(필수), `id`, `message` |
 
+<Badge text="다음 릴리스" /> `open_todos`와 `plan_context`는 내 할 일이 아니라 에이전트의 일인 [에이전트 보드](/ko/docs/guides/agent-board/)의 카드를 빼요. `propose_plan`은 카드를 거부하고, `set_todo_status`는 카드의 줄을 `board_card`로 거부해요. 에이전트는 카드를 `aidectl board`로 바꿔요.
+
 버전을 담은 쓰기는 읽은 뒤 노트가 바뀌었으면 실패해요. 클라이언트가 다시 읽고 재시도해요. `set_todo_status`는 그 줄이 아직 `text`인지도 확인해서, 다른 할 일이 그 줄로 옮겨 왔을 때 엉뚱한 할 일을 바꾸지 않아요.
 
 ### `propose_plan`으로 계획하기

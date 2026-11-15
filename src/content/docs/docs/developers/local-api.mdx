@@ -60,7 +60,7 @@ The same inputs, JSON shapes, status codes and errors as the note routes of an A
 | `DELETE /notes/{id}` | `{version}` → `204`; the note is archived, not deleted |
 | `POST /notes/{id}/append` | `{text, heading?, createHeading?, ifAbsent?}` → Note plus `appended`; `404 heading_not_found` |
 | `POST /notes/{id}/todos/{line}/toggle` | `{version}` → Note; `422` when the line isn't a todo |
-| `GET /todos` | `{"todos": [OpenTodo]}`: every open todo |
+| `GET /todos` | `{"todos": [OpenTodo]}`: every open todo, <Badge text="Next release" /> with the agent board's cards; `?cards=0` leaves them out |
 | `GET /daily/{date}` | The daily note for `YYYY-MM-DD`, created from your template if missing |
 | `GET /periodic/{period}/{key}` | The note of `daily`, `weekly`, `monthly`, `quarterly` or `yearly` containing `key` (`YYYY-MM-DD`, `today`, `2026-W43`, `2026-10`), created if missing; `?create=false` answers `404` instead |
 | `GET /periodic/{period}/{key}/prev` | The latest existing note of that period before `key`'s |

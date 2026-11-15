@@ -167,6 +167,8 @@ aidectl todos [--json]
 
 Every open todo across your notes, one per line, tab-separated: note id, line (0-based), note version, note path, text. `--json` adds `noteTitle`, `indent`, `due`, `scheduled` and `noteDate` (the day of the daily note it's in).
 
+<Badge text="Next release" /> It lists your todos, never the [agent board's](/docs/guides/agent-board/) cards (use `board list` for those). It asks for that with `GET /todos?cards=0`; a plain `GET /todos` still has the cards. Claude's [MCP tools](/docs/developers/mcp/) `open_todos` and `plan_context` leave them out too.
+
 ### todo add
 
 ```sh
@@ -208,7 +210,7 @@ The [agent board](/docs/guides/agent-board/): coding agents keep their plan here
 - `add` writes a new [card](/docs/guides/todos/#agent-cards) at the end of the project's note under the `board` folder and prints its id. The project is `--project`, else `AIDE_BOARD_PROJECT`, else the name of the git repository you're in, else `inbox`; its note is the project in lower case with anything other than letters and digits turned into `-`, so `../daily/foo` is `board/daily-foo.md`, never another folder. `--doing` starts it in progress. Inside an AIDE terminal pane the card names the pane's agent, unless `--agent` does.
 - `plan` gives the whole list of steps again. A step keeps its status by its exact title; a step you leave out that wasn't started is cancelled (`[-]`), and done or started ones stay.
 - `step` takes a step's number or its exact title. A title two steps share is refused with their numbers.
-- `move … waiting` adds your waiting tag (`#waiting`), and moving it on takes the tag out again.
+- `move … waiting` adds your waiting tag (`#waiting`), and moving it on takes the tag out again. <Badge text="Next release" /> Inside an AIDE terminal pane it also tells the terminal the pane's agent is blocked, with `--note` as its question, so the pane shows **Needs you** and you get the terminal's usual notification. A pane with no agent running gets a warning on stderr; the card moves anyway.
 - `note` sets the card's status line, the first line of its memo; `""` removes it. At most three lines.
 - `done`, and `move … done`, refuse while any todo under the card is still open and name them, unless `--skip-rest` cancels those first. The card always gets its completion date.
 - `ref` adds what landed to the card as [refs](/docs/guides/todos/#agent-cards): a commit (a short or full hash) or a URL such as a pull request. `done --ref` adds them while it finishes the card, in the same change, so a refused `done` adds nothing. A commit is looked up by its hash in the git checkout you run it in (`--repo` for another one), never as a branch or tag name, and written as its GitHub page when the checkout's `origin` is on github.com, else as the full hash; one it can't find, or a hash several commits share, exits 2. Outside a checkout the hash is written as given. A ref the card has already isn't added again; a card holds at most 50.

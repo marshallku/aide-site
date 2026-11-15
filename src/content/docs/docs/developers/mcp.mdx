@@ -98,6 +98,8 @@ Read tools are always offered. Write tools need a token with changes allowed, or
 | `update_note` | write | Rewrite a note's body and/or move it to another path, with the version from the latest read | `id`, `version` (required), `body`, `path` |
 | `propose_plan` | write | Propose changes to your todos; nothing is applied until you take it | `reply`, `operations` (required), `id`, `message` |
 
+<Badge text="Next release" /> `open_todos` and `plan_context` leave out the [agent board's](/docs/guides/agent-board/) cards, which are agents' work, not yours; `propose_plan` refuses a card, and `set_todo_status` refuses a card's line with `board_card`. Agents change cards with `aidectl board`.
+
 A write that carries a version fails when the note changed since that read; the client reads again and retries. `set_todo_status` also checks that the line still reads `text`, so it never changes a different todo that moved onto that line.
 
 ### Planning with `propose_plan`

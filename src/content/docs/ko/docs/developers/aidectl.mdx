@@ -166,6 +166,8 @@ aidectl todos [--json]
 
 모든 노트의 열린 할 일을 한 줄에 하나씩, 탭으로 구분해 출력해요: 노트 id, 줄(0부터), 노트 버전, 노트 경로, 텍스트. `--json`은 `noteTitle`, `indent`, `due`, `scheduled`, `noteDate`(할 일이 들어 있는 데일리 노트의 날짜)를 더해요.
 
+<Badge text="다음 릴리스" /> 내 할 일만 보여 주고 [에이전트 보드](/ko/docs/guides/agent-board/)의 카드는 보여 주지 않아요(카드는 `board list`로 봐요). `GET /todos?cards=0`으로 요청해서 그래요. 그냥 `GET /todos`에는 카드가 그대로 있어요. Claude의 [MCP 도구](/ko/docs/developers/mcp/) `open_todos`와 `plan_context`도 카드를 빼요.
+
 ### todo add
 
 ```sh
@@ -207,7 +209,7 @@ aidectl board start <card> --worktree [--repo DIR] [--branch B] [--from REF] [--
 - `add`는 `board` 폴더 아래 그 프로젝트의 노트 끝에 새 [카드](/ko/docs/guides/todos/#에이전트-카드)를 쓰고 ID를 출력해요. 프로젝트는 `--project`, 없으면 `AIDE_BOARD_PROJECT`, 없으면 지금 있는 git 저장소의 이름, 그것도 없으면 `inbox`예요. 노트 이름은 프로젝트를 소문자로 바꾸고 글자와 숫자가 아닌 것은 `-`로 바꾼 것이라서 `../daily/foo`는 다른 폴더가 아니라 `board/daily-foo.md`가 돼요. `--doing`이면 진행 중으로 시작해요. AIDE 터미널 패널 안에서는 `--agent`가 없으면 그 패널의 에이전트를 카드에 적어요.
 - `plan`은 단계 목록 전체를 다시 줘요. 단계는 정확히 같은 제목으로 상태를 이어 가요. 빠진 단계 중 시작하지 않은 것은 취소(`[-]`)되고, 끝냈거나 시작한 단계는 그대로 남아요.
 - `step`은 단계 번호나 정확한 제목을 받아요. 두 단계가 같은 제목이면 번호를 알려 주며 거절해요.
-- `move … waiting`은 대기 태그(`#waiting`)를 붙이고, 다른 곳으로 옮기면 다시 떼요.
+- `move … waiting`은 대기 태그(`#waiting`)를 붙이고, 다른 곳으로 옮기면 다시 떼요. <Badge text="다음 릴리스" /> AIDE 터미널 페인 안에서 실행하면 그 페인의 에이전트가 막혔다고 터미널에도 알려요. `--note`가 그 질문이라서 페인에 **Needs you**가 뜨고 터미널의 평소 알림이 와요. 에이전트가 없는 페인이면 stderr에 경고만 하고, 카드는 그대로 옮겨져요.
 - `note`는 카드의 상태 줄, 곧 메모의 첫 줄을 정해요. `""`면 지워요. 세 줄까지예요.
 - `done`과 `move … done`은 카드 아래 열린 할 일이 남아 있으면 그 할 일들을 알려 주며 거절해요. `--skip-rest`를 주면 먼저 그것들을 취소해요. 카드에는 항상 완료 날짜가 붙어요.
 - `ref`는 카드에 반영된 것을 [ref](/ko/docs/guides/todos/#에이전트-카드)로 더해요. 커밋(짧거나 전체 해시)이나 풀 리퀘스트 같은 URL이에요. `done --ref`는 카드를 완료하면서 같은 변경으로 더하기 때문에 `done`이 거절되면 아무것도 더하지 않아요. 커밋은 실행한 git 체크아웃에서 해시로만 찾고(다른 체크아웃은 `--repo`), 브랜치나 태그 이름으로는 찾지 않아요. 체크아웃의 `origin`이 github.com이면 그 커밋의 GitHub 페이지로, 아니면 전체 해시로 적어요. 찾을 수 없는 해시나 여러 커밋이 함께 쓰는 해시는 종료 코드 2예요. 체크아웃 밖에서는 받은 해시를 그대로 적어요. 카드에 이미 있는 ref는 다시 더하지 않고, 한 카드에 50개까지예요.
