@@ -185,6 +185,18 @@ A warning's `message` is English. `error` is a tab format's problem: its `messag
 language, `line` and `column` (the characters you see), and its range in Unicode characters
 (`start`, `end`) and UTF-16 units (`utf16_start`, `utf16_end`).
 
+## Responsiveness
+
+<Badge text="Next release" /> On the Mac and Linux, a vault's socket reports how long the app took
+to launch, open a note, take a key in the editor, switch sections, open and draw the Board, and take
+a key in the terminal, while the app was started with `AIDE_PERF=1` (or `AIDE_PERF_LOG=<file>`).
+[`aidectl perf`](/docs/developers/aidectl/#perf) uses these routes.
+
+| Route | What it does |
+| --- | --- |
+| `GET /perf` | `{"enabled", "platform", "spans": [{"span", "count", "skipped", "p50", "p95", "max", "last"}]}`, times in milliseconds over each one's last 512; `"enabled": false` and no spans while the app isn't measuring |
+| `DELETE /perf` | forgets what was measured: `200` `{"cleared"}` |
+
 ## Limits
 
 - HTTP/1.1, one request per connection is enough (`Connection: close`).

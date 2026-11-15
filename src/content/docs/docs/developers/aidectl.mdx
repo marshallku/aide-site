@@ -409,6 +409,22 @@ rest of `[terminal.status_bar]`) from a file or standard input, answers the same
 and exits 1 when anything in it can't be used. Change the settings themselves in **Settings ›
 Terminal › Status bar** (or `config.toml` on Linux).
 
+### perf
+
+```sh
+aidectl perf [--json]
+aidectl perf reset
+```
+
+<Badge text="Next release" /> How long the AIDE app took, on the Mac and Linux, to do what you wait
+for: launching, opening a note, a key in the editor, switching sections, opening the Board, drawing
+the Board while you scroll it, and a key in the terminal. Each line is one of these with how many
+times it was measured and the median (p50), the 95th percentile and the longest, in milliseconds,
+over the last 512 times. The app measures only when it was started with `AIDE_PERF=1` in its
+environment (or `AIDE_PERF_LOG=<file>`, which also writes each measurement to that file as a JSON
+line); otherwise `perf` says it isn't measuring. `reset` forgets what was measured, so you can
+change something and measure again.
+
 ### terminal
 
 ```sh

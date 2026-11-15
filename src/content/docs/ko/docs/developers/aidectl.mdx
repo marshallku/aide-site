@@ -403,6 +403,19 @@ aidectl status-bar check <file.json | -> [--json]
 저장하지 않으며, 쓸 수 없는 것이 있으면 1로 끝나요. 설정 자체는 **설정 › 터미널 › 상태 표시줄**(Linux는
 `config.toml`)에서 바꿔요.
 
+### perf
+
+```sh
+aidectl perf [--json]
+aidectl perf reset
+```
+
+<Badge text="다음 릴리스" /> Mac과 Linux에서 AIDE 앱이 기다리게 하는 일에 걸린 시간을 보여 줘요. 실행, 노트 열기,
+편집기의 키 하나, 섹션 전환, 보드 열기, 보드를 스크롤할 때의 프레임, 터미널의 키 하나예요. 줄마다 잰 횟수와 최근
+512번의 중앙값(p50), 95번째 백분위, 가장 긴 시간을 밀리초로 보여 줘요. 앱은 환경에 `AIDE_PERF=1`(또는 잰 값을 그
+파일에 JSON 줄로도 쓰는 `AIDE_PERF_LOG=<파일>`)을 두고 실행했을 때만 재고, 아니면 `perf`가 재지 않는다고 알려 줘요.
+`reset`은 잰 값을 지워서, 무언가를 바꾸고 다시 잴 수 있어요.
+
 ### terminal
 
 ```sh
