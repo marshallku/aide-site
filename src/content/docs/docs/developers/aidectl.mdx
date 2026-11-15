@@ -189,7 +189,7 @@ The title is one line of up to 200 characters with no field in it (no date, prio
 ### board
 
 ```sh
-aidectl board add <title> [--project P] [--agent A] [--step S]… [--note N] [--doing]
+aidectl board add <title> [--project P] [--agent A] [--step S]… [--note N] [--doing] [--new]
 aidectl board plan <card> --step S…
 aidectl board step <card> <n|title> done|doing|todo|skip
 aidectl board move <card> todo|doing|waiting|done|cancelled [--note N] [--skip-rest]
@@ -198,8 +198,9 @@ aidectl board done <card> [--note N] [--skip-rest] [--ref R]… [--repo DIR]
 aidectl board ref <card> <commit|url>… [--repo DIR]
 aidectl board show <card> [--json]
 aidectl board list [--project P] [--mine] [--done] [--json]
-aidectl board link <card>
+aidectl board link [<card>]
 aidectl board adopt <path>:<line> [--text T] [--agent A] [--project P]
+aidectl board start <card> --worktree [--repo DIR] [--branch B] [--from REF] [--show]
 ```
 
 The [agent board](/docs/guides/agent-board/): coding agents keep their plan here as cards. You rarely run these yourself; the `aide-board` skill tells the agents when to.
@@ -216,6 +217,8 @@ The [agent board](/docs/guides/agent-board/): coding agents keep their plan here
 - `show` prints the card's refs too, and with `--json` both `show` and `list` give them as `refs`.
 - With `--json`, `show` and `list` say each card's `column` as [the Board](/docs/guides/todos/#the-board) draws it: `todo`, `doing`, `waiting` or `done` (empty when it's on no column). `list --done` lists the board's **Done** column instead: cards done this week, and done or cancelled cards with open steps under them (their `open` count says how many).
 - `link` (inside an AIDE terminal pane) links the pane to a card.
+- <Badge text="Next release" /> `start <card> --worktree` gives the card its own branch, `<project>/<card>-<title>` (`--branch` names another), in a git worktree beside the repository you run it in (`--repo` for another), and a [terminal space](/docs/guides/terminal/#worktrees) working there, as **Start in a worktree…** on the Board does. It prints the space, the worktree's folder, the branch and the first pane. Nothing moves on screen unless `--show`. It links nothing: the agent you start in that space links itself.
+- <Badge text="Next release" /> In a space started for a card, every shell has `AIDE_BOARD_CARD` (`<vault>/<card>`). There `add` puts its `--step`s, `--note` and `--doing` on that card and prints its id instead of adding a card (`--new` adds one anyway), and `link` with no card links the pane to it. A card of another vault is never used.
 - `adopt` makes one of your todos a card, as **Give to an agent** in the app does: the todo at that line of that note (1-based, as `show` prints it) moves, with its memo and subtasks, to its project's note under the `board` folder, and the line where it was becomes `[>]`. `--text` (the todo's text as `todos` prints it) must still be what the line reads, or nothing happens (exit 5). `--project` sets its project on the way; `--agent` names the agent, else the pane's, else `agent`. It prints the card's id and, inside a terminal pane, links the pane. A subtask of an open todo goes with its parent (exit 6), and a repeating todo or a card can't be adopted (exit 2). Cards you handed over from the app have the agent `agent` until an agent picks them up.
 
 Every change is made on the note as just read and saved only if nobody changed it meanwhile; if you ticked a step in the note at that moment, aidectl reads it again and makes its change on top of yours, never over it. A card you moved to a note outside the `board` folder is no card any more.
@@ -425,6 +428,9 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `mark set <slot>` | Marks this pane (or `--pane`) as that slot and prints the slot and pane; the slot's earlier pane loses it |
 | `mark clear <slot>` | Empties that slot |
 | `mark goto <slot>` | Shows the slot's pane in a window, as `focus` does, bringing its space back first when it had ended, and prints the space and pane |
+| `worktree list [<dir>]` <Badge text="Next release" /> | Lists the [worktrees](/docs/guides/terminal/#worktrees) of the repository you're in (or `<dir>`'s): branch, folder, **live:** with the spaces working in it (or **not running:**), and the card a space there was started for |
+| `worktree create <branch> [--from REF] [--dir D] [--name N] [--project P] [--vault V] [--show]` <Badge text="Next release" /> | Makes the branch in a folder beside the repository (this folder's, or `--dir`'s) and a space working there, whose first pane runs the repository's worktree command, and prints the space, folder, branch and pane. `--from` starts it elsewhere than the commit you're on. Nothing moves on screen unless `--show` |
+| `worktree rm <branch\|folder> [--dir D] [--force] [--discard-changes] [--delete-branch]` <Badge text="Next release" /> | Removes a worktree: `--force` ends the spaces working in it, `--discard-changes` drops what isn't committed, `--delete-branch` deletes its branch when it is merged. It refuses, before ending anything, the main checkout, a locked worktree, the one your own pane is in, a live space without `--force` and changes without `--discard-changes`; when the branch stays, it says so with git's reason (exit 1) |
 
 `read`, `state`, `exec`, `feed`, `history`, `context` and `split` act on the pane `--pane` names, else on the focused pane. A pane's id is in `tabs`, and a pane's own shell has it in `$COPAD_PANEL_ID`. `--json` prints the app's answer as JSON instead of text.
 
@@ -441,7 +447,7 @@ Reading never moves the pane: `read` and `history` read the live screen even whe
 
 To show the owner the pane working on a board card, wherever it is: `aidectl agent list` names each agent's pane and the card it's linked to, and `aidectl terminal focus <pane>` brings that pane forward. On the Mac a minimized window comes back to the front, but a window behind another app only switches to the pane and asks to come forward: macOS leaves it behind until you switch to AIDE.
 
-`resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. Nor do `space new` and `new-tab --space`: an agent can start a space for a card and work in it alone, while you stay where you are. When the terminal server is older than `aidectl` (it hasn't restarted since an update), `new-tab --space`/`--cwd`, every `space new` and every `mark` stop with exit code 1 before doing anything. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
+`resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. Nor do `space new` and `new-tab --space`: an agent can start a space for a card and work in it alone, while you stay where you are. When the terminal server is older than `aidectl` (it hasn't restarted since an update), `new-tab --space`/`--cwd`, every `space new`, every `mark` and every `worktree` stop with exit code 1 before doing anything. A `worktree create` or `rm` may wait for another one in the same repository, so aidectl waits up to three minutes for it. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
 
 The Mac App Store build and the iPhone have no terminal socket.
 

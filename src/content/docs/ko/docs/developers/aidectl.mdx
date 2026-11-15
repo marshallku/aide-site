@@ -188,7 +188,7 @@ aidectl todo add "Reply to Kim" --source https://acme.slack.com/archives/C1/p1 -
 ### board
 
 ```sh
-aidectl board add <title> [--project P] [--agent A] [--step S]… [--note N] [--doing]
+aidectl board add <title> [--project P] [--agent A] [--step S]… [--note N] [--doing] [--new]
 aidectl board plan <card> --step S…
 aidectl board step <card> <n|title> done|doing|todo|skip
 aidectl board move <card> todo|doing|waiting|done|cancelled [--note N] [--skip-rest]
@@ -197,8 +197,9 @@ aidectl board done <card> [--note N] [--skip-rest] [--ref R]… [--repo DIR]
 aidectl board ref <card> <commit|url>… [--repo DIR]
 aidectl board show <card> [--json]
 aidectl board list [--project P] [--mine] [--done] [--json]
-aidectl board link <card>
+aidectl board link [<card>]
 aidectl board adopt <path>:<line> [--text T] [--agent A] [--project P]
+aidectl board start <card> --worktree [--repo DIR] [--branch B] [--from REF] [--show]
 ```
 
 [에이전트 보드](/ko/docs/guides/agent-board/)예요. 코딩 에이전트가 자기 계획을 카드로 여기 적어 둬요. 직접 실행할 일은 드물고, 언제 무엇을 쓸지는 `aide-board` 스킬이 에이전트에게 알려 줘요.
@@ -215,6 +216,8 @@ aidectl board adopt <path>:<line> [--text T] [--agent A] [--project P]
 - `add`는 표준 출력에 카드 id를 출력한 뒤, 표준 오류에 카드 링크 `aide://card/<vault>/<card>`를 한 줄로 출력해요. 그래서 `card=$(aidectl board add …)`는 여전히 id만 받아요. `show`는 마지막 줄에 링크를 출력하고(`link aide://card/…`), `--json`이면 `show`와 `list` 모두 `link`로 알려 줘요. 에이전트는 이 링크로 카드를 알려 줘요. 터미널 페인에서 클릭하면 보드에서 카드가 열리고, `aidectl open`은 다른 카드 링크처럼 열어요(그 페인, 없으면 보드).
 - `--json`이면 `show`와 `list`가 각 카드의 `column`을 [보드](/ko/docs/guides/todos/#보드)가 그리는 대로 알려 줘요: `todo`, `doing`, `waiting`, `done`(어느 열에도 없으면 비어 있어요). `list --done`은 대신 보드의 **완료** 열을 보여 줘요. 이번 주에 끝낸 카드와, 아래에 열린 단계가 남은 완료되거나 취소된 카드예요(`open`이 몇 개인지 알려 줘요).
 - `link`(AIDE 터미널 패널 안에서)는 그 패널을 카드에 연결해요.
+- <Badge text="다음 릴리스" /> `start <card> --worktree`는 카드만의 브랜치 `<project>/<card>-<title>`(`--branch`로 다른 이름)을 실행한 곳의 저장소(`--repo`로 다른 저장소) 옆 git 워크트리에 만들고, 거기서 일하는 [터미널 스페이스](/ko/docs/guides/terminal/#워크트리)를 열어요. 보드의 **워크트리에서 시작…**과 같아요. 스페이스, 워크트리 폴더, 브랜치, 첫 페인을 출력해요. `--show`가 없으면 화면은 그대로예요. 아무것도 연결하지 않아요. 그 스페이스에서 시작한 에이전트가 스스로 연결해요.
+- <Badge text="다음 릴리스" /> 카드를 위해 시작한 스페이스에서는 모든 셸에 `AIDE_BOARD_CARD`(`<vault>/<card>`)가 있어요. 거기서 `add`는 카드를 새로 더하는 대신 `--step`, `--note`, `--doing`을 그 카드에 넣고 그 카드의 id를 출력해요(`--new`면 그래도 새로 더해요). 카드 없이 실행한 `link`는 페인을 그 카드에 연결해요. 다른 보관소의 카드는 쓰지 않아요.
 - `adopt`는 앱의 **에이전트에게 맡기기**처럼 내 할 일 하나를 카드로 만들어요. 그 노트의 그 줄(`show`가 출력하는 것처럼 1부터 세요)에 있는 할 일이 메모와 하위 할 일과 함께 `board` 폴더 아래 그 프로젝트의 노트로 옮겨지고, 원래 있던 줄은 `[>]`가 돼요. `--text`(`todos`가 출력하는 할 일의 텍스트)가 지금 그 줄과 같아야 하고, 다르면 아무것도 하지 않아요(종료 코드 5). `--project`는 옮기면서 프로젝트를 정하고, `--agent`는 에이전트를 정해요. 없으면 패널의 에이전트, 그것도 없으면 `agent`예요. 카드 ID를 출력하고, 터미널 패널 안이면 그 패널을 연결해요. 열린 할 일의 하위 할 일은 부모와 함께 가야 하고(종료 코드 6), 반복하는 할 일이나 카드는 맡길 수 없어요(종료 코드 2). 앱에서 맡긴 카드는 에이전트가 맡기 전까지 에이전트가 `agent`예요.
 
 변경은 모두 방금 읽은 노트를 바탕으로 만들고, 그사이 아무도 노트를 바꾸지 않았을 때만 저장해요. 그 순간 노트에서 단계를 체크했다면 aidectl이 다시 읽고 그 위에 변경을 더해요. 덮어쓰지 않아요. `board` 폴더 밖의 노트로 옮긴 카드는 더 이상 카드가 아니에요.
@@ -420,6 +423,9 @@ AIDE의 터미널을 읽고 입력하고, 탭과 페인을 열고 나누고 이�
 | `mark set <slot>` | 이 페인(또는 `--pane`)을 그 번호로 표시하고 번호와 페인을 출력해요. 그 번호의 예전 페인은 표시를 잃어요 |
 | `mark clear <slot>` | 그 번호를 비워요 |
 | `mark goto <slot>` | 그 번호의 페인을 `focus`처럼 창에 보여 줘요. 스페이스가 끝났으면 먼저 다시 살리고, 스페이스와 페인을 출력해요 |
+| `worktree list [<dir>]` <Badge text="다음 릴리스" /> | 지금 있는 저장소(또는 `<dir>`의 저장소)의 [워크트리](/ko/docs/guides/terminal/#워크트리)를 보여 줘요. 브랜치, 폴더, 그 안에서 일하는 스페이스(**live:**, 끝났으면 **not running:**), 거기서 시작한 스페이스의 카드 |
+| `worktree create <branch> [--from REF] [--dir D] [--name N] [--project P] [--vault V] [--show]` <Badge text="다음 릴리스" /> | 저장소(이 폴더의, 또는 `--dir`의) 옆 폴더에 브랜치를 만들고, 첫 페인에서 저장소의 워크트리 명령을 실행하는 스페이스를 열어요. 스페이스, 폴더, 브랜치, 페인을 출력해요. `--from`은 지금 커밋이 아닌 곳에서 시작해요. `--show`가 없으면 화면은 그대로예요 |
+| `worktree rm <branch\|folder> [--dir D] [--force] [--discard-changes] [--delete-branch]` <Badge text="다음 릴리스" /> | 워크트리를 제거해요. `--force`는 그 안에서 일하는 스페이스를 끝내고, `--discard-changes`는 커밋하지 않은 것을 버리고, `--delete-branch`는 병합된 브랜치를 삭제해요. 메인 체크아웃, 잠긴 워크트리, 내 페인이 있는 워크트리, `--force` 없이 살아 있는 스페이스, `--discard-changes` 없이 변경 사항이 있으면 아무것도 끝내기 전에 거절해요. 브랜치가 남으면 git이 말한 이유와 함께 알려 줘요(종료 코드 1) |
 
 `read`, `state`, `exec`, `feed`, `history`, `context`, `split`은 `--pane`으로 지정한 페인에, 없으면 포커스된 페인에 동작해요. 페인 id는 `tabs`에 나오고, 페인의 셸 안에서는 `$COPAD_PANEL_ID`에 들어 있어요. `--json`을 주면 앱의 응답을 글자 대신 JSON으로 출력해요.
 
@@ -436,7 +442,7 @@ AIDE의 터미널을 읽고 입력하고, 탭과 페인을 열고 나누고 이�
 
 보드 카드에서 일하는 페인을 어디에 있든 보여 주려면: `aidectl agent list`가 에이전트마다 페인과 연결된 카드를 알려 주고, `aidectl terminal focus <pane>`이 그 페인을 앞으로 가져와요. Mac에서 최소화된 창은 다시 앞으로 나오지만, 다른 앱 뒤에 있는 창은 그 페인으로 바뀌고 앞으로 나오겠다고 요청만 해요. AIDE로 전환할 때까지 macOS가 뒤에 둬요.
 
-`resume`과 `fork`는 `--focus`를 주지 않으면 창을 움직이지 않아요. 그래서 에이전트가 화면을 가져가지 않고 대화를 열 수 있어요. `space new`와 `new-tab --space`도 그래요. 에이전트가 카드를 위한 스페이스를 만들어 혼자 일하는 동안 여러분은 보던 곳에 그대로 있어요. 터미널 서버가 `aidectl`보다 오래됐으면(업데이트 뒤 아직 다시 시작하지 않았으면) `new-tab --space`/`--cwd`, 모든 `space new`, 모든 `mark`는 아무것도 하기 전에 종료 코드 1로 멈춰요. `--tool`(`claude`, `codex`, `grok`)은 두 에이전트에 같은 id가 있을 때만 필요해요. 에이전트의 페인에 [에이전트 카드](/ko/docs/guides/terminal/#패널에-연결된-카드)가 연결돼 있었다면 `fork`는 포크한 대화가 그 카드와 연결되지 않는다고 stderr에 알려 줘요.
+`resume`과 `fork`는 `--focus`를 주지 않으면 창을 움직이지 않아요. 그래서 에이전트가 화면을 가져가지 않고 대화를 열 수 있어요. `space new`와 `new-tab --space`도 그래요. 에이전트가 카드를 위한 스페이스를 만들어 혼자 일하는 동안 여러분은 보던 곳에 그대로 있어요. 터미널 서버가 `aidectl`보다 오래됐으면(업데이트 뒤 아직 다시 시작하지 않았으면) `new-tab --space`/`--cwd`, 모든 `space new`, 모든 `mark`, 모든 `worktree`는 아무것도 하기 전에 종료 코드 1로 멈춰요. `worktree create`와 `rm`은 같은 저장소의 다른 작업을 기다릴 수 있어서, aidectl은 최대 3분까지 기다려요. `--tool`(`claude`, `codex`, `grok`)은 두 에이전트에 같은 id가 있을 때만 필요해요. 에이전트의 페인에 [에이전트 카드](/ko/docs/guides/terminal/#패널에-연결된-카드)가 연결돼 있었다면 `fork`는 포크한 대화가 그 카드와 연결되지 않는다고 stderr에 알려 줘요.
 
 Mac App Store 빌드와 iPhone에는 터미널 소켓이 없어요.
 

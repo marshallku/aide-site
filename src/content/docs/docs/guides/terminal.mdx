@@ -255,6 +255,38 @@ that project's todos:
   palette. Either shows the newest space with that project, or opens **New space…** with the project
   filled in.
 
+#### Worktrees
+
+<Badge text="Next release" /> A worktree is a second checkout of your repository on a branch of its own, so an agent can work on
+one branch while you stay on another (comux's worktrees). AIDE makes one with its own space:
+
+1. In the repository's space, choose **New worktree…** from the space menu, a space's menu in
+   **Spaces**, or the command palette.
+2. **Repository** is the git checkout of the pane you're in. Type the new **Branch** and, if it
+   shouldn't start where your checkout is now, **Start from** (a branch, tag or commit).
+3. Choose **Create**. The worktree goes in a folder beside the repository, `<repository>-<branch>`
+   (`/` in the branch becomes `-`), and its space, named after the branch, opens there.
+
+- A worktree's space has the branch icon in **Spaces** and in the space pill.
+- **Settings › Terminal › Worktrees** can give a repository a command its new worktrees run first,
+  such as `pnpm install`: it runs in the new space's first pane, where you can watch it or press
+  <kbd>Ctrl</kbd><kbd>C</kbd>, and then the pane is your shell. The command gets the worktree's
+  folder as `$WORKTREE_PATH` (and `$WORKTREE_BRANCH`, `$WORKTREE_MAIN`). **Folder name** changes how
+  the folder is named, from `{repo}` and `{branch}`.
+- **End space…** on a worktree's space also offers **Also remove the worktree** and **Delete the
+  branch**. Nothing is removed while a pane of another space is in its folder, while it is your
+  repository's main checkout or it is locked. Uncommitted or untracked files are asked about first:
+  **Discard changes and remove**, or **Keep it**. The branch is deleted only when it has been merged;
+  otherwise the worktree goes and AIDE says the branch stayed, with git's reason.
+- From an [agent card](/docs/guides/agent-board/), **Start in a worktree…** does the same for the
+  card (see [Cards linked to panes](#cards-linked-to-panes)).
+- `aidectl terminal worktree create`, `list` and `rm` do it from a shell (see
+  [aidectl](/docs/developers/aidectl/)).
+
+Worktrees need the terminal server from this version: an older one shows **The terminal server needs
+updating** until it restarts. The iPhone has no **New worktree…**; a worktree's space made on a
+desktop shows in its list like any other.
+
 ### Shells that outlive AIDE
 
 Your shells run in AIDE's terminal server, a small program of its own, not in the app. Quitting
@@ -341,12 +373,15 @@ after AIDE quits**. Then:
 | **Reopen tabs at launch** | On | After your computer restarts, your tabs, splits and folders come back. See [Tabs after a restart](#tabs-after-a-restart). |
 | **Bring back agents in their conversation** | On | Claude Code and Codex start again where they were. Off, their panes come back as shells. |
 | **Programs to bring back** | Editors and other full-screen programs | The programs that run again after a restart, by name, separated by spaces. **Reset** sets the default list again. |
+| **Folder name** <Badge text="Next release" /> | `{repo}-{branch}` | Under **Worktrees**: the folder a new worktree goes in, beside the repository. See [Worktrees](#worktrees). |
+| **Repository folder** and **Command to run** <Badge text="Next release" /> | None | Under **Worktrees**: a command a repository's new worktrees run in their first pane. |
 | **Keep shells running after AIDE quits** | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide). |
 
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
 are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`,
 `keep_running`, `restore_agent_sessions` and `restore_processes`, a list of
-names; without it the default list applies). **Scrollback**, **Shell**, **Kitty keyboard protocol**,
+names; without it the default list applies; `worktree_naming`, and a `[terminal.worktree_scripts]`
+table of `"<repository folder>" = "<command>"`). **Scrollback**, **Shell**, **Kitty keyboard protocol**,
 **Reopen tabs at launch**, **Keep shells running after AIDE quits** and the two restore settings are
 also the terminal server's own: a change on one AIDE reaches the server, and the last change wins.
 
@@ -682,6 +717,13 @@ When a coding agent in one of AIDE's panes adds an [agent card](/docs/guides/age
 - The link lasts as long as the agent and its conversation. A new conversation (`/clear`), another agent in the pane or the agent quitting finishes it. A finished link still names the pane, so you can open it while the pane is there, but it no longer shows that agent's state.
 - It survives the terminal server restarting, and comes back finished: Claude Code resumed in the same conversation (`claude --resume`) takes it up again. An in-place update of the terminal server keeps it as it is.
 - The terminal socket's `agent.list` names each pane's card beside its agent (see the [terminal socket](/docs/developers/local-api/#terminal-socket)).
+- <Badge text="Next release" /> **Start in a worktree…** on a card (its menu on the Board, or its
+  details) makes a branch for the card, `<project>/<card>-<title>`, in a worktree beside the
+  repository, and a space there (see [Worktrees](#worktrees)). Every shell in that space has
+  `AIDE_BOARD_CARD`, so an agent you start there that runs `aidectl board add` or `aidectl board link`
+  works on that card; AIDE never links it for the agent. The space pill's tooltip and its row in
+  **Spaces** name the card, and ending the space with its worktree asks whether to move the card to
+  **Waiting**, where you review it.
 - A card link, `aide://card/<vault>/<card>`, opens the card's pane: on the Mac and Linux when one of the window's terminals shows it, on the iPhone when one of the [hosts' AIDE sessions](#aide-sessions-on-a-host) you have open does. Elsewhere the card's note opens at the card, saying **Not open on this device**. With the [agent board](/docs/guides/agent-board/) on, the Board opens with the card selected instead, and the note opens only when the card isn't on the board. A link to a card of another vault says **This card is in a vault that isn't open**.
 - A card link you click in a pane opens the card on the Board, never a pane (see [Links in a pane](#links-in-a-pane)).
 - `<vault>` is the vault's id: a notes folder's own id, or `server:` followed by the server's and your user's ids for a server's notes.

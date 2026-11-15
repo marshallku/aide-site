@@ -45,6 +45,10 @@ Cards show on **Todos › Board**, in columns with a lane per project, each with
 
 To hand one of your todos to a coding agent, choose **Give to an agent** in its menu in **Today** or **All**, or in a card's menu on the Board. It becomes a card in its project's board note with the agent `agent`, in the column its status gives it: **To do** for a todo you haven't started. Ask an agent in a terminal pane to pick up the work you handed over: with the skill it finds those cards with `aidectl board list`, links its pane with `aidectl board link` and moves the card to **Doing** as it starts. An agent you ask to take one of your todos directly can make it a card itself with `aidectl board adopt`. You move cards yourself too: see [The Board](/docs/guides/todos/#the-board).
 
+## A worktree for a card
+
+<Badge text="Next release" /> On the Mac and Linux, **Start in a worktree…** in a card's menu on the Board (or in its details) gives the card its own branch, `<project>/<card>-<title>`, in a git worktree beside the repository, and a terminal space working there. Start an agent in that space: its shells have `AIDE_BOARD_CARD`, so `aidectl board add` puts the agent's plan on this card instead of adding another, and `aidectl board link` with no card links its pane to it. AIDE doesn't link the card for the agent. When you end the space with **Also remove the worktree**, AIDE asks whether to move the card to **Waiting**, where you review it, or leave it. An agent can start one too, with `aidectl board start <card> --worktree`. See [Worktrees](/docs/guides/terminal/#worktrees).
+
 ## Turning it off
 
 The board is on. Turn it off with **Settings › Todos › Agent board**. While the board is off, an agent's changes to cards are refused, AIDE doesn't give agents the skill, there's no **Board** in **Todos**, and agents' todos show in **All** like any other; reading cards still works.
