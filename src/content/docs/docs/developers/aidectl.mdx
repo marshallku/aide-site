@@ -140,6 +140,16 @@ aidectl edit <path>
 
 Opens the note in `$VISUAL`, else `$EDITOR`, else `vi`, and saves it back under the version it was read at. While your editor is open, `aidectl` lets go of the vault, so the app can open it. If the note changed meanwhile, nothing is written, your text stays in the temporary file it names, and the exit code is 4. Closing without changes writes nothing.
 
+### move
+
+<Badge text="Next release" />
+
+```sh
+aidectl move <path> <new-path> [--dry-run] [--json]
+```
+
+Renames or moves a note and rewrites every link to it, as **Rename…** and **Move to…** do in the app ([Renaming and moving a note](/docs/guides/editor/#renaming-and-moving-a-note)). `<new-path>` is a note path or the file name you want (`plans/Homelab plan`, `.md` optional); in a notes folder the file keeps that spelling. It prints `moved <old path> → <new path> · N links in M notes`, then each note it changed with its count, then any note it left as it was because that note changed meanwhile. `--dry-run` prints the same with `would move` and writes nothing; `--json` prints the whole answer (`changed`, `skipped`, `unresolved`, `applied`). A path another note has exits 3, a note that isn't there 5 and a note that changed after it was read 4; the note's own path, a path no note can have, or a note with agent cards leaving or entering the board folder exit 1.
+
 ### daily and periodic
 
 ```sh

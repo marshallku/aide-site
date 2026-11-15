@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
 
 Every note in AIDE is a Markdown file, and you edit it in one live-preview editor that is the same on the iPhone, the Mac and Linux. What you type stays plain Markdown; the editor only styles it and hides the syntax on lines your cursor isn't on.
 
@@ -88,6 +88,17 @@ Typing `[[` opens a list of your notes ranked by what you type; pick one to inse
 Click a rendered link to follow it. <kbd>⌘</kbd>-click (<kbd>Ctrl</kbd>-click on Linux) or a middle-click opens it in a new tab on the desktop. On the line your cursor is on, the link shows as raw text and clicking it just places the cursor.
 
 Rest the pointer on a note link for a moment (on the iPhone, press and hold it) to peek: the note's title and first lines, with **Open**. A `aide://` link written in a note (`aide://note/…`, `aide://today`) opens too.
+
+### Renaming and moving a note
+
+<Badge text="Next release" /> **Rename…** and **Move to…** give a note a new name or folder: in its row's menu in the Wiki (right-click on the Mac, touch and hold on the iPhone, the **More** button on the row on Linux). On the Mac and Linux, **Rename this note…** and **Move this note to…** in the command palette do the same for the note on screen. The links to it in your other notes follow it, as in Obsidian:
+
+- `[[Old name]]`, `[[Old name|shown text]]`, `[[Old name#Heading]]`, `[[Old name#^block-id]]`, `![[Old name]]` and `[text](old/Old%20name.md)` take the new name or path, keeping the heading, block, shown text and `.md` they had. A link that named the folder names the new one.
+- A link by the note's title or one of its aliases still finds it, so it stays as it is. Links in code stay too.
+- A link that the new name would send to another note, or make match two notes, gets the longer path of the note it meant and keeps showing what it showed: `[[plugin]]` becomes `[[topics/plugin|plugin]]`.
+- In the moved note, links to images and other files keep pointing at them from its new folder.
+
+When it's done, AIDE says how many links changed in how many notes. A note that changed while the links were being rewritten keeps its old links, and AIDE says how many did. The new path can't be one another note has, and changing only the letter case isn't a rename. A note with agent cards can't move into or out of the board folder; move the cards on the Board instead. Folders can't be renamed yet.
 
 ### Notes inside a note
 

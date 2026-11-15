@@ -56,6 +56,7 @@ AIDE 서버의 노트 경로와 입력, JSON 형태, 상태 코드, 오류가 �
 | `GET /notes/{id}` | 살아 있는 노트 하나 |
 | `POST /notes` | `{path?, body?, title?, sourcePath?, template?, vars?}` → `201` Note, `409 path_taken` |
 | `PUT /notes/{id}` | `{version, body}` → Note. 그사이 노트가 바뀌었으면 `409 version_conflict`. 여기서는 `path`, `title`, `sourcePath`를 바꿀 수 없어요(`422 unsupported`) |
+| `POST /notes/{id}/move` <Badge text="다음 릴리스" /> | `{path, version, dryRun?}` → `{note, from, to, links, notes, changed, skipped, unresolved, applied}`. 노트의 이름을 바꾸거나 옮기고 이 노트로의 링크를 고쳐요. `409 version_conflict`, `409 path_taken`, `422 same_path`, `422 invalid`, `422 board_note`(에이전트 카드가 있는 노트를 보드 폴더 안팎으로 옮길 때) |
 | `DELETE /notes/{id}` | `{version}` → `204`. 노트는 삭제되지 않고 보관돼요 |
 | `POST /notes/{id}/append` | `{text, heading?, createHeading?, ifAbsent?}` → Note와 `appended`, `404 heading_not_found` |
 | `POST /notes/{id}/todos/{line}/toggle` | `{version}` → Note. 그 줄이 할 일이 아니면 `422` |

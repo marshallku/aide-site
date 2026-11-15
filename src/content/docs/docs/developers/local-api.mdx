@@ -56,6 +56,7 @@ The same inputs, JSON shapes, status codes and errors as the note routes of an A
 | `GET /notes/{id}` | One live note |
 | `POST /notes` | `{path?, body?, title?, sourcePath?, template?, vars?}` → `201` Note; `409 path_taken` |
 | `PUT /notes/{id}` | `{version, body}` → Note; `409 version_conflict` when the note moved on. Changing `path`, `title` or `sourcePath` isn't supported here (`422 unsupported`) |
+| `POST /notes/{id}/move` <Badge text="Next release" /> | `{path, version, dryRun?}` → `{note, from, to, links, notes, changed, skipped, unresolved, applied}`: renames or moves the note and rewrites the links to it; `409 version_conflict`, `409 path_taken`, `422 same_path`, `422 invalid`, `422 board_note` (a note with agent cards leaving or entering the board folder) |
 | `DELETE /notes/{id}` | `{version}` → `204`; the note is archived, not deleted |
 | `POST /notes/{id}/append` | `{text, heading?, createHeading?, ifAbsent?}` → Note plus `appended`; `404 heading_not_found` |
 | `POST /notes/{id}/todos/{line}/toggle` | `{version}` → Note; `422` when the line isn't a todo |
