@@ -427,6 +427,28 @@ To fork the agent in a pane you're looking at, right-click its row in the Agents
   wasn't: **Not linked: Fix the login is done**, or **Not linked again: 2 cards were on it**.
 - A fork is a new conversation, so it starts with no card: **The fork isn't linked to Fix the login**.
 
+### Links in a pane <Badge text="Next release" />
+
+<kbd>⌘</kbd>-click on the Mac, or <kbd>Ctrl</kbd>-click on Linux, opens what's under the pointer:
+
+- A web address (`http://` or `https://`) opens in your browser.
+- An AIDE link opens in AIDE: a note (`aide://note/<id>`), the Wiki (`aide://wiki`), or a card
+  (`aide://card/<vault>/<card>`), which opens on the Board with its details rather than in its pane.
+  A program can print anything, so other AIDE links do nothing from a terminal, and these only show
+  a place: they never change anything.
+- A file and line, such as `src/main.rs:10:5` or `/Users/you/app/File.swift:120:15`, as compilers and
+  test runners print them. A relative path is read from the pane's folder. A note of the notes
+  folder you have open opens in the editor at that line. Any other file opens in a new pane to the
+  right running your editor at that line: `$VISUAL`, else `$EDITOR`, as your shell's login files
+  set them (a variable set only in `.zshrc` or `.bashrc` doesn't count), given `+<line>` and the
+  path. With neither set, AIDE says to set one and opens nothing. The terminal server starts the
+  editor itself, the path only ever its argument, never typed into a shell. A path that isn't a
+  file does nothing, and so does one in a remote session, whose files are the other computer's, or
+  with a terminal server older than this AIDE.
+
+Links a program writes with OSC 8 work the same way. On the iPhone, tapping an AIDE link in a
+session's pane opens it.
+
 ### Keys and pictures
 
 Keys with no text, such as <kbd>Home</kbd>, <kbd>F5</kbd> or the arrows, reach programs the way
@@ -544,6 +566,9 @@ it printed, with a small gauge of its context when AIDE knows it.
 - <Badge text="Next release" /> Agents working in the same git checkout (the same folder of a
   repository, a linked worktree counting as its own) show the git mark and how many share it, as a
   reminder that they edit the same files.
+- <Badge text="Next release" /> An agent whose pane works on an [agent card](/docs/guides/agent-board/)
+  has a third line, **on:** with the card's title. Right-click the row and choose **Open card** to
+  see the card on **Todos › Board**. A tab's tooltip names its pane's card the same way.
 - A remote session's agents (see [Open remote AIDE…](#open-remote-aide)) are listed under the
   host's name.
 - A row that says **Not updating** is one AIDE couldn't read just now; it shows the last state it
@@ -654,6 +679,7 @@ hook.
 - It survives the terminal server restarting, and comes back finished: Claude Code resumed in the same conversation (`claude --resume`) takes it up again. An in-place update of the terminal server keeps it as it is.
 - The terminal socket's `agent.list` names each pane's card beside its agent (see the [terminal socket](/docs/developers/local-api/#terminal-socket)).
 - A card link, `aide://card/<vault>/<card>`, opens the card's pane: on the Mac and Linux when one of the window's terminals shows it, on the iPhone when one of the [hosts' AIDE sessions](#aide-sessions-on-a-host) you have open does. Elsewhere the card's note opens at the card, saying **Not open on this device**. <Badge text="Next release" /> With the [agent board](/docs/guides/agent-board/) on, the Board opens with the card selected instead, and the note opens only when the card isn't on the board. A link to a card of another vault says **This card is in a vault that isn't open**.
+- <Badge text="Next release" /> A card link you click in a pane opens the card on the Board, never a pane (see [Links in a pane](#links-in-a-pane-)).
 - `<vault>` is the vault's id: a notes folder's own id, or `server:` followed by the server's and your user's ids for a server's notes.
 
 #### Plugin skills
@@ -790,7 +816,8 @@ Coding agents in the host's panes show here too, as the host's AIDE reports them
 - A session's row adds what needs you, such as "1 needs you, 2 done".
 - **Agents** (beside the list, and in the **Session** menu) lists the host's agents across its
   sessions, those that need you first, each with its tab, what it's waiting for or doing, and how
-  full its context is. Tapping one opens its pane.
+  full its context is. Tapping one opens its pane. <Badge text="Next release" /> One whose pane
+  works on an agent card says **on:** with the card's title; touch and hold it for **Open card**.
 - An agent counts as seen once its pane is on the iPhone's screen while you're in the app: a
   finished turn stops showing as done. Being in a list, or a turn that finishes while AIDE is in
   the background, doesn't count. Looking doesn't take the pane's size either.

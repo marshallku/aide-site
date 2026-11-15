@@ -35,6 +35,8 @@ The `aide-board` skill tells an agent when to add a card, how to keep its steps 
 
 <Badge text="Next release" /> In an AIDE terminal pane, the card is linked to the agent's pane, and its link `aide://card/<vault>/<card>` opens that pane (see [Cards linked to panes](/docs/guides/terminal/#cards-linked-to-panes)). The agents use `aidectl board`; the [aidectl reference](/docs/developers/aidectl/#board) lists its commands. <Badge text="Next release" /> In a pane they need no flag or token: `aidectl` uses the pane's window's notes, and read-only agents can still use the board. Run `aidectl board list` to see the open cards yourself, or `aidectl board show <card>` for one card and its steps.
 
+<Badge text="Next release" /> An agent tells you about its card with the card's link, which `aidectl board add` and `aidectl board show` print. In a terminal pane, <kbd>⌘</kbd>-click it on the Mac, <kbd>Ctrl</kbd>-click it on Linux, or tap it on the iPhone, and the card opens on the Board. In the Agents list, a row whose pane works on a card says **on:** with the card's title, and **Open card** in its menu shows the card on the Board (see [The Agents list](/docs/guides/terminal/#the-agents-list)).
+
 ## Where you see it
 
 <Badge text="Next release" /> Cards show on **Todos › Board**, in columns with a lane per project, each with what its agent's terminal pane is doing right now: see [The Board](/docs/guides/todos/#the-board). Agents' work stays off **Today** and **All**. A card's link opens its pane when one is open in this window, else the board with the card selected. When the board is off, or the card isn't on it (one finished long ago, say), the link opens the card's note instead.
