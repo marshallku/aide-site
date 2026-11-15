@@ -44,7 +44,7 @@ The script:
 
 If `~/.local/bin` isn't on your `PATH`, the script says so. Add it to run `aidectl` by name.
 
-<Badge text="Next release" /> When the app starts, it moves a `~/.local/bin/aidectl` link that points into
+When the app starts, it moves a `~/.local/bin/aidectl` link that points into
 another copy of AIDE, such as an old download, to the `aidectl` in the app you started. It leaves a
 file or a link to anything else alone (a Homebrew `aidectl`, your own script), and it doesn't create
 the link when it's missing.
@@ -101,7 +101,7 @@ running the old one with your shells, the install still finishes, and the script
 `~/.local/bin/aide-mux ctl upgrade` tries again. With no server running, nothing is started; AIDE
 starts the new one when it needs it.
 
-<Badge text="Next release" /> When the app starts, it moves a `~/.local/bin/aidectl` link that points into
+When the app starts, it moves a `~/.local/bin/aidectl` link that points into
 another install of AIDE (a folder with its own `aide-desktop`) to the `aidectl` beside the app you
 started. It leaves a file or a link to anything else alone, and it doesn't create the link when it's
 missing.

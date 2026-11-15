@@ -32,13 +32,13 @@ It takes the first of these that names a target:
 | --- | --- | --- |
 | Flags before the command | `--vault DIR` | `--server URL` |
 | Environment | `AIDE_VAULT` | `AIDE_URL` |
-| The AIDE terminal pane it runs in <Badge text="Next release" /> | the window's folder | the window's server |
-| The AIDE window in front <Badge text="Next release" /> | the window's folder | the window's server |
+| The AIDE terminal pane it runs in | the window's folder | the window's server |
+| The AIDE window in front | the window's folder | the window's server |
 | Config file | `vault=` | `url=` |
 
 Each source names a vault or a server, not both; one that names both stops with a usage error. A server's token comes from `AIDE_TOKEN`, else from `token=` in the config file.
 
-**Inside an AIDE terminal pane** <Badge text="Next release" />, `aidectl` needs no flag and no token: it uses the notes of the window the pane belongs to, with your rights there. A coding agent in a pane keeps the board of the vault it works in. On a window that shows a server, the app passes the requests on with its own sign-in.
+**Inside an AIDE terminal pane**, `aidectl` needs no flag and no token: it uses the notes of the window the pane belongs to, with your rights there. A coding agent in a pane keeps the board of the vault it works in. On a window that shows a server, the app passes the requests on with its own sign-in.
 - In a pane, anything that goes wrong is an error that says what to do; `aidectl` never falls back to the window in front or the config file there. A window that hasn't said where its notes are yet (open before this release) needs to be focused once. A session shown by two copies of the same vault asks for `--vault`.
 - Outside a pane, the AIDE window last in front is next, while its app runs.
 - `aidectl where` prints which notes the next command would reach, and why.
@@ -78,7 +78,7 @@ vault=~/Notes
 
 On your own server, use a plugin token scoped to what the caller may touch, minted with the server's `aide plugin-token` command; [Build a server plugin](/docs/developers/server-plugins/) explains tokens and scopes.
 
-<Badge text="Next release" /> A request the token's scopes don't cover names the scope it lacks (`notes:write:board`, say) and where to get it: run `aidectl` in an AIDE terminal pane, connect Claude again in **Settings › Claude**, or mint a token with that scope. `board:write` writes under the board folder while the board is on, wherever the folder moves; read-only agents can still use the board.
+A request the token's scopes don't cover names the scope it lacks (`notes:write:board`, say) and where to get it: run `aidectl` in an AIDE terminal pane, connect Claude again in **Settings › Claude**, or mint a token with that scope. `board:write` writes under the board folder while the board is on, wherever the folder moves; read-only agents can still use the board.
 
 ## Notes and paths
 
@@ -142,7 +142,7 @@ Opens the note in `$VISUAL`, else `$EDITOR`, else `vi`, and saves it back under 
 
 ### move
 
-<Badge text="Next release" />
+
 
 ```sh
 aidectl move <path> <new-path> [--dry-run] [--json]
@@ -210,13 +210,13 @@ The [agent board](/docs/guides/agent-board/): coding agents keep their plan here
 - `move … waiting` adds your waiting tag (`#waiting`), and moving it on takes the tag out again.
 - `note` sets the card's status line, the first line of its memo; `""` removes it. At most three lines.
 - `done`, and `move … done`, refuse while any todo under the card is still open and name them, unless `--skip-rest` cancels those first. The card always gets its completion date.
-- <Badge text="Next release" /> `ref` adds what landed to the card as [refs](/docs/guides/todos/#agent-cards): a commit (a short or full hash) or a URL such as a pull request. `done --ref` adds them while it finishes the card, in the same change, so a refused `done` adds nothing. A commit is looked up by its hash in the git checkout you run it in (`--repo` for another one), never as a branch or tag name, and written as its GitHub page when the checkout's `origin` is on github.com, else as the full hash; one it can't find, or a hash several commits share, exits 2. Outside a checkout the hash is written as given. A ref the card has already isn't added again; a card holds at most 50.
+- `ref` adds what landed to the card as [refs](/docs/guides/todos/#agent-cards): a commit (a short or full hash) or a URL such as a pull request. `done --ref` adds them while it finishes the card, in the same change, so a refused `done` adds nothing. A commit is looked up by its hash in the git checkout you run it in (`--repo` for another one), never as a branch or tag name, and written as its GitHub page when the checkout's `origin` is on github.com, else as the full hash; one it can't find, or a hash several commits share, exits 2. Outside a checkout the hash is written as given. A ref the card has already isn't added again; a card holds at most 50.
 - `show` prints the card, its steps and its progress; `list` the open cards, `--mine` the one linked to the pane you run it in.
-- <Badge text="Next release" /> `add` prints the card's link, `aide://card/<vault>/<card>`, on a line of its own on stderr, after its id on stdout, so `card=$(aidectl board add …)` still gets the id alone. `show` prints the link as its last line (`link aide://card/…`), and with `--json` both `show` and `list` give it as `link`. An agent gives you that link: clicked in a terminal pane it opens the card on the Board, and `aidectl open` opens it as any card link opens (its pane, else the Board).
-- <Badge text="Next release" /> `show` prints the card's refs too, and with `--json` both `show` and `list` give them as `refs`.
-- <Badge text="Next release" /> With `--json`, `show` and `list` say each card's `column` as [the Board](/docs/guides/todos/#the-board) draws it: `todo`, `doing`, `waiting` or `done` (empty when it's on no column). `list --done` lists the board's **Done** column instead: cards done this week, and done or cancelled cards with open steps under them (their `open` count says how many).
+- `add` prints the card's link, `aide://card/<vault>/<card>`, on a line of its own on stderr, after its id on stdout, so `card=$(aidectl board add …)` still gets the id alone. `show` prints the link as its last line (`link aide://card/…`), and with `--json` both `show` and `list` give it as `link`. An agent gives you that link: clicked in a terminal pane it opens the card on the Board, and `aidectl open` opens it as any card link opens (its pane, else the Board).
+- `show` prints the card's refs too, and with `--json` both `show` and `list` give them as `refs`.
+- With `--json`, `show` and `list` say each card's `column` as [the Board](/docs/guides/todos/#the-board) draws it: `todo`, `doing`, `waiting` or `done` (empty when it's on no column). `list --done` lists the board's **Done** column instead: cards done this week, and done or cancelled cards with open steps under them (their `open` count says how many).
 - `link` (inside an AIDE terminal pane) links the pane to a card.
-- <Badge text="Next release" /> `adopt` makes one of your todos a card, as **Give to an agent** in the app does: the todo at that line of that note (1-based, as `show` prints it) moves, with its memo and subtasks, to its project's note under the `board` folder, and the line where it was becomes `[>]`. `--text` (the todo's text as `todos` prints it) must still be what the line reads, or nothing happens (exit 5). `--project` sets its project on the way; `--agent` names the agent, else the pane's, else `agent`. It prints the card's id and, inside a terminal pane, links the pane. A subtask of an open todo goes with its parent (exit 6), and a repeating todo or a card can't be adopted (exit 2). Cards you handed over from the app have the agent `agent` until an agent picks them up.
+- `adopt` makes one of your todos a card, as **Give to an agent** in the app does: the todo at that line of that note (1-based, as `show` prints it) moves, with its memo and subtasks, to its project's note under the `board` folder, and the line where it was becomes `[>]`. `--text` (the todo's text as `todos` prints it) must still be what the line reads, or nothing happens (exit 5). `--project` sets its project on the way; `--agent` names the agent, else the pane's, else `agent`. It prints the card's id and, inside a terminal pane, links the pane. A subtask of an open todo goes with its parent (exit 6), and a repeating todo or a card can't be adopted (exit 2). Cards you handed over from the app have the agent `agent` until an agent picks them up.
 
 Every change is made on the note as just read and saved only if nobody changed it meanwhile; if you ticked a step in the note at that moment, aidectl reads it again and makes its change on top of yours, never over it. A card you moved to a note outside the `board` folder is no card any more.
 
@@ -316,7 +316,7 @@ A Waybar module that updates by itself:
 aidectl open [today | scratch | wiki | todos | <period> | YYYY-MM-DD | <path> | aide://…] [--print]
 ```
 
-Opens the AIDE app at that place, through `open` on macOS or `xdg-open` on Linux. Without an argument it opens today's daily note. A period (`weekly`, …) opens the current note of that period; a date opens that day's daily note; a note path opens that note (only this form needs the vault or server, to look up the note's id). An `aide://` link is checked against the links the apps accept: `aide://note/<id>`, `aide://today`, `aide://periodic/<period>[/YYYY-MM-DD]`, `aide://scratch`, `aide://wiki`, `aide://todos`, and <Badge text="Next release" /> a card's `aide://card/<vault>/<card>`.
+Opens the AIDE app at that place, through `open` on macOS or `xdg-open` on Linux. Without an argument it opens today's daily note. A period (`weekly`, …) opens the current note of that period; a date opens that day's daily note; a note path opens that note (only this form needs the vault or server, to look up the note's id). An `aide://` link is checked against the links the apps accept: `aide://note/<id>`, `aide://today`, `aide://periodic/<period>[/YYYY-MM-DD]`, `aide://scratch`, `aide://wiki`, `aide://todos`, and a card's `aide://card/<vault>/<card>`.
 
 `--print` prints the link instead of opening it.
 
@@ -407,24 +407,24 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `context [--history-lines N]` | The rows above the screen (50 unless you say), then the screen |
 | `tabs` | Lists every tab and its panes: tab id, pane id, title, and whether the pane is on screen, focused or exited |
 | `new-tab` | Opens a new tab and prints its pane id |
-| `new-tab [--space S] [--cwd D] [--show]` <Badge text="Next release" /> | Opens the tab in that space (else the space of the pane it runs in), in that folder (else the space's folder), and prints its pane id. No window is needed, and a window showing that space stays on its tab unless `--show` |
+| `new-tab [--space S] [--cwd D] [--show]` | Opens the tab in that space (else the space of the pane it runs in), in that folder (else the space's folder), and prints its pane id. No window is needed, and a window showing that space stays on its tab unless `--show` |
 | `close-tab [<tab>]` | Closes that tab with every pane in it; without a tab id, closes the focused pane |
 | `rename <tab> <title>` | Names a tab; an empty title clears the name |
 | `switch-tab <index>` | Selects a tab by its index in `tabs`, counting from 0 |
 | `split right\|down` | Splits the pane and prints the new pane's id |
 | `focus <pane>` | Brings that pane forward: its tab, the Terminal section and the window |
-| `conversations [--dir D \| --here] [--all] [--query Q] [--rescan]` <Badge text="Next release" /> | Lists past Claude Code, Codex and Grok conversations, newest first: id, agent, age, folder, the first prompt, and **● pane N** when a pane has it. `--dir` (or `--here`, this folder) keeps those in that folder or under it; `--all` adds runs nobody typed into |
-| `resume <id> [--tool T] [--focus]` <Badge text="Next release" /> | Opens that conversation in a new tab, in the space working in its folder, else in the session of the pane it runs in, and prints the new pane's id; one a pane already has prints that pane's id instead |
-| `fork [<id>] [--tool T] [--focus]` <Badge text="Next release" /> | Starts a new conversation from the agent in this pane (or `--pane`), or from a past conversation, in a new tab, and prints its pane id |
-| `space list` <Badge text="Next release" /> | Lists every [space](/docs/guides/terminal/#spaces): id, name (**on screen** when a window shows it, **not running** when it's ended with its layout kept), folder, branch, tabs, its agents by state, and its panes, those of a space no window shows included |
-| `space new <dir> [--name N] [--project P] [--vault V] [--show]` <Badge text="Next release" /> | Makes a space working in that folder and prints its id and its first pane's id on one line. Run in a pane, it belongs to that pane's vault and uses that pane's notes, so `aidectl` works in its panes before any window shows it. `--vault` names a folder vault for its notes instead; a folder AIDE hasn't opened as a vault is refused. Nothing moves on screen; with `--show`, a window shows it, and when none can, it says so on stderr, and the space is made all the same |
-| `space show <id> [--pane P]` <Badge text="Next release" /> | Shows that space (and that pane in it) in a window, switching the window in front to it when no window shows it |
-| `space rename <id> <name>` <Badge text="Next release" /> | Names a space |
-| `space end <id> [--force]` <Badge text="Next release" /> | Ends a space and its shells. While a program runs in one of them it refuses, naming the programs, unless `--force` |
-| `mark list` <Badge text="Next release" /> | Lists the [marks](/docs/guides/terminal/#switch-go-back-mark-), slots 1 to 9 that every AIDE window shares: each slot's space, tab and pane, or **(not running)** while its space has ended with its layout kept |
-| `mark set <slot>` <Badge text="Next release" /> | Marks this pane (or `--pane`) as that slot and prints the slot and pane; the slot's earlier pane loses it |
-| `mark clear <slot>` <Badge text="Next release" /> | Empties that slot |
-| `mark goto <slot>` <Badge text="Next release" /> | Shows the slot's pane in a window, as `focus` does, bringing its space back first when it had ended, and prints the space and pane |
+| `conversations [--dir D \| --here] [--all] [--query Q] [--rescan]` | Lists past Claude Code, Codex and Grok conversations, newest first: id, agent, age, folder, the first prompt, and **● pane N** when a pane has it. `--dir` (or `--here`, this folder) keeps those in that folder or under it; `--all` adds runs nobody typed into |
+| `resume <id> [--tool T] [--focus]` | Opens that conversation in a new tab, in the space working in its folder, else in the session of the pane it runs in, and prints the new pane's id; one a pane already has prints that pane's id instead |
+| `fork [<id>] [--tool T] [--focus]` | Starts a new conversation from the agent in this pane (or `--pane`), or from a past conversation, in a new tab, and prints its pane id |
+| `space list` | Lists every [space](/docs/guides/terminal/#spaces): id, name (**on screen** when a window shows it, **not running** when it's ended with its layout kept), folder, branch, tabs, its agents by state, and its panes, those of a space no window shows included |
+| `space new <dir> [--name N] [--project P] [--vault V] [--show]` | Makes a space working in that folder and prints its id and its first pane's id on one line. Run in a pane, it belongs to that pane's vault and uses that pane's notes, so `aidectl` works in its panes before any window shows it. `--vault` names a folder vault for its notes instead; a folder AIDE hasn't opened as a vault is refused. Nothing moves on screen; with `--show`, a window shows it, and when none can, it says so on stderr, and the space is made all the same |
+| `space show <id> [--pane P]` | Shows that space (and that pane in it) in a window, switching the window in front to it when no window shows it |
+| `space rename <id> <name>` | Names a space |
+| `space end <id> [--force]` | Ends a space and its shells. While a program runs in one of them it refuses, naming the programs, unless `--force` |
+| `mark list` | Lists the [marks](/docs/guides/terminal/#switch-go-back-mark), slots 1 to 9 that every AIDE window shares: each slot's space, tab and pane, or **(not running)** while its space has ended with its layout kept |
+| `mark set <slot>` | Marks this pane (or `--pane`) as that slot and prints the slot and pane; the slot's earlier pane loses it |
+| `mark clear <slot>` | Empties that slot |
+| `mark goto <slot>` | Shows the slot's pane in a window, as `focus` does, bringing its space back first when it had ended, and prints the space and pane |
 
 `read`, `state`, `exec`, `feed`, `history`, `context` and `split` act on the pane `--pane` names, else on the focused pane. A pane's id is in `tabs`, and a pane's own shell has it in `$COPAD_PANEL_ID`. `--json` prints the app's answer as JSON instead of text.
 
@@ -437,11 +437,11 @@ Reading never moves the pane: `read` and `history` read the live screen even whe
 - Else it uses the terminal server's socket, from any shell: `~/Library/Application Support/AIDE/mux/terminal.sock` on the Mac, `$XDG_RUNTIME_DIR/aide-mux/terminal.sock` on Linux (`/tmp/aide-mux-<uid>/terminal.sock` without `XDG_RUNTIME_DIR`). It's used only when its folder is yours alone and the server answers.
 - Else it uses the only AIDE app with a terminal running as your user. With none, it stops. With more than one, it doesn't guess: it lists their sockets and asks you to choose one with `--socket`.
 
-`focus`, `switch-tab` and `new-tab` (without `--space` or `--cwd`) need an AIDE window showing the terminal; with none, they stop with exit code 1. <Badge text="Next release" /> `focus`, `space show` and `mark goto` reach a pane or space no window shows: the window in front switches to its space.
+`focus`, `switch-tab` and `new-tab` (without `--space` or `--cwd`) need an AIDE window showing the terminal; with none, they stop with exit code 1. `focus`, `space show` and `mark goto` reach a pane or space no window shows: the window in front switches to its space.
 
 To show the owner the pane working on a board card, wherever it is: `aidectl agent list` names each agent's pane and the card it's linked to, and `aidectl terminal focus <pane>` brings that pane forward. On the Mac a minimized window comes back to the front, but a window behind another app only switches to the pane and asks to come forward: macOS leaves it behind until you switch to AIDE.
 
-`resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. <Badge text="Next release" /> Nor do `space new` and `new-tab --space`: an agent can start a space for a card and work in it alone, while you stay where you are. When the terminal server is older than `aidectl` (it hasn't restarted since an update), `new-tab --space`/`--cwd`, every `space new` and every `mark` stop with exit code 1 before doing anything. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
+`resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. Nor do `space new` and `new-tab --space`: an agent can start a space for a card and work in it alone, while you stay where you are. When the terminal server is older than `aidectl` (it hasn't restarted since an update), `new-tab --space`/`--cwd`, every `space new` and every `mark` stop with exit code 1 before doing anything. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
 
 The Mac App Store build and the iPhone have no terminal socket.
 
@@ -450,7 +450,7 @@ The Mac App Store build and the iPhone have no terminal socket.
 | Done | 0 |
 | No app to talk to, a `$COPAD_SOCKET` or `--socket` that doesn't answer, or the app refused (a shell that has exited, a pane too small to split) | 1 |
 | Several apps running and no `--socket`, or wrong arguments (a `read` range the app refuses, say) | 2 |
-| No pane, tab or space with that id, no such conversation, no agent in the pane to fork, or (<Badge text="Next release" />) an empty mark slot | 5 |
+| No pane, tab or space with that id, no such conversation, no agent in the pane to fork, or () an empty mark slot | 5 |
 
 ```sh
 aidectl terminal tabs
@@ -481,10 +481,10 @@ The [coding agents](/docs/guides/terminal/#coding-agents) in AIDE's terminal.
 `list` asks the terminal server which agents run in its panes, with no AIDE window needed: one row
 per agent with its pane, its vault's session, the agent, its state (`done` for a turn nobody has
 looked at, `(not updating)` when the last read couldn't be confirmed), how full its context is, and
-the step it's on. <Badge text="Next release" /> It also names the board card each pane is linked to
+the step it's on. It also names the board card each pane is linked to
 (`(finished)` once the card is done) and the git checkout it works in; a pane whose agent left still
 shows its card. With none it prints `No agents.` `--json` prints the server's answer as it is,
-with each pane's board card link. <Badge text="Next release" /> Inside an AIDE terminal pane it asks
+with each pane's board card link. Inside an AIDE terminal pane it asks
 that pane's own terminal server.
 
 ```text
@@ -492,8 +492,8 @@ PANE           SESSION  AGENT   STATE    CONTEXT  CARD      CHECKOUT           D
 1794000000001  work     claude  blocked  41%      a1b2c3d4  /home/me/dev/aide  Bash: Run the tests
 ```
 
-<Badge text="Next release" /> `usage` prints Claude's and Codex's plan limits as the terminal server last read
-them, the same ones the terminal's [status bar](/docs/guides/terminal/#the-status-bar-) shows: one row per
+`usage` prints Claude's and Codex's plan limits as the terminal server last read
+them, the same ones the terminal's [status bar](/docs/guides/terminal/#the-status-bar) shows: one row per
 limit with how much is used and how long until it resets, marked `stale` when the last read failed, and
 why underneath. An agent can check it before it starts a big task. `--refresh` asks the server to read
 them again (at most every 15 seconds); the new reading shows the next time you ask. Before the first
@@ -538,7 +538,7 @@ Plugin skills** does on your Mac or Linux desktop. It needs a server in the [con
   with aidectl itself; the server only says which plugins are on. Each skill says it works on that
   server. The first `sync` turns Plugin skills on for this computer, with every agent's folder that
   is here. A plugin turned off on the server takes its skill out at the next `sync`.
-- <Badge text="Next release" /> When the board is on and the token can't write it (it has neither
+- When the board is on and the token can't write it (it has neither
   `board:write` nor `notes:write` on the board's folder), `sync` says so: an agent using that token
   outside an AIDE terminal pane can't keep its cards. In a pane, `aidectl` uses that window's notes;
   or connect Claude again in **Settings › Claude**, since read-only agents can still use the board.

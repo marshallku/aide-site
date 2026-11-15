@@ -13,8 +13,8 @@ the iPhone, which has no local shell, the SSH section opens terminals to your se
 ## Terminal on the Mac and Linux
 
 The **Terminal** section in the sidebar is a row of tabs over a shell, filling the main area.
-<Badge text="Next release" /> The tabs move into one bar under the shell, as in comux and tmux:
-see [The status bar](#the-status-bar-).
+The tabs move into one bar under the shell, as in comux and tmux:
+see [The status bar](#the-status-bar).
 
 - **+** or **New tab** opens a shell in a new tab (<kbd>⌘</kbd><kbd>T</kbd> on the Mac,
   <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>T</kbd> on Linux), in the folder of the tab you're in, or your
@@ -36,7 +36,7 @@ split and move between them from the keyboard or the **Go** menu:
 | **Split Right** | <kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>D</kbd> |
 | **Split Down** | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> |
 | **Next Pane** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>N</kbd> |
-| **Previous Pane** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | none <Badge text="Next release" /> |
+| **Previous Pane** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>[</kbd> | none |
 | Close the focused pane | <kbd>⌘</kbd><kbd>W</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> |
 
 - The keys work only while a terminal pane has the keyboard. **Go** › **Split Right**,
@@ -52,7 +52,7 @@ split and move between them from the keyboard or the **Go** menu:
   pane and ends its shell; on the tab's last pane it closes the tab. The tab's × and **Close** still
   close the whole tab, with every pane in it.
 
-#### Move between panes, resize and zoom <Badge text="Next release" />
+#### Move between panes, resize and zoom
 
 From the keyboard, the **Go** menu or the command palette:
 
@@ -94,7 +94,7 @@ when there are none, on the Mac and Linux.
 
 For the tab, pane, find and text-size keys, see [Keyboard shortcuts](/docs/guides/shortcuts/#terminal).
 
-### The status bar <Badge text="Next release" />
+### The status bar
 
 On the Mac and Linux the Terminal section has one status bar under the panes, as comux and tmux have. The
 tab row at the top is gone: everything you used it for is in the bar. From left to right:
@@ -107,11 +107,11 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   a program rang the bell there since you last looked. A tab on another computer starts with its
   host, as `box:3:zsh`. Click a tab to show it, double-click to rename it, right-click for its menu;
   its × shows on the tab on screen and when you point at another. **+** opens a new tab.
-- On the right: `ZOOM` while the tab on screen has a pane zoomed, <Badge text="Next release" /> `^B` while the
-  [prefix key](/docs/guides/shortcuts/#the-prefix-key-) waits for its next key, then the agents in every space,
+- On the right: `ZOOM` while the tab on screen has a pane zoomed, `^B` while the
+  [prefix key](/docs/guides/shortcuts/#the-prefix-key) waits for its next key, then the agents in every space,
   each count after its mark from the Agents list (working, needs you, and done: finished, and you
   haven't looked yet), the usage readout, and the clock. Click the needs-you count to
-  [jump to the agent that needs you](#jump-to-an-agent-), the done count to jump to the one that
+  [jump to the agent that needs you](#jump-to-an-agent), the done count to jump to the one that
   finished last, and the working count to show the Agents list.
 
 Press <kbd>⌥</kbd><kbd>1</kbd> to <kbd>⌥</kbd><kbd>9</kbd> on the Mac, or
@@ -172,7 +172,7 @@ An agent can read them too, before it starts a big task: `aidectl agent usage` (
 
 ### Spaces
 
-<Badge text="Next release" />
+
 
 A space is a set of tabs of its own, started in a folder you pick, such as one per project. Each
 window shows one space at a time and switches between them; the shells of the others keep running.
@@ -180,7 +180,7 @@ window shows one space at a time and switches between them; the shells of the ot
 - Your vault's own tabs are its first space, named after the vault.
 - **Spaces** at the top of the section's panel lists them, each with its git branch and how many
   tabs it has. Click one to show it.
-- The menu at the start of the tab row (<Badge text="Next release" /> the pill in [the status bar](#the-status-bar-))
+- The menu at the start of the tab row (the pill in [the status bar](#the-status-bar))
   shows the space you're in and its branch. Open it to switch,
   or for **New space…**, **Rename space…** and **End space…**.
 - Every window on the computer lists the same spaces, and each window remembers the one it showed
@@ -216,7 +216,7 @@ folder of the pane you split.
   on the space you were in, and showing one starts its shells again in its folders.
 - The branch is read from the folder's git files; it follows a `git checkout` within a few seconds.
 
-#### Switch, go back, mark <Badge text="Next release" />
+#### Switch, go back, mark
 
 Get back to where you just were, to a pane you marked, or to any tab by a few letters of its name
 (comux's <kbd>Ctrl</kbd><kbd>f</kbd>, `;` and marks):
@@ -243,7 +243,7 @@ Only the switcher and Linux's move-tab keys have a shortcut; give the others one
 need the terminal server from this version: an older one shows **The terminal server needs
 updating** until it restarts.
 
-#### Spaces and projects <Badge text="Next release" />
+#### Spaces and projects
 
 A space made for a project (`aidectl terminal space new --project`, or **Open space** below) joins
 that project's todos:
@@ -296,7 +296,7 @@ left it, still running, with its screen and scrollback.
   AIDE quits** turned off, and doesn't ask about running programs.
 - On the iPhone, a host's AIDE sessions keep going while that host's
   terminal server updates: a pane pauses for a moment and goes on, with no reconnect.
-- <Badge text="Next release" /> If the connection to the terminal server is lost anyway, your tabs,
+- If the connection to the terminal server is lost anyway, your tabs,
   splits and panes stay on screen while AIDE connects again. When it reaches the same server, each
   pane picks up where it is, with the same tab on screen and its program still running; a pane
   whose shell ended in the meantime closes as usual. Only when the server is a new one (the old one
@@ -339,13 +339,13 @@ after AIDE quits**. Then:
 | **Kitty keyboard protocol** | On | Programs that ask for it get every key with its modifiers. Applies to new tabs. |
 | **Images** | On | Programs can draw pictures with kitty graphics. On Linux, sixel too where the system's VTE has it, and pictures more than 200 lines up in the scrollback aren't drawn. Applies to new tabs. |
 | **Reopen tabs at launch** | On | After your computer restarts, your tabs, splits and folders come back. See [Tabs after a restart](#tabs-after-a-restart). |
-| **Bring back agents in their conversation** <Badge text="Next release" /> | On | Claude Code and Codex start again where they were. Off, their panes come back as shells. |
-| **Programs to bring back** <Badge text="Next release" /> | Editors and other full-screen programs | The programs that run again after a restart, by name, separated by spaces. **Reset** sets the default list again. |
+| **Bring back agents in their conversation** | On | Claude Code and Codex start again where they were. Off, their panes come back as shells. |
+| **Programs to bring back** | Editors and other full-screen programs | The programs that run again after a restart, by name, separated by spaces. **Reset** sets the default list again. |
 | **Keep shells running after AIDE quits** | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide). |
 
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
 are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`,
-`keep_running`, and in the next release `restore_agent_sessions` and `restore_processes`, a list of
+`keep_running`, `restore_agent_sessions` and `restore_processes`, a list of
 names; without it the default list applies). **Scrollback**, **Shell**, **Kitty keyboard protocol**,
 **Reopen tabs at launch**, **Keep shells running after AIDE quits** and the two restore settings are
 also the terminal server's own: a change on one AIDE reaches the server, and the last change wins.
@@ -357,7 +357,7 @@ the tab you were on, and the folder each pane's shell is in. When the server sta
 your computer restarts say, the layout comes back with a new shell in each pane, in its folder.
 The scrollback and the environment don't come back; a folder that's gone opens at home instead.
 
-<Badge text="Next release" /> Some programs come back too, as tmux-resurrect brings them back:
+Some programs come back too, as tmux-resurrect brings them back:
 
 - **Claude Code and Codex** start again in the conversation they had, with the options that still
   apply: `claude --resume <conversation> --dangerously-skip-permissions`, say, or
@@ -390,7 +390,7 @@ the program off the list, or turn **Reopen tabs at launch** off, if that matters
 
 ### Reopen a past conversation
 
-<Badge text="Next release" /> Claude Code, Codex and Grok keep every conversation on your computer, so one you closed days ago can
+Claude Code, Codex and Grok keep every conversation on your computer, so one you closed days ago can
 be opened again, or forked into a new one, as comux's resume picker does.
 
 1. In a terminal, press <kbd>⌥</kbd><kbd>⌘</kbd><kbd>R</kbd> on the Mac or
@@ -428,7 +428,7 @@ To fork the agent in a pane you're looking at, right-click its row in the Agents
   wasn't: **Not linked: Fix the login is done**, or **Not linked again: 2 cards were on it**.
 - A fork is a new conversation, so it starts with no card: **The fork isn't linked to Fix the login**.
 
-### Links in a pane <Badge text="Next release" />
+### Links in a pane
 
 <kbd>⌘</kbd>-click on the Mac, or <kbd>Ctrl</kbd>-click on Linux, opens what's under the pointer:
 
@@ -474,8 +474,8 @@ split and list panes and tabs from a script.
 ### comux and tmux
 
 comux, tmux and other multiplexers run in a pane like any other program and draw their own screens.
-<Badge text="Next release" /> To drive AIDE's own panes with comux's <kbd>Ctrl</kbd><kbd>B</kbd> keys, set a
-[prefix key](/docs/guides/shortcuts/#the-prefix-key-); pressed twice, it still reaches a comux or
+To drive AIDE's own panes with comux's <kbd>Ctrl</kbd><kbd>B</kbd> keys, set a
+[prefix key](/docs/guides/shortcuts/#the-prefix-key); pressed twice, it still reaches a comux or
 tmux running in a pane.
 A comux in a pane can still bring its pane forward when you click one of
 its notifications, through the terminal socket above.
@@ -563,14 +563,14 @@ tab's name, and under it what it asks while it needs you, else the step it's on,
 it printed, with a small gauge of its context when AIDE knows it.
 
 - The agents that need you come first, then the rest in tab order.
-- <Badge text="Next release" /> It lists the agents in every [space](#spaces), not only the one on
+- It lists the agents in every [space](#spaces), not only the one on
   screen: once you have more than one space, each has a heading with its name, the space on screen
   first, then the spaces with an agent that needs you. Clicking an agent in another space switches
   the window to that space first.
-- <Badge text="Next release" /> Agents working in the same git checkout (the same folder of a
+- Agents working in the same git checkout (the same folder of a
   repository, a linked worktree counting as its own) show the git mark and how many share it, as a
   reminder that they edit the same files.
-- <Badge text="Next release" /> An agent whose pane works on an [agent card](/docs/guides/agent-board/)
+- An agent whose pane works on an [agent card](/docs/guides/agent-board/)
   has a third line, **on:** with the card's title. Right-click the row and choose **Open card** to
   see the card on **Todos › Board**. A tab's tooltip names its pane's card the same way.
 - A remote session's agents (see [Open remote AIDE…](#open-remote-aide)) are listed under the
@@ -581,7 +581,7 @@ it printed, with a small gauge of its context when AIDE knows it.
   comes forward. Looking at it this way turns **Done** into **Waiting**.
 - With none, the list says **No agents running**.
 
-#### Jump to an agent <Badge text="Next release" />
+#### Jump to an agent
 
 Two commands take you to an agent wherever it is, switching the window to its space when needed:
 
@@ -591,7 +591,7 @@ Two commands take you to an agent wherever it is, switching the window to its sp
 | **Jump to the newest finished agent** | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd> | none (in the command palette) | The agent that most recently finished or started needing you, and that you haven't looked at. Press it again for the one before. |
 
 With nothing to go to, the Terminal section says **No agent needs you** or **Nothing unread**. The
-counts on the [status bar](#the-status-bar-) do the same when you click them.
+counts on the [status bar](#the-status-bar) do the same when you click them.
 
 A tab with an agent that is working, done or needs you shows a small mark next to its name: a dot
 while it works, a check when it's done, and a warning sign while it needs you. Point at the mark to
@@ -611,7 +611,7 @@ replaces the one before.
 
 Click it to go to the pane: AIDE selects its tab, gives the pane the keyboard, brings the window
 forward and marks the agent as seen. A pane closed since says **That terminal has closed**.
-<Badge text="Next release" /> An agent in a space no window shows gets a notification too, and its
+An agent in a space no window shows gets a notification too, and its
 click switches the window in front to that space.
 
 The first notification asks for permission on the Mac. On Linux the desktop may keep the window from
@@ -677,13 +677,13 @@ hook.
 
 #### Cards linked to panes
 
-<Badge text="Next release" /> When a coding agent in one of AIDE's panes adds an [agent card](/docs/guides/agent-board/) with `aidectl board add`, or picks one up with `aidectl board link`, the card is linked to that pane. A pane has one card at a time, and on one computer a card is linked to one pane: linking it from another pane moves it there.
+When a coding agent in one of AIDE's panes adds an [agent card](/docs/guides/agent-board/) with `aidectl board add`, or picks one up with `aidectl board link`, the card is linked to that pane. A pane has one card at a time, and on one computer a card is linked to one pane: linking it from another pane moves it there.
 
 - The link lasts as long as the agent and its conversation. A new conversation (`/clear`), another agent in the pane or the agent quitting finishes it. A finished link still names the pane, so you can open it while the pane is there, but it no longer shows that agent's state.
 - It survives the terminal server restarting, and comes back finished: Claude Code resumed in the same conversation (`claude --resume`) takes it up again. An in-place update of the terminal server keeps it as it is.
 - The terminal socket's `agent.list` names each pane's card beside its agent (see the [terminal socket](/docs/developers/local-api/#terminal-socket)).
-- A card link, `aide://card/<vault>/<card>`, opens the card's pane: on the Mac and Linux when one of the window's terminals shows it, on the iPhone when one of the [hosts' AIDE sessions](#aide-sessions-on-a-host) you have open does. Elsewhere the card's note opens at the card, saying **Not open on this device**. <Badge text="Next release" /> With the [agent board](/docs/guides/agent-board/) on, the Board opens with the card selected instead, and the note opens only when the card isn't on the board. A link to a card of another vault says **This card is in a vault that isn't open**.
-- <Badge text="Next release" /> A card link you click in a pane opens the card on the Board, never a pane (see [Links in a pane](#links-in-a-pane-)).
+- A card link, `aide://card/<vault>/<card>`, opens the card's pane: on the Mac and Linux when one of the window's terminals shows it, on the iPhone when one of the [hosts' AIDE sessions](#aide-sessions-on-a-host) you have open does. Elsewhere the card's note opens at the card, saying **Not open on this device**. With the [agent board](/docs/guides/agent-board/) on, the Board opens with the card selected instead, and the note opens only when the card isn't on the board. A link to a card of another vault says **This card is in a vault that isn't open**.
+- A card link you click in a pane opens the card on the Board, never a pane (see [Links in a pane](#links-in-a-pane)).
 - `<vault>` is the vault's id: a notes folder's own id, or `server:` followed by the server's and your user's ids for a server's notes.
 
 #### Plugin skills
@@ -794,7 +794,7 @@ Touching and holding the row offers **Open AIDE** too.
   The iPhone shows splits other computers make, but doesn't split itself.
 - The **Session** menu has **New tab**, **Rename tab…**, **Close pane** and **Reconnect**. **Close
   pane** asks first, and names the program still running there.
-- <Badge text="Next release" /> The list includes the host's [spaces](#spaces), each with its git
+- The list includes the host's [spaces](#spaces), each with its git
   branch. **+** makes one: type the folder's whole path on the host (the folders its shells are in
   are offered), and its name, which is filled in from the folder. Swipe a row for **Rename**; a
   space also has **End**, which asks first. A vault's own session can't be ended from the iPhone.
@@ -809,7 +809,7 @@ Touching and holding the row offers **Open AIDE** too.
 - A paste larger than the pane can take now is refused whole: **That paste is too large to send**.
   When a program stops reading what you type, the pane says **Not responding** until it reads again.
 
-<Badge text="Next release" /> **Resume a conversation** over the sessions lists the host's past
+**Resume a conversation** over the sessions lists the host's past
 conversations, as [the Mac and Linux do](#reopen-a-past-conversation). Tap one to resume it in a new tab
 on the host; touch and hold it to **Fork this conversation**.
 
@@ -820,7 +820,7 @@ Coding agents in the host's panes show here too, as the host's AIDE reports them
 - A session's row adds what needs you, such as "1 needs you, 2 done".
 - **Agents** (beside the list, and in the **Session** menu) lists the host's agents across its
   sessions, those that need you first, each with its tab, what it's waiting for or doing, and how
-  full its context is. Tapping one opens its pane. <Badge text="Next release" /> One whose pane
+  full its context is. Tapping one opens its pane. One whose pane
   works on an agent card says **on:** with the card's title; touch and hold it for **Open card**.
 - An agent counts as seen once its pane is on the iPhone's screen while you're in the app: a
   finished turn stops showing as done. Being in a list, or a turn that finishes while AIDE is in

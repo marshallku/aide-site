@@ -70,7 +70,7 @@ claude mcp add --transport http aide https://aide.example.com/mcp \
 
 ### What the token can do
 
-The token belongs to a built-in connection named Claude. It reads every note (`notes:read:*`) and, while the [agent board](/docs/guides/agent-board/) is on, writes the board's notes (`board:write`) <Badge text="Next release" />: read-only agents can still use the board. With **Allow changes to notes** it can also write any note (`notes:write:*`). Without it, the write tools only reach the board folder, and aren't listed at all while the board is off. A connection made before this release gets `board:write` when you make a new token. Every tool runs as a request through the server's own routes with that token, so the same checks apply as for any other client.
+The token belongs to a built-in connection named Claude. It reads every note (`notes:read:*`) and, while the [agent board](/docs/guides/agent-board/) is on, writes the board's notes (`board:write`): read-only agents can still use the board. With **Allow changes to notes** it can also write any note (`notes:write:*`). Without it, the write tools only reach the board folder, and aren't listed at all while the board is off. A connection made before this release gets `board:write` when you make a new token. Every tool runs as a request through the server's own routes with that token, so the same checks apply as for any other client.
 
 The endpoint answers only `POST`; there are no server-initiated messages (`GET /mcp` is `405`). A request from a web page whose `Origin` isn't the server's own public URL is refused with `403`, so a browser page can't drive it. Batches aren't supported. Protocol versions `2025-11-25`, `2025-06-18` and `2025-03-26` are accepted.
 
