@@ -60,7 +60,7 @@ AIDE 서버의 노트 경로와 입력, JSON 형태, 상태 코드, 오류가 �
 | `DELETE /notes/{id}` | `{version}` → `204`. 노트는 삭제되지 않고 보관돼요 |
 | `POST /notes/{id}/append` | `{text, heading?, createHeading?, ifAbsent?}` → Note와 `appended`, `404 heading_not_found` |
 | `POST /notes/{id}/todos/{line}/toggle` | `{version}` → Note. 그 줄이 할 일이 아니면 `422` |
-| `GET /todos` | `{"todos": [OpenTodo]}`: 열린 할 일 전부, <Badge text="다음 릴리스" /> 에이전트 보드의 카드도 들어 있어요. `?cards=0`이면 빼요 |
+| `GET /todos` | `{"todos": [OpenTodo]}`: 열린 할 일 전부, 에이전트 보드의 카드도 들어 있어요. `?cards=0`이면 빼요 |
 | `GET /daily/{date}` | `YYYY-MM-DD`의 일일 노트. 없으면 템플릿으로 만들어요 |
 | `GET /periodic/{period}/{key}` | `key`(`YYYY-MM-DD`, `today`, `2026-W43`, `2026-10`)를 포함하는 `daily`, `weekly`, `monthly`, `quarterly`, `yearly` 노트. 없으면 만들어요. `?create=false`면 대신 `404`로 답해요 |
 | `GET /periodic/{period}/{key}/prev` | `key`의 기간보다 앞서는, 그 주기의 가장 최근 노트 |

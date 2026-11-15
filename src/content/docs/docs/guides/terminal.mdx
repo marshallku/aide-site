@@ -118,7 +118,7 @@ Press <kbd>⌥</kbd><kbd>1</kbd> to <kbd>⌥</kbd><kbd>9</kbd> on the Mac, or
 <kbd>Alt</kbd><kbd>1</kbd> to <kbd>Alt</kbd><kbd>9</kbd> on Linux, to show a tab by its number;
 <kbd>⌘</kbd><kbd>1</kbd> to <kbd>⌘</kbd><kbd>9</kbd> still work on the Mac. A program that wants
 Option with a digit for itself (readline, emacs) gets it back with **Settings › Terminal ›
-Option+digit switches tabs** off (<Badge text="Next release" /> on Linux, **Alt+digit switches
+Option+digit switches tabs** off (on Linux, **Alt+digit switches
 tabs**), and you can give the tabs other keys in **Settings › Keyboard**.
 
 When the window is narrow, the bar gives things up in this order: the clock, the usage gauges (the
@@ -258,7 +258,7 @@ that project's todos:
 
 #### Worktrees
 
-<Badge text="Next release" /> A worktree is a second checkout of your repository on a branch of its own, so an agent can work on
+A worktree is a second checkout of your repository on a branch of its own, so an agent can work on
 one branch while you stay on another (comux's worktrees). AIDE makes one with its own space:
 
 1. In the repository's space, choose **New worktree…** from the space menu, a space's menu in
@@ -370,19 +370,19 @@ after AIDE quits**. Then:
 | **Font thickening** (Mac) | **Off** | **On**, **Off**, or **On non-Retina displays**: draws text a little heavier. |
 | **Color blending** (Mac) | **Native** | **Native** or **Linear**. Linear applies only when drawing with the GPU, and not over a wallpaper. |
 | **Kitty keyboard protocol** | On | Programs that ask for it get every key with its modifiers. Applies to new tabs. |
-| **Option+digit switches tabs** (Mac), **Alt+digit switches tabs** (Linux, <Badge text="Next release" />) | On | <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> on the Mac, <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> on Linux, show a tab by its number. Off, the program in the terminal gets them (readline, Emacs, weechat). |
+| **Option+digit switches tabs** (Mac), **Alt+digit switches tabs** (Linux,) | On | <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> on the Mac, <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> on Linux, show a tab by its number. Off, the program in the terminal gets them (readline, Emacs, weechat). |
 | **Images** | On | Programs can draw pictures with kitty graphics. On Linux, sixel too where the system's VTE has it, and pictures more than 200 lines up in the scrollback aren't drawn. Applies to new tabs. |
 | **Reopen tabs at launch** | On | After your computer restarts, your tabs, splits and folders come back. See [Tabs after a restart](#tabs-after-a-restart). |
 | **Bring back agents in their conversation** | On | Claude Code and Codex start again where they were. Off, their panes come back as shells. |
 | **Programs to bring back** | Editors and other full-screen programs | The programs that run again after a restart, by name, separated by spaces. **Reset** sets the default list again. |
-| **Folder name** <Badge text="Next release" /> | `{repo}-{branch}` | Under **Worktrees**: the folder a new worktree goes in, beside the repository. See [Worktrees](#worktrees). |
-| **Repository folder** and **Command to run** <Badge text="Next release" /> | None | Under **Worktrees**: a command a repository's new worktrees run in their first pane. |
+| **Folder name** | `{repo}-{branch}` | Under **Worktrees**: the folder a new worktree goes in, beside the repository. See [Worktrees](#worktrees). |
+| **Repository folder** and **Command to run** | None | Under **Worktrees**: a command a repository's new worktrees run in their first pane. |
 | **Keep shells running after AIDE quits** | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide). |
 
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
 are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`,
 `keep_running`, `restore_agent_sessions` and `restore_processes`, a list of
-names; without it the default list applies; <Badge text="Next release" /> `alt_digit_tabs`, `true` unless you turn it off, when Alt+digits go to the program; `worktree_naming`, and a `[terminal.worktree_scripts]`
+names; without it the default list applies; `alt_digit_tabs`, `true` unless you turn it off, when Alt+digits go to the program; `worktree_naming`, and a `[terminal.worktree_scripts]`
 table of `"<repository folder>" = "<command>"`). **Scrollback**, **Shell**, **Kitty keyboard protocol**,
 **Reopen tabs at launch**, **Keep shells running after AIDE quits** and the two restore settings are
 also the terminal server's own: a change on one AIDE reaches the server, and the last change wins.
@@ -719,7 +719,7 @@ When a coding agent in one of AIDE's panes adds an [agent card](/docs/guides/age
 - The link lasts as long as the agent and its conversation. A new conversation (`/clear`), another agent in the pane or the agent quitting finishes it. A finished link still names the pane, so you can open it while the pane is there, but it no longer shows that agent's state.
 - It survives the terminal server restarting, and comes back finished: Claude Code resumed in the same conversation (`claude --resume`) takes it up again. An in-place update of the terminal server keeps it as it is.
 - The terminal socket's `agent.list` names each pane's card beside its agent (see the [terminal socket](/docs/developers/local-api/#terminal-socket)).
-- <Badge text="Next release" /> **Start in a worktree…** on a card (its menu on the Board, or its
+- **Start in a worktree…** on a card (its menu on the Board, or its
   details) makes a branch for the card, `<project>/<card>-<title>`, in a worktree beside the
   repository, and a space there (see [Worktrees](#worktrees)). Every shell in that space has
   `AIDE_BOARD_CARD`, so an agent you start there that runs `aidectl board add` or `aidectl board link`
