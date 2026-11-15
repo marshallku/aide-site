@@ -169,6 +169,20 @@ Mac과 Linux에서 보관소 소켓은 그 보관소 사이드바 아래의 [상
 | `PUT /status-items/{id}` | `{"text", "icon", "progress": {"start", "end"}, "tooltip", "action", "order", "ttl"}`(모두 선택이지만 텍스트, 아이콘, 링 중 하나는 있어야 해요): `200` `{"item"}`, 16개를 넘으면 `409` `too_many` |
 | `DELETE /status-items/{id}` | `200` `{"id", "cleared"}` |
 
+## 터미널 상태 표시줄
+
+<Badge text="다음 릴리스" /> Mac과 Linux에서 보관소 소켓은 터미널 [상태 표시줄](/ko/docs/guides/terminal/#막대-꾸미기)
+설정을 막대가 읽는 그대로 읽고, 바꿀 내용을 같은 방식으로 확인해요. 아무것도 저장하지 않아요.
+[`aidectl status-bar`](/ko/docs/developers/aidectl/#status-bar)가 이 경로를 써요.
+
+| 경로 | 하는 일 |
+| --- | --- |
+| `GET /terminal/status-bar` | `{"settings", "effective": {"left", "right", "tab_template", "style"}, "warnings": [{"key", "code", "message", "error"}]}`: 읽은 설정, 막대에 그리는 부분과 탭 형식, 각 부분의 색(`null`이면 원래 색), 쓸 수 없는 설정이에요 |
+| `POST /terminal/status-bar/check` | `[terminal.status_bar]`의 키로 된 JSON 객체를 받아 같은 방식으로 답해요. 본문이 객체가 아니면 `400` `invalid_params`예요 |
+
+경고의 `message`는 영어예요. `error`는 탭 형식의 문제로, 앱 언어로 된 `message`, `line`과 `column`(보이는 글자 기준),
+유니코드 문자(`start`, `end`)와 UTF-16 단위(`utf16_start`, `utf16_end`)로 센 범위가 있어요.
+
 ## 제한
 
 - HTTP/1.1이고, 연결 하나에 요청 하나면 충분해요(`Connection: close`).

@@ -389,6 +389,20 @@ aidectl status-item list [--json]
 사라져서, 스크립트가 멈춰도 남지 않아요. 보관소마다 16개까지예요. `list`는 앱과 플러그인 항목까지 보관소의 모든
 항목을 보여 줘요. `aidectl status`는 그대로예요.
 
+### status-bar
+
+```sh
+aidectl status-bar show [--json]
+aidectl status-bar check <file.json | -> [--json]
+```
+
+<Badge text="다음 릴리스" /> AIDE 앱에서 터미널 [상태 표시줄](/ko/docs/guides/terminal/#막대-꾸미기) 설정을 막대가
+읽는 그대로 읽어요. 양쪽에 둔 부분, 지금 쓰는 탭 형식, 각 부분의 색, 쓸 수 없는 설정을 보여 주고, 읽을 수 없는 탭
+형식은 몇 행 몇 열인지도 알려 줘요. `check`는 같은 키(`left`, `right`, `tab_format`, `style`과
+`[terminal.status_bar]`의 나머지)로 된 JSON 객체를 파일이나 표준 입력에서 읽어 같은 방식으로 답하고, 아무것도
+저장하지 않으며, 쓸 수 없는 것이 있으면 1로 끝나요. 설정 자체는 **설정 › 터미널 › 상태 표시줄**(Linux는
+`config.toml`)에서 바꿔요.
+
 ### terminal
 
 ```sh

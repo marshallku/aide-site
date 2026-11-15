@@ -169,6 +169,22 @@ On the Mac and Linux, a vault's socket sets the [status items](/docs/guides/appe
 | `PUT /status-items/{id}` | `{"text", "icon", "progress": {"start", "end"}, "tooltip", "action", "order", "ttl"}` (all optional, but an item needs text, an icon or a ring): `200` `{"item"}`; `409` `too_many` past 16 |
 | `DELETE /status-items/{id}` | `200` `{"id", "cleared"}` |
 
+## Terminal status bar
+
+<Badge text="Next release" /> On the Mac and Linux, a vault's socket reads the terminal's
+[status bar](/docs/guides/terminal/#arrange-the-bar) settings as the bar does, and checks a change
+the same way. Nothing is saved. [`aidectl status-bar`](/docs/developers/aidectl/#status-bar) uses
+these routes.
+
+| Route | What it does |
+| --- | --- |
+| `GET /terminal/status-bar` | `{"settings", "effective": {"left", "right", "tab_template", "style"}, "warnings": [{"key", "code", "message", "error"}]}`: the settings as read, the parts and tab format as drawn, each part's colour (`null`: its own), and what can't be used |
+| `POST /terminal/status-bar/check` | a JSON object of `[terminal.status_bar]`'s keys: the same answer for it; `400` `invalid_params` when the body isn't an object |
+
+A warning's `message` is English. `error` is a tab format's problem: its `message` in the app's
+language, `line` and `column` (the characters you see), and its range in Unicode characters
+(`start`, `end`) and UTF-16 units (`utf16_start`, `utf16_end`).
+
 ## Limits
 
 - HTTP/1.1, one request per connection is enough (`Connection: close`).

@@ -160,6 +160,60 @@ On Linux the same settings are also in `config.toml` under `[terminal.status_bar
 `index`, `clock`, `clock_format`, `usage`, `usage_layout`, `usage_page_unit`, `usage_reset`,
 `usage_rotate_secs`, `usage_bar_width`, `usage_windows`), with the names and values comux used.
 
+#### Arrange the bar
+
+<Badge text="Next release" /> You choose what the bar holds, in what order, how a tab is labelled
+and what colour each part takes. The same settings, with the same names, work on the Mac and Linux,
+and both read them the same way.
+
+| Setting | Default | What it does |
+|---|---|---|
+| **Tab format** | Empty | How a tab is labelled; empty uses **Tab labels**. See below. |
+| **Left side** | `space, tabs` | The parts at the left end, in order. |
+| **Right side** | `flags, agents, usage, clock` | The parts at the right end, in order. |
+| **Tab color**, **Active tab color**, **Mode flags color**, **Clock color** | **Default** | **Text**, **Secondary text**, **Accent**, **Success**, **Warning**, **Danger** or **Info**. |
+
+The parts are `space` (the pill, or the chips with **Every space**), `tabs` (with **+** after them),
+`flags` (`ZOOM`, `^B`), `agents`, `usage` and `clock`. Each part goes in one side only, and the tabs
+are always there: left out of both sides, they join the left. **Show status bar** off keeps only the
+space and the tabs, where you put them, and **Clock** off drops the clock; your order stays for when
+you turn them back on. A name AIDE doesn't know shows under the field and is left out.
+
+A tab format is text with names in braces:
+
+- `{index}` is the tab's number, `{name}` its name, `{host}` the computer of a remote tab (empty for
+  a local one), `{active}` whether it's the tab on screen, and `{agent}` what its coding agent is
+  doing: `working`, `blocked` (needs you), `done`, `waiting`, `idle`, or empty.
+- `{if active}…{end}` shows its part only for the tab on screen; `{if not active}`, `{elif …}` and
+  `{else}` work too, and so do `{if agent == "blocked"}` and `{if index != 1}`.
+- `{style danger}…{end}` colours its part, with the colour names above (`text`, `text-secondary`,
+  `accent`, `success`, `warning`, `danger`, `info`).
+- `{{` and `}}` are a brace.
+
+For example, `{index} {name}{if active} ●{end}` labels the tab on screen `2 zsh ●`, and
+`{if agent == "blocked"}{style danger}!{end} {end}{index}:{name}` puts a red `!` before a tab whose
+agent needs you. The bar still draws a remote tab's computer, the agent's mark, `Z` and `!` itself.
+A label is at most 256 characters, the last one `…` when it's cut.
+
+A format AIDE can't read shows under the field with where the problem is, such as
+`Line 1, column 10: Unknown name “nam” (one of index, name, host, active, agent)`, and Return selects
+it. The format is kept as you wrote it, so you can fix it, and the tabs use **Tab labels** until it
+reads.
+
+On Linux they're `tab_format`, `left`, `right` and `style` in `[terminal.status_bar]`:
+
+```toml
+[terminal.status_bar]
+left = ["tabs"]
+right = ["agents", "clock", "space"]
+tab_format = "{index}{if active}*{end}"
+style.tab_active = "accent"
+style.clock = "text-secondary"
+```
+
+An agent can read the bar's settings and check a change before you make it:
+[`aidectl status-bar`](/docs/developers/aidectl/#status-bar).
+
 To stop reading one of them at all, set `usage` in the terminal server's `config.json`
 (`~/Library/Application Support/AIDE/aide-mux/config.json` on the Mac,
 `~/.local/state/aide-mux/config.json` on Linux), for example `"usage": {"codex": false}`. Nothing is
