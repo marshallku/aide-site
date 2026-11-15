@@ -276,7 +276,7 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `split.vertical` | `id` | 페인을 아래로 나누고 `{panel_id}`로 응답해요 |
 | `pane.focus_next`, `pane.focus_prev` | | 다음 또는 이전 페인으로 포커스를 옮겨요 |
 | `agent.list` | | 서버 페인의 [코딩 에이전트](/ko/docs/guides/terminal/#코딩-에이전트): `{agents: [{pane, tab, session, agent}]}`, `agent`마다 `kind`, `state`, `unseen`, `wait`, `detail`, `context`. 보드 카드에 연결된 페인에는 `link {vault, card, gen, finished, at}`도 있어요. 항목마다 페인이 일하는 git 체크아웃 `checkout`(같은 체크아웃의 에이전트는 같은 파일을 고쳐요)도 있고, `agent`마다 상태가 마지막으로 바뀐 때(Unix 밀리초) `changed`가 있어요 |
-| `agent.card` | `pane`, `vault`, `card` | 그 페인 안에서만: 페인을 [보드 카드](/ko/docs/guides/terminal/#패널에-연결된-카드)에 연결하거나 `card: null`로 연결을 끊어요. `aidectl board add`와 `link`가 부르는 메서드예요 |
+| `agent.card` | `pane`, `vault`, `card` | 그 페인 안에서만: 페인을 [보드 카드](/ko/docs/guides/terminal/#페인에-연결된-카드)에 연결하거나 `card: null`로 연결을 끊어요. `aidectl board add`와 `link`가 부르는 메서드예요 |
 | `agent.notify` | `pane`, `kind`, `body` | 그 페인 안에서만: 에이전트가 작업을 마쳤거나(`kind: "done"`) 확인이 필요하다고(`"blocked"`) 알려요. `body`(1 KiB까지)가 알림 내용이 돼요. 훅이 부르는 메서드예요 |
 | `agent.report` | `pane`, `session_id`, `window`, `used`, `cost_usd`, `duration_ms` | 그 페인 안에서만: 상태 줄에서 얻은 Claude Code의 컨텍스트와 비용이에요. 그 페인의 에이전트가 그 대화의 Claude Code일 때만 받아요 |
 | `conversation.list` | `dir`, `all`, `query`, `after`, `limit`, `rescan` | 지난 Claude Code, Codex, Grok 대화를 최근 것부터: `{items: [{tool, id, title, cwd, mtime, age, interactive, open, starting, card, relink}], more, truncated}`. `dir`은 그 폴더나 그 아래의 대화만, `query`는 프롬프트, 폴더, id에 그 글자들이 순서대로 들어 있는 대화만 남겨요. `after`는 앞 페이지의 마지막 항목(`{mtime, tool, id}`), `limit`은 1–1000(기본 200)이에요. `open`은 그 대화가 열려 있는 페인(`{session, tab, pane}`), `truncated`는 대화가 너무 많아 다 읽지 못했다는 뜻이에요 |

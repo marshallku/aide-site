@@ -133,7 +133,7 @@ While a terminal has the keyboard, these act on its tabs and panes:
 | Move the divider left / down / up / right | <kbd>⌃</kbd><kbd>⌘</kbd> and the arrows | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd> and the arrows |
 | Zoom pane | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd> |
 | Previous / next tab | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
-| Go to tab 1–9 | <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
+| Go to tab 1–9 | <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> or <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
 | Find in terminal | <kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> |
 | Copy / paste | <kbd>⌘</kbd><kbd>C</kbd> / <kbd>⌘</kbd><kbd>V</kbd> (the Edit menu) | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>C</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>V</kbd> |
 | Bigger / smaller text | <kbd>⌘</kbd><kbd>=</kbd> / <kbd>⌘</kbd><kbd>-</kbd> | <kbd>Ctrl</kbd><kbd>=</kbd> / <kbd>Ctrl</kbd><kbd>-</kbd> |
@@ -143,7 +143,12 @@ While a terminal has the keyboard, these act on its tabs and panes:
 | Jump to the agent that needs you | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>B</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd> |
 | Jump to the newest finished agent | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd> | none |
 | Switch space, tab or agent… | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd> |
+| Resume a conversation… | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>R</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>R</kbd> |
 | Move tab left / right | none | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Down</kbd> |
+
+<Badge text="Next release" /> On Linux, a program that wants <kbd>Alt</kbd> with a digit for itself (readline,
+Emacs, weechat) gets it with **Settings › Terminal › Alt+digit switches tabs** off, as the Mac's
+**Option+digit switches tabs** does.
 
 On the Mac, a terminal with the keyboard keeps <kbd>⌘</kbd><kbd>T</kbd>, <kbd>⌘</kbd><kbd>W</kbd>,
 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd>, <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd>
@@ -400,6 +405,7 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `terminal/open-project-space` | Open this project's space (no shortcut until you give it one) |
 | `terminal/key-help` | Terminal keys: **Settings › Keyboard** on the terminal's actions (no shortcut until you give it one; the prefix's <kbd>?</kbd>) |
 | `terminal/open-remote-aide` | Open remote AIDE… (no shortcut until you give it one) |
+| `terminal/tab-1` … `terminal/tab-9` | Tab 1 … Tab 9: <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> on the Mac. <Badge text="Next release" /> On Linux, no shortcut until you give it one (<kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> are the terminal's own keys) |
 
 Others come and go with what the window shows:
 

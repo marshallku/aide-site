@@ -131,7 +131,7 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 | 구분선을 왼쪽 / 아래 / 위 / 오른쪽으로 | <kbd>⌃</kbd><kbd>⌘</kbd>와 화살표 | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd>와 화살표 |
 | 페인 확대 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd> |
 | 이전 / 다음 탭 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
-| 1–9번 탭으로 이동 | <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
+| 1–9번 탭으로 이동 | <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> 또는 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
 | 터미널에서 찾기 | <kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> |
 | 복사 / 붙여넣기 | <kbd>⌘</kbd><kbd>C</kbd> / <kbd>⌘</kbd><kbd>V</kbd>(편집 메뉴) | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>C</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>V</kbd> |
 | 글자 크게 / 작게 | <kbd>⌘</kbd><kbd>=</kbd> / <kbd>⌘</kbd><kbd>-</kbd> | <kbd>Ctrl</kbd><kbd>=</kbd> / <kbd>Ctrl</kbd><kbd>-</kbd> |
@@ -141,7 +141,11 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 | 확인이 필요한 에이전트로 이동 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>B</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd> |
 | 가장 최근에 끝난 에이전트로 이동 | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd> | 없음 |
 | 스페이스, 탭, 에이전트로 전환… | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd> |
+| 대화 다시 열기… | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>R</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>R</kbd> |
 | 탭을 왼쪽으로 / 오른쪽으로 | 없음 | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Down</kbd> |
+
+<Badge text="다음 릴리스" /> Linux에서 <kbd>Alt</kbd>와 숫자를 직접 쓰는 프로그램(readline, Emacs, weechat)에 키를
+돌려주려면 **설정 › 터미널 › Alt+숫자로 탭 전환**을 끄세요. Mac의 **Option+숫자로 탭 전환**과 같아요.
 
 Mac에서 터미널에 키보드 포커스가 있으면 <kbd>⌘</kbd><kbd>T</kbd>, <kbd>⌘</kbd><kbd>W</kbd>,
 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd>, <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd>,
@@ -388,6 +392,7 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `terminal/open-project-space` | 이 프로젝트의 스페이스 열기(직접 주기 전까지 단축키 없음) |
 | `terminal/key-help` | 터미널 키: 터미널 동작을 보여 주는 **설정 › 키보드**(직접 주기 전까지 단축키 없음, 프리픽스의 <kbd>?</kbd>) |
 | `terminal/open-remote-aide` | 원격 AIDE 열기…(직접 지정하기 전까지 단축키 없음) |
+| `terminal/tab-1` … `terminal/tab-9` | 탭 1 … 탭 9: Mac에서는 <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd>. <Badge text="다음 릴리스" /> Linux에서는 직접 지정하기 전까지 단축키 없음(<kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd>는 터미널의 키예요) |
 
 창에 보이는 것에 따라 생기고 없어지는 id도 있어요.
 
