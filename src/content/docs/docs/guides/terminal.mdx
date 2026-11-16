@@ -82,6 +82,40 @@ From the keyboard, the **Go** menu or the command palette:
 - These need the terminal server from the same release. An older one says **The terminal server is
   too old for this. Restart it to update it.**
 
+#### Arrange a tab and type into every pane
+
+<Badge text="Next release" /> Snap a tab's panes into a shape, move them around, or take one out into a tab of its own.
+Right-click the tab in the status bar: **Layout** has the shapes and moves, then **Sync panes** and
+**Break pane into a tab**. Each acts on that tab and shows it. The **Go** menu and the command palette have every one, and so
+does the [prefix key](/docs/guides/shortcuts/#the-prefix-key).
+
+| Action | What it does |
+|---|---|
+| **Even horizontal layout** | Every pane side by side, equal widths |
+| **Even vertical layout** | Every pane stacked, equal heights |
+| **Main horizontal layout** | The first pane across the top (60%), the rest side by side beneath it |
+| **Main vertical layout** | The first pane on the left (60%), the rest stacked to its right |
+| **Tiled layout** | As close to a square grid as the panes allow: four are equal quarters |
+| **Next layout** | The shape after the one this tab took last, in the order above |
+| **Spread panes evenly** | Keeps the shape and evens out every divider: split, split again and split again gives 50%, 25%, 12.5%… until you spread them |
+| **Swap with the previous pane** / **Swap with the next pane** | The focused pane trades places with the one before or after it; the focus stays on it |
+| **Rotate panes** / **Rotate panes back** | Every pane moves one place along, the last one going round |
+| **Break pane into a tab** | The focused pane leaves for a new tab right after this one, with its shell and what it shows |
+| **Sync panes** (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>I</kbd> on the Mac) | What you type into one pane of the tab goes to all of them, until you turn it off |
+
+- The panes keep their order: swap the one you want into the first place before a main layout to
+  make it the big one.
+- A shape or a move ends a zoom. The panes' programs keep running; each gets its new size.
+- While a tab is synced, its status bar shows `SYNC`. Keys and pastes are copied; mouse clicks and
+  scrolling aren't. A pane that isn't reading its input (its program is stuck) is skipped rather
+  than holding the others up, and the flag says so: `SYNC · 1 skipped`. A paste reaches each pane
+  as a paste, bracketed where that program asked for it.
+- On the iPhone you see one pane at a time, so there is no layout there. What you type there into a
+  synced tab's pane goes to its other panes all the same.
+- Agents can do the same with [`aidectl terminal`](/docs/developers/aidectl/#terminal): `layout`,
+  `swap`, `rotate`, `break`, `sync` and `broadcast`, which types one text into many panes.
+- These need the terminal server from the same release.
+
 #### Copy mode
 
 <Badge text="Next release" /> Copy mode moves through a pane's text and its scrollback with vi's
@@ -156,7 +190,8 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   a program rang the bell there since you last looked. A tab on another computer starts with its
   host, as `box:3:zsh`. Click a tab to show it, double-click to rename it, right-click for its menu;
   its × shows on the tab on screen and when you point at another. **+** opens a new tab.
-- On the right: `ZOOM` while the tab on screen has a pane zoomed, `^B` while the
+- On the right: `ZOOM` while the tab on screen has a pane zoomed, `SYNC` while it's
+  [synced](#arrange-a-tab-and-type-into-every-pane) <Badge text="Next release" />, `^B` while the
   [prefix key](/docs/guides/shortcuts/#the-prefix-key) waits for its next key, then the agents in every space,
   each count after its mark from the Agents list (working, needs you, and done: finished, and you
   haven't looked yet), the usage readout, and the clock. Click the needs-you count to
