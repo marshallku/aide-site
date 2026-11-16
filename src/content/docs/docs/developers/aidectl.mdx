@@ -469,6 +469,11 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `spawn [--space S] [--cwd D] [--title T] [--focus] -- <program> [args…]` | <Badge text="Next release" /> Runs the program in a new tab of that space (else the space of the pane it runs in), right after this pane's tab, and prints its pane id. The arguments reach the program as they are, never read by a shell. The tab doesn't become the current one and nothing moves on screen unless `--focus`. When the program ends, so does the pane |
 | `prompt --pane P [--submit] <text…>` | <Badge text="Next release" /> Gives the pane's agent the text as a paste, with <kbd>Enter</kbd> after it when `--submit`, by the same rules as a [voice prompt](/docs/guides/voice-prompts/): it's refused while the agent asks you something or hasn't turned on bracketed paste. It prints the agent's `seq`, for `wait-agent --state done --since` |
 | `events [--kinds agent,tree,notify,output] [--pane P] [--pattern X] [--regex]` | <Badge text="Next release" /> Prints the terminal's events as JSON lines until you stop it: agents changing state (`agent`), notifications (`notify`), tabs and panes changing (`tree`), and with `--kinds output --pane P --pattern X` each finished line of that pane that matches. `{"event": "dropped", "count": N}` means it fell behind |
+| `message --to owner\|P <text…\|->` | <Badge text="Next release" /> From inside a pane: leaves the text (up to 4 KiB; `-` reads it from stdin) in another pane's inbox. `owner` is the pane whose `spawn` made your tab, so a worker reports to the agent that started it. Prints `delivered to P` |
+| `inbox [--wait] [--timeout MS] [--peek]` | <Badge text="Next release" /> From inside a pane: prints your pane's messages, `[seq] time from pane P: text`, oldest first, and then marks them read; with `--peek` they stay unread. A message stays until it is read this way, so one you lost (a broken pipe) comes again. `--wait` waits for one when there are none. The inbox keeps 64; it says how many older ones were dropped |
+| `notices [--all]` | <Badge text="Next release" /> The [notification center](/docs/guides/terminal/#notification-center): the notifications agents raised on this computer, newest first, a dot before the unread ones. `--all` lists the dismissed ones too |
+| `notice-ack <id\|all> [--dismiss]` | <Badge text="Next release" /> Marks a notification (or every one) read, and with `--dismiss` takes it out of the center |
+| `compact [--pane P] [--cancel]` | <Badge text="Next release" /> Asks the pane's Claude Code agent (else your own pane's) to compact at its next step, or with `--cancel` withdraws that. It needs the [gate in request mode](/docs/guides/terminal/#hold-claude-codes-auto-compaction-until-you-commit) |
 
 `read`, `state`, `exec`, `feed`, `history`, `context` and `split` act on the pane `--pane` names, else on the focused pane. A pane's id is in `tabs`, and a pane's own shell has it in `$COPAD_PANEL_ID`. `--json` prints the app's answer as JSON instead of text.
 
@@ -488,6 +493,12 @@ To show the owner the pane working on a board card, wherever it is: `aidectl age
 `resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. Nor do `space new` and `new-tab --space`: an agent can start a space for a card and work in it alone, while you stay where you are. When the terminal server is older than `aidectl` (it hasn't restarted since an update), `new-tab --space`/`--cwd`, every `space new`, every `mark` and every `worktree` stop with exit code 1 before doing anything. A `worktree create` or `rm` may wait for another one in the same repository, so aidectl waits up to three minutes for it. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
 
 The waits (`wait-output`, `wait-agent`) give up after `--timeout` milliseconds: 30 seconds unless you say, at most 600000 (10 minutes). If the terminal server restarts in place while one waits (an update), it carries on from where it was, within the same time. <Badge text="Next release" />
+
+An agent that starts workers with `spawn` can wait for their reports with `inbox --wait`; each worker
+ends with `aidectl terminal message --to owner "done: …"`. A message is another program's text:
+read it as data. `message` and `inbox` exit 3 outside an AIDE pane, and `message --to owner` exits 5
+when your tab has no owner (nobody spawned it, or that pane closed). `inbox --wait` exits 124 when
+none comes in time. <Badge text="Next release" />
 
 The Mac App Store build and the iPhone have no terminal socket.
 
@@ -518,7 +529,7 @@ aidectl terminal mark goto 1
 ```sh
 aidectl agent list [--json]
 aidectl agent usage [--refresh] [--json]
-aidectl agent install-hooks [--claude] [--codex] [--yes] [--print] [--remove] [--pre-compact]
+aidectl agent install-hooks [--claude] [--codex] [--yes] [--print] [--remove] [--pre-compact[=request] [--window N]]
 aidectl agent skills list | show <name> | sync [--print] | remove [--print]
 ```
 
@@ -572,6 +583,8 @@ need you, as **Set up agent hooks…** in Settings does. It shows each file's di
 | `--yes` | Applies without asking. Without a terminal and without `--yes`, it only shows the diff and exits 1 |
 | `--remove` | Takes AIDE's entries out again, only where they're exactly as written; one you edited since is left alone with a note |
 | `--pre-compact` | Also adds the [gate that holds Claude Code's auto-compaction](/docs/guides/terminal/#hold-claude-codes-auto-compaction-until-you-commit) while tracked changes are uncommitted. A plain `install-hooks` never adds it; `--remove` takes it out too |
+| `--pre-compact=request` | <Badge text="Next release" /> The gate in request mode instead: Claude compacts only when you ask (**Compact at next step**, `aidectl terminal compact`) or when its context is nearly full. It also sets `CLAUDE_CODE_AUTO_COMPACT_WINDOW` and `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` in `settings.json`'s `env` |
+| `--window N` | <Badge text="Next release" /> With `--pre-compact=request`: your model's context window in tokens. Without it, `install-hooks` asks, offering 1,000,000 for a model whose name ends in `[1m]` and 200,000 otherwise; without a terminal it stops with exit code 2 |
 
 It runs the terminal server's own `hooks` command through the link AIDE keeps,
 `~/Library/Application Support/AIDE/bin/aide-mux` on the Mac and `~/.local/share/aide/bin/aide-mux`
@@ -708,12 +721,12 @@ The extension commands found (see below): name, description, path, tab-separated
 | 0 | Done |
 | 1 | Error |
 | 2 | Usage: a wrong flag or argument, or no vault or server configured |
-| 3 | Path taken (`put --create-only`) |
+| 3 | Path taken (`put --create-only`). For `terminal message` and `inbox`: not in an AIDE pane. <Badge text="Next release" /> |
 | 4 | Conflict: the note moved on; nothing was written. For `terminal wait-output --since`: the lines to go on from are gone (wait again without `--since`). <Badge text="Next release" /> |
-| 5 | Not found: the note, the heading for `append`, the action for `action run`, or the card for `board` |
+| 5 | Not found: the note, the heading for `append`, the action for `action run`, or the card for `board`. For `terminal message --to owner`: your tab has no owner. <Badge text="Next release" /> |
 | 6 | `board step`: two steps have that title (say which number), or the plan changed meanwhile |
 | 7 | `board done`: todos under the card are still open |
-| 124 | `terminal wait-output` or `wait-agent`: the time ran out. <Badge text="Next release" /> |
+| 124 | `terminal wait-output`, `wait-agent` or `inbox --wait`: the time ran out. <Badge text="Next release" /> |
 
 An extension command exits with its own code (128 plus the signal number when a signal ended it).
 
