@@ -942,6 +942,7 @@ one reaches the server, and the last change wins. On Linux they're also kept in 
 | **Remind after** | 10 min | **Off**, 5, 10 or 30 min: one more notification that long after an agent started needing you, if you haven't looked at it (`notify_remind`). |
 | **Send to your phone** | On | The same notifications on phones you connect, sealed so only they can read them (`push`). A phone connects by opening this computer's AIDE sessions in the iPhone app with its **Agent notifications** on: see [Agent notifications](#agent-notifications). Until one has, nothing is sent. |
 | **Set up agent hooks…** | | Below. |
+| **Check setup…** | | <Badge text="Next release" /> [Below](#check-setup). |
 
 If AIDE stops being able to read agents' files (a read that never returned), the group says **Agent
 detection stopped: a file read didn't return. Restart the terminal server to try again.** The agents
@@ -969,6 +970,31 @@ where it links to when it's a symlink, and the lines that change. Nothing is wri
 The hooks only do anything in AIDE's own panes. Elsewhere, or inside comux, they run what you had
 and nothing else. [`aidectl agent install-hooks`](/docs/developers/aidectl/#agent) does the same from a
 terminal, and takes them out again with `--remove`.
+
+#### Check setup…
+
+<Badge text="Next release" /> **Check setup…** looks over what the terminal on this computer depends on
+and shows what it finds under **Setup check**, as `aidectl terminal doctor` and `aide-mux doctor` do
+in a shell (the way `comux doctor` did). It changes nothing.
+
+- **Terminal server**: whether it runs, and whether it's from this AIDE. One from another version, or
+  one too old to answer, has **Restart it…**.
+- **Sockets**: the terminal server's folder and sockets are yours and closed to other users.
+- **Terminal settings**: the terminal server's `config.json` reads, and any key in it that AIDE
+  doesn't know.
+- **Sessions**, **Agents**, **Usage** and **Phone push**: how big the saved sessions are, how many
+  panes and agents there are, each usage reading's last problem, and whether notifications reach a
+  phone. Agent detection that stopped has **Restart it…**.
+- **Agent hooks**: whether Claude Code's and Codex's hooks are in place. **Claude Code hooks: not
+  installed** has **Install hooks…**, which opens [Set up agent hooks…](#set-up-agent-hooks) with its
+  diff first.
+- **Agent skills**: whether the [plugin skills](#plugin-skills) are up to date.
+- **Last restore**: each program the terminal server started again after it restarted, and whether
+  it came back (by its name only), with what a restore never keeps.
+- **State folder**, **Local API** and **This computer**: how much the terminal server keeps, whether
+  an AIDE app answers [aidectl](/docs/developers/aidectl/), and whether `git` is installed.
+
+Each finding is marked as fine, a note, a warning or an error, with a line on what it means.
 
 #### Hold Claude Code's auto-compaction until you commit
 
