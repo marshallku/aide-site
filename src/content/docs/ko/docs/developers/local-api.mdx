@@ -330,6 +330,7 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `notice.list` | | <Badge text="다음 릴리스" /> [알림 센터](/ko/docs/guides/terminal/#알림-센터): 최근 200개를 오래된 것부터 `{notices: [{id, pane, kind, title, body, at, read, dismissed}]}`로 줘요 |
 | `notice.ack` | `id`, `dismiss` | <Badge text="다음 릴리스" /> 알림 하나(`id: "all"`이면 전부)를 읽음으로, `dismiss: true`면 지운 것으로 표시해요. `{changed}`로 답해요. 에이전트의 최근 턴 알림을 읽으면 그 에이전트를 본 것으로도 쳐요 |
 | `agent.compact` | `id`, `cancel` | <Badge text="다음 릴리스" /> 페인의 Claude Code 에이전트에게 다음 단계에서 압축하라고 하거나(`{queued}`), 그 요청을 거둬요(`cancel: true`). 에이전트가 없으면 `no_agent`예요 |
+| `usage.report` | `since`, `until`, `tool`, `fresh`, `label` | <Badge text="다음 릴리스" /> 이 컴퓨터의 Claude Code와 Codex 대화 파일에서 읽은 [토큰과 비용 보고서](/ko/docs/guides/terminal/#토큰과-비용-보고서): `{since, until, pricing_as_of, tools: [{tool, models: [{model, tokens, cost, estimated}], tokens, cost, estimated, partial}], total, warnings, text}`. `since`와 `until`은 유닉스 밀리초(`since`가 없으면 전체, `until`이 없으면 지금), `tokens`는 `{input, cache_write_5m, cache_write_1h, cache_read, output, total}`, `cost`는 미국 달러이고 가격이 없는 모델은 null, `partial`은 그런 모델의 토큰을 비용에서 뺐다는 뜻, `text`는 `aidectl terminal usage`가 출력하는 표(`label`이 머리에 붙어요)예요. 지금까지의 보고서는 `fresh: true`가 아니면 30초 동안 다시 써요. 다른 보고서 넷을 읽는 중이면 `busy`예요 |
 
 읽어도 페인의 스크롤 위치는 바뀌지 않아요.
 

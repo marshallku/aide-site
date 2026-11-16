@@ -218,7 +218,8 @@ about once a minute while AIDE is open.
   how long until it resets. The gauge turns yellow from 70% and red from 90%. `1/4` after it says
   which page you're on.
 - Click it, or scroll over it, for the next page.
-- Right-click it for **Refresh** and **Status bar settings…**.
+- Right-click it for **Refresh** and **Status bar settings…**, and <Badge text="Next release" />
+  **Token and cost report…** ([below](#token-and-cost-report)).
 - When a limit can't be read right now, the last reading stays, marked `~` (`~claude`), for up to
   3 hours.
 
@@ -305,10 +306,34 @@ To stop reading one of them at all, set `usage` in the terminal server's `config
 then read for it, and the bar doesn't show it.
 
 On the iPhone, a host's **AIDE on** screen shows the same limits as one line under its title, such as
-`Claude 5h 34% · wk 27% · Codex wk 45%`.
+`Claude 5h 34% · wk 27% · Codex wk 45%`. <Badge text="Next release" /> Tap it for that host's
+[token and cost report](#token-and-cost-report).
 
 An agent can read them too, before it starts a big task: `aidectl agent usage` (see
 [aidectl](/docs/developers/aidectl/#agent)).
+
+#### Token and cost report
+
+<Badge text="Next release" /> **Token and cost report…** shows how many tokens Claude Code and Codex
+used on this computer and what that would cost at the providers' prices, model by model. Right-click
+the usage readout and choose it, or choose **Token and cost report…** in the command palette. AIDE
+reads it from the agents' own conversation files on the computer the terminal server runs on.
+
+- Pick **Today**, **7 days** or **30 days** (by your own calendar: today's midnight, then 6 or 29
+  days before).
+- Each model has a row with its input, cache writes, cache reads, output, total and cost, and the
+  last row adds them up. A message Claude Code wrote several times counts once.
+- Prices come from a table dated in the report's notes. A model the table doesn't know shows `?`:
+  its tokens count, its cost doesn't, and a total that leaves it out ends in `+`. Codex's costs are
+  estimates, marked `~`, since a ChatGPT plan isn't billed by the token.
+- **Refresh** reads the files again; the report is otherwise kept for 30 seconds.
+- **Save as note** adds the report as a section, **Token and cost report, 14:32**, at the end of
+  today's daily note (made from your template if it isn't there yet).
+- On the iPhone, tap the usage line on a host's **AIDE on** screen to see that host's report. It
+  saves to the iPhone's own notes.
+- `aidectl terminal usage` prints the same table (see
+  [aidectl](/docs/developers/aidectl/#terminal)), and `aide-mux usage` prints it without AIDE running,
+  as `comux usage` did.
 
 ### Spaces
 
