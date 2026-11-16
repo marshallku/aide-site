@@ -381,6 +381,62 @@ folder of the pane you split.
   on the space you were in, and showing one starts its shells again in its folders.
 - The branch is read from the folder's git files; it follows a `git checkout` within a few seconds.
 
+#### Build a space from a layout file
+
+<Badge text="Next release" /> A layout file describes a whole space in one TOML file: its folder, its
+tabs, each tab's layout and what each pane runs. Choose **New space from layout…** in the space menu
+(also on a space's right-click menu and in the command palette), pick the file, and AIDE makes the
+space and shows it. It reads the same files as comux's `apply-layout`.
+
+```toml
+name = "api"            # the space's name (default: the file's name)
+cwd = "~/dev/api"       # where it starts (default: the file's folder)
+
+[[tab]]
+name = "code"
+layout = "main-vertical"  # even-horizontal, even-vertical, main-horizontal, main-vertical or tiled (the default)
+
+[[tab.pane]]              # the first pane is the main one
+run = "nvim ."
+
+[[tab.pane]]
+run = ["cargo build", "cargo watch -x test"]   # several lines, in order
+
+[[tab.pane]]              # a plain shell
+
+[[tab]]
+name = "agents"
+
+[[tab.pane]]
+cwd = "web"               # relative to the folder above it
+run = "claude"
+```
+
+- Every pane is a shell. Its `run` lines are typed into it, one <kbd>Return</kbd> each, once every
+  pane has started, so your aliases and shell settings apply and the lines are in the shell's
+  history. A program that reads its input can read the lines meant for after it.
+- A folder can be absolute, start with `~`, or be relative to the one above it (the file's folder,
+  then the space's, then the tab's).
+- Nothing is made when the file names a folder that isn't there, or has a mistake: AIDE says which
+  folder, or where the mistake is (`tab 2 pane 1: …`). An unknown key counts as a mistake, so a typo
+  isn't quietly a plain shell.
+- A file holds at most 32 tabs, 16 panes in a tab and 64 in all, and is at most 16 KiB. A `run` line
+  is one line of at most 1000 bytes.
+- Agents and scripts can use [`aidectl terminal layout apply`](/docs/developers/aidectl/#terminal),
+  whose `--dry-run` prints what it would make without making it.
+- This needs the terminal server from the same release.
+
+#### Restart an ended shell
+
+<Badge text="Next release" /> With **Close a tab when its shell exits** off in **Settings › Terminal**,
+a pane whose shell ends stays with what it showed. Right-click its tab in the status bar and choose
+**Restart shell** (also in the **Go** menu and the command palette): a new shell starts in the same
+pane, in the folder the old one was last in, below what was there. On the iPhone, **Restart shell**
+is in the **Session** menu.
+
+A program an agent started with [`aidectl terminal spawn --keep`](/docs/developers/aidectl/#terminal)
+needs none of this: when it ends, its pane says `[exited N]` (its exit code) and goes on as a shell.
+
 #### Switch, go back, mark
 
 Get back to where you just were, to a pane you marked, or to any tab by a few letters of its name
