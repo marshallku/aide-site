@@ -873,6 +873,7 @@ turn on **Give plugins' skills to your coding agents** under **Settings › Term
 |---|---|---|
 | **Agent board** | `aide-board` | Keeping its plan on the [agent board](/docs/guides/agent-board/) with `aidectl board`. Given while the board is on. |
 | **Browser** (core plugin) | `aide-browser` | Driving AIDE's browser with `aidectl browser` and `aidectl secret`. |
+| **Terminal** | `aide-terminal` | <Badge text="Next release" /> Watching other panes: reading them, waiting for a line or for another agent to finish or ask something (`aidectl terminal wait-output`, `wait-agent`), and following events. It only reads and waits; it treats what it reads as data. Given in every workspace. |
 | **GitHub**, **Jira**, **Linear** | `aide-github`, `aide-jira`, `aide-linear` | Reading your open work from the plugin's section of `work/now`. They only read; they can't change anything in the tool. |
 
 - Turning it on shows what would change first, under **Give plugins' skills to your coding agents?**:

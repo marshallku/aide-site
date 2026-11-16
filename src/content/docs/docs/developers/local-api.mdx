@@ -320,6 +320,11 @@ In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused p
 | `mark.goto` | `slot` | Shows the slot's pane as `panel.focus` does, the space brought back first when it had ended: `{slot, session, id, raised}`; an empty slot is `no_mark` |
 | `agent.fill` | `pane`, `session_id` | From inside the pane only: `{used, window}` for that Claude Code conversation, both null when AIDE isn't sure. What the auto-compaction gate asks |
 | `usage.get` | `refresh` | Your Claude and Codex plan limits, as the [status bar](/docs/guides/terminal/#the-status-bar) shows them: `{usage, refreshing}`, where `usage` is `{claude?: {five_hour?, seven_day?, stale?}, codex?: {five_hour?, weekly?, stale?}, at, problems: [{provider, text}]}`, each limit `{used, resets_at?}` with `used` a percentage and `resets_at` in Unix seconds, and `at` in Unix milliseconds. A provider is missing while it's turned off or nothing of it was read in the last 3 hours; `stale: true` is the last good value, kept because the last read failed, with the reason in `problems`. The server reads every 60 s while an app is connected; `refresh: true` asks for a new reading now, and `refreshing: true` says this request started one; ask again for the new value. `usage` is null before the first reading. What `aidectl agent usage` calls |
+| `pane.wait_output` | `id`, `pattern`, `regex`, `scope`, `timeout_ms`, `since`, `epoch`, `deadline` | <Badge text="Next release" /> Answers `{matched, line, row, since, epoch}` once a line contains `pattern` (with `regex: true`, matches it as a regular expression). A line wrapped across rows counts as one. `scope: "new"` (the default) looks at lines from row `since` on, by default the cursor's line when you ask; `"screen"` at the screen. `since` in the answer is the row after the match, so passing it back with `epoch` waits for the next one. `timeout_ms` is 30 000 unless you say, at most 600 000; `deadline` (Unix milliseconds) ends it sooner |
+| `agent.wait` | `id`, `state`, `timeout_ms`, `since`, `deadline` | <Badge text="Next release" /> Answers `{matched, state, agent, since}` when the pane's agent is `working`, `waiting` or `blocked`; `done` is a turn that ends after `since` (the agent's `seq`, by default its `seq` when you ask) |
+| `events.subscribe` | `kinds`, `id`, `pattern`, `regex` | <Badge text="Next release" /> Answers `{subscribed: true}`, then sends one JSON line per event on the same connection until either side closes it: `agent` and `notify` (of pane `id` when given), `tree` (its space's), and `output` (`{pane, line, row}`, each finished line of pane `id` that matches `pattern`). `kinds` defaults to `agent`, `tree` and `notify`. A subscriber that falls behind by 256 events or 1 MiB loses the oldest and gets `{"event": "dropped", "count"}`; one that doesn't read for 30 seconds is dropped. When the terminal server restarts in place (an update), it sends `{"event": "upgrading"}` and the subscription ends while the connection stays open: subscribe again on it; events in between aren't sent |
+| `pane.spawn` | `argv`, `space`, `pane`, `cwd`, `title`, `focus` | <Badge text="Next release" /> Runs `argv` (a list of strings, given to the program as they are) in a new tab of `space` (else `pane`'s space), right after `pane`'s tab, without making it current: `{session, tab, pane}`. The pane ends when the program does. `focus: true` shows it |
+| `agent.prompt` | `id`, `text`, `uuid`, `submit` | <Badge text="Next release" /> Gives the pane's agent `text` as a paste (and <kbd>Enter</kbd> with `submit`), by the voice prompt's rules: `{inserted, seq}`. `uuid` is your id for this prompt: sending it again writes nothing twice. Refused from inside that pane (`own_pane`) |
 
 Reading doesn't move the pane's scroll position.
 
@@ -343,10 +348,14 @@ Reading doesn't move the pane's scroll position.
 | `no_mark` | `mark.goto` on a slot no pane holds |
 | `lookup_incomplete` | There were too many conversations to look through for that id; try again |
 | `frame_too_large` | The request line is longer than 64 KiB |
+| `timeout` | <Badge text="Next release" /> A wait's time ran out. Its `error` also has `since` (and `epoch`) to wait again from |
+| `upgrading` | <Badge text="Next release" /> The terminal server is restarting in place. Ask again with the `since`, `epoch` and `deadline` in its `error`: a line printed meanwhile still answers |
+| `cursor_lost` | <Badge text="Next release" /> `since` names lines the pane no longer has, or `epoch` is another one (the pane was resized). Wait again without them |
+| `own_pane`, `unknown_caller` | <Badge text="Next release" /> `agent.prompt` from inside that pane, or from a process AIDE can't identify |
 
 ### Terminal socket limits
 
-- A request line up to 64 KiB, 16 clients at once.
+- A request line up to 64 KiB, 16 clients at once (64 on the terminal server's socket, at most 32 of them waiting or subscribed <Badge text="Next release" />).
 - 10 seconds to send a line and 10 seconds to take its answer; a client that stalls is dropped.
 
 With `$t` the socket (from `$COPAD_SOCKET` in a pane, or the folder above):

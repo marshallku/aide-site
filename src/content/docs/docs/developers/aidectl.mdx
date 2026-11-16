@@ -464,6 +464,11 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `worktree list [<dir>]` | Lists the [worktrees](/docs/guides/terminal/#worktrees) of the repository you're in (or `<dir>`'s): branch, folder, **live:** with the spaces working in it (or **not running:**), and the card a space there was started for |
 | `worktree create <branch> [--from REF] [--dir D] [--name N] [--project P] [--vault V] [--show]` | Makes the branch in a folder beside the repository (this folder's, or `--dir`'s) and a space working there, whose first pane runs the repository's worktree command, and prints the space, folder, branch and pane. `--from` starts it elsewhere than the commit you're on. Nothing moves on screen unless `--show` |
 | `worktree rm <branch\|folder> [--dir D] [--force] [--discard-changes] [--delete-branch]` | Removes a worktree: `--force` ends the spaces working in it, `--discard-changes` drops what isn't committed, `--delete-branch` deletes its branch when it is merged. It refuses, before ending anything, the main checkout, a locked worktree, the one your own pane is in, a live space without `--force` and changes without `--discard-changes`; when the branch stays, it says so with git's reason (exit 1) |
+| `wait-output [--pane P] [--regex] [--screen] [--since N --epoch E] [--timeout MS] <pattern>` | <Badge text="Next release" /> Waits until a line printed in the pane from now on contains the pattern (with `--regex`, matches it), and prints that line. A line wrapped across rows counts as one. `--screen` takes a line already on the screen too. `--json` also prints `since` and `epoch`: pass them back with `--since` and `--epoch` to wait for the next match without missing a line in between |
+| `wait-agent --pane P --state working\|waiting\|blocked\|done [--since SEQ] [--timeout MS]` | <Badge text="Next release" /> Waits until the pane's agent is working, waiting, or asking you something (`blocked`), and prints the state (`--json`: the agent). `done` waits for a turn that ends after `SEQ` (the agent's `seq` in `aidectl agent list --json`; without it, after you run this) |
+| `spawn [--space S] [--cwd D] [--title T] [--focus] -- <program> [args…]` | <Badge text="Next release" /> Runs the program in a new tab of that space (else the space of the pane it runs in), right after this pane's tab, and prints its pane id. The arguments reach the program as they are, never read by a shell. The tab doesn't become the current one and nothing moves on screen unless `--focus`. When the program ends, so does the pane |
+| `prompt --pane P [--submit] <text…>` | <Badge text="Next release" /> Gives the pane's agent the text as a paste, with <kbd>Enter</kbd> after it when `--submit`, by the same rules as a [voice prompt](/docs/guides/voice-prompts/): it's refused while the agent asks you something or hasn't turned on bracketed paste. It prints the agent's `seq`, for `wait-agent --state done --since` |
+| `events [--kinds agent,tree,notify,output] [--pane P] [--pattern X] [--regex]` | <Badge text="Next release" /> Prints the terminal's events as JSON lines until you stop it: agents changing state (`agent`), notifications (`notify`), tabs and panes changing (`tree`), and with `--kinds output --pane P --pattern X` each finished line of that pane that matches. `{"event": "dropped", "count": N}` means it fell behind |
 
 `read`, `state`, `exec`, `feed`, `history`, `context` and `split` act on the pane `--pane` names, else on the focused pane. A pane's id is in `tabs`, and a pane's own shell has it in `$COPAD_PANEL_ID`. `--json` prints the app's answer as JSON instead of text.
 
@@ -481,6 +486,8 @@ Reading never moves the pane: `read` and `history` read the live screen even whe
 To show the owner the pane working on a board card, wherever it is: `aidectl agent list` names each agent's pane and the card it's linked to, and `aidectl terminal focus <pane>` brings that pane forward. On the Mac a minimized window comes back to the front, but a window behind another app only switches to the pane and asks to come forward: macOS leaves it behind until you switch to AIDE.
 
 `resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. Nor do `space new` and `new-tab --space`: an agent can start a space for a card and work in it alone, while you stay where you are. When the terminal server is older than `aidectl` (it hasn't restarted since an update), `new-tab --space`/`--cwd`, every `space new`, every `mark` and every `worktree` stop with exit code 1 before doing anything. A `worktree create` or `rm` may wait for another one in the same repository, so aidectl waits up to three minutes for it. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
+
+The waits (`wait-output`, `wait-agent`) give up after `--timeout` milliseconds: 30 seconds unless you say, at most 600000 (10 minutes). If the terminal server restarts in place while one waits (an update), it carries on from where it was, within the same time. <Badge text="Next release" />
 
 The Mac App Store build and the iPhone have no terminal socket.
 
@@ -702,10 +709,11 @@ The extension commands found (see below): name, description, path, tab-separated
 | 1 | Error |
 | 2 | Usage: a wrong flag or argument, or no vault or server configured |
 | 3 | Path taken (`put --create-only`) |
-| 4 | Conflict: the note moved on; nothing was written |
+| 4 | Conflict: the note moved on; nothing was written. For `terminal wait-output --since`: the lines to go on from are gone (wait again without `--since`). <Badge text="Next release" /> |
 | 5 | Not found: the note, the heading for `append`, the action for `action run`, or the card for `board` |
 | 6 | `board step`: two steps have that title (say which number), or the plan changed meanwhile |
 | 7 | `board done`: todos under the card are still open |
+| 124 | `terminal wait-output` or `wait-agent`: the time ran out. <Badge text="Next release" /> |
 
 An extension command exits with its own code (128 plus the signal number when a signal ended it).
 
