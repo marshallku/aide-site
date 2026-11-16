@@ -78,6 +78,51 @@ Mac과 Linux의 AIDE에는 자체 터미널이 있어서, 노트 옆에 셸을 �
 - 같은 릴리스의 터미널 서버가 있어야 해요. 오래된 서버면 **터미널 서버가 오래돼서 이 기능을 쓸 수 없어요. 다시
   시작하면 업데이트돼요.**라고 알려 줘요.
 
+#### 복사 모드
+
+<Badge text="다음 릴리스" /> 복사 모드에서는 vi 키로 페인의 텍스트와 스크롤 기록을 오가며, 마우스 없이 선택하고
+복사할 수 있어요. Mac에서는 <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd>, Linux에서는 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd>를
+누르세요(Mac의 **이동** 메뉴와 명령 팔레트의 **복사 모드**). [프리픽스 키](/ko/docs/guides/shortcuts/#프리픽스-키)를
+누른 뒤 <kbd>[</kbd>를 눌러도 돼요. 터미널 커서가 있던 자리에 커서가 나타나고, 상태 표시줄에 `COPY`가, 페인 아래쪽에
+**복사 모드**가 보여요. 키는 comux와 같아요.
+
+| 키 | 하는 일 |
+|---|---|
+| <kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd>, 또는 화살표 | 이동 |
+| <kbd>w</kbd> <kbd>b</kbd> <kbd>e</kbd> | 다음 단어, 이전 단어, 단어 끝(문장 부호에서 멈춰요) |
+| <kbd>W</kbd> <kbd>B</kbd> <kbd>E</kbd> | 공백으로 나뉜 단어 단위로 같은 이동 |
+| <kbd>0</kbd> <kbd>^</kbd> <kbd>$</kbd> | 줄의 처음, 첫 글자, 끝 |
+| <kbd>H</kbd> <kbd>M</kbd> <kbd>L</kbd> | 보이는 영역의 맨 위, 가운데, 맨 아래 |
+| <kbd>&#123;</kbd> <kbd>&#125;</kbd> | 이전·다음 빈 줄 |
+| <kbd>%</kbd> | 커서부터 처음 나오는 괄호의 짝 |
+| <kbd>f</kbd> <kbd>F</kbd> <kbd>t</kbd> <kbd>T</kbd>와 글자, 그다음 <kbd>;</kbd> <kbd>,</kbd> | 줄에서 그 글자로(또는 바로 앞까지), 한 번 더, 반대로 |
+| <kbd>g</kbd> | 스크롤 기록의 맨 위 |
+| <kbd>Ctrl</kbd><kbd>U</kbd> <kbd>Ctrl</kbd><kbd>D</kbd>, <kbd>Ctrl</kbd><kbd>B</kbd> <kbd>Ctrl</kbd><kbd>F</kbd>, <kbd>Page Up</kbd> <kbd>Page Down</kbd> | 반 페이지, 한 페이지 |
+| <kbd>Ctrl</kbd><kbd>Y</kbd> <kbd>Ctrl</kbd><kbd>E</kbd>, <kbd>K</kbd> <kbd>J</kbd> | 한 줄 스크롤 |
+| <kbd>/</kbd> <kbd>?</kbd>, 그다음 <kbd>n</kbd> <kbd>N</kbd> | 아래·위로 검색, 그다음 다음·이전 일치 항목 |
+| <kbd>*</kbd> <kbd>#</kbd> | 커서 아래 단어를 아래·위로 검색 |
+| <kbd>v</kbd> 또는 <kbd>Space</kbd> | 글자 단위로 선택 |
+| <kbd>V</kbd> | 줄 단위로 선택 |
+| <kbd>Ctrl</kbd><kbd>V</kbd> | 사각형으로 선택 |
+| <kbd>o</kbd> | 선택의 반대쪽 끝으로 |
+| <kbd>y</kbd> 또는 <kbd>Return</kbd> | 복사하고 나가기 |
+| <kbd>Esc</kbd> | 선택 지우기, 선택이 없으면 나가기 |
+| <kbd>q</kbd>, <kbd>G</kbd> 또는 <kbd>Ctrl</kbd><kbd>C</kbd> | 나가기 |
+
+- <kbd>y</kbd>는 선택한 부분을, 선택이 없으면 커서가 있는 줄 전체를 클립보드에 복사하고 몇 줄을 복사했는지 알려
+  줘요. 너무 길어서 터미널이 다음 행으로 넘긴 줄은 한 줄로 복사돼요.
+- 다른 종류의 선택이 있을 때 <kbd>v</kbd>, <kbd>V</kbd>, <kbd>Ctrl</kbd><kbd>V</kbd>를 누르면 시작점은 그대로 두고
+  모양만 바뀌어요. 같은 키를 한 번 더 누르면 선택이 지워져요.
+- 검색은 대소문자를 가리지 않고, 끝에 닿으면 반대쪽 끝에서 이어져요. 입력하는 동안 보이는 일치 항목이 모두 표시되고,
+  <kbd>Return</kbd>을 누른 뒤에도 남아 있어요. 한국어 같은 입력기로도 검색어를 입력할 수 있어요.
+- 휠로 스크롤하고, 클릭하면 그 글자로 커서가 가요.
+- 복사 모드는 키를 누른 순간의 페인을 읽어요. 프로그램은 계속 실행되고, 출력 때문에 행이 움직이면 나갈 때까지
+  복사하는 텍스트를 색 없이 보여 줘요.
+- **복사 모드 · 텍스트가 정확하지 않을 수 있어요**는 터미널이 어디서 줄을 넘겼는지 AIDE가 알 수 없었다는 뜻이에요.
+  이때는 행마다 한 줄로 복사돼요.
+- 페인 크기를 바꾸거나 글자 크기를 바꾸면 복사 모드가 끝나요. 나가면 보이는 영역이 맨 아래로 돌아가요.
+- iPhone에는 복사 모드가 없어요. 지금처럼 길게 눌러 텍스트를 선택하세요.
+
 ### 노트 옆에서
 
 오른쪽 패널(<kbd>⌥</kbd><kbd>⌘</kbd><kbd>\\</kbd>, Linux에서는 <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>\\</kbd>)에는

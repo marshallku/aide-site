@@ -132,6 +132,7 @@ While a terminal has the keyboard, these act on its tabs and panes:
 | Focus the pane to the left / below / above / to the right | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd>, or <kbd>Ctrl</kbd><kbd>Shift</kbd> and the arrows |
 | Move the divider left / down / up / right | <kbd>⌃</kbd><kbd>⌘</kbd> and the arrows | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd> and the arrows |
 | Zoom pane | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd> |
+| Copy mode ([vi keys](/docs/guides/terminal/#copy-mode)) <Badge text="Next release" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd> |
 | Previous / next tab | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
 | Go to tab 1–9 | <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> or <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
 | Find in terminal | <kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> |
@@ -209,6 +210,7 @@ While a terminal has the keyboard, the prefix doesn't reach the program: the sta
 | <kbd>!</kbd> | Jump to the agent that needs you |
 | <kbd>u</kbd> | Jump to the newest finished agent |
 | <kbd>R</kbd> | Resume a conversation… |
+| <kbd>[</kbd> | Copy mode <Badge text="Next release" /> |
 | <kbd>?</kbd> | **Terminal keys**: **Settings › Keyboard** with the terminal's actions, each with its prefix key |
 
 - The prefix pressed twice sends it to the program, for a tmux or readline inside.
@@ -393,6 +395,7 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `terminal/pane-numbers` | Show pane numbers |
 | `terminal/resize-left`, `terminal/resize-down`, `terminal/resize-up`, `terminal/resize-right` | Move the divider left, down, up, right |
 | `terminal/zoom-pane` | Zoom pane |
+| `terminal/copy-mode` | Copy mode <Badge text="Next release" /> |
 | `terminal/close-pane` | Close pane |
 | `terminal/new-space` | New space… |
 | `terminal/next-space`, `terminal/previous-space` | Next space, Previous space |

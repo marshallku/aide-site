@@ -82,6 +82,55 @@ From the keyboard, the **Go** menu or the command palette:
 - These need the terminal server from the same release. An older one says **The terminal server is
   too old for this. Restart it to update it.**
 
+#### Copy mode
+
+<Badge text="Next release" /> Copy mode moves through a pane's text and its scrollback with vi's
+keys, so you can select and copy without the mouse. Press <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd> on the
+Mac or <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd> on Linux (**Copy mode** in the **Go** menu on the Mac
+and in the command palette), or the [prefix key](/docs/guides/shortcuts/#the-prefix-key) and then
+<kbd>[</kbd>. A cursor appears where the terminal's cursor was, the status bar shows `COPY`, and the
+bottom of the pane says **Copy mode**. The keys are comux's:
+
+| Keys | Does |
+|---|---|
+| <kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd>, or the arrows | Move |
+| <kbd>w</kbd> <kbd>b</kbd> <kbd>e</kbd> | Next word, previous word, end of the word (stopping at punctuation) |
+| <kbd>W</kbd> <kbd>B</kbd> <kbd>E</kbd> | The same by words between blanks |
+| <kbd>0</kbd> <kbd>^</kbd> <kbd>$</kbd> | Start of the line, its first character, its end |
+| <kbd>H</kbd> <kbd>M</kbd> <kbd>L</kbd> | Top, middle and bottom of the view |
+| <kbd>&#123;</kbd> <kbd>&#125;</kbd> | Previous and next blank line |
+| <kbd>%</kbd> | The bracket that matches the first one from the cursor |
+| <kbd>f</kbd> <kbd>F</kbd> <kbd>t</kbd> <kbd>T</kbd> and a character, then <kbd>;</kbd> <kbd>,</kbd> | To that character on the line (or just before it), again, the other way |
+| <kbd>g</kbd> | The top of the scrollback |
+| <kbd>Ctrl</kbd><kbd>U</kbd> <kbd>Ctrl</kbd><kbd>D</kbd>, <kbd>Ctrl</kbd><kbd>B</kbd> <kbd>Ctrl</kbd><kbd>F</kbd>, <kbd>Page Up</kbd> <kbd>Page Down</kbd> | Half a page, a page |
+| <kbd>Ctrl</kbd><kbd>Y</kbd> <kbd>Ctrl</kbd><kbd>E</kbd>, <kbd>K</kbd> <kbd>J</kbd> | Scroll a line |
+| <kbd>/</kbd> <kbd>?</kbd>, then <kbd>n</kbd> <kbd>N</kbd> | Search down or up, then the next match or the one before |
+| <kbd>*</kbd> <kbd>#</kbd> | Search for the word under the cursor, down or up |
+| <kbd>v</kbd> or <kbd>Space</kbd> | Select characters |
+| <kbd>V</kbd> | Select lines |
+| <kbd>Ctrl</kbd><kbd>V</kbd> | Select a rectangle |
+| <kbd>o</kbd> | Go to the other end of the selection |
+| <kbd>y</kbd> or <kbd>Return</kbd> | Copy and leave |
+| <kbd>Esc</kbd> | Clear the selection, or leave |
+| <kbd>q</kbd>, <kbd>G</kbd> or <kbd>Ctrl</kbd><kbd>C</kbd> | Leave |
+
+- <kbd>y</kbd> copies the selection to the clipboard, or the cursor's whole line when nothing is
+  selected, and says how many lines it copied. A line the terminal wrapped because it was too long
+  copies as one line.
+- Pressing <kbd>v</kbd>, <kbd>V</kbd> or <kbd>Ctrl</kbd><kbd>V</kbd> while another kind of selection
+  is up changes its shape and keeps where it started; the same key again clears it.
+- Search ignores case and goes round at the ends. Every match in view lights up as you type, and
+  stays lit after <kbd>Return</kbd>. You can type the search with an input method, Korean included.
+- The wheel scrolls and a click puts the cursor on the character you clicked.
+- Copy mode reads the pane when you press the key. The program keeps running; when its output
+  moves the rows, the pane shows the text you're copying from, without its colours, until you
+  leave.
+- **Copy mode · the text may be inexact** means AIDE couldn't tell where the terminal wrapped
+  lines: each row then copies as a line of its own.
+- Resizing the pane or changing the text size ends copy mode. Leaving takes the view back to the
+  bottom.
+- The iPhone has no copy mode: touch and hold to select text as before.
+
 ### Beside your notes
 
 The right panel (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>\\</kbd>, <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>\\</kbd> on
