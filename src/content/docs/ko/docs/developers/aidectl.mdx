@@ -450,6 +450,7 @@ AIDE의 터미널을 읽고 입력하고, 탭과 페인을 열고 나누고 이�
 | `resize left\|right\|up\|down [--cells N] [--pane P]` | <Badge text="다음 릴리스" /> 페인 옆의 경계를 그쪽으로 옮겨요. `--cells`가 없으면 2칸이에요 |
 | `move-tab <place> [--tab T \| --pane P]` | <Badge text="다음 릴리스" /> 탭(`T`, 없으면 그 페인의 탭)을 스페이스 안의 그 자리로 옮겨요. 첫 자리는 0이에요 |
 | `focus <pane>` | 그 페인을 앞으로 가져와요: 그 탭, 터미널 섹션, 그리고 창까지 |
+| `env` | <Badge text="다음 릴리스" /> 마지막으로 접속한 AIDE나 SSH 로그인에서 새 탭이 가져오는 값(**연결한 클라이언트의 변수**: SSH 에이전트, 디스플레이 등)을 셸 줄로 출력해요. `eval "$(aidectl terminal env)"`를 실행하면 이미 실행 중인 셸이 최신 값으로 바뀌어요. 값이 없는 변수는 `unset`이에요. `--json`은 이름마다 값이나 null을 줘요. [SSH로 쓰는 에이전트](/ko/docs/guides/terminal/#ssh로-쓰는-에이전트)를 보세요 |
 | `conversations [--dir D \| --here] [--all] [--query Q] [--rescan]` | 지난 Claude Code, Codex, Grok 대화를 최근 것부터 보여 줘요: id, 에이전트, 지난 시간, 폴더, 첫 프롬프트, 그리고 어느 페인에 열려 있으면 **● pane N**. `--dir`(또는 지금 폴더인 `--here`)은 그 폴더나 그 아래의 대화만, `--all`은 아무도 입력하지 않은 실행까지 보여 줘요 |
 | `resume <id> [--tool T] [--focus]` | 그 대화를 새 탭에서 열고(그 폴더에서 작업하는 스페이스, 없으면 명령을 실행한 페인의 세션) 새 페인의 id를 출력해요. 이미 열려 있으면 그 페인의 id를 출력해요 |
 | `fork [<id>] [--tool T] [--focus]` | 이 페인(또는 `--pane`)의 에이전트나 지난 대화에서 새 대화를 새 탭에서 시작하고 그 페인의 id를 출력해요 |

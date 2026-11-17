@@ -625,6 +625,7 @@ after AIDE quits**. Then:
 | **Reopen tabs at launch** | On | After your computer restarts, your tabs, splits and folders come back. See [Tabs after a restart](#tabs-after-a-restart). |
 | **Bring back agents in their conversation** | On | Claude Code and Codex start again where they were. Off, their panes come back as shells. |
 | **Programs to bring back** | Editors and other full-screen programs | The programs that run again after a restart, by name, separated by spaces. **Reset** sets the default list again. |
+| **Variables from the attaching client** | `DISPLAY WAYLAND_DISPLAY XAUTHORITY SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION SSH_ASKPASS KRB5CCNAME WINDOWID` | <Badge text="Next release" /> What a new tab or pane takes from the AIDE or SSH login that opened it, such as your SSH agent and display. See [Your agent over SSH](#your-agent-over-ssh). **Reset** sets the default list again. |
 | **Folder name** | `{repo}-{branch}` | Under **Worktrees**: the folder a new worktree goes in, beside the repository. See [Worktrees](#worktrees). |
 | **Repository folder** and **Command to run** | None | Under **Worktrees**: a command a repository's new worktrees run in their first pane. |
 | **Keep shells running after AIDE quits** | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide). |
@@ -632,7 +633,8 @@ after AIDE quits**. Then:
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
 are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`,
 `keep_running`, `restore_agent_sessions` and `restore_processes`, a list of
-names; without it the default list applies; `alt_digit_tabs`, `true` unless you turn it off, when Alt+digits go to the program; `worktree_naming`, and a `[terminal.worktree_scripts]`
+names; without it the default list applies; `update_environment`, a list of variable names, the same
+way; `alt_digit_tabs`, `true` unless you turn it off, when Alt+digits go to the program; `worktree_naming`, and a `[terminal.worktree_scripts]`
 table of `"<repository folder>" = "<command>"`). **Scrollback**, **Shell**, **Kitty keyboard protocol**,
 **Reopen tabs at launch**, **Keep shells running after AIDE quits** and the two restore settings are
 also the terminal server's own: a change on one AIDE reaches the server, and the last change wins.
@@ -815,8 +817,28 @@ password and never relaxes host key checking:
 - A host whose key changed is refused with `ssh`'s own warning.
 - A host where AIDE hasn't been set up says **AIDE isn't set up on box: open AIDE there once**.
 
-The other computer treats the connection as remote: none of your local environment reaches its
-shells, and nothing running there can bring windows forward on this computer.
+The other computer treats the connection as remote: nothing running there can bring windows
+forward on this computer, and none of your local environment reaches its shells, except what your
+SSH login there has (below).
+
+#### Your agent over SSH
+
+<Badge text="Next release" /> A tab or pane you open on the other computer takes the variables in
+**Variables from the attaching client** from the SSH login AIDE connected with, as tmux's
+`update-environment` does. With `ForwardAgent yes` for that host in your `~/.ssh/config`, its
+`SSH_AUTH_SOCK` is your forwarded agent, so `git push` there signs with the keys on this computer.
+
+- It applies to tabs and panes opened afterwards: by you, or by `aidectl` or a layout file on that
+  computer, which take what the last AIDE to connect gave. Tabs already open keep what they started
+  with; `eval "$(aidectl terminal env)"` in one brings it up to date.
+- A variable the connection doesn't have keeps the other computer's own value: on a Mac, its own
+  SSH agent.
+- A forwarded agent works while that connection is open. After **Disconnect** or a dropped
+  connection, the tabs opened through it point at an agent that's gone; **Reconnect**, then open a
+  new tab or run `eval "$(aidectl terminal env)"`.
+- The same list applies to AIDE on your own computer: a tab you open takes your session's agent and
+  display. `PATH`, `HOME`, `SHELL`, `LD_*` and the other variables a shell or the terminal depends on
+  are never taken, even when you add them to the list.
 
 ### Coding agents
 
@@ -1213,6 +1235,10 @@ Touching and holding the row offers **Open AIDE** too.
   see the last lines of its pane before you open it.
 - A paste larger than the pane can take now is refused whole: **That paste is too large to send**.
   When a program stops reading what you type, the pane says **Not responding** until it reads again.
+- <Badge text="Next release" /> A tab you open from the iPhone takes the host's SSH login variables
+  (its `SSH_CONNECTION`, say), never the iPhone's own; see
+  [Your agent over SSH](#your-agent-over-ssh). The iPhone doesn't forward an SSH agent, so on a Mac
+  host the tab keeps that Mac's own agent.
 
 **Resume a conversation** over the sessions lists the host's past
 conversations, as [the Mac and Linux do](#reopen-a-past-conversation). Tap one to resume it in a new tab
