@@ -1196,6 +1196,15 @@ Touching and holding the row offers **Open AIDE** too.
   pane or **Fit to this phone** gives it the iPhone's size until that computer takes it back.
 - Programs that use the mouse get your taps as clicks and a two-finger drag as the scroll wheel.
 - Pictures that programs draw in the terminal (kitty images) aren't shown on the iPhone.
+- <Badge text="Next release" /> The terminal draws in JetBrains Mono Nerd Font, which the app
+  includes, so prompt icons and powerline arrows show as they do on the Mac.
+- <Badge text="Next release" /> When a program copies (OSC 52, as tmux, Neovim and many CLIs do),
+  the text goes to the iPhone's clipboard, as it does in a plain SSH shell. Programs can't read the
+  clipboard.
+- <Badge text="Next release" /> A bell in the pane on screen gives a light tap. A tab whose pane
+  rang while you were elsewhere shows **!** until you open it, and so does its session in the list.
+- <Badge text="Next release" /> Touch and hold a session in the list, or an agent in **Agents**, to
+  see the last lines of its pane before you open it.
 - A paste larger than the pane can take now is refused whole: **That paste is too large to send**.
   When a program stops reading what you type, the pane says **Not responding** until it reads again.
 
@@ -1219,7 +1228,9 @@ Coding agents in the host's panes show here too, as the host's AIDE reports them
   the background, doesn't count. Looking doesn't take the pane's size either.
 
 While it connects, the screen says **Connecting to box…**. If the connection drops, it says
-**Disconnected from box**, with **Reconnect**. A host where AIDE hasn't been set up says **AIDE isn't
+**Disconnected from box**, with **Reconnect**. <Badge text="Next release" /> A connection that goes
+quiet without closing (moving from Wi-Fi to cellular, say) is noticed within 30 seconds, without
+waiting for you to type, and AIDE connects again by itself once. A host where AIDE hasn't been set up says **AIDE isn't
 set up on box: open AIDE there once**, and one whose AIDE is older than the app says **AIDE on box is
 older than this app: update it there**.
 
