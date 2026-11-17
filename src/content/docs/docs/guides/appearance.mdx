@@ -5,6 +5,8 @@ sidebar:
     order: 12
 ---
 
+import { Badge } from "@astrojs/starlight/components";
+
 **Settings › Appearance** changes how AIDE looks on this device, with a live preview of the editor
 at the top of the page. **Settings › Language** picks the language of the app and of what plugins
 write for you.
@@ -27,12 +29,18 @@ editor and around the app.
 
 | Setting | Choices | Default |
 |---|---|---|
+| **Text size** (Linux) | **Smaller**, **Default**, **Larger** <Badge text="Next release" /> | Default |
 | **Font** | **System**, **Serif**, **Rounded**, **Mono** | System |
 | **Size** | 13 to 24 | 17 |
 | **Line spacing** | **Compact**, **Normal**, **Relaxed** | Normal |
 | **Large headings** | On or off | On |
 
 These apply to the editor and the reader on this device.
+
+<Badge text="Next release" /> **Text size** is on Linux only. It scales everything AIDE shows,
+the notes too, from your desktop's own text size: GNOME's font and its text scaling, which AIDE
+follows in every case. **Smaller** is about 12% smaller and **Larger** about 12% larger. The Mac
+and the iPhone keep their system's sizes (on the iPhone, Dynamic Type).
 
 ## Wallpaper
 
