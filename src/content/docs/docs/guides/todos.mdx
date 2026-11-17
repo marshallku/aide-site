@@ -272,6 +272,16 @@ For a separate timer that logs a daily count, see the [Pomodoro plugin](/docs/pl
 
 The [assistant](/docs/guides/assistant/) can propose changes to your todos: times, estimates, moves, new todos. They wait on the Todos screen under the todo they change, and new todos under **Proposed**, until you take (**✓**) or drop (**✕**) them, or **Take all** (or **Drop all**).
 
+### Shortening a long todo
+
+<Badge text="Next release" /> A todo whose title runs past 80 characters, or holds two or more links, gets a small ✨ button at the end of its row on the Todos screen and on its card on the [Board](/docs/guides/agent-board/). Click it (its tooltip is **Shorten the title**) and the [assistant](/docs/guides/assistant/) suggests a shorter title of at most 60 characters.
+
+The suggestion waits under the todo like any proposal: the old title struck through, over **Shorten · ** and the new title, with why. Nothing changes until you take it (**✓**); **✕** drops it. The ✨ button hides while a suggestion waits.
+
+Taking it keeps everything else on the line where it was: the checkbox, the time block, tags, people and every field (dates, priority, estimate, links in `[source:: …]`). Only the words of the title change. The old title isn't lost: it becomes the first line of the todo's [memo](#memos), above whatever the memo already said. **Undo** on the taken card puts the line back and takes that memo line out again.
+
+The new title can't hold links, tags, `@people`, fields, dates, times or the field emoji, so it can't change anything else about the todo. A suggestion that would is asked for once more, then dropped with a note saying why.
+
 ## Old todos
 
 Todos you keep not doing pile up. AIDE asks about old ones, so each gets a decision: do it today, give it a day, keep it for someday, or drop it.
