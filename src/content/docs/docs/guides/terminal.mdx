@@ -119,6 +119,22 @@ does the [prefix key](/docs/guides/shortcuts/#the-prefix-key).
   `swap`, `rotate`, `break`, `sync` and `broadcast`, which types one text into many panes.
 - These need the terminal server from the same release.
 
+#### Name a pane
+
+<Badge text="Next release" /> Give a pane a name to tell it from the others: choose **Rename pane…** from the **Go** menu or
+the command palette, or press the [prefix key](/docs/guides/shortcuts/#the-prefix-key) and then <kbd>T</kbd>, type the name
+and choose **Rename**.
+
+- In a tab of two or more panes, a named pane shows its name at its top right corner, the focused
+  one's in the accent colour. A pane alone in its tab, or zoomed, shows none.
+- The tab takes its focused pane's name instead of the program's title, unless you named the tab
+  itself.
+- The name stays when AIDE or your computer restarts. Rename it with an empty name to show the
+  program's title again.
+- On the iPhone the **Panes** list of an AIDE session names each pane by its name.
+- Agents name panes with [`aidectl terminal rename-pane`](/docs/developers/aidectl/#terminal), or give a pane its name as
+  they start it (`split --name`, `spawn --name`).
+
 #### Copy mode
 
 <Badge text="Next release" /> Copy mode moves through a pane's text and its scrollback with vi's

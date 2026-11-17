@@ -299,6 +299,7 @@ In `params`, `id` (or `panel_id`) is a **pane** id and defaults to the focused p
 | `tab.close` | `id` | With a tab id, closes that tab and every pane in it; without one, closes the focused pane |
 | `tab.list`, `tab.info` | | `{count, current, tabs: [{id, index, title, selected, panes: [{id, title, focused, exited, cols, rows}]}]}`: the tabs of the windows in front-to-back order; with no window, every vault's tabs, and `current` is null |
 | `tab.rename` | `id`, `title` | Names a tab |
+| `pane.rename` | `id`, `name` | <Badge text="Next release" /> Names the pane (`""` clears it): `{pane, name}`. `split.*` and `pane.spawn` take the new pane's `name` too. `features` names `pane-names` |
 | `tab.switch` | `index` | Selects the tab at that index of `tab.list` (from 0); answers `{tab}`. No tab there is `not_found`, an index that isn't a whole number is `invalid_params` |
 | `split.horizontal` | `id` | Splits the pane to the right; answers `{panel_id}` of the new pane |
 | `split.vertical` | `id` | Splits the pane downward; answers `{panel_id}` |
