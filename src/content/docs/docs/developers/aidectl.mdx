@@ -455,6 +455,7 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `split right\|down` | Splits the pane and prints the new pane's id |
 | `split right\|down [--cwd D] [--env K=V]… [-- <program> [args…]]` | <Badge text="Next release" /> The new pane starts in that folder, with those variables, and runs that program until it ends. The program's arguments reach it as they are. Names starting with `AIDE_` or `COPAD_` are refused |
 | `zoom [--pane P]` | <Badge text="Next release" /> The pane fills its tab, or the tab comes back. It acts on `--pane`, else the pane it runs in, else the focused pane |
+| `agent-log <pane> [--last N] [--max-chars N]` | <Badge text="Next release" /> Prints the last `N` entries (20 unless you say, at most 200) of the conversation of that pane's coding agent, read from its own Claude Code or Codex log rather than its screen: what it was asked, what it said, the tools it ran and what they answered, the newest last. Each entry is cut to 400 characters unless `--max-chars` says (0 leaves it whole). Control characters in the text are made harmless before they reach your terminal |
 | `resize left\|right\|up\|down [--cells N] [--pane P]` | <Badge text="Next release" /> Moves the divider beside the pane that way, 2 cells unless `--cells` says |
 | `move-tab <place> [--tab T \| --pane P]` | <Badge text="Next release" /> Moves the tab (`T`, else the pane's) to that place in its space, 0 being the first |
 | `focus <pane>` | Brings that pane forward: its tab, the Terminal section and the window |
