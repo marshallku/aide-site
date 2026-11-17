@@ -173,6 +173,32 @@ Linux) has a **Terminal** view: the same tabs and the same shells, next to whate
 shows, such as a note. While the main area is the Terminal section, the shells are there and the
 panel says so.
 
+#### Work graph
+
+<Badge text="Next release" /> The right panel's **Work graph** view shows what each Claude Code or
+Codex agent in your panes has read, edited, written, searched and run, as a graph that grows while
+it works. Open it from the panel's views, or choose **Work graph** in the command palette.
+
+- **This agent** shows one agent (pick it in the menu beside); **All agents** shows every agent, with
+  the files more than one of them touched marked.
+- Each file is a dot, bigger the more it was touched; hover for how often it was read, edited,
+  written and searched. **Filter files** narrows them by name.
+- The strip at the bottom is the agent's steps in order: drag along it to go back, **▶** replays from
+  the start, **Live** follows the newest step. The line beside it adds them up, such as
+  `3 files · 2 reads · 1 edit · 1 run`.
+- **Go to its pane** (or a click on the agent) brings its pane forward, in its space if another one is
+  on screen. Double-click a file to open it: a note of your vault opens in AIDE, any other file in an
+  editor split beside that agent's pane, as a path printed there does.
+- Only what succeeded counts. A shell command counts only for what its exit status proves (`cat
+  notes.md` read `notes.md`); anything else shows as a run.
+- AIDE reads the agents' own conversation files on the computer the terminal server runs on, and
+  keeps each graph there for 30 days, so it's still there after AIDE or the server restarts. Turn
+  it off with **Keep a work graph** in [Settings › Terminal › Agents](#settings--terminal--agents):
+  an open panel then says the work graph is off, and fills again as soon as you turn it back on.
+- On the iPhone, **Work graph** at the top of a host's **Agents** sheet shows that host's graph; tap
+  an agent to open its pane. Files there are the host's, so a double-click shows the path instead.
+- `aidectl terminal graph` prints the same (see [aidectl](/docs/developers/aidectl/#terminal)).
+
 Find goes on past the last match to the first, and says **No matches**
 when there are none, on the Mac and Linux.
 
@@ -937,6 +963,7 @@ one reaches the server, and the last change wins. On Linux they're also kept in 
 | Setting | Default | What it does |
 |---|---|---|
 | **Watch for coding agents** | On | Off, AIDE doesn't look for agents at all: the list stays empty, and there are no marks, status item or notifications (`agents`). |
+| **Keep a work graph** | On | <Badge text="Next release" /> What each agent reads, edits and runs, for the right panel's [Work graph](#work-graph), kept 30 days on the computer the terminal server runs on (`graph`). Off, nothing is read or kept. |
 | **Notify when an agent finishes** | On | A notification when an agent's turn ends (`notify_done`). Off, it still shows as **Done**. |
 | **Notify when an agent needs you** | On | A notification when an agent asks you something (`notify_blocked`). |
 | **Remind after** | 10 min | **Off**, 5, 10 or 30 min: one more notification that long after an agent started needing you, if you haven't looked at it (`notify_remind`). |

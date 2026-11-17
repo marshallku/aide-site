@@ -475,6 +475,7 @@ AIDE의 터미널을 읽고 입력하고, 탭과 페인을 열고 나누고 이�
 | `compact [--pane P] [--cancel]` | <Badge text="다음 릴리스" /> 페인(없으면 내 페인)의 Claude Code 에이전트에게 다음 단계에서 압축하라고 하거나, `--cancel`이면 그 요청을 거둬요. [요청 모드의 압축 장치](/ko/docs/guides/terminal/#커밋할-때까지-claude-code의-자동-압축-미루기)가 있어야 해요 |
 | `usage [--window today\|7d\|30d\|all] [--since 5h] [--tool claude\|codex] [--fresh] [--json]` | <Badge text="다음 릴리스" /> [토큰과 비용 보고서](/ko/docs/guides/terminal/#토큰과-비용-보고서): 터미널 서버가 실행되는 컴퓨터의 대화 파일에서 읽은 Claude Code와 Codex의 모델별 토큰과 비용이에요. 따로 말하지 않으면 오늘이에요(`7d`와 `30d`는 6일이나 29일 전 자정부터, `--since 5h`는 지난 5시간이에요). `?`는 가격이 없는 모델, `~`는 추정치예요. `--fresh`는 지난 30초 안의 보고서를 쓰지 않고 다시 읽어요 |
 | `doctor [--json] [--language en\|ko]` | <Badge text="다음 릴리스" /> [설정 점검](/ko/docs/guides/terminal/#설정-점검): 터미널 서버와 소켓, 설정, 에이전트 훅과 스킬, 사용량, 휴대폰 푸시, 마지막 복원이에요. 찾은 내용마다 `ok`, `note`, `warn`, `error` 중 하나와 무슨 뜻인지 한 줄, AIDE에 고칠 방법이 있으면 앱이 보여 주는 해결(`install-hooks`, `restart-server`)이 붙어요. 아무것도 바꾸지 않고, 경고나 오류가 있으면 1로 끝나요. 물어볼 터미널 서버가 없어도 그렇다고 말하는 보고서를 출력해요 |
+| `graph [PANE] [--before N] [--limit N] [--json]` | <Badge text="다음 릴리스" /> [작업 그래프](/ko/docs/guides/terminal/#작업-그래프): 에이전트마다 합계, 가장 많이 건드린 파일(`3r 1e`는 세 번 읽고 한 번 고쳤다는 뜻), 최근 단계를 보여 줘요. 페인을 주면 그 에이전트의 단계를 한 쪽씩 보여 줘요(`--before`에 보인 첫 단계를 주면 한 쪽 앞으로 가요). 성공한 호출만 세요 |
 
 `read`, `state`, `exec`, `feed`, `history`, `context`, `split`은 `--pane`으로 지정한 페인에, 없으면 포커스된 페인에 동작해요. 페인 id는 `tabs`에 나오고, 페인의 셸 안에서는 `$COPAD_PANEL_ID`에 들어 있어요. `--json`을 주면 앱의 응답을 글자 대신 JSON으로 출력해요.
 
