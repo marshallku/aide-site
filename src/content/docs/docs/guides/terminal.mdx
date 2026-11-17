@@ -51,6 +51,9 @@ split and move between them from the keyboard or the **Go** menu:
 - <kbd>⌘</kbd><kbd>W</kbd> (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>W</kbd> on Linux) closes the focused
   pane and ends its shell; on the tab's last pane it closes the tab. The tab's × and **Close** still
   close the whole tab, with every pane in it.
+- When a program other than the shell runs in what you close (an editor, an agent, a build), AIDE
+  asks first: **Close this pane?** or **Close this tab?**, naming the programs. **Close** ends them,
+  **Cancel** keeps them. A shell at its prompt closes at once. <Badge text="Next release" />
 
 #### Move between panes, resize and zoom
 
@@ -602,6 +605,7 @@ after AIDE quits**. Then:
 | **Show Terminal in the sidebar** | On | Turns the Terminal section (and the panel view) on or off. |
 | **Shell** | Your login shell | The program a new tab starts. |
 | **Close a tab when its shell exits** | On | Off keeps an ended tab open so you can read what it printed. |
+| **Ask before closing a running program** | On | <Badge text="Next release" /> Closing a pane or tab with a program other than the shell running in it asks first. Off, it closes at once (`confirm_close` on Linux). |
 | **Theme** | **System (light and dark)** | System uses Catppuccin Latte in light mode and Catppuccin Mocha in dark. Others: Catppuccin Frappé, Catppuccin Macchiato, Dracula, Nord, Tokyo Night, Gruvbox Dark, One Dark, Solarized Dark. |
 | **Font** | A Nerd Font if one is installed, else the system's monospace | Any installed font by name. |
 | **Size** | 13 | 8 to 32. |
