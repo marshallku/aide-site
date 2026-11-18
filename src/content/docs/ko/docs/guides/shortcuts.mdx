@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE는 같은 단축키를 써요. Linux에서 <kbd>Ctrl</kbd>을 쓰는 자리에 Mac에서는 <kbd>⌘</kbd>를 써요.
 Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 단축키와 함께 명령 팔레트에 있어요.
@@ -130,8 +130,8 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 | 왼쪽 / 아래 / 위 / 오른쪽 페인으로 이동 | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd>, 또는 <kbd>Ctrl</kbd><kbd>Shift</kbd>와 화살표 |
 | 구분선을 왼쪽 / 아래 / 위 / 오른쪽으로 | <kbd>⌃</kbd><kbd>⌘</kbd>와 화살표 | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd>와 화살표 |
 | 페인 확대 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd> |
-| 복사 모드([vi 키](/ko/docs/guides/terminal/#복사-모드)) <Badge text="다음 릴리스" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd> |
-| [페인 동시 입력](/ko/docs/guides/terminal/#탭-배치와-모든-페인에-입력하기) <Badge text="다음 릴리스" /> | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>I</kbd> | 없음 |
+| 복사 모드([vi 키](/ko/docs/guides/terminal/#복사-모드)) | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd> |
+| [페인 동시 입력](/ko/docs/guides/terminal/#탭-배치와-모든-페인에-입력하기) | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>I</kbd> | 없음 |
 | 이전 / 다음 탭 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
 | 1–9번 탭으로 이동 | <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> 또는 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
 | 터미널에서 찾기 | <kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> |
@@ -144,7 +144,7 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 | 가장 최근에 끝난 에이전트로 이동 | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd> | 없음 |
 | 스페이스, 탭, 에이전트로 전환… | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd> |
 | 대화 다시 열기… | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>R</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>R</kbd> |
-| 알림 <Badge text="다음 릴리스" /> | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>N</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>N</kbd> |
+| 알림 | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>N</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>N</kbd> |
 | 탭을 왼쪽으로 / 오른쪽으로 | 없음 | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Down</kbd> |
 
 Linux에서 <kbd>Alt</kbd>와 숫자를 직접 쓰는 프로그램(readline, Emacs, weechat)에 키를
@@ -208,22 +208,22 @@ comux나 tmux의 <kbd>Ctrl</kbd><kbd>B</kbd>에 손이 익었다면 터미널에
 | <kbd>!</kbd> | 확인이 필요한 에이전트로 이동 |
 | <kbd>u</kbd> | 가장 최근에 끝난 에이전트로 이동 |
 | <kbd>R</kbd> | 대화 다시 열기… |
-| <kbd>[</kbd> | 복사 모드 <Badge text="다음 릴리스" /> |
-| <kbd>Space</kbd> | 다음 배치 <Badge text="다음 릴리스" /> |
-| <kbd>Alt</kbd><kbd>1</kbd> … <kbd>Alt</kbd><kbd>5</kbd>(Mac은 <kbd>⌥</kbd>) | 가로로 균등, 세로로 균등, 주 페인 위, 주 페인 왼쪽, 바둑판 배치 <Badge text="다음 릴리스" /> |
-| <kbd>E</kbd> | 페인 크기 고르게 <Badge text="다음 릴리스" /> |
-| <kbd>{"{"}</kbd> / <kbd>{"}"}</kbd> | 이전 페인과 자리 바꾸기 / 다음 페인과 자리 바꾸기 <Badge text="다음 릴리스" /> |
-| <kbd>Ctrl</kbd><kbd>O</kbd> / <kbd>Alt</kbd><kbd>O</kbd>(Mac은 <kbd>⌃</kbd> / <kbd>⌥</kbd>) | 페인 돌리기 / 페인 거꾸로 돌리기 <Badge text="다음 릴리스" /> |
-| <kbd>B</kbd> | 페인을 새 탭으로 분리 <Badge text="다음 릴리스" /> |
-| <kbd>T</kbd> | [페인 이름 바꾸기…](/ko/docs/guides/terminal/#페인-이름-붙이기) <Badge text="다음 릴리스" /> |
-| <kbd>S</kbd> | 페인 동시 입력 <Badge text="다음 릴리스" /> |
-| <kbd>n</kbd> / <kbd>p</kbd> | 다음 터미널 탭 / 이전 터미널 탭 <Badge text="다음 릴리스" /> |
-| <kbd>1</kbd> … <kbd>9</kbd> | 탭 1 … 탭 9 <Badge text="다음 릴리스" /> |
-| <kbd>,</kbd> | 터미널 탭 이름 변경…: 상태 표시줄에 탭 이름 입력란이 열려요 <Badge text="다음 릴리스" /> |
-| <kbd>&amp;</kbd> | 터미널 탭 닫기(탭의 모든 페인과 함께) <Badge text="다음 릴리스" /> |
-| <kbd>s</kbd> | 패널 보이기/숨기기 <Badge text="다음 릴리스" /> |
-| <kbd>a</kbd> | 알림 <Badge text="다음 릴리스" /> |
-| <kbd>W</kbd> | 새 워크트리… <Badge text="다음 릴리스" /> |
+| <kbd>[</kbd> | 복사 모드 |
+| <kbd>Space</kbd> | 다음 배치 |
+| <kbd>Alt</kbd><kbd>1</kbd> … <kbd>Alt</kbd><kbd>5</kbd>(Mac은 <kbd>⌥</kbd>) | 가로로 균등, 세로로 균등, 주 페인 위, 주 페인 왼쪽, 바둑판 배치 |
+| <kbd>E</kbd> | 페인 크기 고르게 |
+| <kbd>{"{"}</kbd> / <kbd>{"}"}</kbd> | 이전 페인과 자리 바꾸기 / 다음 페인과 자리 바꾸기 |
+| <kbd>Ctrl</kbd><kbd>O</kbd> / <kbd>Alt</kbd><kbd>O</kbd>(Mac은 <kbd>⌃</kbd> / <kbd>⌥</kbd>) | 페인 돌리기 / 페인 거꾸로 돌리기 |
+| <kbd>B</kbd> | 페인을 새 탭으로 분리 |
+| <kbd>T</kbd> | [페인 이름 바꾸기…](/ko/docs/guides/terminal/#페인-이름-붙이기) |
+| <kbd>S</kbd> | 페인 동시 입력 |
+| <kbd>n</kbd> / <kbd>p</kbd> | 다음 터미널 탭 / 이전 터미널 탭 |
+| <kbd>1</kbd> … <kbd>9</kbd> | 탭 1 … 탭 9 |
+| <kbd>,</kbd> | 터미널 탭 이름 변경…: 상태 표시줄에 탭 이름 입력란이 열려요 |
+| <kbd>&amp;</kbd> | 터미널 탭 닫기(탭의 모든 페인과 함께) |
+| <kbd>s</kbd> | 패널 보이기/숨기기 |
+| <kbd>a</kbd> | 알림 |
+| <kbd>W</kbd> | 새 워크트리… |
 | <kbd>?</kbd> | **터미널 키**: 터미널 동작과 각 동작의 프리픽스 키를 보여 주는 **설정 › 키보드** |
 
 - 프리픽스를 두 번 누르면 프리픽스 자체가 프로그램으로 가요. 안에서 tmux나 readline을 쓸 때 필요해요.
@@ -399,14 +399,14 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `terminal/pane-numbers` | 페인 번호 보기 |
 | `terminal/resize-left`, `terminal/resize-down`, `terminal/resize-up`, `terminal/resize-right` | 구분선을 왼쪽, 아래, 위, 오른쪽으로 |
 | `terminal/zoom-pane` | 페인 확대 |
-| `terminal/copy-mode` | 복사 모드 <Badge text="다음 릴리스" /> |
-| `terminal/layout-even-horizontal`, `terminal/layout-even-vertical`, `terminal/layout-main-horizontal`, `terminal/layout-main-vertical`, `terminal/layout-tiled` | 가로로 균등 배치, 세로로 균등 배치, 주 페인 위 배치, 주 페인 왼쪽 배치, 바둑판 배치 <Badge text="다음 릴리스" /> |
-| `terminal/next-layout`, `terminal/spread-panes` | 다음 배치, 페인 크기 고르게 <Badge text="다음 릴리스" /> |
-| `terminal/swap-pane-prev`, `terminal/swap-pane-next` | 이전 페인과 자리 바꾸기, 다음 페인과 자리 바꾸기 <Badge text="다음 릴리스" /> |
-| `terminal/rotate-panes`, `terminal/rotate-panes-back` | 페인 돌리기, 페인 거꾸로 돌리기 <Badge text="다음 릴리스" /> |
-| `terminal/break-pane` | 페인을 새 탭으로 분리 <Badge text="다음 릴리스" /> |
-| `terminal/rename-pane` | 페인 이름 바꾸기… <Badge text="다음 릴리스" /> |
-| `terminal/sync-panes` | 페인 동시 입력 <Badge text="다음 릴리스" /> |
+| `terminal/copy-mode` | 복사 모드 |
+| `terminal/layout-even-horizontal`, `terminal/layout-even-vertical`, `terminal/layout-main-horizontal`, `terminal/layout-main-vertical`, `terminal/layout-tiled` | 가로로 균등 배치, 세로로 균등 배치, 주 페인 위 배치, 주 페인 왼쪽 배치, 바둑판 배치 |
+| `terminal/next-layout`, `terminal/spread-panes` | 다음 배치, 페인 크기 고르게 |
+| `terminal/swap-pane-prev`, `terminal/swap-pane-next` | 이전 페인과 자리 바꾸기, 다음 페인과 자리 바꾸기 |
+| `terminal/rotate-panes`, `terminal/rotate-panes-back` | 페인 돌리기, 페인 거꾸로 돌리기 |
+| `terminal/break-pane` | 페인을 새 탭으로 분리 |
+| `terminal/rename-pane` | 페인 이름 바꾸기… |
+| `terminal/sync-panes` | 페인 동시 입력 |
 | `terminal/close-pane` | 페인 닫기 |
 | `terminal/new-space` | 새 스페이스… |
 | `terminal/next-space`, `terminal/previous-space` | 다음 스페이스, 이전 스페이스 |
@@ -417,7 +417,7 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `terminal/mark`, `terminal/goto-mark` | 이 페인 표시하기…, 표시한 곳으로 가기…(직접 주기 전까지 단축키 없음) |
 | `terminal/move-tab-left`, `terminal/move-tab-right` | 탭을 왼쪽으로, 탭을 오른쪽으로 |
 | `terminal/open-project-space` | 이 프로젝트의 스페이스 열기(직접 주기 전까지 단축키 없음) |
-| `terminal/next-tab`, `terminal/previous-tab`, `terminal/close-tab`, `terminal/rename-tab` | 다음 터미널 탭, 이전 터미널 탭, 터미널 탭 닫기, 터미널 탭 이름 변경…(직접 주기 전까지 단축키 없음, 프리픽스의 <kbd>n</kbd> <kbd>p</kbd> <kbd>&amp;</kbd> <kbd>,</kbd>) <Badge text="다음 릴리스" /> |
+| `terminal/next-tab`, `terminal/previous-tab`, `terminal/close-tab`, `terminal/rename-tab` | 다음 터미널 탭, 이전 터미널 탭, 터미널 탭 닫기, 터미널 탭 이름 변경…(직접 주기 전까지 단축키 없음, 프리픽스의 <kbd>n</kbd> <kbd>p</kbd> <kbd>&amp;</kbd> <kbd>,</kbd>) |
 | `terminal/key-help` | 터미널 키: 터미널 동작을 보여 주는 **설정 › 키보드**(직접 주기 전까지 단축키 없음, 프리픽스의 <kbd>?</kbd>) |
 | `terminal/open-remote-aide` | 원격 AIDE 열기…(직접 지정하기 전까지 단축키 없음) |
 | `terminal/tab-1` … `terminal/tab-9` | 탭 1 … 탭 9: Mac에서는 <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd>. Linux에서는 직접 지정하기 전까지 단축키 없음(<kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd>는 터미널의 키예요) |

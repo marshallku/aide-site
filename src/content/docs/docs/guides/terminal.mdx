@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 On the Mac and Linux, AIDE has a terminal of its own, so you can keep a shell next to your notes. On
 the iPhone, which has no local shell, the SSH section opens terminals to your servers instead.
@@ -53,7 +53,7 @@ split and move between them from the keyboard or the **Go** menu:
   close the whole tab, with every pane in it.
 - When a program other than the shell runs in what you close (an editor, an agent, a build), AIDE
   asks first: **Close this pane?** or **Close this tab?**, naming the programs. **Close** ends them,
-  **Cancel** keeps them. A shell at its prompt closes at once. <Badge text="Next release" />
+  **Cancel** keeps them. A shell at its prompt closes at once.
 
 #### Move between panes, resize and zoom
 
@@ -87,7 +87,7 @@ From the keyboard, the **Go** menu or the command palette:
 
 #### Arrange a tab and type into every pane
 
-<Badge text="Next release" /> Snap a tab's panes into a shape, move them around, or take one out into a tab of its own.
+Snap a tab's panes into a shape, move them around, or take one out into a tab of its own.
 Right-click the tab in the status bar: **Layout** has the shapes and moves, then **Sync panes** and
 **Break pane into a tab**. Each acts on that tab and shows it. The **Go** menu and the command palette have every one, and so
 does the [prefix key](/docs/guides/shortcuts/#the-prefix-key).
@@ -121,7 +121,7 @@ does the [prefix key](/docs/guides/shortcuts/#the-prefix-key).
 
 #### Name a pane
 
-<Badge text="Next release" /> Give a pane a name to tell it from the others: choose **Rename pane…** from the **Go** menu or
+Give a pane a name to tell it from the others: choose **Rename pane…** from the **Go** menu or
 the command palette, or press the [prefix key](/docs/guides/shortcuts/#the-prefix-key) and then <kbd>T</kbd>, type the name
 and choose **Rename**.
 
@@ -137,7 +137,7 @@ and choose **Rename**.
 
 #### Copy mode
 
-<Badge text="Next release" /> Copy mode moves through a pane's text and its scrollback with vi's
+Copy mode moves through a pane's text and its scrollback with vi's
 keys, so you can select and copy without the mouse. Press <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd> on the
 Mac or <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd> on Linux (**Copy mode** in the **Go** menu on the Mac
 and in the command palette), or the [prefix key](/docs/guides/shortcuts/#the-prefix-key) and then
@@ -194,7 +194,7 @@ panel says so.
 
 #### Work graph
 
-<Badge text="Next release" /> The right panel's **Work graph** view shows what each Claude Code or
+The right panel's **Work graph** view shows what each Claude Code or
 Codex agent in your panes has read, edited, written, searched and run, as a graph that grows while
 it works. Open it from the panel's views, or choose **Work graph** in the command palette.
 
@@ -237,7 +237,7 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   host, as `box:3:zsh`. Click a tab to show it, double-click to rename it, right-click for its menu;
   its × shows on the tab on screen and when you point at another. **+** opens a new tab.
 - On the right: `ZOOM` while the tab on screen has a pane zoomed, `SYNC` while it's
-  [synced](#arrange-a-tab-and-type-into-every-pane) <Badge text="Next release" />, `^B` while the
+  [synced](#arrange-a-tab-and-type-into-every-pane) , `^B` while the
   [prefix key](/docs/guides/shortcuts/#the-prefix-key) waits for its next key, then the agents in every space,
   each count after its mark from the Agents list (working, needs you, and done: finished, and you
   haven't looked yet), the usage readout, and the clock. Click the needs-you count to
@@ -263,7 +263,7 @@ about once a minute while AIDE is open.
   how long until it resets. The gauge turns yellow from 70% and red from 90%. `1/4` after it says
   which page you're on.
 - Click it, or scroll over it, for the next page.
-- Right-click it for **Refresh** and **Status bar settings…**, and <Badge text="Next release" />
+- Right-click it for **Refresh** and **Status bar settings…**, and
   **Token and cost report…** ([below](#token-and-cost-report)).
 - When a limit can't be read right now, the last reading stays, marked `~` (`~claude`), for up to
   3 hours.
@@ -293,7 +293,7 @@ On Linux the same settings are also in `config.toml` under `[terminal.status_bar
 
 #### Arrange the bar
 
-<Badge text="Next release" /> You choose what the bar holds, in what order, how a tab is labelled
+You choose what the bar holds, in what order, how a tab is labelled
 and what colour each part takes. The same settings, with the same names, work on the Mac and Linux,
 and both read them the same way.
 
@@ -351,7 +351,7 @@ To stop reading one of them at all, set `usage` in the terminal server's `config
 then read for it, and the bar doesn't show it.
 
 On the iPhone, a host's **AIDE on** screen shows the same limits as one line under its title, such as
-`Claude 5h 34% · wk 27% · Codex wk 45%`. <Badge text="Next release" /> Tap it for that host's
+`Claude 5h 34% · wk 27% · Codex wk 45%`. Tap it for that host's
 [token and cost report](#token-and-cost-report).
 
 An agent can read them too, before it starts a big task: `aidectl agent usage` (see
@@ -359,7 +359,7 @@ An agent can read them too, before it starts a big task: `aidectl agent usage` (
 
 #### Token and cost report
 
-<Badge text="Next release" /> **Token and cost report…** shows how many tokens Claude Code and Codex
+**Token and cost report…** shows how many tokens Claude Code and Codex
 used on this computer and what that would cost at the providers' prices, model by model. Right-click
 the usage readout and choose it, or choose **Token and cost report…** in the command palette. AIDE
 reads it from the agents' own conversation files on the computer the terminal server runs on.
@@ -428,7 +428,7 @@ folder of the pane you split.
 
 #### Build a space from a layout file
 
-<Badge text="Next release" /> A layout file describes a whole space in one TOML file: its folder, its
+A layout file describes a whole space in one TOML file: its folder, its
 tabs, each tab's layout and what each pane runs. Choose **New space from layout…** in the space menu
 (also on a space's right-click menu and in the command palette), pick the file, and AIDE makes the
 space and shows it. It reads the same files as comux's `apply-layout`.
@@ -473,7 +473,7 @@ run = "claude"
 
 #### Restart an ended shell
 
-<Badge text="Next release" /> With **Close a tab when its shell exits** off in **Settings › Terminal**,
+With **Close a tab when its shell exits** off in **Settings › Terminal**,
 a pane whose shell ends stays with what it showed. Right-click its tab in the status bar and choose
 **Restart shell** (also in the **Go** menu and the command palette): a new shell starts in the same
 pane, in the folder the old one was last in, below what was there. On the iPhone, **Restart shell**
@@ -621,7 +621,7 @@ after AIDE quits**. Then:
 | **Show Terminal in the sidebar** | On | Turns the Terminal section (and the panel view) on or off. |
 | **Shell** | Your login shell | The program a new tab starts. |
 | **Close a tab when its shell exits** | On | Off keeps an ended tab open so you can read what it printed. |
-| **Ask before closing a running program** | On | <Badge text="Next release" /> Closing a pane or tab with a program other than the shell running in it asks first. Off, it closes at once (`confirm_close` on Linux). |
+| **Ask before closing a running program** | On | Closing a pane or tab with a program other than the shell running in it asks first. Off, it closes at once (`confirm_close` on Linux). |
 | **Theme** | **System (light and dark)** | System uses Catppuccin Latte in light mode and Catppuccin Mocha in dark. Others: Catppuccin Frappé, Catppuccin Macchiato, Dracula, Nord, Tokyo Night, Gruvbox Dark, One Dark, Solarized Dark. |
 | **Font** | A Nerd Font if one is installed, else the system's monospace | Any installed font by name. |
 | **Size** | 13 | 8 to 32. |
@@ -641,7 +641,7 @@ after AIDE quits**. Then:
 | **Reopen tabs at launch** | On | After your computer restarts, your tabs, splits and folders come back. See [Tabs after a restart](#tabs-after-a-restart). |
 | **Bring back agents in their conversation** | On | Claude Code and Codex start again where they were. Off, their panes come back as shells. |
 | **Programs to bring back** | Editors and other full-screen programs | The programs that run again after a restart, by name, separated by spaces. **Reset** sets the default list again. |
-| **Variables from the attaching client** | `DISPLAY WAYLAND_DISPLAY XAUTHORITY SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION SSH_ASKPASS KRB5CCNAME WINDOWID` | <Badge text="Next release" /> What a new tab or pane takes from the AIDE or SSH login that opened it, such as your SSH agent and display. See [Your agent over SSH](#your-agent-over-ssh). **Reset** sets the default list again. |
+| **Variables from the attaching client** | `DISPLAY WAYLAND_DISPLAY XAUTHORITY SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION SSH_ASKPASS KRB5CCNAME WINDOWID` | What a new tab or pane takes from the AIDE or SSH login that opened it, such as your SSH agent and display. See [Your agent over SSH](#your-agent-over-ssh). **Reset** sets the default list again. |
 | **Folder name** | `{repo}-{branch}` | Under **Worktrees**: the folder a new worktree goes in, beside the repository. See [Worktrees](#worktrees). |
 | **Repository folder** and **Command to run** | None | Under **Worktrees**: a command a repository's new worktrees run in their first pane. |
 | **Keep shells running after AIDE quits** | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide). |
@@ -839,7 +839,7 @@ SSH login there has (below).
 
 #### Your agent over SSH
 
-<Badge text="Next release" /> A tab or pane you open on the other computer takes the variables in
+A tab or pane you open on the other computer takes the variables in
 **Variables from the attaching client** from the SSH login AIDE connected with, as tmux's
 `update-environment` does. With `ForwardAgent yes` for that host in your `~/.ssh/config`, its
 `SSH_AUTH_SOCK` is your forwarded agent, so `git push` there signs with the keys on this computer.
@@ -898,13 +898,13 @@ it printed, with a small gauge of its context when AIDE knows it.
 - An agent whose pane works on an [agent card](/docs/guides/agent-board/)
   has a third line, **on:** with the card's title. Right-click the row and choose **Open card** to
   see the card on **Todos › Board**. A tab's tooltip names its pane's card the same way.
-  <Badge text="Next release" /> The line also shows how many of the card's steps are done, such as
+  The line also shows how many of the card's steps are done, such as
   **2/4**, and clicking it opens the card (the rest of the row still opens the pane).
 - A remote session's agents (see [Open remote AIDE…](#open-remote-aide)) are listed under the
   host's name.
 - A row that says **Not updating** is one AIDE couldn't read just now; it shows the last state it
   knows.
-- <Badge text="Next release" /> Right-click a Claude Code agent's row and choose **Compact at next
+- Right-click a Claude Code agent's row and choose **Compact at next
   step** to have it compact before its next model request (see
   [below](#hold-claude-codes-auto-compaction-until-you-commit)). The row shows **⇣** before its
   context gauge until it does; **Cancel compact** takes the request back. **Compact at next step** in
@@ -927,7 +927,7 @@ counts on the [status bar](#the-status-bar) do the same when you click them.
 
 #### Agent overview
 
-<Badge text="Next release" /> The agent overview lists every agent at once, so you can see which one
+The agent overview lists every agent at once, so you can see which one
 needs you and why without going through the tabs. On the Mac and Linux, click the working count on
 the [status bar](#the-status-bar) or choose **Agent overview** (<kbd>⇧</kbd><kbd>⌘</kbd><kbd>A</kbd> on
 the Mac, <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>A</kbd> on Linux). The same list is on
@@ -981,10 +981,10 @@ coming forward; the pane is selected all the same.
 
 #### Notification center
 
-<Badge text="Next release" /> The notification center keeps the notifications your agents raised on
+The notification center keeps the notifications your agents raised on
 this computer, the last 200, so you can catch up on what you missed. Right-click an agent count on
 the [status bar](#the-status-bar) and choose **Notifications**, or choose **Notifications** in the
-command palette. <Badge text="Next release" /> While a terminal has the keyboard, <kbd>⌥</kbd><kbd>⌘</kbd><kbd>N</kbd> on the Mac,
+command palette. While a terminal has the keyboard, <kbd>⌥</kbd><kbd>⌘</kbd><kbd>N</kbd> on the Mac,
 <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>N</kbd> on Linux, or the [prefix key](/docs/guides/shortcuts/#the-prefix-key) then
 <kbd>a</kbd> opens it too.
 
@@ -1009,13 +1009,13 @@ one reaches the server, and the last change wins. On Linux they're also kept in 
 | Setting | Default | What it does |
 |---|---|---|
 | **Watch for coding agents** | On | Off, AIDE doesn't look for agents at all: the list stays empty, and there are no marks, status item or notifications (`agents`). |
-| **Keep a work graph** | On | <Badge text="Next release" /> What each agent reads, edits and runs, for the right panel's [Work graph](#work-graph), kept 30 days on the computer the terminal server runs on (`graph`). Off, nothing is read or kept. |
+| **Keep a work graph** | On | What each agent reads, edits and runs, for the right panel's [Work graph](#work-graph), kept 30 days on the computer the terminal server runs on (`graph`). Off, nothing is read or kept. |
 | **Notify when an agent finishes** | On | A notification when an agent's turn ends (`notify_done`). Off, it still shows as **Done**. |
 | **Notify when an agent needs you** | On | A notification when an agent asks you something (`notify_blocked`). |
 | **Remind after** | 10 min | **Off**, 5, 10 or 30 min: one more notification that long after an agent started needing you, if you haven't looked at it (`notify_remind`). |
 | **Send to your phone** | On | The same notifications on phones you connect, sealed so only they can read them (`push`). A phone connects by opening this computer's AIDE sessions in the iPhone app with its **Agent notifications** on: see [Agent notifications](#agent-notifications). Until one has, nothing is sent. |
 | **Set up agent hooks…** | | Below. |
-| **Check setup…** | | <Badge text="Next release" /> [Below](#check-setup). |
+| **Check setup…** | | [Below](#check-setup). |
 
 If AIDE stops being able to read agents' files (a read that never returned), the group says **Agent
 detection stopped: a file read didn't return. Restart the terminal server to try again.** The agents
@@ -1046,7 +1046,7 @@ terminal, and takes them out again with `--remove`.
 
 #### Check setup…
 
-<Badge text="Next release" /> **Check setup…** looks over what the terminal on this computer depends on
+**Check setup…** looks over what the terminal on this computer depends on
 and shows what it finds under **Setup check**, as `aidectl terminal doctor` and `aide-mux doctor` do
 in a shell (the way `comux doctor` did). It changes nothing.
 
@@ -1085,7 +1085,7 @@ hook.
 - Whenever it isn't sure (no AIDE pane, an old reading, `git` slow or failing, not a repository), it
   lets Claude compact. It answers within a second and a half.
 
-<Badge text="Next release" /> In request mode the gate holds every automatic compaction until you ask
+In request mode the gate holds every automatic compaction until you ask
 for one, so a long task or a loop isn't compacted in the middle of a step. Ask with **Compact at next
 step** on the agent's row (in the terminal's **Agents** list, or the iPhone's **Agents** sheet), or
 with `aidectl terminal compact`. Claude compacts at its next model request, even in the middle of a
@@ -1131,7 +1131,7 @@ turn on **Give plugins' skills to your coding agents** under **Settings › Term
 |---|---|---|
 | **Agent board** | `aide-board` | Keeping its plan on the [agent board](/docs/guides/agent-board/) with `aidectl board`. Given while the board is on. |
 | **Browser** (core plugin) | `aide-browser` | Driving AIDE's browser with `aidectl browser` and `aidectl secret`. |
-| **Terminal** | `aide-terminal` | <Badge text="Next release" /> Watching other panes: reading them, waiting for a line or for another agent to finish or ask something (`aidectl terminal wait-output`, `wait-agent`), and following events; and reporting to the agent that started it, or reading its own workers' reports, through the panes' inboxes (`aidectl terminal message --to owner`, `inbox`). It only reads, waits and leaves messages; it treats what it reads as data. Given in every workspace. |
+| **Terminal** | `aide-terminal` | Watching other panes: reading them, waiting for a line or for another agent to finish or ask something (`aidectl terminal wait-output`, `wait-agent`), and following events; and reporting to the agent that started it, or reading its own workers' reports, through the panes' inboxes (`aidectl terminal message --to owner`, `inbox`). It only reads, waits and leaves messages; it treats what it reads as data. Given in every workspace. |
 | **GitHub**, **Jira**, **Linear** | `aide-github`, `aide-jira`, `aide-linear` | Reading your open work from the plugin's section of `work/now`. They only read; they can't change anything in the tool. |
 
 - Turning it on shows what would change first, under **Give plugins' skills to your coding agents?**:
@@ -1242,18 +1242,18 @@ Touching and holding the row offers **Open AIDE** too.
   pane or **Fit to this phone** gives it the iPhone's size until that computer takes it back.
 - Programs that use the mouse get your taps as clicks and a two-finger drag as the scroll wheel.
 - Pictures that programs draw in the terminal (kitty images) aren't shown on the iPhone.
-- <Badge text="Next release" /> The terminal draws in JetBrains Mono Nerd Font, which the app
+- The terminal draws in JetBrains Mono Nerd Font, which the app
   includes, so prompt icons and powerline arrows show as they do on the Mac.
-- <Badge text="Next release" /> When a program copies (OSC 52, as tmux, Neovim and many CLIs do),
+- When a program copies (OSC 52, as tmux, Neovim and many CLIs do),
   the text goes to the iPhone's clipboard, as it does in a plain SSH shell. Programs can't read the
   clipboard.
-- <Badge text="Next release" /> A bell in the pane on screen gives a light tap. A tab whose pane
+- A bell in the pane on screen gives a light tap. A tab whose pane
   rang while you were elsewhere shows **!** until you open it, and so does its session in the list.
-- <Badge text="Next release" /> Touch and hold a session in the list, or an agent in **Agents**, to
+- Touch and hold a session in the list, or an agent in **Agents**, to
   see the last lines of its pane before you open it.
 - A paste larger than the pane can take now is refused whole: **That paste is too large to send**.
   When a program stops reading what you type, the pane says **Not responding** until it reads again.
-- <Badge text="Next release" /> A tab you open from the iPhone takes the host's SSH login variables
+- A tab you open from the iPhone takes the host's SSH login variables
   (its `SSH_CONNECTION`, say), never the iPhone's own; see
   [Your agent over SSH](#your-agent-over-ssh). The iPhone doesn't forward an SSH agent, so on a Mac
   host the tab keeps that Mac's own agent.
@@ -1271,16 +1271,16 @@ Coding agents in the host's panes show here too, as the host's AIDE reports them
   sessions, those that need you first, each with its tab, what it's waiting for or doing, and how
   full its context is. Tapping one opens its pane. One whose pane
   works on an agent card says **on:** with the card's title; touch and hold it for **Open card**.
-  <Badge text="Next release" /> The line shows the card's steps done (**2/4**), and tapping it
+  The line shows the card's steps done (**2/4**), and tapping it
   opens the card.
-  <Badge text="Next release" /> Touch and hold a Claude Code agent for **Compact at next step** (or
+  Touch and hold a Claude Code agent for **Compact at next step** (or
   **Cancel compact**), when the host's AIDE has it; the row shows **⇣** until it compacts.
 - An agent counts as seen once its pane is on the iPhone's screen while you're in the app: a
   finished turn stops showing as done. Being in a list, or a turn that finishes while AIDE is in
   the background, doesn't count. Looking doesn't take the pane's size either.
 
 While it connects, the screen says **Connecting to box…**. If the connection drops, it says
-**Disconnected from box**, with **Reconnect**. <Badge text="Next release" /> A connection that goes
+**Disconnected from box**, with **Reconnect**. A connection that goes
 quiet without closing (moving from Wi-Fi to cellular, say) is noticed within 30 seconds, without
 waiting for you to type, and AIDE connects again by itself once. A host where AIDE hasn't been set up says **AIDE isn't
 set up on box: open AIDE there once**, and one whose AIDE is older than the app says **AIDE on box is

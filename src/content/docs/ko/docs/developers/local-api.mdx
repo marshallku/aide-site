@@ -5,7 +5,7 @@ sidebar:
     order: 3
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 Mac이나 Linux의 AIDE 앱은 보관소를 열어 두는 동안 그 보관소의 노트를 Unix 소켓으로 제공해요. 같은 컴퓨터에서 실행하는 프로그램이라면 서버도 토큰도 없이 평범한 HTTP로 노트를 읽고 쓸 수 있고, 서버가 주는 것과 같은 응답을 받아요. [`aidectl`](/ko/docs/developers/aidectl/)도 이 위에서 만들어졌어요. 이 페이지는 직접 호출하고 싶을 때를 위한 거예요.
 
@@ -171,7 +171,7 @@ Mac과 Linux에서 보관소 소켓은 그 보관소 사이드바 아래의 [상
 
 ## 터미널 상태 표시줄
 
-<Badge text="다음 릴리스" /> Mac과 Linux에서 보관소 소켓은 터미널 [상태 표시줄](/ko/docs/guides/terminal/#막대-꾸미기)
+Mac과 Linux에서 보관소 소켓은 터미널 [상태 표시줄](/ko/docs/guides/terminal/#막대-꾸미기)
 설정을 막대가 읽는 그대로 읽고, 바꿀 내용을 같은 방식으로 확인해요. 아무것도 저장하지 않아요.
 [`aidectl status-bar`](/ko/docs/developers/aidectl/#status-bar)가 이 경로를 써요.
 
@@ -185,7 +185,7 @@ Mac과 Linux에서 보관소 소켓은 그 보관소 사이드바 아래의 [상
 
 ## 반응 속도
 
-<Badge text="다음 릴리스" /> Mac과 Linux에서 보관소 소켓은 앱을 `AIDE_PERF=1`(또는 `AIDE_PERF_LOG=<파일>`)로 실행했을 때
+Mac과 Linux에서 보관소 소켓은 앱을 `AIDE_PERF=1`(또는 `AIDE_PERF_LOG=<파일>`)로 실행했을 때
 실행, 노트 열기, 편집기의 키, 섹션 전환, 보드 열기와 그리기, 터미널의 키에 걸린 시간을 알려 줘요.
 [`aidectl perf`](/ko/docs/developers/aidectl/#perf)가 이 경로를 써요.
 
@@ -296,7 +296,7 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `tab.close` | `id` | 탭 id를 주면 그 탭을 안의 모든 페인과 함께 닫고, 없으면 포커스된 페인을 닫아요 |
 | `tab.list`, `tab.info` | | `{count, current, tabs: [{id, index, title, selected, panes: [{id, title, focused, exited, cols, rows}]}]}`: 앞에서 뒤 순서의 창들의 탭이에요. 창이 없으면 모든 볼트의 탭이고 `current`는 null이에요 |
 | `tab.rename` | `id`, `title` | 탭에 이름을 붙여요 |
-| `pane.rename` | `id`, `name` | <Badge text="다음 릴리스" /> 페인에 이름을 붙여요(`""`는 지워요): `{pane, name}`. `split.*`와 `pane.spawn`도 새 페인의 `name`을 받아요. `features`에 `pane-names`가 있어요 |
+| `pane.rename` | `id`, `name` | 페인에 이름을 붙여요(`""`는 지워요): `{pane, name}`. `split.*`와 `pane.spawn`도 새 페인의 `name`을 받아요. `features`에 `pane-names`가 있어요 |
 | `tab.switch` | `index` | `tab.list`의 그 순서(0부터)에 있는 탭을 선택하고 `{tab}`을 돌려줘요. 그 자리에 탭이 없으면 `not_found`, 정수가 아니면 `invalid_params`예요 |
 | `split.horizontal` | `id` | 페인을 오른쪽으로 나누고 새 페인의 `{panel_id}`로 응답해요 |
 | `split.vertical` | `id` | 페인을 아래로 나누고 `{panel_id}`로 응답해요 |
@@ -316,26 +316,26 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `mark.list` | | 모든 창이 함께 쓰는 1부터 9까지의 표시: `{marks: [{slot, session, tab, id}]}`, 스페이스가 레이아웃을 남긴 채 끝났으면 `{slot, session, dormant: true}` |
 | `mark.set`, `mark.clear` | `slot`, `id`(`mark.set`만) | 그 번호에 페인 `id`(없으면 포커스된 페인)를 표시하거나 비워요: `{slot, id}`. 1부터 9가 아닌 번호는 `invalid_params` |
 | `mark.goto` | `slot` | 그 번호의 페인을 `panel.focus`처럼 보여 줘요. 스페이스가 끝났으면 먼저 다시 살려요: `{slot, session, id, raised}`. 빈 번호는 `no_mark` |
-| `tab.layout`, `tab.rotate`, `tab.sync`, `pane.swap`, `pane.break` | `id`, 그리고 `layout`(배치 이름, `next`, `spread`), `reverse`, `on`, `direction`(`prev`나 `next`) | <Badge text="다음 릴리스" /> 페인 `id`(없으면 포커스된 페인)의 탭을 [배치](/ko/docs/guides/terminal/#탭-배치와-모든-페인에-입력하기)해요: `{tab, layout, changed}`, `{changed}`, `{tab, synced}`, `pane.break`는 새 탭 `{tab, pane}`. `features`에 `layouts`가 있어요 |
-| `layout.apply` | `toml`, `base_dir`, `stem`, `name`, `dry_run`, `show` | <Badge text="다음 릴리스" /> [레이아웃 파일](/ko/docs/guides/terminal/#레이아웃-파일로-스페이스-만들기)의 텍스트(`toml`, 16 KiB까지)로 스페이스를 만들어요. `base_dir`는 파일의 폴더(절대 경로), `stem`은 `.toml`을 뺀 파일 이름이에요. `{session, name, tabs: [{tab, panes}]}`로 답하고, `show`면 창에 보여 줘요. `dry_run`이면 `{dry_run: true, plan, text}`로 답하고 아무것도 만들지 않아요. 없는 폴더는 `missing_folder`, 잘못된 곳은 `bad_layout`이고, 둘 다 아무것도 만들지 않아요. `features`에 `layout-files`가 있어요 |
-| `pane.respawn` | `id` | <Badge text="다음 릴리스" /> 셸이 끝난 페인 `id`(없으면 포커스된 페인)에 같은 페인, 마지막 폴더에서 새 셸을 시작해요: `{id, session}`. 셸이 아직 실행 중이면 `running`이에요. `features`에 `respawn`이 있어요 |
-| `terminal.broadcast` | `tab`이나 `session`이나 `panes`, `text`, `enter`, `paste`, `dry_run`, `caller` | <Badge text="다음 릴리스" /> 한 탭, 한 스페이스, 페인 id 목록의 실행 중인 모든 페인(`caller`의 페인은 빼고)에 `text`를 입력해요: `{targets: [{pane, session, space, tab, tab_label, label}], sent, skipped, dry_run}`. 입력하기 전에 대상을 모두 확인하고, `dry_run`이면 아무것도 입력하지 않아요. 지금 텍스트를 다 받을 수 없는 페인은 `skipped`에 들어가요. `features`에 `broadcast`가 있어요 |
-| `agent.fill` | `pane`, `session_id`, `take` | 그 페인 안에서만: 그 Claude Code 대화의 `{used, window}`예요. AIDE가 확실하지 않으면 둘 다 null이에요. 자동 압축을 미루는 장치가 물어요. `take`(이번 물음에 대한 장치 자신의 id)를 주면 `requested`도 줘요. 이 대화에 압축 요청이 있었는지이고, 있었다면 이번 물음이 그 요청을 써요 <Badge text="다음 릴리스" /> |
+| `tab.layout`, `tab.rotate`, `tab.sync`, `pane.swap`, `pane.break` | `id`, 그리고 `layout`(배치 이름, `next`, `spread`), `reverse`, `on`, `direction`(`prev`나 `next`) | 페인 `id`(없으면 포커스된 페인)의 탭을 [배치](/ko/docs/guides/terminal/#탭-배치와-모든-페인에-입력하기)해요: `{tab, layout, changed}`, `{changed}`, `{tab, synced}`, `pane.break`는 새 탭 `{tab, pane}`. `features`에 `layouts`가 있어요 |
+| `layout.apply` | `toml`, `base_dir`, `stem`, `name`, `dry_run`, `show` | [레이아웃 파일](/ko/docs/guides/terminal/#레이아웃-파일로-스페이스-만들기)의 텍스트(`toml`, 16 KiB까지)로 스페이스를 만들어요. `base_dir`는 파일의 폴더(절대 경로), `stem`은 `.toml`을 뺀 파일 이름이에요. `{session, name, tabs: [{tab, panes}]}`로 답하고, `show`면 창에 보여 줘요. `dry_run`이면 `{dry_run: true, plan, text}`로 답하고 아무것도 만들지 않아요. 없는 폴더는 `missing_folder`, 잘못된 곳은 `bad_layout`이고, 둘 다 아무것도 만들지 않아요. `features`에 `layout-files`가 있어요 |
+| `pane.respawn` | `id` | 셸이 끝난 페인 `id`(없으면 포커스된 페인)에 같은 페인, 마지막 폴더에서 새 셸을 시작해요: `{id, session}`. 셸이 아직 실행 중이면 `running`이에요. `features`에 `respawn`이 있어요 |
+| `terminal.broadcast` | `tab`이나 `session`이나 `panes`, `text`, `enter`, `paste`, `dry_run`, `caller` | 한 탭, 한 스페이스, 페인 id 목록의 실행 중인 모든 페인(`caller`의 페인은 빼고)에 `text`를 입력해요: `{targets: [{pane, session, space, tab, tab_label, label}], sent, skipped, dry_run}`. 입력하기 전에 대상을 모두 확인하고, `dry_run`이면 아무것도 입력하지 않아요. 지금 텍스트를 다 받을 수 없는 페인은 `skipped`에 들어가요. `features`에 `broadcast`가 있어요 |
+| `agent.fill` | `pane`, `session_id`, `take` | 그 페인 안에서만: 그 Claude Code 대화의 `{used, window}`예요. AIDE가 확실하지 않으면 둘 다 null이에요. 자동 압축을 미루는 장치가 물어요. `take`(이번 물음에 대한 장치 자신의 id)를 주면 `requested`도 줘요. 이 대화에 압축 요청이 있었는지이고, 있었다면 이번 물음이 그 요청을 써요 |
 | `usage.get` | `refresh` | [상태 표시줄](/ko/docs/guides/terminal/#상태-표시줄)에 나오는 Claude와 Codex 요금제 한도예요. `{usage, refreshing}`으로 답하고, `usage`는 `{claude?: {five_hour?, seven_day?, stale?}, codex?: {five_hour?, weekly?, stale?}, at, problems: [{provider, text}]}`예요. 한도마다 `{used, resets_at?}`이고 `used`는 퍼센트, `resets_at`은 Unix 초, `at`은 Unix 밀리초예요. 꺼 두었거나 지난 3시간 동안 읽은 게 없는 서비스는 빠져요. `stale: true`는 마지막으로 읽기에 실패해서 이전 값을 보여 주는 것이고, 이유는 `problems`에 있어요. 앱이 연결돼 있는 동안 서버가 60초마다 읽고, `refresh: true`는 지금 새로 읽어 달라는 요청이고, `refreshing: true`는 이 요청이 새로 읽기를 시작했다는 뜻이에요. 새 값은 다시 물어보세요. 처음 읽기 전에는 `usage`가 null이에요. `aidectl agent usage`가 불러요 |
-| `pane.wait_output` | `id`, `pattern`, `regex`, `scope`, `timeout_ms`, `since`, `epoch`, `deadline` | <Badge text="다음 릴리스" /> 어떤 줄이 `pattern`을 포함하면(`regex: true`면 정규 표현식으로 맞으면) `{matched, line, row, since, epoch}`로 답해요. 여러 행에 걸쳐 줄바꿈된 줄은 한 줄로 쳐요. `scope: "new"`(기본)는 `since` 행부터의 줄을 보고, 기본값은 물어본 때 커서가 있는 줄이에요. `"screen"`은 화면을 봐요. 답의 `since`는 일치한 줄 다음 행이라, `epoch`와 함께 다시 주면 다음 일치를 기다려요. `timeout_ms`는 따로 정하지 않으면 30 000, 최대 600 000이고, `deadline`(Unix 밀리초)은 더 일찍 끝내요 |
-| `agent.wait` | `id`, `state`, `timeout_ms`, `since`, `deadline` | <Badge text="다음 릴리스" /> 페인의 에이전트가 `working`, `waiting`, `blocked`가 되면 `{matched, state, agent, since}`로 답해요. `done`은 `since`(에이전트의 `seq`, 기본값은 물어본 때의 `seq`) 뒤에 끝나는 턴이에요 |
-| `events.subscribe` | `kinds`, `id`, `pattern`, `regex` | <Badge text="다음 릴리스" /> `{subscribed: true}`로 답한 뒤, 어느 쪽이든 닫을 때까지 같은 연결로 이벤트마다 JSON 한 줄을 보내요. `agent`와 `notify`(`id`가 있으면 그 페인의 것), `tree`(그 스페이스의 것), `output`(`{pane, line, row}`, 페인 `id`에서 끝난 줄 중 `pattern`에 맞는 줄)이에요. `kinds`의 기본값은 `agent`, `tree`, `notify`예요. 이벤트 256개나 1 MiB만큼 뒤처지면 가장 오래된 것부터 버리고 `{"event": "dropped", "count"}`를 보내요. 30초 동안 읽지 않으면 끊어요. 터미널 서버가 그 자리에서 다시 시작하면(업데이트) `{"event": "upgrading"}`을 보내고 구독이 끝나요. 연결은 열려 있으니 그 연결로 다시 구독하세요. 그사이 이벤트는 오지 않아요 |
-| `pane.spawn` | `argv`, `space`, `pane`, `cwd`, `title`, `focus`, `owner`, `keep` | <Badge text="다음 릴리스" /> `argv`(문자열 목록, 그대로 프로그램에 가요)를 `space`(없으면 `pane`의 스페이스)의 새 탭에서 `pane`의 탭 바로 뒤에 실행하고, 현재 탭으로 만들지 않아요. `{session, tab, pane}`으로 답해요. 프로그램이 끝나면 페인도 끝나요. `focus: true`면 보여 줘요. 탭의 `owner`(그 탭 페인들의 `agent.message {to: "owner"}`가 가는 곳)는 `owner`, 없으면 부른 페인, 그것도 없으면 `pane`이에요. `keep: true`면 <Badge text="다음 릴리스" /> 프로그램이 끝날 때 페인에 `[exited N]`이 나오고 셸로 이어져요(`features`에 `keep`이 있어요) |
-| `agent.prompt` | `id`, `text`, `uuid`, `submit` | <Badge text="다음 릴리스" /> 페인의 에이전트에게 `text`를 붙여넣기로 주고(`submit`이면 <kbd>Enter</kbd>도), 음성 프롬프트와 같은 규칙을 따라요. `{inserted, seq}`로 답해요. `uuid`는 이 프롬프트의 id라 다시 보내도 두 번 쓰지 않아요. 그 페인 안에서 보내면 거절해요(`own_pane`) |
-| `agent.message` | `to`, `body` | <Badge text="다음 릴리스" /> 페인 안에서만: `body`(텍스트, 4 KiB까지)를 페인 `to`의 받은 편지함에, `to: "owner"`면 내 탭의 주인 페인의 받은 편지함에 남겨요. `{to, seq}`로 답해요 |
-| `agent.inbox` | `pane`, `wait`, `timeout_ms`, `deadline` | <Badge text="다음 릴리스" /> 그 페인 안에서만: 아직 확인하지 않은 메시지를 오래된 것부터 `{messages: [{seq, at, from, body}], dropped}`로 줘요. 읽어도 지우지 않아요. `dropped`는 마지막 확인 뒤에 받은 편지함(최대 64개)이 버린 수예요. `wait: true`면 메시지가 오면 답하고, 아니면 `timeout`이에요 |
-| `agent.inbox_ack` | `pane`, `upto` | <Badge text="다음 릴리스" /> 그 페인 안에서만: `seq` `upto`까지의 메시지를 지워요. `{removed}`로 답해요 |
-| `notice.list` | | <Badge text="다음 릴리스" /> [알림 센터](/ko/docs/guides/terminal/#알림-센터): 최근 200개를 오래된 것부터 `{notices: [{id, pane, kind, title, body, at, read, dismissed}]}`로 줘요 |
-| `notice.ack` | `id`, `dismiss` | <Badge text="다음 릴리스" /> 알림 하나(`id: "all"`이면 전부)를 읽음으로, `dismiss: true`면 지운 것으로 표시해요. `{changed}`로 답해요. 에이전트의 최근 턴 알림을 읽으면 그 에이전트를 본 것으로도 쳐요 |
-| `agent.compact` | `id`, `cancel` | <Badge text="다음 릴리스" /> 페인의 Claude Code 에이전트에게 다음 단계에서 압축하라고 하거나(`{queued}`), 그 요청을 거둬요(`cancel: true`). 에이전트가 없으면 `no_agent`예요 |
-| `usage.report` | `since`, `until`, `tool`, `fresh`, `label` | <Badge text="다음 릴리스" /> 이 컴퓨터의 Claude Code와 Codex 대화 파일에서 읽은 [토큰과 비용 보고서](/ko/docs/guides/terminal/#토큰과-비용-보고서): `{since, until, pricing_as_of, tools: [{tool, models: [{model, tokens, cost, estimated}], tokens, cost, estimated, partial}], total, warnings, text}`. `since`와 `until`은 유닉스 밀리초(`since`가 없으면 전체, `until`이 없으면 지금), `tokens`는 `{input, cache_write_5m, cache_write_1h, cache_read, output, total}`, `cost`는 미국 달러이고 가격이 없는 모델은 null, `partial`은 그런 모델의 토큰을 비용에서 뺐다는 뜻, `text`는 `aidectl terminal usage`가 출력하는 표(`label`이 머리에 붙어요)예요. 지금까지의 보고서는 `fresh: true`가 아니면 30초 동안 다시 써요. 다른 보고서 넷을 읽는 중이면 `busy`예요 |
-| `doctor.run` | `language` | <Badge text="다음 릴리스" /> [설정 점검](/ko/docs/guides/terminal/#설정-점검): `{errors, warnings, version, sections: [{id, title, path, findings: [{id, level, message, hint, fix}]}], text}`. `level`은 `ok`, `note`, `warn`, `error`, `fix`는 있으면 `install-hooks`나 `restart-server`, `text`는 `aidectl terminal doctor`가 출력하는 내용이에요. 읽기만 해요. 다른 점검이 진행 중이면 `busy`예요 |
-| `terminal.graph` | `pane`, `before`, `limit` | <Badge text="다음 릴리스" /> 이 컴퓨터의 Claude Code와 Codex 대화 파일에서 읽은 [작업 그래프](/ko/docs/guides/terminal/#작업-그래프)예요. `pane`이 없으면 모든 에이전트의 개요 `{graph: {agents: [{pane, tool, conversation, gen, cwd, session, tab, counts, files, subagents, steps, …}]}, text}`, 있으면 그 에이전트의 단계 한 쪽(`before` 앞으로 `limit`개까지, 최대 1000개) `{pane, counts, files, subagents, steps, next_before, …, text}`예요. `counts`는 `{files, reads, edits, writes, searches, runs, prompts, subagents, failed, steps}`, 단계는 `{seq, at_ms, kind, agent, file, label, outcome}`이에요. `text`는 `aidectl terminal graph`가 출력하는 내용이에요. 페인에 그래프가 없거나 **작업 그래프 남기기**가 꺼져 있으면 `no_graph`예요 |
+| `pane.wait_output` | `id`, `pattern`, `regex`, `scope`, `timeout_ms`, `since`, `epoch`, `deadline` | 어떤 줄이 `pattern`을 포함하면(`regex: true`면 정규 표현식으로 맞으면) `{matched, line, row, since, epoch}`로 답해요. 여러 행에 걸쳐 줄바꿈된 줄은 한 줄로 쳐요. `scope: "new"`(기본)는 `since` 행부터의 줄을 보고, 기본값은 물어본 때 커서가 있는 줄이에요. `"screen"`은 화면을 봐요. 답의 `since`는 일치한 줄 다음 행이라, `epoch`와 함께 다시 주면 다음 일치를 기다려요. `timeout_ms`는 따로 정하지 않으면 30 000, 최대 600 000이고, `deadline`(Unix 밀리초)은 더 일찍 끝내요 |
+| `agent.wait` | `id`, `state`, `timeout_ms`, `since`, `deadline` | 페인의 에이전트가 `working`, `waiting`, `blocked`가 되면 `{matched, state, agent, since}`로 답해요. `done`은 `since`(에이전트의 `seq`, 기본값은 물어본 때의 `seq`) 뒤에 끝나는 턴이에요 |
+| `events.subscribe` | `kinds`, `id`, `pattern`, `regex` | `{subscribed: true}`로 답한 뒤, 어느 쪽이든 닫을 때까지 같은 연결로 이벤트마다 JSON 한 줄을 보내요. `agent`와 `notify`(`id`가 있으면 그 페인의 것), `tree`(그 스페이스의 것), `output`(`{pane, line, row}`, 페인 `id`에서 끝난 줄 중 `pattern`에 맞는 줄)이에요. `kinds`의 기본값은 `agent`, `tree`, `notify`예요. 이벤트 256개나 1 MiB만큼 뒤처지면 가장 오래된 것부터 버리고 `{"event": "dropped", "count"}`를 보내요. 30초 동안 읽지 않으면 끊어요. 터미널 서버가 그 자리에서 다시 시작하면(업데이트) `{"event": "upgrading"}`을 보내고 구독이 끝나요. 연결은 열려 있으니 그 연결로 다시 구독하세요. 그사이 이벤트는 오지 않아요 |
+| `pane.spawn` | `argv`, `space`, `pane`, `cwd`, `title`, `focus`, `owner`, `keep` | `argv`(문자열 목록, 그대로 프로그램에 가요)를 `space`(없으면 `pane`의 스페이스)의 새 탭에서 `pane`의 탭 바로 뒤에 실행하고, 현재 탭으로 만들지 않아요. `{session, tab, pane}`으로 답해요. 프로그램이 끝나면 페인도 끝나요. `focus: true`면 보여 줘요. 탭의 `owner`(그 탭 페인들의 `agent.message {to: "owner"}`가 가는 곳)는 `owner`, 없으면 부른 페인, 그것도 없으면 `pane`이에요. `keep: true`면 프로그램이 끝날 때 페인에 `[exited N]`이 나오고 셸로 이어져요(`features`에 `keep`이 있어요) |
+| `agent.prompt` | `id`, `text`, `uuid`, `submit` | 페인의 에이전트에게 `text`를 붙여넣기로 주고(`submit`이면 <kbd>Enter</kbd>도), 음성 프롬프트와 같은 규칙을 따라요. `{inserted, seq}`로 답해요. `uuid`는 이 프롬프트의 id라 다시 보내도 두 번 쓰지 않아요. 그 페인 안에서 보내면 거절해요(`own_pane`) |
+| `agent.message` | `to`, `body` | 페인 안에서만: `body`(텍스트, 4 KiB까지)를 페인 `to`의 받은 편지함에, `to: "owner"`면 내 탭의 주인 페인의 받은 편지함에 남겨요. `{to, seq}`로 답해요 |
+| `agent.inbox` | `pane`, `wait`, `timeout_ms`, `deadline` | 그 페인 안에서만: 아직 확인하지 않은 메시지를 오래된 것부터 `{messages: [{seq, at, from, body}], dropped}`로 줘요. 읽어도 지우지 않아요. `dropped`는 마지막 확인 뒤에 받은 편지함(최대 64개)이 버린 수예요. `wait: true`면 메시지가 오면 답하고, 아니면 `timeout`이에요 |
+| `agent.inbox_ack` | `pane`, `upto` | 그 페인 안에서만: `seq` `upto`까지의 메시지를 지워요. `{removed}`로 답해요 |
+| `notice.list` | | [알림 센터](/ko/docs/guides/terminal/#알림-센터): 최근 200개를 오래된 것부터 `{notices: [{id, pane, kind, title, body, at, read, dismissed}]}`로 줘요 |
+| `notice.ack` | `id`, `dismiss` | 알림 하나(`id: "all"`이면 전부)를 읽음으로, `dismiss: true`면 지운 것으로 표시해요. `{changed}`로 답해요. 에이전트의 최근 턴 알림을 읽으면 그 에이전트를 본 것으로도 쳐요 |
+| `agent.compact` | `id`, `cancel` | 페인의 Claude Code 에이전트에게 다음 단계에서 압축하라고 하거나(`{queued}`), 그 요청을 거둬요(`cancel: true`). 에이전트가 없으면 `no_agent`예요 |
+| `usage.report` | `since`, `until`, `tool`, `fresh`, `label` | 이 컴퓨터의 Claude Code와 Codex 대화 파일에서 읽은 [토큰과 비용 보고서](/ko/docs/guides/terminal/#토큰과-비용-보고서): `{since, until, pricing_as_of, tools: [{tool, models: [{model, tokens, cost, estimated}], tokens, cost, estimated, partial}], total, warnings, text}`. `since`와 `until`은 유닉스 밀리초(`since`가 없으면 전체, `until`이 없으면 지금), `tokens`는 `{input, cache_write_5m, cache_write_1h, cache_read, output, total}`, `cost`는 미국 달러이고 가격이 없는 모델은 null, `partial`은 그런 모델의 토큰을 비용에서 뺐다는 뜻, `text`는 `aidectl terminal usage`가 출력하는 표(`label`이 머리에 붙어요)예요. 지금까지의 보고서는 `fresh: true`가 아니면 30초 동안 다시 써요. 다른 보고서 넷을 읽는 중이면 `busy`예요 |
+| `doctor.run` | `language` | [설정 점검](/ko/docs/guides/terminal/#설정-점검): `{errors, warnings, version, sections: [{id, title, path, findings: [{id, level, message, hint, fix}]}], text}`. `level`은 `ok`, `note`, `warn`, `error`, `fix`는 있으면 `install-hooks`나 `restart-server`, `text`는 `aidectl terminal doctor`가 출력하는 내용이에요. 읽기만 해요. 다른 점검이 진행 중이면 `busy`예요 |
+| `terminal.graph` | `pane`, `before`, `limit` | 이 컴퓨터의 Claude Code와 Codex 대화 파일에서 읽은 [작업 그래프](/ko/docs/guides/terminal/#작업-그래프)예요. `pane`이 없으면 모든 에이전트의 개요 `{graph: {agents: [{pane, tool, conversation, gen, cwd, session, tab, counts, files, subagents, steps, …}]}, text}`, 있으면 그 에이전트의 단계 한 쪽(`before` 앞으로 `limit`개까지, 최대 1000개) `{pane, counts, files, subagents, steps, next_before, …, text}`예요. `counts`는 `{files, reads, edits, writes, searches, runs, prompts, subagents, failed, steps}`, 단계는 `{seq, at_ms, kind, agent, file, label, outcome}`이에요. `text`는 `aidectl terminal graph`가 출력하는 내용이에요. 페인에 그래프가 없거나 **작업 그래프 남기기**가 꺼져 있으면 `no_graph`예요 |
 
 읽어도 페인의 스크롤 위치는 바뀌지 않아요.
 
@@ -353,23 +353,23 @@ AIDE 창이 하나도 없어도 읽고 입력할 수 있어요. 창만 할 수 �
 | `too_small` | 페인이 나누기엔 너무 작음 |
 | `busy` | 이미 클라이언트 16개가 연결돼 있음, 또는 보낸 것을 읽지 않는 프로그램의 페인에 `terminal.exec`이나 `terminal.feed`, 또는() 프로그램이 실행 중인 스페이스에 `space.end` |
 | `no_window` | 그 페인의 볼트를 보여 주는 AIDE 창이 없을 때 `panel.focus`, `tab.switch`, `tab.new`(어느 창도 보여 주지 않는 스페이스라면, 그리로 바꿀 수 있는 창이 없을 때) |
-| `not_in_pane` | 그 페인에서 실행되지 않는 프로그램이 `agent.notify`, `agent.report`, `agent.fill`을 보냄(그리고 `agent.message`, `agent.inbox`, `agent.inbox_ack` <Badge text="다음 릴리스" />) |
+| `not_in_pane` | 그 페인에서 실행되지 않는 프로그램이 `agent.notify`, `agent.report`, `agent.fill`을 보냄(그리고 `agent.message`, `agent.inbox`, `agent.inbox_ack` ) |
 | `no_agent` | 그 페인에 에이전트가 없음 |
 | `unknown_conversation` | 그 id의 대화가 없거나, 페인의 에이전트 대화를 아직 알 수 없음 |
 | `no_mark` | 페인이 없는 번호에 `mark.goto` |
 | `lookup_incomplete` | 그 id를 찾기에는 대화가 너무 많음. 다시 시도하세요 |
 | `frame_too_large` | 요청 줄이 64 KiB를 넘음 |
-| `timeout` | <Badge text="다음 릴리스" /> 기다리는 시간이 다 됨. `error`에 다시 기다릴 `since`(와 `epoch`)가 있어요 |
-| `upgrading` | <Badge text="다음 릴리스" /> 터미널 서버가 그 자리에서 다시 시작하는 중. `error`의 `since`, `epoch`, `deadline`으로 다시 물어보세요. 그사이 출력된 줄도 답이 돼요 |
-| `cursor_lost` | <Badge text="다음 릴리스" /> `since`가 페인에 더는 없는 줄을 가리키거나 `epoch`가 다름(페인 크기가 바뀜). 그것 없이 다시 기다리세요 |
-| `own_pane`, `unknown_caller` | <Badge text="다음 릴리스" /> 그 페인 안에서, 또는 AIDE가 알아볼 수 없는 프로세스에서 보낸 `agent.prompt` |
-| `no_owner` | <Badge text="다음 릴리스" /> 아무도 spawn하지 않은 탭, 또는 주인 페인이 닫힌 탭에서 보낸 `agent.message {to: "owner"}` |
-| `missing_folder`, `bad_layout`, `too_large` | <Badge text="다음 릴리스" /> 없는 폴더를 적었거나, 잘못된 곳이 있거나(메시지에 어디인지 나와요), 16 KiB를 넘는 파일로 부른 `layout.apply`. 아무것도 만들지 않았어요 |
-| `running` | <Badge text="다음 릴리스" /> 셸이 아직 실행 중인 페인에 부른 `pane.respawn` |
+| `timeout` | 기다리는 시간이 다 됨. `error`에 다시 기다릴 `since`(와 `epoch`)가 있어요 |
+| `upgrading` | 터미널 서버가 그 자리에서 다시 시작하는 중. `error`의 `since`, `epoch`, `deadline`으로 다시 물어보세요. 그사이 출력된 줄도 답이 돼요 |
+| `cursor_lost` | `since`가 페인에 더는 없는 줄을 가리키거나 `epoch`가 다름(페인 크기가 바뀜). 그것 없이 다시 기다리세요 |
+| `own_pane`, `unknown_caller` | 그 페인 안에서, 또는 AIDE가 알아볼 수 없는 프로세스에서 보낸 `agent.prompt` |
+| `no_owner` | 아무도 spawn하지 않은 탭, 또는 주인 페인이 닫힌 탭에서 보낸 `agent.message {to: "owner"}` |
+| `missing_folder`, `bad_layout`, `too_large` | 없는 폴더를 적었거나, 잘못된 곳이 있거나(메시지에 어디인지 나와요), 16 KiB를 넘는 파일로 부른 `layout.apply`. 아무것도 만들지 않았어요 |
+| `running` | 셸이 아직 실행 중인 페인에 부른 `pane.respawn` |
 
 ### 터미널 소켓의 제한
 
-- 요청 한 줄은 64 KiB까지, 동시에 클라이언트 16개까지예요(터미널 서버의 소켓은 64개, 그중 기다리거나 구독하는 것은 32개까지 <Badge text="다음 릴리스" />).
+- 요청 한 줄은 64 KiB까지, 동시에 클라이언트 16개까지예요(터미널 서버의 소켓은 64개, 그중 기다리거나 구독하는 것은 32개까지 ).
 - 한 줄을 보내는 데 10초, 응답을 받아 가는 데 10초가 주어지고, 멈춘 클라이언트는 연결이 끊겨요.
 
 `$t`가 그 소켓일 때(페인 안에서는 `$COPAD_SOCKET`, 아니면 위의 폴더):

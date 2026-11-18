@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { Badge, LinkCard } from "@astrojs/starlight/components";
+import { LinkCard } from "@astrojs/starlight/components";
 
 A todo in AIDE is a checkbox line in a note, so there's no separate todo database: `- [ ] Call the bank` in any note is a todo, and the Todos screen gathers every open one from all your notes. Checking it off anywhere changes that line in its note.
 
@@ -188,7 +188,7 @@ With the [agent board](/docs/guides/agent-board/) on, the switch is **Today**, *
 
 A todo counts as today's when it's in today's daily note or its due (or scheduled) date is today.
 
-<Badge text="Next release" /> Each row reads like a [calm todo line](#calm-todo-lines) in the
+Each row reads like a [calm todo line](#calm-todo-lines) in the
 editor, on the Mac, the iPhone and Linux alike:
 
 - Its title shows **two lines at most**, then **…**; the note has it in full.
@@ -249,7 +249,7 @@ To move a card, drag it onto another column on the Mac and Linux. Dropping it in
 
 The card's menu and details also have **Give to an agent** for a todo of yours that isn't a card yet, as in **Today** and **All**.
 
-<Badge text="Next release" /> **Cards** and **Agents** above the filters switch what the board shows. **Agents** lists every coding agent AIDE's terminals know of, with what each asks, what it's doing or how long it has made no progress, what its checkout changed, its card's steps, **Open pane**, **Open card** and **Peek**: the [agent overview](/docs/guides/terminal/#agent-overview). The project chips keep the agents whose card is in that project. Your choice is remembered on the device. On the iPhone it lists the agents of the computers whose AIDE terminal it's connected to.
+**Cards** and **Agents** above the filters switch what the board shows. **Agents** lists every coding agent AIDE's terminals know of, with what each asks, what it's doing or how long it has made no progress, what its checkout changed, its card's steps, **Open pane**, **Open card** and **Peek**: the [agent overview](/docs/guides/terminal/#agent-overview). The project chips keep the agents whose card is in that project. Your choice is remembered on the device. On the iPhone it lists the agents of the computers whose AIDE terminal it's connected to.
 
 ### Focus timer
 
@@ -286,7 +286,7 @@ The [assistant](/docs/guides/assistant/) can propose changes to your todos: time
 
 ### Shortening a long todo
 
-<Badge text="Next release" /> A todo whose title runs past 80 characters, or holds two or more links, gets a small ✨ button at the end of its row on the Todos screen and on its card on the [Board](/docs/guides/agent-board/). Click it (its tooltip is **Shorten the title**) and the [assistant](/docs/guides/assistant/) suggests a shorter title of at most 60 characters.
+A todo whose title runs past 80 characters, or holds two or more links, gets a small ✨ button at the end of its row on the Todos screen and on its card on the [Board](/docs/guides/agent-board/). Click it (its tooltip is **Shorten the title**) and the [assistant](/docs/guides/assistant/) suggests a shorter title of at most 60 characters.
 
 The suggestion waits under the todo like any proposal: the old title struck through, over **Shorten · ** and the new title, with why. Nothing changes until you take it (**✓**); **✕** drops it. The ✨ button hides while a suggestion waits.
 

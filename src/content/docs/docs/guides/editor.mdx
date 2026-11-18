@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
 Every note in AIDE is a Markdown file, and you edit it in one live-preview editor that is the same on the iPhone, the Mac and Linux. What you type stays plain Markdown; the editor only styles it and hides the syntax on lines your cursor isn't on.
 
@@ -94,7 +94,7 @@ Rest the pointer on a note link for a moment (on the iPhone, press and hold it) 
 **Rename…** and **Move to…** give a note a new name or folder: in its row's menu in the Wiki (right-click on the Mac, touch and hold on the iPhone, the **More** button on the row on Linux). On the Mac and Linux, **Rename this note…** and **Move this note to…** in the command palette do the same for the note on screen. The links to it in your other notes follow it, as in Obsidian:
 
 - `[[Old name]]`, `[[Old name|shown text]]`, `[[Old name#Heading]]`, `[[Old name#^block-id]]`, `![[Old name]]` and `[text](old/Old%20name.md)` take the new name or path, keeping the heading, block, shown text and `.md` they had. A link that named the folder names the new one.
-- A link by the note's title or one of its aliases still finds it, so it stays as it is. Links in code stay too: inline code, fenced code blocks and, <Badge text="Next release" /> code blocks indented by four spaces (not a list item's indented text, which stays prose).
+- A link by the note's title or one of its aliases still finds it, so it stays as it is. Links in code stay too: inline code, fenced code blocks and, code blocks indented by four spaces (not a list item's indented text, which stays prose).
 - A link that the new name would send to another note, or make match two notes, gets the longer path of the note it meant and keeps showing what it showed: `[[plugin]]` becomes `[[topics/plugin|plugin]]`.
 - In the moved note, links to images and other files keep pointing at them from its new folder.
 

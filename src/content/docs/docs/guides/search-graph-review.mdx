@@ -5,8 +5,6 @@ sidebar:
     order: 6
 ---
 
-import { Badge } from "@astrojs/starlight/components";
-
 AIDE has three ways to look across your notes: search finds one, the graph shows how they connect, and Review shows what you got done in a week, month, quarter or year.
 
 ## Searching notes
@@ -28,7 +26,7 @@ Inside one note, **Find in Note…** (<kbd>⌘</kbd><kbd>F</kbd>, <kbd>Ctrl</kbd
 
 **Backlinks** lists the notes that point at the note you're reading. On the Mac and Linux it's a view of the right panel (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>\\</kbd>, <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>\\</kbd> on Linux), next to the outline; on the iPhone, open it from the note's **More › Backlinks**.
 
-- **Linked mentions**: each line of another note with a link that opens this note, the same way a click resolves it: a `[[wikilink]]`, an embed or a relative Markdown link. A link in code doesn't count: inline code, a fenced code block or, <Badge text="Next release" /> a code block indented by four spaces.
+- **Linked mentions**: each line of another note with a link that opens this note, the same way a click resolves it: a `[[wikilink]]`, an embed or a relative Markdown link. A link in code doesn't count: inline code, a fenced code block or, a code block indented by four spaces.
 - **Unlinked mentions**, folded: lines of notes that name this note by its title or an alias without linking it. Code, links and web addresses don't count. **Link** beside a line turns that name into a link to this note, in place: `[[Name]]` as you wrote it when that opens the note, otherwise a link by its path that still reads as you wrote it. Only that line changes, and only if it still reads as shown.
 
 Click a line to open its note at that line.
@@ -39,7 +37,7 @@ Pin the notes you come back to and they're listed under **Pinned** at the top of
 
 ## The graph
 
-The graph draws your wiki and periodic notes as dots, sized by how many links they have, with a line for each link between them. Links are resolved the same way as clicking them in a note, and links in code (inline, fenced or, <Badge text="Next release" /> indented by four spaces) aren't drawn.
+The graph draws your wiki and periodic notes as dots, sized by how many links they have, with a line for each link between them. Links are resolved the same way as clicking them in a note, and links in code (inline, fenced or, indented by four spaces) aren't drawn.
 
 - On the Mac and Linux it's the **Graph** section of the sidebar: <kbd>⌘</kbd><kbd>4</kbd> on the Mac, <kbd>Alt</kbd><kbd>4</kbd> on Linux.
 - On the iPhone, open it from the Wiki's **More › Graph**.

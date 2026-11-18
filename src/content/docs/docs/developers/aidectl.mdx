@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 `aidectl` reads and writes your AIDE notes from a terminal, a script, an editor or a status bar. It goes through AIDE's own note rules, so a write never overwrites an edit it didn't see. It knows nothing about any particular workflow: you compose `get`, `put`, `append` and `toggle` yourself.
 
@@ -401,7 +401,7 @@ aidectl status-bar show [--json]
 aidectl status-bar check <file.json | -> [--json]
 ```
 
-<Badge text="Next release" /> Reads the terminal's [status bar](/docs/guides/terminal/#arrange-the-bar)
+Reads the terminal's [status bar](/docs/guides/terminal/#arrange-the-bar)
 settings from the AIDE app as the bar reads them: the parts on each side, the tab format in use, each
 part's colour, and anything that can't be used, with the line and column of a tab format that doesn't
 read. `check` reads a JSON object of the same keys (`left`, `right`, `tab_format`, `style`, and the
@@ -416,7 +416,7 @@ aidectl perf [--json]
 aidectl perf reset
 ```
 
-<Badge text="Next release" /> How long the AIDE app took, on the Mac and Linux, to do what you wait
+How long the AIDE app took, on the Mac and Linux, to do what you wait
 for: launching, opening a note, a key in the editor, switching sections, opening the Board, drawing
 the Board while you scroll it, and a key in the terminal. Each line is one of these with how many
 times it was measured and the median (p50), the 95th percentile and the longest, in milliseconds,
@@ -439,29 +439,29 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `state` | Prints the pane, its tab, size, cursor, folder, title and whether its shell has exited |
 | `exec <line…>` | Types the line and <kbd>Enter</kbd>. It doesn't wait for the command to run |
 | `feed <text>` | Types the text as it is, without <kbd>Enter</kbd> |
-| `feed --file PATH` | <Badge text="Next release" /> Types a file's text into one pane as it is (`-` reads stdin). The file is UTF-8 text of at most 1 MiB. The pane is `--pane`, else the one it runs in, else the focused pane, fixed before anything is typed; while that pane's program isn't reading, it waits up to 10 seconds. If it stops partway, it says how much went |
+| `feed --file PATH` | Types a file's text into one pane as it is (`-` reads stdin). The file is UTF-8 text of at most 1 MiB. The pane is `--pane`, else the one it runs in, else the focused pane, fixed before anything is typed; while that pane's program isn't reading, it waits up to 10 seconds. If it stops partway, it says how much went |
 | `history [--lines N]` | Prints the last `N` rows above the screen, then the screen (`N` is 100 unless you say) |
 | `context [--history-lines N]` | The rows above the screen (50 unless you say), then the screen |
 | `tabs` | Lists every tab and its panes: tab id, pane id, title, and whether the pane is on screen, focused or exited |
-| `tabs [--space S] [--owner P]` | <Badge text="Next release" /> Only that space's tabs, or only the tabs pane `P` owns (the ones it started with `spawn`), whether or not a window shows them. Each tab's place in its space is the number `move-tab` takes |
+| `tabs [--space S] [--owner P]` | Only that space's tabs, or only the tabs pane `P` owns (the ones it started with `spawn`), whether or not a window shows them. Each tab's place in its space is the number `move-tab` takes |
 | `new-tab` | Opens a new tab and prints its pane id |
 | `new-tab [--space S] [--cwd D] [--show]` | Opens the tab in that space (else the space of the pane it runs in), in that folder (else the space's folder), and prints its pane id. No window is needed, and a window showing that space stays on its tab unless `--show` |
-| `new-tab --name N` | <Badge text="Next release" /> Names the new tab |
+| `new-tab --name N` | Names the new tab |
 | `close-tab [<tab>]` | Closes that tab with every pane in it; without a tab id, closes the focused pane |
-| `close-tab --owned-by P (--dry-run \| --yes)` | <Badge text="Next release" /> Closes the tabs pane `P` owns (the ones it started with `spawn`), or with `--dry-run` lists them. A space's last tab stays |
-| `close <pane>` | <Badge text="Next release" /> Closes that pane, and its tab when it was the tab's last |
+| `close-tab --owned-by P (--dry-run \| --yes)` | Closes the tabs pane `P` owns (the ones it started with `spawn`), or with `--dry-run` lists them. A space's last tab stays |
+| `close <pane>` | Closes that pane, and its tab when it was the tab's last |
 | `rename <tab> <title>` | Names a tab; an empty title clears the name |
 | `switch-tab <index>` | Selects a tab by its index in `tabs`, counting from 0 |
 | `split right\|down` | Splits the pane and prints the new pane's id |
-| `split right\|down [--cwd D] [--env K=V]… [-- <program> [args…]]` | <Badge text="Next release" /> The new pane starts in that folder, with those variables, and runs that program until it ends. The program's arguments reach it as they are. Names starting with `AIDE_` or `COPAD_` are refused |
-| `split right\|down --name N` | <Badge text="Next release" /> Gives the new pane that [name](/docs/guides/terminal/#name-a-pane) |
-| `rename-pane [--pane P] <name…>` | <Badge text="Next release" /> Names the pane (yours, else the focused one), or with `""` clears its name, and prints the pane and its name. The name shows on the pane's edge and in its tab, and stays with the layout |
-| `zoom [--pane P]` | <Badge text="Next release" /> The pane fills its tab, or the tab comes back. It acts on `--pane`, else the pane it runs in, else the focused pane |
-| `agent-log <pane> [--last N] [--max-chars N]` | <Badge text="Next release" /> Prints the last `N` entries (20 unless you say, at most 200) of the conversation of that pane's coding agent, read from its own Claude Code or Codex log rather than its screen: what it was asked, what it said, the tools it ran and what they answered, the newest last. Each entry is cut to 400 characters unless `--max-chars` says (0 leaves it whole). Control characters in the text are made harmless before they reach your terminal |
-| `resize left\|right\|up\|down [--cells N] [--pane P]` | <Badge text="Next release" /> Moves the divider beside the pane that way, 2 cells unless `--cells` says |
-| `move-tab <place> [--tab T \| --pane P]` | <Badge text="Next release" /> Moves the tab (`T`, else the pane's) to that place in its space, 0 being the first |
+| `split right\|down [--cwd D] [--env K=V]… [-- <program> [args…]]` | The new pane starts in that folder, with those variables, and runs that program until it ends. The program's arguments reach it as they are. Names starting with `AIDE_` or `COPAD_` are refused |
+| `split right\|down --name N` | Gives the new pane that [name](/docs/guides/terminal/#name-a-pane) |
+| `rename-pane [--pane P] <name…>` | Names the pane (yours, else the focused one), or with `""` clears its name, and prints the pane and its name. The name shows on the pane's edge and in its tab, and stays with the layout |
+| `zoom [--pane P]` | The pane fills its tab, or the tab comes back. It acts on `--pane`, else the pane it runs in, else the focused pane |
+| `agent-log <pane> [--last N] [--max-chars N]` | Prints the last `N` entries (20 unless you say, at most 200) of the conversation of that pane's coding agent, read from its own Claude Code or Codex log rather than its screen: what it was asked, what it said, the tools it ran and what they answered, the newest last. Each entry is cut to 400 characters unless `--max-chars` says (0 leaves it whole). Control characters in the text are made harmless before they reach your terminal |
+| `resize left\|right\|up\|down [--cells N] [--pane P]` | Moves the divider beside the pane that way, 2 cells unless `--cells` says |
+| `move-tab <place> [--tab T \| --pane P]` | Moves the tab (`T`, else the pane's) to that place in its space, 0 being the first |
 | `focus <pane>` | Brings that pane forward: its tab, the Terminal section and the window |
-| `env` | <Badge text="Next release" /> Prints what a new tab takes from the last AIDE or SSH login to connect (**Variables from the attaching client**: your SSH agent, display…), as shell lines: `eval "$(aidectl terminal env)"` brings a shell already running up to date. A variable with no value is `unset`. `--json` gives each name's value, or null. See [Your agent over SSH](/docs/guides/terminal/#your-agent-over-ssh) |
+| `env` | Prints what a new tab takes from the last AIDE or SSH login to connect (**Variables from the attaching client**: your SSH agent, display…), as shell lines: `eval "$(aidectl terminal env)"` brings a shell already running up to date. A variable with no value is `unset`. `--json` gives each name's value, or null. See [Your agent over SSH](/docs/guides/terminal/#your-agent-over-ssh) |
 | `conversations [--dir D \| --here] [--all] [--query Q] [--rescan]` | Lists past Claude Code, Codex and Grok conversations, newest first: id, agent, age, folder, the first prompt, and **● pane N** when a pane has it. `--dir` (or `--here`, this folder) keeps those in that folder or under it; `--all` adds runs nobody typed into |
 | `resume <id> [--tool T] [--focus]` | Opens that conversation in a new tab, in the space working in its folder, else in the session of the pane it runs in, and prints the new pane's id; one a pane already has prints that pane's id instead |
 | `fork [<id>] [--tool T] [--focus]` | Starts a new conversation from the agent in this pane (or `--pane`), or from a past conversation, in a new tab, and prints its pane id |
@@ -477,30 +477,30 @@ Reads and types into AIDE's terminal, and opens, splits, names and closes its ta
 | `worktree list [<dir>]` | Lists the [worktrees](/docs/guides/terminal/#worktrees) of the repository you're in (or `<dir>`'s): branch, folder, **live:** with the spaces working in it (or **not running:**), and the card a space there was started for |
 | `worktree create <branch> [--from REF] [--dir D] [--name N] [--project P] [--vault V] [--show]` | Makes the branch in a folder beside the repository (this folder's, or `--dir`'s) and a space working there, whose first pane runs the repository's worktree command, and prints the space, folder, branch and pane. `--from` starts it elsewhere than the commit you're on. Nothing moves on screen unless `--show` |
 | `worktree rm <branch\|folder> [--dir D] [--force] [--discard-changes] [--delete-branch]` | Removes a worktree: `--force` ends the spaces working in it, `--discard-changes` drops what isn't committed, `--delete-branch` deletes its branch when it is merged. It refuses, before ending anything, the main checkout, a locked worktree, the one your own pane is in, a live space without `--force` and changes without `--discard-changes`; when the branch stays, it says so with git's reason (exit 1) |
-| `wait-output [--pane P] [--regex] [--screen] [--since N --epoch E] [--timeout MS] <pattern>` | <Badge text="Next release" /> Waits until a line printed in the pane from now on contains the pattern (with `--regex`, matches it), and prints that line. A line wrapped across rows counts as one. `--screen` takes a line already on the screen too. `--json` also prints `since` and `epoch`: pass them back with `--since` and `--epoch` to wait for the next match without missing a line in between |
-| `wait-agent --pane P --state working\|waiting\|blocked\|done [--since SEQ] [--timeout MS]` | <Badge text="Next release" /> Waits until the pane's agent is working, waiting, or asking you something (`blocked`), and prints the state (`--json`: the agent). `done` waits for a turn that ends after `SEQ` (the agent's `seq` in `aidectl agent list --json`; without it, after you run this) |
-| `spawn [--space S] [--cwd D] [--title T] [--focus] [--keep] -- <program> [args…]` | <Badge text="Next release" /> Runs the program in a new tab of that space (else the space of the pane it runs in), right after this pane's tab, and prints its pane id. The arguments reach the program as they are, never read by a shell. The tab doesn't become the current one and nothing moves on screen unless `--focus`. When the program ends, so does the pane; with `--keep` <Badge text="Next release" /> the pane says `[exited N]` (its exit code) and goes on as a shell |
-| `spawn --env K=V …` | <Badge text="Next release" /> Gives the program those variables, as `split --env` does |
-| `spawn --name N` | <Badge text="Next release" /> Names the program's pane (`--title` names its tab) |
-| `prompt --pane P [--submit] <text…>` | <Badge text="Next release" /> Gives the pane's agent the text as a paste, with <kbd>Enter</kbd> after it when `--submit`, by the same rules as a [voice prompt](/docs/guides/voice-prompts/): it's refused while the agent asks you something or hasn't turned on bracketed paste. It prints the agent's `seq`, for `wait-agent --state done --since` |
-| `events [--kinds agent,tree,notify,output] [--pane P] [--pattern X] [--regex]` | <Badge text="Next release" /> Prints the terminal's events as JSON lines until you stop it: agents changing state (`agent`), notifications (`notify`), tabs and panes changing (`tree`), and with `--kinds output --pane P --pattern X` each finished line of that pane that matches. `{"event": "dropped", "count": N}` means it fell behind |
-| `message --to owner\|P <text…\|->` | <Badge text="Next release" /> From inside a pane: leaves the text (up to 4 KiB; `-` reads it from stdin) in another pane's inbox. `owner` is the pane whose `spawn` made your tab, so a worker reports to the agent that started it. Prints `delivered to P` |
-| `inbox [--wait] [--timeout MS] [--peek]` | <Badge text="Next release" /> From inside a pane: prints your pane's messages, `[seq] time from pane P: text`, oldest first, and then marks them read; with `--peek` they stay unread. A message stays until it is read this way, so one you lost (a broken pipe) comes again. `--wait` waits for one when there are none. The inbox keeps 64; it says how many older ones were dropped |
-| `notices [--all]` | <Badge text="Next release" /> The [notification center](/docs/guides/terminal/#notification-center): the notifications agents raised on this computer, newest first, a dot before the unread ones. `--all` lists the dismissed ones too |
-| `notice-ack <id\|all> [--dismiss]` | <Badge text="Next release" /> Marks a notification (or every one) read, and with `--dismiss` takes it out of the center |
-| `layout even-horizontal\|even-vertical\|main-horizontal\|main-vertical\|tiled\|next\|spread` | <Badge text="Next release" /> [Arranges](/docs/guides/terminal/#arrange-a-tab-and-type-into-every-pane) the tab of the pane it runs in (or `--pane`'s) and prints the layout, `(already)` after it when nothing moved |
-| `swap prev\|next` | <Badge text="Next release" /> The pane (yours, or `--pane`) trades places with the one before or after it |
-| `rotate [--reverse]` | <Badge text="Next release" /> Every pane of the tab moves one place along, or back |
-| `break` | <Badge text="Next release" /> Moves the pane into a new tab of its own, right after its tab, and prints the tab and pane |
-| `sync on\|off` | <Badge text="Next release" /> Typing into one pane of the tab goes to all of them, or no longer |
-| `layout apply FILE [--dry-run] [--name N] [-d]` | <Badge text="Next release" /> Builds a space from a [layout file](/docs/guides/terminal/#build-a-space-from-a-layout-file) and shows it (`-d` leaves it in the background); `--name` names it instead of the file's `name`. Prints the space id, its name and how many tabs it has. `--dry-run` prints what it would make, every folder resolved, and makes nothing. A folder that isn't there, or a mistake in the file, makes nothing and exits 2 |
-| `respawn [--pane P]` | <Badge text="Next release" /> A new shell in a pane whose shell ended (`--pane`, else the focused one), in the same pane and its last folder; prints the pane id. A pane whose shell still runs is refused |
-| `broadcast (--tab T \| --space S \| --panes P,Q) [--paste] [--enter] (--dry-run \| --yes) <text…>` | <Badge text="Next release" /> Types the text into every running pane of that tab, space or list, but never your own pane: as a paste with `--paste`, then <kbd>Enter</kbd> with `--enter`. `--dry-run` lists them (pane, space, tab, what runs there) and types nothing; `--yes` sends. A pane that can't take it now (its program isn't reading) is listed as skipped. Nothing is undone: running it twice types twice |
-| `broadcast --all [--agents] [--status S] …` | <Badge text="Next release" /> `--all` types into every running pane but yours. `--agents` keeps only panes with a coding agent, and `--status working\|waiting\|blocked\|idle` only agents in that state (`ready` is `waiting`). Both work with `--tab`, `--space` and `--panes` too |
-| `compact [--pane P] [--cancel]` | <Badge text="Next release" /> Asks the pane's Claude Code agent (else your own pane's) to compact at its next step, or with `--cancel` withdraws that. It needs the [gate in request mode](/docs/guides/terminal/#hold-claude-codes-auto-compaction-until-you-commit) |
-| `usage [--window today\|7d\|30d\|all] [--since 5h] [--tool claude\|codex] [--fresh] [--json]` | <Badge text="Next release" /> The [token and cost report](/docs/guides/terminal/#token-and-cost-report): Claude Code's and Codex's tokens and cost per model, from their conversation files on the terminal server's computer, today unless you say (`7d` and `30d` start at local midnight 6 or 29 days ago; `--since 5h` is the last five hours). `?` is a model with no price, `~` an estimate. `--fresh` reads again rather than reuse a report from the last 30 seconds |
-| `doctor [--json] [--language en\|ko]` | <Badge text="Next release" /> The [setup check](/docs/guides/terminal/#check-setup): the terminal server, its sockets and settings, the agent hooks and skills, usage, phone push and the last restore, each finding `ok`, `note`, `warn` or `error` with a line on what it means and, where AIDE has one, the fix the app offers (`install-hooks`, `restart-server`). It changes nothing, and exits 1 when anything is a warning or an error. With no terminal server to ask, it still prints a report that says so |
-| `graph [PANE] [--before N] [--limit N] [--json]` | <Badge text="Next release" /> The [work graph](/docs/guides/terminal/#work-graph): for every agent, its counts, its busiest files (`3r 1e`: read three times, edited once) and newest steps; with a pane, that agent's steps one page at a time (`--before` the first step shown goes back a page). Only calls that succeeded count |
+| `wait-output [--pane P] [--regex] [--screen] [--since N --epoch E] [--timeout MS] <pattern>` | Waits until a line printed in the pane from now on contains the pattern (with `--regex`, matches it), and prints that line. A line wrapped across rows counts as one. `--screen` takes a line already on the screen too. `--json` also prints `since` and `epoch`: pass them back with `--since` and `--epoch` to wait for the next match without missing a line in between |
+| `wait-agent --pane P --state working\|waiting\|blocked\|done [--since SEQ] [--timeout MS]` | Waits until the pane's agent is working, waiting, or asking you something (`blocked`), and prints the state (`--json`: the agent). `done` waits for a turn that ends after `SEQ` (the agent's `seq` in `aidectl agent list --json`; without it, after you run this) |
+| `spawn [--space S] [--cwd D] [--title T] [--focus] [--keep] -- <program> [args…]` | Runs the program in a new tab of that space (else the space of the pane it runs in), right after this pane's tab, and prints its pane id. The arguments reach the program as they are, never read by a shell. The tab doesn't become the current one and nothing moves on screen unless `--focus`. When the program ends, so does the pane; with `--keep` the pane says `[exited N]` (its exit code) and goes on as a shell |
+| `spawn --env K=V …` | Gives the program those variables, as `split --env` does |
+| `spawn --name N` | Names the program's pane (`--title` names its tab) |
+| `prompt --pane P [--submit] <text…>` | Gives the pane's agent the text as a paste, with <kbd>Enter</kbd> after it when `--submit`, by the same rules as a [voice prompt](/docs/guides/voice-prompts/): it's refused while the agent asks you something or hasn't turned on bracketed paste. It prints the agent's `seq`, for `wait-agent --state done --since` |
+| `events [--kinds agent,tree,notify,output] [--pane P] [--pattern X] [--regex]` | Prints the terminal's events as JSON lines until you stop it: agents changing state (`agent`), notifications (`notify`), tabs and panes changing (`tree`), and with `--kinds output --pane P --pattern X` each finished line of that pane that matches. `{"event": "dropped", "count": N}` means it fell behind |
+| `message --to owner\|P <text…\|->` | From inside a pane: leaves the text (up to 4 KiB; `-` reads it from stdin) in another pane's inbox. `owner` is the pane whose `spawn` made your tab, so a worker reports to the agent that started it. Prints `delivered to P` |
+| `inbox [--wait] [--timeout MS] [--peek]` | From inside a pane: prints your pane's messages, `[seq] time from pane P: text`, oldest first, and then marks them read; with `--peek` they stay unread. A message stays until it is read this way, so one you lost (a broken pipe) comes again. `--wait` waits for one when there are none. The inbox keeps 64; it says how many older ones were dropped |
+| `notices [--all]` | The [notification center](/docs/guides/terminal/#notification-center): the notifications agents raised on this computer, newest first, a dot before the unread ones. `--all` lists the dismissed ones too |
+| `notice-ack <id\|all> [--dismiss]` | Marks a notification (or every one) read, and with `--dismiss` takes it out of the center |
+| `layout even-horizontal\|even-vertical\|main-horizontal\|main-vertical\|tiled\|next\|spread` | [Arranges](/docs/guides/terminal/#arrange-a-tab-and-type-into-every-pane) the tab of the pane it runs in (or `--pane`'s) and prints the layout, `(already)` after it when nothing moved |
+| `swap prev\|next` | The pane (yours, or `--pane`) trades places with the one before or after it |
+| `rotate [--reverse]` | Every pane of the tab moves one place along, or back |
+| `break` | Moves the pane into a new tab of its own, right after its tab, and prints the tab and pane |
+| `sync on\|off` | Typing into one pane of the tab goes to all of them, or no longer |
+| `layout apply FILE [--dry-run] [--name N] [-d]` | Builds a space from a [layout file](/docs/guides/terminal/#build-a-space-from-a-layout-file) and shows it (`-d` leaves it in the background); `--name` names it instead of the file's `name`. Prints the space id, its name and how many tabs it has. `--dry-run` prints what it would make, every folder resolved, and makes nothing. A folder that isn't there, or a mistake in the file, makes nothing and exits 2 |
+| `respawn [--pane P]` | A new shell in a pane whose shell ended (`--pane`, else the focused one), in the same pane and its last folder; prints the pane id. A pane whose shell still runs is refused |
+| `broadcast (--tab T \| --space S \| --panes P,Q) [--paste] [--enter] (--dry-run \| --yes) <text…>` | Types the text into every running pane of that tab, space or list, but never your own pane: as a paste with `--paste`, then <kbd>Enter</kbd> with `--enter`. `--dry-run` lists them (pane, space, tab, what runs there) and types nothing; `--yes` sends. A pane that can't take it now (its program isn't reading) is listed as skipped. Nothing is undone: running it twice types twice |
+| `broadcast --all [--agents] [--status S] …` | `--all` types into every running pane but yours. `--agents` keeps only panes with a coding agent, and `--status working\|waiting\|blocked\|idle` only agents in that state (`ready` is `waiting`). Both work with `--tab`, `--space` and `--panes` too |
+| `compact [--pane P] [--cancel]` | Asks the pane's Claude Code agent (else your own pane's) to compact at its next step, or with `--cancel` withdraws that. It needs the [gate in request mode](/docs/guides/terminal/#hold-claude-codes-auto-compaction-until-you-commit) |
+| `usage [--window today\|7d\|30d\|all] [--since 5h] [--tool claude\|codex] [--fresh] [--json]` | The [token and cost report](/docs/guides/terminal/#token-and-cost-report): Claude Code's and Codex's tokens and cost per model, from their conversation files on the terminal server's computer, today unless you say (`7d` and `30d` start at local midnight 6 or 29 days ago; `--since 5h` is the last five hours). `?` is a model with no price, `~` an estimate. `--fresh` reads again rather than reuse a report from the last 30 seconds |
+| `doctor [--json] [--language en\|ko]` | The [setup check](/docs/guides/terminal/#check-setup): the terminal server, its sockets and settings, the agent hooks and skills, usage, phone push and the last restore, each finding `ok`, `note`, `warn` or `error` with a line on what it means and, where AIDE has one, the fix the app offers (`install-hooks`, `restart-server`). It changes nothing, and exits 1 when anything is a warning or an error. With no terminal server to ask, it still prints a report that says so |
+| `graph [PANE] [--before N] [--limit N] [--json]` | The [work graph](/docs/guides/terminal/#work-graph): for every agent, its counts, its busiest files (`3r 1e`: read three times, edited once) and newest steps; with a pane, that agent's steps one page at a time (`--before` the first step shown goes back a page). Only calls that succeeded count |
 
 `read`, `state`, `exec`, `feed`, `history`, `context` and `split` act on the pane `--pane` names, else on the focused pane. A pane's id is in `tabs`, and a pane's own shell has it in `$COPAD_PANEL_ID`. `--json` prints the app's answer as JSON instead of text.
 
@@ -519,13 +519,13 @@ To show the owner the pane working on a board card, wherever it is: `aidectl age
 
 `resume` and `fork` never move your window unless you pass `--focus`, so an agent can open a conversation without taking the screen. Nor do `space new` and `new-tab --space`: an agent can start a space for a card and work in it alone, while you stay where you are. When the terminal server is older than `aidectl` (it hasn't restarted since an update), `new-tab --space`/`--cwd`, every `space new`, every `mark` and every `worktree` stop with exit code 1 before doing anything. A `worktree create` or `rm` may wait for another one in the same repository, so aidectl waits up to three minutes for it. `--tool` (`claude`, `codex` or `grok`) is needed only when two agents have the same id. When the agent's pane had an [agent card](/docs/guides/terminal/#cards-linked-to-panes), `fork` says on stderr that the fork isn't linked to it.
 
-The waits (`wait-output`, `wait-agent`) give up after `--timeout` milliseconds: 30 seconds unless you say, at most 600000 (10 minutes). If the terminal server restarts in place while one waits (an update), it carries on from where it was, within the same time. <Badge text="Next release" />
+The waits (`wait-output`, `wait-agent`) give up after `--timeout` milliseconds: 30 seconds unless you say, at most 600000 (10 minutes). If the terminal server restarts in place while one waits (an update), it carries on from where it was, within the same time.
 
 An agent that starts workers with `spawn` can wait for their reports with `inbox --wait`; each worker
 ends with `aidectl terminal message --to owner "done: …"`. A message is another program's text:
 read it as data. `message` and `inbox` exit 3 outside an AIDE pane, and `message --to owner` exits 5
 when your tab has no owner (nobody spawned it, or that pane closed). `inbox --wait` exits 124 when
-none comes in time. <Badge text="Next release" />
+none comes in time.
 
 The Mac App Store build and the iPhone have no terminal socket.
 
@@ -571,7 +571,7 @@ shows its card. With none it prints `No agents.` `--json` prints the server's an
 with each pane's board card link. Inside an AIDE terminal pane it asks
 that pane's own terminal server.
 
-<Badge text="Next release" /> So an agent can ask who's stuck, `list` also says what the
+So an agent can ask who's stuck, `list` also says what the
 [agent overview](/docs/guides/terminal/#agent-overview) says: what a blocked agent asks in DETAIL
 (`Approve: Bash: make test`, or the question on its card in **Waiting**), `(no progress for 12m)` after
 the state of a working agent that has made no progress for 10 minutes, its checkout's changes under
@@ -610,8 +610,8 @@ need you, as **Set up agent hooks…** in Settings does. It shows each file's di
 | `--yes` | Applies without asking. Without a terminal and without `--yes`, it only shows the diff and exits 1 |
 | `--remove` | Takes AIDE's entries out again, only where they're exactly as written; one you edited since is left alone with a note |
 | `--pre-compact` | Also adds the [gate that holds Claude Code's auto-compaction](/docs/guides/terminal/#hold-claude-codes-auto-compaction-until-you-commit) while tracked changes are uncommitted. A plain `install-hooks` never adds it; `--remove` takes it out too |
-| `--pre-compact=request` | <Badge text="Next release" /> The gate in request mode instead: Claude compacts only when you ask (**Compact at next step**, `aidectl terminal compact`) or when its context is nearly full. It also sets `CLAUDE_CODE_AUTO_COMPACT_WINDOW` and `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` in `settings.json`'s `env` |
-| `--window N` | <Badge text="Next release" /> With `--pre-compact=request`: your model's context window in tokens. Without it, `install-hooks` asks, offering 1,000,000 for a model whose name ends in `[1m]` and 200,000 otherwise; without a terminal it stops with exit code 2 |
+| `--pre-compact=request` | The gate in request mode instead: Claude compacts only when you ask (**Compact at next step**, `aidectl terminal compact`) or when its context is nearly full. It also sets `CLAUDE_CODE_AUTO_COMPACT_WINDOW` and `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` in `settings.json`'s `env` |
+| `--window N` | With `--pre-compact=request`: your model's context window in tokens. Without it, `install-hooks` asks, offering 1,000,000 for a model whose name ends in `[1m]` and 200,000 otherwise; without a terminal it stops with exit code 2 |
 
 It runs the terminal server's own `hooks` command through the link AIDE keeps,
 `~/Library/Application Support/AIDE/bin/aide-mux` on the Mac and `~/.local/share/aide/bin/aide-mux`
@@ -748,12 +748,12 @@ The extension commands found (see below): name, description, path, tab-separated
 | 0 | Done |
 | 1 | Error |
 | 2 | Usage: a wrong flag or argument, or no vault or server configured |
-| 3 | Path taken (`put --create-only`). For `terminal message` and `inbox`: not in an AIDE pane. <Badge text="Next release" /> |
-| 4 | Conflict: the note moved on; nothing was written. For `terminal wait-output --since`: the lines to go on from are gone (wait again without `--since`). <Badge text="Next release" /> |
-| 5 | Not found: the note, the heading for `append`, the action for `action run`, or the card for `board`. For `terminal message --to owner`: your tab has no owner. <Badge text="Next release" /> |
+| 3 | Path taken (`put --create-only`). For `terminal message` and `inbox`: not in an AIDE pane. |
+| 4 | Conflict: the note moved on; nothing was written. For `terminal wait-output --since`: the lines to go on from are gone (wait again without `--since`). |
+| 5 | Not found: the note, the heading for `append`, the action for `action run`, or the card for `board`. For `terminal message --to owner`: your tab has no owner. |
 | 6 | `board step`: two steps have that title (say which number), or the plan changed meanwhile |
 | 7 | `board done`: todos under the card are still open |
-| 124 | `terminal wait-output`, `wait-agent` or `inbox --wait`: the time ran out. <Badge text="Next release" /> |
+| 124 | `terminal wait-output`, `wait-agent` or `inbox --wait`: the time ran out. |
 
 An extension command exits with its own code (128 plus the signal number when a signal ended it).
 

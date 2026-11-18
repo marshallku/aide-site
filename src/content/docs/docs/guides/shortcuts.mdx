@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 AIDE on the Mac and Linux has the same shortcuts, with <kbd>⌘</kbd> on the Mac where Linux uses
 <kbd>Ctrl</kbd>. On the Mac each one is also in the menu bar, and every command is in the command
@@ -132,8 +132,8 @@ While a terminal has the keyboard, these act on its tabs and panes:
 | Focus the pane to the left / below / above / to the right | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd>, or <kbd>Ctrl</kbd><kbd>Shift</kbd> and the arrows |
 | Move the divider left / down / up / right | <kbd>⌃</kbd><kbd>⌘</kbd> and the arrows | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd> and the arrows |
 | Zoom pane | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd> |
-| Copy mode ([vi keys](/docs/guides/terminal/#copy-mode)) <Badge text="Next release" /> | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd> |
-| [Sync panes](/docs/guides/terminal/#arrange-a-tab-and-type-into-every-pane) <Badge text="Next release" /> | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>I</kbd> | none |
+| Copy mode ([vi keys](/docs/guides/terminal/#copy-mode)) | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd> |
+| [Sync panes](/docs/guides/terminal/#arrange-a-tab-and-type-into-every-pane) | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>I</kbd> | none |
 | Previous / next tab | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
 | Go to tab 1–9 | <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> or <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
 | Find in terminal | <kbd>⌘</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> |
@@ -146,7 +146,7 @@ While a terminal has the keyboard, these act on its tabs and panes:
 | Jump to the newest finished agent | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd> | none |
 | Switch space, tab or agent… | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd> |
 | Resume a conversation… | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>R</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>R</kbd> |
-| Notifications <Badge text="Next release" /> | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>N</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>N</kbd> |
+| Notifications | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>N</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>N</kbd> |
 | Move tab left / right | none | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Down</kbd> |
 
 On Linux, a program that wants <kbd>Alt</kbd> with a digit for itself (readline,
@@ -212,22 +212,22 @@ While a terminal has the keyboard, the prefix doesn't reach the program: the sta
 | <kbd>!</kbd> | Jump to the agent that needs you |
 | <kbd>u</kbd> | Jump to the newest finished agent |
 | <kbd>R</kbd> | Resume a conversation… |
-| <kbd>[</kbd> | Copy mode <Badge text="Next release" /> |
-| <kbd>Space</kbd> | Next layout <Badge text="Next release" /> |
-| <kbd>Alt</kbd><kbd>1</kbd> … <kbd>Alt</kbd><kbd>5</kbd> (<kbd>⌥</kbd> on the Mac) | Even horizontal, Even vertical, Main horizontal, Main vertical, Tiled layout <Badge text="Next release" /> |
-| <kbd>E</kbd> | Spread panes evenly <Badge text="Next release" /> |
-| <kbd>{"{"}</kbd> / <kbd>{"}"}</kbd> | Swap with the previous pane / Swap with the next pane <Badge text="Next release" /> |
-| <kbd>Ctrl</kbd><kbd>O</kbd> / <kbd>Alt</kbd><kbd>O</kbd> (<kbd>⌃</kbd> / <kbd>⌥</kbd> on the Mac) | Rotate panes / Rotate panes back <Badge text="Next release" /> |
-| <kbd>B</kbd> | Break pane into a tab <Badge text="Next release" /> |
-| <kbd>T</kbd> | [Rename pane…](/docs/guides/terminal/#name-a-pane) <Badge text="Next release" /> |
-| <kbd>S</kbd> | Sync panes <Badge text="Next release" /> |
-| <kbd>n</kbd> / <kbd>p</kbd> | Next terminal tab / Previous terminal tab <Badge text="Next release" /> |
-| <kbd>1</kbd> … <kbd>9</kbd> | Tab 1 … Tab 9 <Badge text="Next release" /> |
-| <kbd>,</kbd> | Rename terminal tab…: the tab's name field in the status bar <Badge text="Next release" /> |
-| <kbd>&amp;</kbd> | Close terminal tab, with all its panes <Badge text="Next release" /> |
-| <kbd>s</kbd> | Show or hide the panel <Badge text="Next release" /> |
-| <kbd>a</kbd> | Notifications <Badge text="Next release" /> |
-| <kbd>W</kbd> | New worktree… <Badge text="Next release" /> |
+| <kbd>[</kbd> | Copy mode |
+| <kbd>Space</kbd> | Next layout |
+| <kbd>Alt</kbd><kbd>1</kbd> … <kbd>Alt</kbd><kbd>5</kbd> (<kbd>⌥</kbd> on the Mac) | Even horizontal, Even vertical, Main horizontal, Main vertical, Tiled layout |
+| <kbd>E</kbd> | Spread panes evenly |
+| <kbd>{"{"}</kbd> / <kbd>{"}"}</kbd> | Swap with the previous pane / Swap with the next pane |
+| <kbd>Ctrl</kbd><kbd>O</kbd> / <kbd>Alt</kbd><kbd>O</kbd> (<kbd>⌃</kbd> / <kbd>⌥</kbd> on the Mac) | Rotate panes / Rotate panes back |
+| <kbd>B</kbd> | Break pane into a tab |
+| <kbd>T</kbd> | [Rename pane…](/docs/guides/terminal/#name-a-pane) |
+| <kbd>S</kbd> | Sync panes |
+| <kbd>n</kbd> / <kbd>p</kbd> | Next terminal tab / Previous terminal tab |
+| <kbd>1</kbd> … <kbd>9</kbd> | Tab 1 … Tab 9 |
+| <kbd>,</kbd> | Rename terminal tab…: the tab's name field in the status bar |
+| <kbd>&amp;</kbd> | Close terminal tab, with all its panes |
+| <kbd>s</kbd> | Show or hide the panel |
+| <kbd>a</kbd> | Notifications |
+| <kbd>W</kbd> | New worktree… |
 | <kbd>?</kbd> | **Terminal keys**: **Settings › Keyboard** with the terminal's actions, each with its prefix key |
 
 - The prefix pressed twice sends it to the program, for a tmux or readline inside.
@@ -412,14 +412,14 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `terminal/pane-numbers` | Show pane numbers |
 | `terminal/resize-left`, `terminal/resize-down`, `terminal/resize-up`, `terminal/resize-right` | Move the divider left, down, up, right |
 | `terminal/zoom-pane` | Zoom pane |
-| `terminal/copy-mode` | Copy mode <Badge text="Next release" /> |
-| `terminal/layout-even-horizontal`, `terminal/layout-even-vertical`, `terminal/layout-main-horizontal`, `terminal/layout-main-vertical`, `terminal/layout-tiled` | Even horizontal layout, Even vertical layout, Main horizontal layout, Main vertical layout, Tiled layout <Badge text="Next release" /> |
-| `terminal/next-layout`, `terminal/spread-panes` | Next layout, Spread panes evenly <Badge text="Next release" /> |
-| `terminal/swap-pane-prev`, `terminal/swap-pane-next` | Swap with the previous pane, Swap with the next pane <Badge text="Next release" /> |
-| `terminal/rotate-panes`, `terminal/rotate-panes-back` | Rotate panes, Rotate panes back <Badge text="Next release" /> |
-| `terminal/break-pane` | Break pane into a tab <Badge text="Next release" /> |
-| `terminal/rename-pane` | Rename pane… <Badge text="Next release" /> |
-| `terminal/sync-panes` | Sync panes <Badge text="Next release" /> |
+| `terminal/copy-mode` | Copy mode |
+| `terminal/layout-even-horizontal`, `terminal/layout-even-vertical`, `terminal/layout-main-horizontal`, `terminal/layout-main-vertical`, `terminal/layout-tiled` | Even horizontal layout, Even vertical layout, Main horizontal layout, Main vertical layout, Tiled layout |
+| `terminal/next-layout`, `terminal/spread-panes` | Next layout, Spread panes evenly |
+| `terminal/swap-pane-prev`, `terminal/swap-pane-next` | Swap with the previous pane, Swap with the next pane |
+| `terminal/rotate-panes`, `terminal/rotate-panes-back` | Rotate panes, Rotate panes back |
+| `terminal/break-pane` | Break pane into a tab |
+| `terminal/rename-pane` | Rename pane… |
+| `terminal/sync-panes` | Sync panes |
 | `terminal/close-pane` | Close pane |
 | `terminal/new-space` | New space… |
 | `terminal/next-space`, `terminal/previous-space` | Next space, Previous space |
@@ -430,7 +430,7 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `terminal/mark`, `terminal/goto-mark` | Mark this pane…, Go to a mark… (no shortcut until you give it one) |
 | `terminal/move-tab-left`, `terminal/move-tab-right` | Move tab left, Move tab right |
 | `terminal/open-project-space` | Open this project's space (no shortcut until you give it one) |
-| `terminal/next-tab`, `terminal/previous-tab`, `terminal/close-tab`, `terminal/rename-tab` | Next terminal tab, Previous terminal tab, Close terminal tab, Rename terminal tab… (no shortcut until you give it one; the prefix's <kbd>n</kbd> <kbd>p</kbd> <kbd>&amp;</kbd> <kbd>,</kbd>) <Badge text="Next release" /> |
+| `terminal/next-tab`, `terminal/previous-tab`, `terminal/close-tab`, `terminal/rename-tab` | Next terminal tab, Previous terminal tab, Close terminal tab, Rename terminal tab… (no shortcut until you give it one; the prefix's <kbd>n</kbd> <kbd>p</kbd> <kbd>&amp;</kbd> <kbd>,</kbd>) |
 | `terminal/key-help` | Terminal keys: **Settings › Keyboard** on the terminal's actions (no shortcut until you give it one; the prefix's <kbd>?</kbd>) |
 | `terminal/open-remote-aide` | Open remote AIDE… (no shortcut until you give it one) |
 | `terminal/tab-1` … `terminal/tab-9` | Tab 1 … Tab 9: <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> on the Mac. On Linux, no shortcut until you give it one (<kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> are the terminal's own keys) |
