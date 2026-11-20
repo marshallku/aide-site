@@ -250,6 +250,12 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   haven't looked yet), the usage readout, and the clock. Click the needs-you count to
   [jump to the agent that needs you](#jump-to-an-agent), the done count to jump to the one that
   finished last, and the working count to open the [agent overview](#agent-overview).
+- <Badge text="Next release" /> Before the agent counts, a bell and the number of unread
+  [notifications](#notification-center) of panes still open. Click it to go to the newest one's
+  pane (another pane's first, when the one you're in has some too), its space first; the
+  notification is read once the pane shows. A pane closed since says **That pane is gone**.
+- <Badge text="Next release" /> While the Terminal section's panel shows its list (Agents or Tabs),
+  the bar leaves the agent counts to the list and shows the pill even with **Every space**.
 
 Press <kbd>⌥</kbd><kbd>1</kbd> to <kbd>⌥</kbd><kbd>9</kbd> on the Mac, or
 <kbd>Alt</kbd><kbd>1</kbd> to <kbd>Alt</kbd><kbd>9</kbd> on Linux, to show a tab by its number;
@@ -261,6 +267,10 @@ tabs**), and you can give the tabs other keys in **Settings › Keyboard**.
 When the window is narrow, the bar gives things up in this order: the clock, the usage gauges (the
 percentages stay), the usage, the tabs away from the one on screen (`‹` and `›` stand for them and
 show the nearest one), and the pill's branch.
+
+<Badge text="Next release" /> While the panel shows its list, only the tabs give way first: their
+names are cut to six characters, then only their numbers show (point at one for its whole name), then
+the tabs away from the one on screen; only then the clock, the usage and the pill's branch.
 
 The usage readout comes last: Claude's 5-hour and weekly limits, and Codex's. The terminal server
 reads them for every AIDE on the computer, from Claude Code's own sign-in and Codex's newest session,
@@ -308,11 +318,11 @@ and both read them the same way.
 |---|---|---|
 | **Tab format** | Empty | How a tab is labelled; empty uses **Tab labels**. See below. |
 | **Left side** | `space, tabs` | The parts at the left end, in order. |
-| **Right side** | `flags, agents, usage, clock` | The parts at the right end, in order. |
+| **Right side** | `flags, attention, agents, usage, clock` <Badge text="Next release" /> | The parts at the right end, in order. |
 | **Tab color**, **Active tab color**, **Mode flags color**, **Clock color** | **Default** | **Text**, **Secondary text**, **Accent**, **Success**, **Warning**, **Danger** or **Info**. |
 
 The parts are `space` (the pill, or the chips with **Every space**), `tabs` (with **+** after them),
-`flags` (`ZOOM`, `^B`, and from the next release `LOCK`), `agents`, `usage` and `clock`. Each part goes in one side only, and the tabs
+`flags` (`ZOOM`, `^B`, and from the next release `LOCK`), `attention` (the bell, from the next release), `agents`, `usage` and `clock`. A right side saved as the old default, `flags, agents, usage, clock` in that order, gets `attention`; any other keeps its parts until you add it. Each part goes in one side only, and the tabs
 are always there: left out of both sides, they join the left. **Show status bar** off keeps only the
 space and the tabs, where you put them, and **Clock** off drops the clock; your order stays for when
 you turn them back on. A name AIDE doesn't know shows under the field and is left out.
