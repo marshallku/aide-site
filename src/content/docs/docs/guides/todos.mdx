@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { LinkCard } from "@astrojs/starlight/components";
+import { Badge, LinkCard } from "@astrojs/starlight/components";
 
 A todo in AIDE is a checkbox line in a note, so there's no separate todo database: `- [ ] Call the bank` in any note is a todo, and the Todos screen gathers every open one from all your notes. Checking it off anywhere changes that line in its note.
 
@@ -187,6 +187,11 @@ The **Todos** screen shows the number of open todos and switches between **Today
 With the [agent board](/docs/guides/agent-board/) on, the switch is **Today**, **Board** and **All**. Your coding agents' work (their cards, the steps under them, and any todo with an `agent` field and what's under it) stays off **Today** and **All**, and out of what the assistant plans with; **All** ends with a line such as **3 agent cards on the Board**, which opens the board showing only the agents' cards.
 
 A todo counts as today's when it's in today's daily note or its due (or scheduled) date is today.
+
+<Badge text="Next release" /> On the Mac and Linux, the right panel's **Today** view shows the same
+plan beside any section, with or without the terminal: a todo with its time block or, without one,
+its due day when it has one, and a timed event with its time. Click a todo to open its note. It reads the plan again every 30 seconds
+while it shows, so a todo you write in a note appears there shortly.
 
 Each row reads like a [calm todo line](#calm-todo-lines) in the
 editor, on the Mac, the iPhone and Linux alike:
