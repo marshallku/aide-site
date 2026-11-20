@@ -954,6 +954,26 @@ it printed, with a small gauge of its context when AIDE knows it.
 - Click a row to go to that agent: its tab is selected, its pane gets the keyboard and the window
   comes forward. Looking at it this way turns **Done** into **Waiting**.
 - With none, the list says **No agents running**.
+- <Badge text="Next release" /> Click a space's or host's heading to fold it; a folded heading still
+  shows how many of its agents need you (▲), are done (✓) and are working (●). Going to a space opens
+  it until you leave it again; a heading you fold or open yourself stays that way.
+- <Badge text="Next release" /> The context gauge turns to the warning colour once the context is 80%
+  full or more.
+- <Badge text="Next release" /> The row of an agent that needs you has an **Open** button, which goes
+  to its pane as a click on the row does (not while the row says **Not updating**).
+
+<Badge text="Next release" /> On Linux, `left = ["tabs"]` under `[terminal.layout]` in `config.toml`
+puts a **Tabs** list in the panel instead: every tab of every space under its space's heading, with
+its agent's state, and a split tab's agents under it. Spaces with no agent, no unread notice and no
+bell fold into one **Quiet · N spaces** row, which you click to list them; the space on screen never
+folds, and a space leaves the fold as soon as one of those arrives. The Mac has no way to turn the
+Tabs list on yet. Other keys there:
+
+| Key | Default | What it does |
+|---|---|---|
+| `fold_quiet` | `true` | `false` lists the quiet spaces like the others. |
+| `row_lines` | `2` | `1` draws each row on one line, with the context gauge only from 80%. |
+| `row_format` | the title | A template for a row's title over `glyph`, `title`, `action`, `card`, `context` and `space`, written as the status bar's `tab_format` is. |
 
 #### Jump to an agent
 
