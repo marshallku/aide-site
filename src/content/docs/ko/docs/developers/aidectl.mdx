@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 `aidectl`은 터미널, 스크립트, 에디터, 상태 표시줄에서 AIDE 노트를 읽고 써요. AIDE의 노트 규칙을 그대로 따르기 때문에, 보지 못한 편집을 덮어쓰는 일은 없어요. 특정 작업 방식은 정해 두지 않았어요. `get`, `put`, `append`, `toggle`을 직접 조합해서 쓰면 돼요.
 
@@ -44,7 +44,13 @@ import { Aside } from "@astrojs/starlight/components";
 - `aidectl where`는 다음 명령이 어떤 노트에 닿을지와 그 이유를 보여 줘요.
 - 페인은 자기를 띄운 AIDE의 `aidectl`을 써요. 셸 시작 파일이 실행된 뒤 그 `aidectl`을 `PATH` 맨 앞에 두고,
   `$AIDECTL`에 전체 경로를 넣어 둬요. 그래서 Homebrew나 `~/.local/bin`의 예전 `aidectl`이 대신 실행되지 않아요.
+  다음 릴리스부터는 AIDE의 `claude`와 `codex`만 그보다 앞에 와요.
   `aidectl where`는 실행된 바이너리도 알려 줘요. 예전 것이면 `$AIDECTL`로 실행하세요.
+- <Badge text="다음 릴리스" /> `aidectl where`는 한 줄로 실행한 페인이 Claude Code와 Codex에게 AIDE 맥락을 줄 수 있는지 알려 줘요.
+  `agent context: on`, 또는 `off`와 그 이유예요([에이전트에게 주는 AIDE 맥락](/ko/docs/guides/terminal/#에이전트에게-주는-aide-맥락)
+  참고). 그 아래에는 둘 중 하나가 AIDE를 건너뛰게 만드는 별칭, 셸 함수, 앞선 `PATH` 항목을 알려 줘요. `on`이어도 반드시
+  받는 건 아니에요. AIDE가 쓰는 옵션이 없는 버전처럼, 맥락 없이 시작되는 경우가 있어요. AIDE가 시작한 에이전트 안에서 실행하면 그 세션을 시작할 때 AIDE가 정한 결과를
+  알려 줘요. `--json`에서는 `agent_context`예요.
 
 ```sh
 aidectl --vault ~/Notes daily
@@ -223,6 +229,17 @@ aidectl board start <card> --worktree [--repo DIR] [--branch B] [--from REF] [--
 - `adopt`는 앱의 **에이전트에게 맡기기**처럼 내 할 일 하나를 카드로 만들어요. 그 노트의 그 줄(`show`가 출력하는 것처럼 1부터 세요)에 있는 할 일이 메모와 하위 할 일과 함께 `board` 폴더 아래 그 프로젝트의 노트로 옮겨지고, 원래 있던 줄은 `[>]`가 돼요. `--text`(`todos`가 출력하는 할 일의 텍스트)가 지금 그 줄과 같아야 하고, 다르면 아무것도 하지 않아요(종료 코드 5). `--project`는 옮기면서 프로젝트를 정하고, `--agent`는 에이전트를 정해요. 없으면 페인의 에이전트, 그것도 없으면 `agent`예요. 카드 ID를 출력하고, 터미널 페인 안이면 그 페인을 연결해요. 열린 할 일의 하위 할 일은 부모와 함께 가야 하고(종료 코드 6), 반복하는 할 일이나 카드는 맡길 수 없어요(종료 코드 2). 앱에서 맡긴 카드는 에이전트가 맡기 전까지 에이전트가 `agent`예요.
 
 변경은 모두 방금 읽은 노트를 바탕으로 만들고, 그사이 아무도 노트를 바꾸지 않았을 때만 저장해요. 그 순간 노트에서 단계를 체크했다면 aidectl이 다시 읽고 그 위에 변경을 더해요. 덮어쓰지 않아요. `board` 폴더 밖의 노트로 옮긴 카드는 더 이상 카드가 아니에요.
+
+### guide
+
+<Badge text="다음 릴리스" />
+
+```sh
+aidectl guide board
+```
+
+에이전트가 [에이전트 보드](/ko/docs/guides/agent-board/)에 계획을 남기는 방법을 출력해요. `aide-board` 스킬의 글이라,
+스킬이 없는 에이전트도 읽을 수 있어요. 터미널 페인에서 시작한 Codex에게는 이 명령을 알려 줘요.
 
 ### toggle
 

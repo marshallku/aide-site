@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE에는 자체 터미널이 있어서, 노트 옆에 셸을 띄워 둘 수 있어요. 로컬 셸이 없는 iPhone에서는
 대신 SSH 섹션에서 서버로 터미널을 열어요.
@@ -925,6 +925,7 @@ Mac에서는 첫 알림 때 권한을 물어요. Linux에서는 데스크톱이 
 |---|---|---|
 | **코딩 에이전트 살펴보기** | 켜짐 | 끄면 에이전트를 아예 찾지 않아요. 목록이 비고, 표시, 상태 항목, 알림도 없어요(`agents`). |
 | **작업 그래프 남기기** | 켜짐 | 에이전트가 읽고, 고치고, 실행한 것을 오른쪽 패널의 [작업 그래프](#작업-그래프)에 보여 주려고 터미널 서버가 실행되는 컴퓨터에 30일 동안 남겨요(`graph`). 끄면 아무것도 읽거나 남기지 않아요. |
+| **에이전트에게 AIDE 맥락 알려 주기** <Badge text="다음 릴리스" /> | 켜짐 | 패널에서 시작한 Claude Code와 Codex가 그 세션 동안 보드와 노트를 알게 돼요(`agent_context`). [에이전트에게 주는 AIDE 맥락](#에이전트에게-주는-aide-맥락)을 보세요. |
 | **에이전트가 작업을 마치면 알림** | 켜짐 | 에이전트의 작업이 끝나면 알림을 보내요(`notify_done`). 꺼도 **완료**로는 보여요. |
 | **에이전트가 확인을 기다리면 알림** | 켜짐 | 에이전트가 무언가를 물으면 알림을 보내요(`notify_blocked`). |
 | **다시 알림** | 10분 | **끔**, 5분, 10분, 30분. 확인을 기다리기 시작한 뒤 그만큼 지나도 보지 않았으면 한 번 더 알려요(`notify_remind`). |
@@ -1020,7 +1021,43 @@ AIDE 페인 안의 코딩 에이전트가 `aidectl board add`로 [에이전트 �
 - 페인에서 클릭한 카드 링크는 페인이 아니라 보드에서 카드를 열어요([페인 안의 링크](#페인-안의-링크) 참고).
 - `<vault>`는 보관소의 ID예요. 노트 폴더는 그 폴더의 ID, 서버의 노트는 `server:` 뒤에 서버 ID와 내 사용자 ID가 붙어요.
 
+#### 에이전트에게 주는 AIDE 맥락
+
+<Badge text="다음 릴리스" />
+
+페인에서 Claude Code나 Codex를 시작하면 처음부터 AIDE 안에 있다는 걸 알아요. 노트가 어디 있는지,
+[에이전트 보드](/ko/docs/guides/agent-board/)에 계획을 어떻게 남기는지, 이 페인이 어떤 카드를 맡았는지요. 에이전트 자체
+설정에는 아무것도 쓰지 않아요. 맥락은 그 세션에만 있고, 다른 곳에서 시작한 에이전트는 평소처럼 실행돼요.
+
+- **Claude Code**는 그 세션에 AIDE의 플러그인 `aide`를 받아요. `aide:aide-board` 스킬, 그리고 세션을 시작할 때마다
+  페인, 그 페인의 `aidectl`, 카드를 알려 주는 짧은 안내예요. 내 플러그인, MCP 서버, 훅은 그대로예요.
+- **Codex**는 내 `developer_instructions`(명령줄, 고른 프로필, `config.toml`에서 온 것) 뒤에 몇 줄짜리 안내를 받아요.
+  자세한 내용은 `aidectl guide board`를 보라고 알려 줘요. `AGENTS.md` 파일은 평소처럼 읽어요. 프로젝트의
+  `.codex/config.toml`이 `developer_instructions`를 정해 두었으면 그대로 둬요.
+- 세션을 시작하는 명령만 받아요. `claude`와 `codex`, `codex exec`, `codex resume`, `codex fork`예요. `claude mcp`,
+  `codex login` 같은 명령은 그대로 실행돼요.
+- 다시 열거나 포크한 에이전트, 재시작 뒤에 돌아온 에이전트도 받아요.
+- AIDE 터미널 서버가 에이전트가 그 페인 안에서 시작됐다고 확인할 때만, 그리고 **설정 › 터미널 › 에이전트에게 AIDE 맥락
+  알려 주기**가 켜져 있을 때만 받아요. 거기서 끄면 그다음에 어느 페인에서든 시작하는 에이전트는 맥락 없이 실행돼요.
+- SSH로 접속해 AIDE 페인 밖에서 시작한 에이전트는 아무것도 받지 않아요([원격 페인](#원격-aide-열기)은 AIDE 페인이라 받아요).
+  그런 컴퓨터에서는
+  [`aidectl agent skills sync`](/ko/docs/developers/aidectl/#앱이-없는-컴퓨터의-에이전트-스킬)로 스킬을, `aidectl agent install-hooks`로 에이전트 훅을
+  설치하세요.
+
+페인은 AIDE의 `claude`와 `codex`를 `PATH` 맨 앞, `aidectl`보다도 앞에 두어요. 이 둘이 맥락을 더한 뒤 실제 프로그램을
+실행해요. 그래서 `claude`나 `codex`라는 별칭이나 셸 함수, 또는 프로그램의 전체 경로로 실행하면 AIDE를 거치지 않아요.
+`command claude`로 실행하면 다시 AIDE를 거쳐요.
+
+페인에서 `aidectl where`를 실행하면 그 페인이 에이전트에게 맥락을 줄 수 있는지, 없으면 왜인지 알려 줘요. AIDE를 건너뛰게
+만드는 별칭이나 셸 함수도 알려 줘요. 여기서 `on`이어도 반드시 받는 건 아니에요. AIDE가 쓰는 옵션이 없는 버전의 Claude
+Code나 Codex는 맥락 없이 시작돼요. `.codex/config.toml`이 `developer_instructions`를 정해 둔 프로젝트의 Codex도 마찬가지예요. 그 세션을
+시작할 때 AIDE가 정한 결과는 에이전트 안에서 `aidectl where`를 실행하면 볼 수 있어요.
+
 #### 플러그인 스킬
+
+다음 릴리스부터는 **에이전트에게 AIDE 맥락 알려 주기**가 켜져 있으면 페인에서 시작한 Claude Code와 Codex가 이 설정 없이도
+세션 동안 보드를 알게 돼요. Claude Code는 스킬로, Codex는 `aidectl guide board`를 보라는 안내로 받아요([에이전트에게 주는
+AIDE 맥락](#에이전트에게-주는-aide-맥락) 참고). 아래 스킬은 그 밖의 플러그인, Grok, AIDE 밖에서 시작한 에이전트를 위한 거예요.
 
 Mac과 Linux에서는 켠 플러그인의 스킬을 Claude Code, Codex, Grok에게 줄 수 있어요. 스킬은 에이전트에게 `aidectl`로 플러그인을 쓰는
 법을 알려 주는 짧은 안내예요. **설정 › 터미널 › 플러그인 스킬**에서 **플러그인의 스킬을 코딩 에이전트에게 주기**를 켜기

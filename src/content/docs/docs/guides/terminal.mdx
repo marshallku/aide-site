@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 On the Mac and Linux, AIDE has a terminal of its own, so you can keep a shell next to your notes. On
 the iPhone, which has no local shell, the SSH section opens terminals to your servers instead.
@@ -1010,6 +1010,7 @@ one reaches the server, and the last change wins. On Linux they're also kept in 
 |---|---|---|
 | **Watch for coding agents** | On | Off, AIDE doesn't look for agents at all: the list stays empty, and there are no marks, status item or notifications (`agents`). |
 | **Keep a work graph** | On | What each agent reads, edits and runs, for the right panel's [Work graph](#work-graph), kept 30 days on the computer the terminal server runs on (`graph`). Off, nothing is read or kept. |
+| **Give agents AIDE's context** <Badge text="Next release" /> | On | Claude Code and Codex started in a pane learn about your board and notes for that session (`agent_context`). See [AIDE's context for agents](#aides-context-for-agents). |
 | **Notify when an agent finishes** | On | A notification when an agent's turn ends (`notify_done`). Off, it still shows as **Done**. |
 | **Notify when an agent needs you** | On | A notification when an agent asks you something (`notify_blocked`). |
 | **Remind after** | 10 min | **Off**, 5, 10 or 30 min: one more notification that long after an agent started needing you, if you haven't looked at it (`notify_remind`). |
@@ -1121,9 +1122,50 @@ When a coding agent in one of AIDE's panes adds an [agent card](/docs/guides/age
 - A card link you click in a pane opens the card on the Board, never a pane (see [Links in a pane](#links-in-a-pane)).
 - `<vault>` is the vault's id: a notes folder's own id, or `server:` followed by the server's and your user's ids for a server's notes.
 
+#### AIDE's context for agents
+
+<Badge text="Next release" />
+
+When you start Claude Code or Codex in a pane, it already knows it's in AIDE: where your notes are,
+how to keep its plan on the [agent board](/docs/guides/agent-board/), and which card the pane works
+on. Nothing is written to the agents' own settings: the context is for that session only, and an
+agent you start anywhere else runs as it always does.
+
+- **Claude Code** starts with AIDE's plugin `aide` for the session: the `aide:aide-board` skill, and
+  a short note at the start of each session naming the pane, the pane's own `aidectl` and its card.
+  Your own plugins, MCP servers and hooks stay as they are.
+- **Codex** gets a few lines of instructions after any of your own `developer_instructions` (from
+  the command line, the profile you chose or `config.toml`), pointing it at `aidectl guide board`
+  for the details. Your `AGENTS.md` files are read as usual. A project whose own
+  `.codex/config.toml` sets `developer_instructions` is left as it is.
+- Only the commands that start a session get it: `claude` and `codex`, `codex exec`, `codex resume`
+  and `codex fork`. `claude mcp`, `codex login` and the like run untouched.
+- It reaches agents you resume or fork, and the ones that come back after a restart.
+- It's given only when AIDE's terminal server confirms the agent was started inside that pane, and
+  only while **Settings › Terminal › Give agents AIDE's context** is on. Turn it off there: the next
+  agent you start, in any pane, runs without it.
+- An agent you start over SSH outside an AIDE pane gets nothing (a [remote pane](#open-remote-aide) is an
+  AIDE pane and does get it). On such a computer, use
+  [`aidectl agent skills sync`](/docs/developers/aidectl/#agent-skills-on-a-computer-without-the-app) for the skills and `aidectl agent
+  install-hooks` for the agent hooks on that computer instead.
+
+It works because the pane puts AIDE's own `claude` and `codex` first on `PATH`, ahead of even
+`aidectl`; they add the context and start the real program. So an alias or a shell function named
+`claude` or `codex`, or the program's full path, skips AIDE. `command claude` goes through AIDE
+again.
+
+Run `aidectl where` in a pane to see whether the pane can give agents the context, and why not. It
+also names an alias or a shell function that skips AIDE. An `on` there isn't a promise: a version of
+Claude Code or Codex that doesn't have the option AIDE uses still starts without it, and so does
+Codex in a project whose `.codex/config.toml` sets `developer_instructions`. Run `aidectl where` inside the agent to see
+what AIDE decided when that session started.
+
 #### Plugin skills
 
-On the Mac and on Linux, AIDE can give Claude Code, Codex and Grok the skills of the plugins you turn
+From the next release, Claude Code and Codex started in a pane learn the board for that session
+without this, while **Give agents AIDE's context** is on: Claude Code as the skill, Codex as a pointer
+to `aidectl guide board` (see [AIDE's context for agents](#aides-context-for-agents)). These skills
+are for the other plugins, for Grok, and for agents you start outside AIDE. On the Mac and on Linux, AIDE can give Claude Code, Codex and Grok the skills of the plugins you turn
 on: short instructions that teach an agent how to use a plugin with `aidectl`. It's off until you
 turn on **Give plugins' skills to your coding agents** under **Settings › Terminal › Plugin skills**.
 

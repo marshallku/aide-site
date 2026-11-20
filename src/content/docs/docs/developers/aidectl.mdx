@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 `aidectl` reads and writes your AIDE notes from a terminal, a script, an editor or a status bar. It goes through AIDE's own note rules, so a write never overwrites an edit it didn't see. It knows nothing about any particular workflow: you compose `get`, `put`, `append` and `toggle` yourself.
 
@@ -44,8 +44,15 @@ Each source names a vault or a server, not both; one that names both stops with 
 - `aidectl where` prints which notes the next command would reach, and why.
 - A pane runs its own AIDE's `aidectl`: after your shell's startup files run, the pane puts that
   copy first on `PATH` and sets `$AIDECTL` to its full path, so an older copy from Homebrew or
-  `~/.local/bin` isn't the one that answers. `aidectl where` also names the binary that ran; if
+  `~/.local/bin` isn't the one that answers. From the next release, only AIDE's own `claude` and
+  `codex` come before it. `aidectl where` also names the binary that ran; if
   it's an old one, run `$AIDECTL` instead.
+- <Badge text="Next release" /> `aidectl where` prints a line `agent context: on`, or `off` and why: whether
+  the pane it runs in can give Claude Code and Codex AIDE's context (see [AIDE's context for
+  agents](/docs/guides/terminal/#aides-context-for-agents)). Under it, it names an alias, a shell
+  function or an earlier `PATH` entry that skips AIDE for one of them. `on` isn't a promise: AIDE
+  can still start an agent without the context, for example a version without the option it uses. Run inside an agent AIDE started, it says what AIDE decided when that
+  session started. `--json` has it as `agent_context`.
 
 ```sh
 aidectl --vault ~/Notes daily
@@ -224,6 +231,18 @@ The [agent board](/docs/guides/agent-board/): coding agents keep their plan here
 - `adopt` makes one of your todos a card, as **Give to an agent** in the app does: the todo at that line of that note (1-based, as `show` prints it) moves, with its memo and subtasks, to its project's note under the `board` folder, and the line where it was becomes `[>]`. `--text` (the todo's text as `todos` prints it) must still be what the line reads, or nothing happens (exit 5). `--project` sets its project on the way; `--agent` names the agent, else the pane's, else `agent`. It prints the card's id and, inside a terminal pane, links the pane. A subtask of an open todo goes with its parent (exit 6), and a repeating todo or a card can't be adopted (exit 2). Cards you handed over from the app have the agent `agent` until an agent picks them up.
 
 Every change is made on the note as just read and saved only if nobody changed it meanwhile; if you ticked a step in the note at that moment, aidectl reads it again and makes its change on top of yours, never over it. A card you moved to a note outside the `board` folder is no card any more.
+
+### guide
+
+<Badge text="Next release" />
+
+```sh
+aidectl guide board
+```
+
+Prints how an agent keeps its plan on the [agent board](/docs/guides/agent-board/): the text of the
+`aide-board` skill, for an agent that doesn't have the skill. Codex started in a terminal pane is
+pointed here.
 
 ### toggle
 
