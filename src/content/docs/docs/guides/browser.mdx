@@ -5,7 +5,7 @@ sidebar:
     order: 16
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 The Browser is a web browser built into AIDE on the Mac and Linux. You browse in it like any other
 browser, and a coding agent in your terminal can drive the same pages with
@@ -30,7 +30,10 @@ The Browser isn't in the Mac App Store build or on the iPhone.
 
 - There is one browser for the whole app. Every window's Browser section and right-panel view show
   the same tabs. The page is drawn in one place at a time; the other place says the browser is
-  showing elsewhere (on Linux, with a **Show it here** button).
+  showing elsewhere (on Linux, with a **Show it here** button). <Badge text="Next release" /> While the
+  main area is the Browser section, the right panel doesn't offer its Browser view. If the panel was
+  showing it, it shows **Outline** there instead; the panel keeps Browser as its view, so it's back in
+  the other sections.
 - Type an address in the toolbar to open a page. The toolbar also has back, forward, reload, a new
   tab and **Grab**.
 - Tabs: open, close and select them in the tab strip. On the Mac, a tab's right-click menu has

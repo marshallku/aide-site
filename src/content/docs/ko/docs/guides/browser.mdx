@@ -5,7 +5,7 @@ sidebar:
     order: 16
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 브라우저는 Mac과 Linux의 AIDE에 들어 있는 웹 브라우저예요. 여느 브라우저처럼 직접 쓰면서, 터미널의 코딩
 에이전트도 [`aidectl browser`](/ko/docs/developers/aidectl/#browser)로 같은 페이지를 다룰 수 있어요. 페이지를
@@ -30,7 +30,9 @@ Mac App Store 빌드와 iPhone에는 브라우저가 없어요.
 
 - 앱 전체에 브라우저는 하나예요. 모든 창의 브라우저 섹션과 오른쪽 패널 보기가 같은 탭을 보여 줘요. 페이지는
   한 곳에만 그려지고, 다른 곳에는 브라우저가 다른 곳에 있다고 나와요(Linux에서는 **여기에 표시** 버튼과
-  함께).
+  함께). <Badge text="다음 릴리스" /> 메인 영역이 브라우저 섹션일 때는 오른쪽 패널에 브라우저 보기가 없어요.
+  패널이 브라우저를 보여 주고 있었다면 그동안 **개요**가 보여요. 패널은 브라우저를 보기로 기억하고 있어서, 다른 섹션에서
+  다시 브라우저가 보여요.
 - 도구 막대에 주소를 입력하면 페이지가 열려요. 도구 막대에는 뒤로, 앞으로, 새로고침, 새 탭, **가져오기**도
   있어요.
 - 탭은 탭 줄에서 열고 닫고 고를 수 있어요. Mac에서는 탭을 오른쪽 클릭하면 **왼쪽으로 이동**, **오른쪽으로

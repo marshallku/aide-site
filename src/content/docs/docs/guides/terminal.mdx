@@ -189,14 +189,19 @@ bottom of the pane says **Copy mode**. The keys are comux's:
 
 The right panel (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>\\</kbd>, <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>\\</kbd> on
 Linux) has a **Terminal** view: the same tabs and the same shells, next to whatever the main area
-shows, such as a note. While the main area is the Terminal section, the shells are there and the
-panel says so.
+shows, such as a note. While the main area is the Terminal section, the shells are there, so the
+panel doesn't offer its Terminal view <Badge text="Next release" />. If the panel was showing it, it
+shows **Outline** there instead; the panel keeps Terminal as its view, so it's back when you go to
+another section.
 
 #### Work graph
 
 The right panel's **Work graph** view shows what each Claude Code or
 Codex agent in your panes has read, edited, written, searched and run, as a graph that grows while
 it works. Open it from the panel's views, or choose **Work graph** in the command palette.
+
+<Badge text="Next release" /> On Linux, `right = []` under `[terminal.layout]` in `config.toml` leaves
+the Work graph out of the right panel and out of the command palette.
 
 - **This agent** shows one agent (pick it in the menu beside); **All agents** shows every agent, with
   the files more than one of them touched marked.
