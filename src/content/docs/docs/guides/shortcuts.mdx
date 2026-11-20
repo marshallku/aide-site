@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 AIDE on the Mac and Linux has the same shortcuts, with <kbd>⌘</kbd> on the Mac where Linux uses
 <kbd>Ctrl</kbd>. On the Mac each one is also in the menu bar, and every command is in the command
@@ -145,6 +145,7 @@ While a terminal has the keyboard, these act on its tabs and panes:
 | Jump to the agent that needs you | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>B</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd> |
 | Jump to the newest finished agent | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd> | none |
 | Switch space, tab or agent… | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd> |
+| [Open the switcher from a pane](/docs/guides/terminal/#the-switcher-key) (again, or <kbd>Esc</kbd>, closes it) <Badge text="Next release" /> | <kbd>⌃</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>F</kbd> |
 | Resume a conversation… | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>R</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>R</kbd> |
 | Notifications | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>N</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>N</kbd> |
 | Move tab left / right | none | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Down</kbd> |
@@ -178,6 +179,9 @@ terminal and reach the shell instead: <kbd>Ctrl</kbd><kbd>P</kbd>, <kbd>Ctrl</kb
 <kbd>Ctrl</kbd><kbd>O</kbd>, <kbd>Ctrl</kbd><kbd>F</kbd>, <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd>,
 <kbd>Ctrl</kbd><kbd>W</kbd> and the tab-switching keys. The rest, <kbd>Ctrl</kbd><kbd>,</kbd>
 included, keep working. Click outside the terminal to use them again.
+
+<Badge text="Next release" /> In a pane, <kbd>Ctrl</kbd><kbd>F</kbd> opens the switcher instead (the
+[switcher key](/docs/guides/terminal/#the-switcher-key)), unless it's locked.
 </Aside>
 
 ### The prefix key
@@ -208,6 +212,7 @@ While a terminal has the keyboard, the prefix doesn't reach the program: the sta
 | <kbd>&lt;</kbd> / <kbd>&gt;</kbd> | Back to the previous place / Forward to the next place |
 | <kbd>m</kbd> / <kbd>'</kbd> | Mark this pane… / Go to a mark… |
 | <kbd>f</kbd> or <kbd>w</kbd> | List tabs… |
+| <kbd>g</kbd> <Badge text="Next release" /> | [Lock the switcher key](/docs/guides/terminal/#the-switcher-key), or unlock it; the status bar shows `LOCK` while it's locked |
 | <kbd>Shift</kbd><kbd>←</kbd> / <kbd>Shift</kbd><kbd>→</kbd> | Move tab left / Move tab right |
 | <kbd>!</kbd> | Jump to the agent that needs you |
 | <kbd>u</kbd> | Jump to the newest finished agent |
@@ -307,6 +312,20 @@ The keys you press in a terminal belong to the program running there, so your sh
 - **Linux**: while a terminal has the keyboard, only shortcuts with <kbd>Ctrl</kbd><kbd>Shift</kbd>
   or <kbd>Ctrl</kbd><kbd>Alt</kbd> (and <kbd>Ctrl</kbd><kbd>,</kbd>) reach AIDE. Plain
   <kbd>Ctrl</kbd> letters, <kbd>Super</kbd> shortcuts and function keys go to the program.
+
+<Badge text="Next release" /> The switcher key is the one more key that reaches AIDE in a pane:
+**Open the switcher from a pane**, <kbd>⌃</kbd><kbd>F</kbd> on the Mac and <kbd>Ctrl</kbd><kbd>F</kbd>
+on Linux (see [The switcher key](/docs/guides/terminal/#the-switcher-key)). The note under the list
+in **Settings › Keyboard** says so too.
+
+- Give it another shortcut, and that one opens the switcher in a pane while <kbd>Ctrl</kbd><kbd>F</kbd>
+  goes to the program again. **Clear** sends <kbd>Ctrl</kbd><kbd>F</kbd> to the program, and the
+  switcher keeps <kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd> (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd>).
+- The prefix key, then <kbd>g</kbd>, locks it so the program gets <kbd>Ctrl</kbd><kbd>F</kbd>; the
+  same again unlocks it. A plain <kbd>Ctrl</kbd><kbd>G</kbd> never does.
+- On Linux it shares <kbd>Ctrl</kbd><kbd>F</kbd> with **Find in note**: one acts in a pane, the other
+  in a note. Giving either one its own shortcut back takes nothing from the other. Recording
+  <kbd>Ctrl</kbd><kbd>F</kbd> for any other action takes it from both.
 
 The terminal's own actions (**New terminal tab**, **Split right**, **Split down**, **Next pane**,
 **Previous pane**, **Close pane**, the focus, divider, zoom and pane-number ones, the space
@@ -426,6 +445,8 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `terminal/rename-space`, `terminal/end-space` | Rename space…, End space… (no shortcut until you give it one) |
 | `terminal/jump-blocked`, `terminal/jump-unread` | Jump to the agent that needs you, Jump to the newest finished agent |
 | `terminal/switcher`, `terminal/tab-list` | Switch space, tab or agent…, List tabs… |
+| `terminal/switcher-key` <Badge text="Next release" /> | Open the switcher from a pane: <kbd>⌃</kbd><kbd>F</kbd> on the Mac, <kbd>Ctrl</kbd><kbd>F</kbd> on Linux, only while a pane has the keyboard |
+| `terminal/lock` <Badge text="Next release" /> | Lock the switcher key (no shortcut until you give it one; the prefix's <kbd>g</kbd>) |
 | `terminal/nav-back`, `terminal/nav-forward`, `terminal/nav-last` | Back to the previous place, Forward to the next place, Last place (no shortcut until you give it one) |
 | `terminal/mark`, `terminal/goto-mark` | Mark this pane…, Go to a mark… (no shortcut until you give it one) |
 | `terminal/move-tab-left`, `terminal/move-tab-right` | Move tab left, Move tab right |

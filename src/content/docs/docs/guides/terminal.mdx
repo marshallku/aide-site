@@ -237,7 +237,9 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   host, as `box:3:zsh`. Click a tab to show it, double-click to rename it, right-click for its menu;
   its × shows on the tab on screen and when you point at another. **+** opens a new tab.
 - On the right: `ZOOM` while the tab on screen has a pane zoomed, `SYNC` while it's
-  [synced](#arrange-a-tab-and-type-into-every-pane) , `^B` while the
+  [synced](#arrange-a-tab-and-type-into-every-pane) , `COPY` while its pane is in
+  [copy mode](#copy-mode), `LOCK` <Badge text="Next release" /> while the
+  [switcher key](#the-switcher-key) is locked (click it to unlock), `^B` while the
   [prefix key](/docs/guides/shortcuts/#the-prefix-key) waits for its next key, then the agents in every space,
   each count after its mark from the Agents list (working, needs you, and done: finished, and you
   haven't looked yet), the usage readout, and the clock. Click the needs-you count to
@@ -305,7 +307,7 @@ and both read them the same way.
 | **Tab color**, **Active tab color**, **Mode flags color**, **Clock color** | **Default** | **Text**, **Secondary text**, **Accent**, **Success**, **Warning**, **Danger** or **Info**. |
 
 The parts are `space` (the pill, or the chips with **Every space**), `tabs` (with **+** after them),
-`flags` (`ZOOM`, `^B`), `agents`, `usage` and `clock`. Each part goes in one side only, and the tabs
+`flags` (`ZOOM`, `^B`, and from the next release `LOCK`), `agents`, `usage` and `clock`. Each part goes in one side only, and the tabs
 are always there: left out of both sides, they join the left. **Show status bar** off keeps only the
 space and the tabs, where you put them, and **Clock** off drops the clock; your order stays for when
 you turn them back on. A name AIDE doesn't know shows under the field and is left out.
@@ -492,6 +494,11 @@ Get back to where you just were, to a pane you marked, or to any tab by a few le
   does; <kbd>←</kbd> and <kbd>→</kbd> switch between **Spaces**, **Agents** and **Tabs** (turn on
   **All spaces** for every space's tabs), <kbd>↑</kbd> and <kbd>↓</kbd> move, <kbd>Return</kbd> goes
   there and <kbd>F2</kbd> renames a space. Under the list, the selected one's last lines show.
+- <Badge text="Next release" /> On **Agents**, each row says under its title what the agent is
+  doing: its state (● **Working**, ✓ **Done**, ▲ **Needs you**, ○ **Waiting** or **Idle**), what it's
+  at (**Not updating** while AIDE can't confirm its state, what it waits for while it needs you,
+  otherwise what it's doing), how full its context is (`62%`, or tokens such as `131k` when the size
+  of its context window isn't known) and its space: `● Working · Editing main.rs · 62% · aide`.
 - **List tabs…** opens the same list on **Tabs** with the tab you were on before selected, so it
   and then <kbd>Return</kbd> flip between two tabs.
 - **Back to the previous place**, **Forward to the next place** and **Last place** walk the places
@@ -504,10 +511,40 @@ Get back to where you just were, to a pane you marked, or to any tab by a few le
 - **Move tab left** and **Move tab right** move the tab you're on along the bar
   (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> and <kbd>Page Down</kbd> on Linux).
 
-Only the switcher and Linux's move-tab keys have a shortcut; give the others one in
-**Settings › Keyboard**, or run them from the command palette. Marks and the switcher's preview
+Only the switcher and Linux's move-tab keys have a shortcut (from the next release, so does the
+[switcher key](#the-switcher-key)); give the others one in **Settings › Keyboard**, or run them from
+the command palette. Marks and the switcher's preview
 need the terminal server from this version: an older one shows **The terminal server needs
 updating** until it restarts.
+
+#### The switcher key
+
+<Badge text="Next release" />
+
+One key reaches the switcher from any pane, as comux's <kbd>Ctrl</kbd><kbd>f</kbd> does. While a pane
+has the keyboard, press <kbd>⌃</kbd><kbd>F</kbd> on the Mac or <kbd>Ctrl</kbd><kbd>F</kbd> on Linux:
+the switcher opens, and the program in the pane doesn't get the key. Press it again, or
+<kbd>Esc</kbd>, to close the switcher; the keyboard is back in the pane you opened it from.
+
+- It acts only in a pane. In a note, <kbd>Ctrl</kbd><kbd>F</kbd> on Linux is still **Find in note**.
+  On the Mac, <kbd>⌘</kbd><kbd>F</kbd> is still **Find in note**, and the terminal's find bar in a
+  pane.
+- It's the action **Open the switcher from a pane**. Give it another shortcut in **Settings ›
+  Keyboard**, or **Clear** it there, and <kbd>Ctrl</kbd><kbd>F</kbd> goes to the program again (see
+  [In a terminal](/docs/guides/shortcuts/#in-a-terminal)).
+- While an input method is composing (Korean, Japanese, Chinese), or the pane is in
+  [copy mode](#copy-mode), the key goes to the pane.
+
+For a program that wants <kbd>Ctrl</kbd><kbd>F</kbd> itself (readline's forward-char, Emacs), lock
+the switcher key: press the [prefix key](/docs/guides/shortcuts/#the-prefix-key), then <kbd>g</kbd>
+(**Lock the switcher key**). While it's locked, the key goes to the program and the
+[status bar](#the-status-bar) shows `LOCK`. Press the prefix and <kbd>g</kbd> again, or click
+`LOCK`, to unlock. The lock is the window's own, and it holds only the switcher key: the prefix,
+<kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd> (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd>) and your other
+shortcuts keep working. **Lock the switcher key** has no shortcut of its own until you give it one
+in **Settings › Keyboard**.
+
+The switcher key isn't on the iPhone.
 
 #### Spaces and projects
 
