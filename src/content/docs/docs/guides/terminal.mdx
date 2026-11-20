@@ -1004,8 +1004,10 @@ it printed, with a small gauge of its context when AIDE knows it.
 - <Badge text="Next release" /> The row of an agent that needs you has an **Open** button, which goes
   to its pane as a click on the row does (not while the row says **Not updating**).
 
-<Badge text="Next release" /> **Settings › Terminal › Layout › Left list** set to **Tabs** (on Linux also
-`left = ["tabs"]` under `[terminal.layout]` in `config.toml`) puts a **Tabs** list in the panel instead: every tab of every space under its space's heading, with
+<Badge text="Next release" /> The panel shows a **Tabs** list by default, instead of the Agents list
+above. To get the Agents list back, set **Settings › Terminal › Layout › Left list** to **Agents** (on
+Linux also `left = ["agents"]` under `[terminal.layout]` in `config.toml`). The Agents list was the
+default before, so choosing it then saved nothing: choose it again after the update. The Tabs list shows every tab of every space under its space's heading, with
 its agent's state, and a split tab's agents under it. Spaces with no agent, no unread notice and no
 bell fold into one **Quiet · N spaces** row, which you click to list them; the space on screen never
 folds, and a space leaves the fold as soon as one of those arrives. The other settings there (on Linux,
@@ -1014,7 +1016,7 @@ the keys under `[terminal.layout]`):
 | Setting | Default | What it does |
 |---|---|---|
 | **Fold quiet spaces** (`fold_quiet`) | On | Off lists the quiet spaces like the others. |
-| **One-line rows** (`row_lines = 1`) | Off | Draws each row on one line, with the context gauge only from 80%. |
+| **Rows** (`row_lines`, `auto_lines`) | Auto | **Auto** draws a row on up to three lines (its title, what it's doing, its card), and on one line while the list is longer than the panel; the selected tab's row and an agent waiting for your answer keep theirs. **One line**, **Two lines** or **Three lines** draw a row on at most that many lines, however long the list. A one-line row shows the context gauge only from 80%. A `row_lines` set in `config.toml` from before stays a fixed count. |
 | **Row format** (`row_format`) | the title | A template for a row's title over `glyph`, `title`, `action`, `card`, `context` and `space`, written as the status bar's **Tab format** is. One that doesn't read shows its line and column under the field and is kept as you wrote it, while the list uses the title. |
 
 On Linux, a setting you put back to its default in Settings is taken out of `config.toml`, so a later
