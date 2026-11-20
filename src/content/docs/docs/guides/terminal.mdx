@@ -200,8 +200,9 @@ The right panel's **Work graph** view shows what each Claude Code or
 Codex agent in your panes has read, edited, written, searched and run, as a graph that grows while
 it works. Open it from the panel's views, or choose **Work graph** in the command palette.
 
-<Badge text="Next release" /> On Linux, `right = []` under `[terminal.layout]` in `config.toml` leaves
-the Work graph out of the right panel and out of the command palette.
+<Badge text="Next release" /> On Linux, `right` under `[terminal.layout]` in `config.toml` lists the
+terminal's right-panel views in their order: `agents`, `notices` and `workgraph`, all three when it's
+left out. `right = []` leaves them all out, and the Work graph out of the command palette too.
 
 - **This agent** shows one agent (pick it in the menu beside); **All agents** shows every agent, with
   the files more than one of them touched marked.
@@ -222,6 +223,31 @@ the Work graph out of the right panel and out of the command palette.
 - On the iPhone, **Work graph** at the top of a host's **Agents** sheet shows that host's graph; tap
   an agent to open its pane. Files there are the host's, so a double-click shows the path instead.
 - `aidectl terminal graph` prints the same (see [aidectl](/docs/developers/aidectl/#terminal)).
+
+#### Agents in the right panel
+
+<Badge text="Next release" /> Beside the Terminal section, the right panel's **Agents** view lists your
+agents as the [agent overview](#agent-overview) does, and shows one of them in detail above the list:
+the first, or the one you click. Other sections don't offer it, nor does a `right` that leaves
+`agents` out; the panel remembers it for the Terminal section and shows its own view elsewhere.
+
+- Its name and state, what it asks or is doing, and how full its context is, such as
+  **Context 62%** (in the warning colour from 80%).
+- The [card](/docs/guides/agent-board/) its pane works on, with how many of its steps are done and each
+  step with its mark.
+- **Recent tool calls**: its last five, newest first, each with what it did (**Read**, **Edit**,
+  **Write**, **Delete**, **Search**, **Run**, **Web** or **Subagent**), what it was about, such as the
+  file it touched, the command it ran, what it searched for or the subagent's task, and **Running** or
+  **Failed** when it's either. They come from the
+  [work graph](#work-graph) and update every few seconds while the view shows; with **Keep a work
+  graph** off it says **None yet**.
+
+#### Notifications in the right panel
+
+<Badge text="Next release" /> The right panel's **Notifications** view is the
+[notification center](#notification-center) in the panel, in every section while the terminal is
+on (unless `right` above leaves `notices` out): the same rows, **Clear all** and **Dismiss**, and <kbd>↑</kbd>, <kbd>↓</kbd>, <kbd>Return</kbd> and
+<kbd>Delete</kbd> as there. Going to a pane from it leaves the panel as it is. A terminal server from an older AIDE says to restart it for the notification center.
 
 Find goes on past the last match to the first, and says **No matches**
 when there are none, on the Mac and Linux.
