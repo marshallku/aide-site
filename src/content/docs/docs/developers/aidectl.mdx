@@ -428,6 +428,21 @@ rest of `[terminal.status_bar]`) from a file or standard input, answers the same
 and exits 1 when anything in it can't be used. Change the settings themselves in **Settings ›
 Terminal › Status bar** (or `config.toml` on Linux).
 
+### terminal-layout
+
+```sh
+aidectl terminal-layout show [--json]
+aidectl terminal-layout check <file.json | -> [--json]
+```
+
+<Badge text="Next release" /> Reads the terminal screen's layout from the AIDE app as it reads it:
+the Terminal section's [left list](/docs/guides/terminal/#the-agents-list), the right panel's views
+in order, the row format in use, one-line rows, whether quiet spaces fold, and anything that can't be
+used, with the line and column of a row format that doesn't read. `check` reads a JSON object of the
+same keys (`left`, `right`, `row_format`, `row_lines`, `fold_quiet`) from a file or standard input,
+answers the same way, saves nothing, and exits 1 when AIDE warns about any of it. Change the
+settings themselves in **Settings › Terminal › Layout** (or `config.toml` on Linux).
+
 ### perf
 
 ```sh

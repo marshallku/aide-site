@@ -420,6 +420,20 @@ AIDE 앱에서 터미널 [상태 표시줄](/ko/docs/guides/terminal/#막대-꾸
 저장하지 않으며, 쓸 수 없는 것이 있으면 1로 끝나요. 설정 자체는 **설정 › 터미널 › 상태 표시줄**(Linux는
 `config.toml`)에서 바꿔요.
 
+### terminal-layout
+
+```sh
+aidectl terminal-layout show [--json]
+aidectl terminal-layout check <file.json | -> [--json]
+```
+
+<Badge text="다음 릴리스" /> AIDE 앱에서 터미널 화면의 배치를 앱이 읽는 그대로 읽어요. 터미널 섹션의
+[왼쪽 목록](/ko/docs/guides/terminal/#에이전트-목록), 오른쪽 패널 보기의 순서, 지금 쓰는 행 형식, 한 줄 행, 조용한
+스페이스를 접는지, 쓸 수 없는 설정을 보여 주고, 읽을 수 없는 행 형식은 몇 행 몇 열인지도 알려 줘요. `check`는 같은
+키(`left`, `right`, `row_format`, `row_lines`, `fold_quiet`)로 된 JSON 객체를 파일이나 표준 입력에서 읽어 같은
+방식으로 답하고, 아무것도 저장하지 않으며, AIDE가 경고하는 것이 하나라도 있으면 1로 끝나요. 설정 자체는 **설정 › 터미널 ›
+배치**(Linux는 `config.toml`)에서 바꿔요.
+
 ### perf
 
 ```sh

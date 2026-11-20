@@ -200,10 +200,11 @@ The right panel's **Work graph** view shows what each Claude Code or
 Codex agent in your panes has read, edited, written, searched and run, as a graph that grows while
 it works. Open it from the panel's views, or choose **Work graph** in the command palette.
 
-<Badge text="Next release" /> On Linux, `right` under `[terminal.layout]` in `config.toml` lists the
-right panel's configurable views in their order: `agents`, `notices`, `today` and `workgraph`, all four
-when it's left out. `right = []` leaves them all out, and the Work graph out of the command palette
-too.
+<Badge text="Next release" /> **Settings › Terminal › Layout › Right panel views** (on Linux also
+`right` under `[terminal.layout]` in `config.toml`) lists the right panel's configurable views in
+their order: `agents`, `notices`, `today` and `workgraph`, all four by default. Type the names
+separated by commas and press <kbd>Return</kbd>; a name AIDE doesn't know is dropped and said under
+the field. Empty leaves them all out, and the Work graph out of the command palette too.
 
 - **This agent** shows one agent (pick it in the menu beside); **All agents** shows every agent, with
   the files more than one of them touched marked.
@@ -1003,18 +1004,22 @@ it printed, with a small gauge of its context when AIDE knows it.
 - <Badge text="Next release" /> The row of an agent that needs you has an **Open** button, which goes
   to its pane as a click on the row does (not while the row says **Not updating**).
 
-<Badge text="Next release" /> On Linux, `left = ["tabs"]` under `[terminal.layout]` in `config.toml`
-puts a **Tabs** list in the panel instead: every tab of every space under its space's heading, with
+<Badge text="Next release" /> **Settings › Terminal › Layout › Left list** set to **Tabs** (on Linux also
+`left = ["tabs"]` under `[terminal.layout]` in `config.toml`) puts a **Tabs** list in the panel instead: every tab of every space under its space's heading, with
 its agent's state, and a split tab's agents under it. Spaces with no agent, no unread notice and no
 bell fold into one **Quiet · N spaces** row, which you click to list them; the space on screen never
-folds, and a space leaves the fold as soon as one of those arrives. The Mac has no way to turn the
-Tabs list on yet. Other keys there:
+folds, and a space leaves the fold as soon as one of those arrives. The other settings there (on Linux,
+the keys under `[terminal.layout]`):
 
-| Key | Default | What it does |
+| Setting | Default | What it does |
 |---|---|---|
-| `fold_quiet` | `true` | `false` lists the quiet spaces like the others. |
-| `row_lines` | `2` | `1` draws each row on one line, with the context gauge only from 80%. |
-| `row_format` | the title | A template for a row's title over `glyph`, `title`, `action`, `card`, `context` and `space`, written as the status bar's `tab_format` is. |
+| **Fold quiet spaces** (`fold_quiet`) | On | Off lists the quiet spaces like the others. |
+| **One-line rows** (`row_lines = 1`) | Off | Draws each row on one line, with the context gauge only from 80%. |
+| **Row format** (`row_format`) | the title | A template for a row's title over `glyph`, `title`, `action`, `card`, `context` and `space`, written as the status bar's **Tab format** is. One that doesn't read shows its line and column under the field and is kept as you wrote it, while the list uses the title. |
+
+On Linux, a setting you put back to its default in Settings is taken out of `config.toml`, so a later
+version's default reaches it; a value you write into the file yourself stays until you change it.
+[`aidectl terminal-layout`](/docs/developers/aidectl/#terminal-layout) reads these settings as AIDE does.
 
 #### Jump to an agent
 
