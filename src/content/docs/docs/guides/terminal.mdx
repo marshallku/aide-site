@@ -304,6 +304,12 @@ show the nearest one), and the pill's branch.
 names are cut to six characters, then only their numbers show (point at one for its whole name), then
 the tabs away from the one on screen; only then the clock and the usage.
 
+<Badge text="Next release" /> The tabs left out become one **+N** button instead of `‹` and `›`. It
+carries the mark of the most pressing agent among them (▲ needs you, then ✓ done, then ● working), so
+a blocked tab out of sight still shows. Click it for a menu of those tabs, and choose one to go to it.
+A tab whose agent reports how much of its context window it has used has a thin line under its label,
+as long as that share, orange from 80%.
+
 The usage readout comes last: Claude's 5-hour and weekly limits, and Codex's. The terminal server
 reads them for every AIDE on the computer, from Claude Code's own sign-in and Codex's newest session,
 about once a minute while AIDE is open.
@@ -1010,8 +1016,24 @@ Linux also `left = ["agents"]` under `[terminal.layout]` in `config.toml`). The 
 default before, so choosing it then saved nothing: choose it again after the update. The Tabs list shows every tab of every space under its space's heading, with
 its agent's state, and a split tab's agents under it. Spaces with no agent, no unread notice and no
 bell fold into one **Quiet · N spaces** row, which you click to list them; the space on screen never
-folds, and a space leaves the fold as soon as one of those arrives. The other settings there (on Linux,
-the keys under `[terminal.layout]`):
+folds, and a space leaves the fold as soon as one of those arrives.
+
+<Badge text="Next release" /> While an agent needs you, both lists start with a **Needs you** group: the agents waiting for your
+answer, then those that finished while you weren't looking. One finished agent is listed and the
+others are summed up as **N more finished**, with their spaces; while you filter, every match is
+listed. Each row names its space and tab, and
+does what that agent's own row further down does. A finished one leaves the group once you look at it.
+The group folds like a space.
+
+<Badge text="Next release" /> Above the rows, **Filter spaces, tabs, agents** narrows both lists as
+you type. It matches space and tab names, what an agent is doing and its card's title, and opens the
+spaces that match; in the Tabs list, quiet ones too. The chips under it, **All**, **Needs you**, **Agents** and
+**Working**, each with its count, narrow it further. **Esc** in the field clears it, and ⌘F (Ctrl+F on
+Linux) goes to the field while the keyboard is in the list; in a pane it still finds in the pane. The
+filter is per window and isn't kept when you close it. With nothing left, the list says **No
+matches**.
+
+The other settings there (on Linux, the keys under `[terminal.layout]`):
 
 | Setting | Default | What it does |
 |---|---|---|
