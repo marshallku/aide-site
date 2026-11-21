@@ -559,11 +559,17 @@ Get back to where you just were, to a pane you marked, or to any tab by a few le
   does; <kbd>←</kbd> and <kbd>→</kbd> switch between **Spaces**, **Agents** and **Tabs** (turn on
   **All spaces** for every space's tabs), <kbd>↑</kbd> and <kbd>↓</kbd> move, <kbd>Return</kbd> goes
   there and <kbd>F2</kbd> renames a space. Under the list, the selected one's last lines show.
-- <Badge text="Next release" /> On **Agents**, each row says under its title what the agent is
-  doing: its state (● **Working**, ✓ **Done**, ▲ **Needs you**, ○ **Waiting** or **Idle**), what it's
-  at (**Not updating** while AIDE can't confirm its state, what it waits for while it needs you,
-  otherwise what it's doing), how full its context is (`62%`, or tokens such as `131k` when the size
-  of its context window isn't known) and its space: `● Working · Editing main.rs · 62% · aide`.
+- <Badge text="Next release" /> **Spaces**, **Agents** and **Tabs** each show how many they have, or
+  how many match what you typed. On **Agents**, with nothing typed, the agents come in groups: **Needs
+  you** (waiting for your answer, then finished while you weren't looking), **Working**, then
+  **Idle**, each the most recently changed first; <kbd>↑</kbd> and <kbd>↓</kbd> pass over the
+  headings. A row has the state's mark (● working, ✓ done, ▲ needs you, ○ waiting or idle), its title,
+  its space and tab, what it's at (**Not updating** while AIDE can't confirm its state, what it waits
+  for while it needs you, otherwise what it's doing) and, from 80%, how full its context is. Typing
+  ranks them all in one list, matching what the rows show as well as the state and how full the
+  context is. With an agent selected, the preview says how full its context is when the agent reports
+  it (a token count such as `131k` when the size of its window isn't known) and how long it has been
+  in its state, and shows its card under its last lines when its pane works on one.
 - **List tabs…** opens the same list on **Tabs** with the tab you were on before selected, so it
   and then <kbd>Return</kbd> flip between two tabs.
 - **Back to the previous place**, **Forward to the next place** and **Last place** walk the places
