@@ -320,7 +320,7 @@ the tabs away from the one on screen; only then the clock and the usage.
 carries the mark of the most pressing agent among them (▲ needs you, then ✓ done, then ● working), so
 a blocked tab out of sight still shows. Click it for a menu of those tabs, and choose one to go to it.
 A tab whose agent reports how much of its context window it has used has a thin line under its label,
-as long as that share, orange from 80%.
+as long as that share: green, orange from 80%.
 
 The usage readout comes last: Claude's 5-hour and weekly limits, and Codex's. The terminal server
 reads them for every AIDE on the computer, from Claude Code's own sign-in and Codex's newest session,
@@ -1035,7 +1035,9 @@ it printed, with a small gauge of its context when AIDE knows it.
 above. To get the Agents list back, set **Settings › Terminal › Layout › Left list** to **Agents** (on
 Linux also `left = ["agents"]` under `[terminal.layout]` in `config.toml`). The Agents list was the
 default before, so choosing it then saved nothing: choose it again after the update. The Tabs list shows every tab of every space under its space's heading, with
-its agent's state, and a split tab's agents under it. Spaces with no agent, no unread notice and no
+its agent's state, and a split tab's agents under it. A tab with no agent shows the folder its shell
+is in under its name, when AIDE knows it and the row has two lines (`~/dev/aide`; a remote host's and
+the iPhone's as the whole path). On the Mac that's the tabs of the space the window shows. Spaces with no agent, no unread notice and no
 bell fold into one **Quiet · N spaces** row, which you click to list them; the space on screen never
 folds, and a space leaves the fold as soon as one of those arrives.
 
@@ -1043,8 +1045,9 @@ folds, and a space leaves the fold as soon as one of those arrives.
 answer, then those that finished while you weren't looking. One finished agent is listed and the
 others are summed up as **N more finished**, with their spaces; while you filter, every match is
 listed. Each row names its space and tab, and
-does what that agent's own row further down does. A finished one leaves the group once you look at it.
-The group folds like a space.
+does what that agent's own row further down does, and is tinted orange. A finished one leaves the
+group once you look at it. The group's heading always shows how many need you, and it folds like a
+space.
 
 <Badge text="Next release" /> Above the rows, **Filter spaces, tabs, agents** narrows both lists as
 you type. It matches space and tab names, what an agent is doing and its card's title, and opens the
@@ -1432,7 +1435,7 @@ Touching and holding the row offers **Open AIDE** too.
   tabs under them.
 - In a session a short bar under the terminal takes the place of the tabs across the top: each
   tab's number and its agent's mark, with a thin line as long as the share of the context used
-  (orange from 80%), **+N** for the tabs that don't fit, a bell with how many agents and
+  (green, orange from 80%), **+N** for the tabs that don't fit, a bell with how many agents and
   notifications want you, and the clock. Swipe the bar sideways for the next or previous tab. The title names the
   space, the tab and the card the tab works on.
 - Swipe the bar up, or tap the bell, for a sheet with **Agents** (how many are working, need you, are unseen
