@@ -230,7 +230,8 @@ the field. Empty leaves them all out, and the Work graph out of the command pale
 
 <Badge text="Next release" /> Beside the Terminal section, the right panel's **Agents** view lists your
 agents as the [agent overview](#agent-overview) does, and shows one of them in detail above the list:
-the first, or the one you click. Other sections don't offer it, nor does a `right` that leaves
+the agent in the pane you're in, or the one you click, until you go to another pane. In a pane with
+no agent it goes on showing the one it showed. Other sections don't offer it, nor does a `right` that leaves
 `agents` out; the panel remembers it for the Terminal section and shows its own view elsewhere.
 
 - Its name and state, what it asks or is doing, and how full its context is, such as
@@ -243,6 +244,17 @@ the first, or the one you click. Other sections don't offer it, nor does a `righ
   **Failed** when it's either. They come from the
   [work graph](#work-graph) and update every few seconds while the view shows; with **Keep a work
   graph** off it says **None yet**.
+
+<Badge text="Next release" /> **Focused** and **All** at the top of the view switch between that and a
+board of every agent. The choice is per window and isn't kept. **All** shows:
+
+- How many agents are **Working**, **Needs you** (waiting for your answer), **Unseen** (finished
+  while you weren't looking) and **Idle**, the two that want you highlighted while they have any.
+- The agents in groups: **Needs you** (the longest waiting first), **Unseen** (the newest first) and
+  **Working** (by how full their context is, **by context**), each with its space and tab, what it's
+  doing and its context. Up to seven show per group, then **N more**; a click goes to its pane.
+- **Idle** with its count and the two idle longest (**Longest: …**), without rows.
+- Your Claude and Codex usage limits at the bottom, as the status bar reads them.
 
 #### Notifications in the right panel
 
@@ -1007,8 +1019,11 @@ it printed, with a small gauge of its context when AIDE knows it.
   it until you leave it again; a heading you fold or open yourself stays that way.
 - <Badge text="Next release" /> The context gauge turns to the warning colour once the context is 80%
   full or more.
-- <Badge text="Next release" /> The row of an agent that needs you has an **Open** button, which goes
-  to its pane as a click on the row does (not while the row says **Not updating**).
+- <Badge text="Next release" /> The row of an agent that needs you has an **Open inline** button: the
+  right panel shows **Agents** › **Focused** on that agent with its pane's last lines, read again every
+  two seconds, and **Open pane** to go there (**Can't read this pane** when they don't come). Where the
+  pane's terminal server can't send its lines, or the panel has no Agents view, the button is **Open**
+  and goes to the pane as a click on the row does. Neither shows while the row says **Not updating**.
 
 <Badge text="Next release" /> The panel shows a **Tabs** list by default, instead of the Agents list
 above. To get the Agents list back, set **Settings › Terminal › Layout › Left list** to **Agents** (on
