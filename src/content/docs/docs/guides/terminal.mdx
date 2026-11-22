@@ -1135,6 +1135,8 @@ forward and marks the agent as seen. A pane closed since says **That terminal ha
 An agent in a space no window shows gets a notification too, and its
 click switches the window in front to that space.
 
+<Badge text="Next release" /> Desktop notifications, for agents and for the ones you post with [`aidectl notify`](/docs/developers/aidectl/#notify), are posted only while **Settings › Terminal › Agents › Desktop notifications** is on (it's on unless you turn it off). That goes for this computer's and for those of computers you opened with **Open remote AIDE…**, whose agents show in the Agents list either way. The switch changes only what reaches the desktop: each computer's terminal server keeps its own notifications whatever it says, and this computer's are in the [notification center](#notification-center).
+
 The first notification asks for permission on the Mac. On Linux the desktop may keep the window from
 coming forward; the pane is selected all the same.
 
@@ -1155,6 +1157,9 @@ command palette. While a terminal has the keyboard, <kbd>⌥</kbd><kbd>⌘</kbd>
 - Going to a pane any other way reads its notifications too. Reading the notification of an agent's
   latest turn counts as looking at the agent, so it stops showing as **Done**; an older one doesn't.
 - A pane closed since says **That pane is gone**. With none it says **No notifications**.
+- <Badge text="Next release" /> It keeps every agent's finished and needs-you notification, also
+  for a kind whose **Notify when …** switch is off, and the ones you post yourself with
+  [`aidectl notify`](/docs/developers/aidectl/#notify), under the title you gave them.
 - It shows this computer's notifications only. On the iPhone, the system's notification list and the
   **Agents** sheet do this job.
 - `aidectl terminal notices` lists the same notifications.
@@ -1162,7 +1167,7 @@ command palette. While a terminal has the keyboard, <kbd>⌥</kbd><kbd>⌘</kbd>
 #### Settings › Terminal › Agents
 
 These are the terminal server's own settings, so every AIDE that uses it shows the same: a change on
-one reaches the server, and the last change wins. On Linux they're also kept in `config.toml` under
+one reaches the server, and the last change wins. <Badge text="Next release" /> **Desktop notifications** is the exception: it's each app's own, so changing it on one doesn't change it on another. On Linux they're also kept in `config.toml` under
 `[terminal]`.
 
 | Setting | Default | What it does |
@@ -1170,8 +1175,9 @@ one reaches the server, and the last change wins. On Linux they're also kept in 
 | **Watch for coding agents** | On | Off, AIDE doesn't look for agents at all: the list stays empty, and there are no marks, status item or notifications (`agents`). |
 | **Keep a work graph** | On | What each agent reads, edits and runs, for the right panel's [Work graph](#work-graph), kept 30 days on the computer the terminal server runs on (`graph`). Off, nothing is read or kept. |
 | **Give agents AIDE's context** | On | Claude Code and Codex started in a pane learn about your board and notes for that session (`agent_context`). See [AIDE's context for agents](#aides-context-for-agents). |
-| **Notify when an agent finishes** | On | A notification when an agent's turn ends (`notify_done`). Off, it still shows as **Done**. |
-| **Notify when an agent needs you** | On | A notification when an agent asks you something (`notify_blocked`). |
+| **Desktop notifications** <Badge text="Next release" /> | On | Shows notifications outside AIDE too: agents' (as the switches below choose) and your own from [`aidectl notify`](/docs/developers/aidectl/#notify), from this computer and from computers opened with **Open remote AIDE…**. This one is this app's own, not the server's (Linux: `desktop_notifications` under `[terminal]`). Off, each computer's terminal server still keeps its notifications, and this computer's are in the notification center. |
+| **Notify when an agent finishes** | On | A notification when an agent's turn ends (`notify_done`). Off, it still shows as **Done**. <Badge text="Next release" /> It then chooses only what goes to the desktop and your phone: the notification center keeps it. |
+| **Notify when an agent needs you** | On | A notification when an agent asks you something (`notify_blocked`). <Badge text="Next release" /> Desktop and phone only, as above. |
 | **Remind after** | 10 min | **Off**, 5, 10 or 30 min: one more notification that long after an agent started needing you, if you haven't looked at it (`notify_remind`). |
 | **Send to your phone** | On | The same notifications on phones you connect, sealed so only they can read them (`push`). A phone connects by opening this computer's AIDE sessions in the iPhone app with its **Agent notifications** on: see [Agent notifications](#agent-notifications). Until one has, nothing is sent. |
 | **Set up agent hooks…** | | Below. |
@@ -1199,6 +1205,8 @@ where it links to when it's a symlink, and the lines that change. Nothing is wri
 - A tool that isn't set up on this computer is skipped. Running it again says **Nothing to change.**
 - Each file is backed up beside itself first (`settings.json.aide-backup-<time>`), and a file that
   changed since you saw the diff isn't written.
+
+<Badge text="Next release" /> Claude Code started in an AIDE pane already gets the `Stop` and `Notification` hooks for that session, with nothing written to your files, while **Give agents AIDE's context** is on. Setting up hooks still adds Codex's `notify` program, which those sessions don't get, and Claude Code's `statusLine`, which reports how full its context is.
 
 The hooks only do anything in AIDE's own panes. Elsewhere, or inside comux, they run what you had
 and nothing else. [`aidectl agent install-hooks`](/docs/developers/aidectl/#agent) does the same from a

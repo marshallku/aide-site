@@ -395,6 +395,19 @@ aidectl event tail [--json] [--all]
 so a chain of triggers stays bounded. `tail` prints events as they happen (from now; `--all` from
 the oldest the app keeps) and says so when some were missed.
 
+### notify
+
+<Badge text="Next release" />
+
+```sh
+aidectl notify <title> [body] [--pane P] [--id K]
+aidectl notify --when-done [--title T] [--pane P] [--id K] -- <command> [args…]
+```
+
+Posts your own notification to an AIDE terminal pane: it shows in the [notification center](/docs/guides/terminal/#notification-center) under your title, and as a desktop notification while **Desktop notifications** is on and the pane isn't on screen. It never goes to your phone. It goes to `--pane` when you give one (`aidectl terminal tabs` lists the panes), else to the pane you run it in; outside a pane with no `--pane` there's no pane to post to, so both forms stop with an error, `--when-done` before it runs the command. No token: it uses this computer's terminal socket, as you. The title can be 120 characters and the body 1000; they count toward the center's last 200 with the agents' ones, the oldest going first. With `--id`, posting the same id again with the same text does nothing, and with other text replaces it.
+
+`--when-done` runs the command as it would run (its input and output, <kbd>Ctrl</kbd><kbd>C</kbd>), then posts **T finished (2m 13s)** or **T failed (exit 1, 2m 13s)** (`T` is `--title`, else the command's name; the arguments never go into the notification, so nothing secret in them shows) and exits with the command's own code: 128 plus the signal when one stopped it, and 127 when it couldn't start, which posts **T couldn't start** with the error as its text (and on standard error). A post that fails is one line on standard error and never changes the exit code. For example, `aidectl notify --when-done -- codex review` tells you when a review is done.
+
 ### status-item
 
 ```sh
