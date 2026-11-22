@@ -5,7 +5,7 @@ sidebar:
     order: 17
 ---
 
-import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
 
 A voice prompt lets you talk to a [coding agent](/docs/guides/terminal/#coding-agents) the way you
 would to a person, false starts and all, and gives the agent a prompt it can work from. You say it;
@@ -23,9 +23,18 @@ Voice prompts are on the Mac, Linux and the iPhone, for agents running in AIDE's
 2. Talk once the pill shows **Listening…**, a level meter and the words as they're written down.
    Until the mic is ready it says **Getting ready…**, and nothing said then is heard. Pause whenever
    you like: a pause never ends a voice prompt.
+   <Badge text="Next release" /> With **Send when I stop** on (the default from the next release), a
+   prompt you started with a tap ends after 2 seconds without speech (**End after a pause**); one you
+   hold ends when you let go. With it off, a pause still never ends one. The pill says how it ends,
+   such as **Tap again or press ⇧⌘M to stop · Ends after 2 s of quiet**.
 3. Stop: let go of the shortcut you're holding, or press it (or tap the mic) again if you tapped it to
-   start. The pill shows **Tidying with …**, then **Sent to Claude · aide** with the prompt.
-4. The prompt is now in the agent's box. Read it, edit it if you want, and press Enter.
+   start. The pill shows **Tidying with …**, then, in the current release, **Sent to Claude · aide**
+   with the prompt. <Badge text="Next release" /> Pressing again while it's being written down or
+   tidied only shows the pill; it never starts another prompt.
+4. In the current release the prompt is now in the agent's box: read it, edit it if you want, and
+   press Enter. <Badge text="Next release" /> The pill says which happened: **Sent to Claude** when
+   **Send when I stop** sent a tidied prompt with nothing flagged for you, so there's nothing to
+   press; **In Claude's box: press Enter** when it waits in the box for you to read, edit and send.
 
 A voice prompt records for up to 5 minutes. If nothing is heard in the first 8 seconds, it ends with
 nothing sent. ✕ on the pill, or <kbd>Esc</kbd> while AIDE is in front, throws the prompt away while
@@ -37,7 +46,9 @@ Only one recording runs at a time: a voice prompt doesn't start while you're tal
 ## Which pane it goes to
 
 The agent is chosen when you start, and the prompt goes there even if you click elsewhere while you
-talk:
+talk. <Badge text="Next release" /> **Say a prompt to this agent**, in a pane's menu or under the agent
+in **Agents › Focused**, always goes to that agent and never to another; if it quits first, nothing is
+typed. Otherwise:
 
 - the focused pane of the AIDE window last in front, if an agent runs in it;
 - else that window's most recently focused pane with an agent;
@@ -60,12 +71,20 @@ and nothing is typed.
 - **Say a prompt** and **Show the last voice prompt** are in the command palette and the menu bar.
   **Say a prompt** has no shortcut of its own until you give it one in
   [Settings › Keyboard](/docs/guides/shortcuts/#change-your-shortcuts).
+  <Badge text="Next release" /> It's <kbd>⇧</kbd><kbd>⌘</kbd><kbd>M</kbd>.
+- <Badge text="Next release" /> In the terminal: the mic on the [status bar](/docs/guides/terminal/#the-status-bar)
+  (greyed out with **No agent in this pane** when there's nothing to talk to), **Say a prompt to this
+  agent** when you right-click an agent's pane, and the same button in **Agents › Focused**. A
+  program that uses the mouse keeps its right click; Shift-right-click opens the menu there.
 
 </TabItem>
 <TabItem label="Linux">
 
 - <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>M</kbd> in AIDE starts a voice prompt, or stops the one
-  under way. The command palette has **Say a prompt**, **Start a voice prompt**, **Stop the voice
+  under way, also while a terminal pane has the keyboard.
+- <Badge text="Next release" /> In the terminal: the mic on the status bar, **Say a prompt to this
+  agent** when you right-click an agent's pane (Shift-right-click in a program that uses the mouse),
+  and the same button in **Agents › Focused**. The command palette has **Say a prompt**, **Start a voice prompt**, **Stop the voice
   prompt** and **Show the last voice prompt**, and **Settings › Keyboard** can give each its own
   shortcut.
 - Outside AIDE, bind the actions in your compositor with
@@ -87,7 +106,7 @@ open.
 <TabItem label="iPhone">
 
 - The mic on the bar of an AIDE session pane: tap it to start and again to stop, or hold it while you
-  talk.
+  talk. <Badge text="Next release" /> The session's short bar has one too.
 - The Shortcuts action **Say a prompt to an agent** opens the last AIDE session pane you used and
   starts listening.
 
@@ -164,8 +183,9 @@ server first checks that it's still the same agent and that the agent isn't aski
 takes out anything that could end the paste early or press a key, and types the same prompt only
 once, even when you retry.
 
-Enter isn't pressed unless you turn on **Send when I stop**, and even then only for a prompt a
-model tidied with nothing flagged: not tidied, flagged, unclear or incomplete prompts always wait in
+Enter isn't pressed unless **Send when I stop** is on, and even then only for a prompt a
+model tidied with nothing flagged. <Badge text="Next release" /> It's on by default from the next
+release, also if you never changed it before; if you had turned it off, turn it off again: not tidied, flagged, unclear or incomplete prompts always wait in
 the box for you.
 
 ## The pill
@@ -178,7 +198,9 @@ iPhone it's a bar above the key bar of the AIDE session pane.
 
 | The pill says | What happened | What you can do |
 |---|---|---|
-| **Sent to Claude · aide** | The prompt is in the agent's box. | **Copy**, **Copy what I said**. It goes away after 8 seconds (longer while the pointer is over it); a flagged one stays until you close it. |
+| **Sent to Claude · aide** (until the next release) | The prompt is in the agent's box. | **Copy**, **Copy what I said**. It goes away after 8 seconds (longer while the pointer is over it); a flagged one stays until you close it. |
+| <Badge text="Next release" /> **Sent to Claude** | The prompt was typed and sent (**Send when I stop** on, tidied, nothing flagged). | **Copy**, **Copy what I said**. It goes away after 8 seconds. |
+| <Badge text="Next release" /> **In Claude's box: press Enter** | The prompt is in the agent's box, waiting for you to press Enter. | **Copy**, **Copy what I said**. It goes away after 8 seconds; a flagged one stays until you close it. |
 | **Claude is asking something. Answer it first.** | The agent is waiting on a question or a permission, so nothing was typed. | Answer the agent, then **Insert anyway**; while it's still asking, the pill stays and says so. **Copy**. |
 | **The agent in that pane went away.** | The agent quit or something else runs there now. | **Copy**. |
 | **No agent to send to.** | No pane with an agent when you started. | **Copy**. |
@@ -205,7 +227,8 @@ it.
 |---|---|---|
 | **Hold to talk** (Mac) | None | A shortcut that works in any app: hold to talk, or press to start and stop. |
 | **Tidy up with** | Automatic | Which model tidies what you said: **Automatic**, **On this device only** (Mac and iPhone), **The assistant's model** or **Off**. |
-| **Send when I stop** | Off | Presses Enter after typing a prompt, only when a model tidied it and nothing is flagged. |
+| **Send when I stop** | On <Badge text="Next release" /> (Off before) | Presses Enter after typing a prompt, only when a model tidied it and nothing is flagged. |
+| **End after a pause** <Badge text="Next release" /> | 2 s | With **Send when I stop** on, a prompt you started with a tap ends after this long without speech (1 to 10 seconds). With it off, a pause never ends one. |
 | **Include what's on the screen** | On | Sends up to 6 KiB of the pane's last lines with what you said, so the model understands what you refer to. |
 | **Language** | Automatic | The same setting as **Settings › Assistant › Voice › Language**: **Automatic**, **English** or **한국어**. Changing it on either page changes both. |
 | **Speech model** (Linux) | Standard | **Standard** or **Better Korean** (see below). |
@@ -231,7 +254,8 @@ footer names it.
 - **Standard**: the speech model the assistant already uses.
 - **Better Korean**: a larger model (about 574 MB) that writes Korean down better. Choose it, then
   press **Download**: AIDE checks the file before keeping it, and a prompt can't start until it's
-  downloaded. On some computers it writes down more
+  downloaded. <Badge text="Next release" /> From the next release a prompt uses **Standard** until
+  then, and the pill says so; with no model at all, the pill's **Settings…** opens this setting to download one. On some computers it writes down more
   slowly than you speak, and then it says **Slower than you speak on this computer**; you wait longer
   after you stop.
 
