@@ -5,6 +5,9 @@ sidebar:
     order: 15
 ---
 
+import { Badge } from "@astrojs/starlight/components";
+
+
 Claude Code, Codex, Grok이 여러 단계가 있는 일을 하면 자기 계획을 노트에 카드로 적어요. 짧은 제목, 단계들, 그리고 지금 하는 일을 말하는 한 줄이에요. 에이전트의 터미널을 읽지 않아도 노트에서 진행 상황을 볼 수 있고, 언제든 직접 단계를 체크할 수 있어요.
 
 ## 카드의 모습
@@ -31,7 +34,7 @@ Claude Code, Codex, Grok이 여러 단계가 있는 일을 하면 자기 계획�
 
 `aide-board` 스킬이 에이전트에게 언제 카드를 더할지, 단계와 상태 줄을 어떻게 최신으로 둘지, 언제 대기로 옮길지, 한 줄짜리 결과로 어떻게 끝낼지 알려 줘요. Mac과 Linux에서는 **플러그인의 스킬을 코딩 에이전트에게 주기**를 켜면 AIDE가 다른 [플러그인 스킬](/ko/docs/guides/terminal/#플러그인-스킬)과 함께 이 스킬을 코딩 에이전트에게 줘요. **에이전트에게 AIDE 맥락 알려 주기**가 켜져 있으면 터미널 페인에서 시작한 Claude Code와 Codex가 그 설정 없이도 세션 동안 이 스킬을 알게 돼요. Claude Code는 스킬 자체를 받고, Codex는 `aidectl guide board`로 읽으라는 안내를 받아요([에이전트에게 주는 AIDE 맥락](/ko/docs/guides/terminal/#에이전트에게-주는-aide-맥락) 참고).
 
-AIDE 터미널 페인 안에서는 카드가 에이전트의 페인에 연결되고, 카드 링크 `aide://card/<vault>/<card>`가 그 페인을 열어요([페인에 연결된 카드](/ko/docs/guides/terminal/#페인에-연결된-카드) 참고). 에이전트는 `aidectl board`를 써요. 명령은 [aidectl 참고서](/ko/docs/developers/aidectl/#board)에 있어요. 페인 안에서는 플래그도 토큰도 필요 없어요. `aidectl`이 그 페인의 창 노트를 쓰고, 읽기 전용 에이전트도 보드는 쓸 수 있어요. 열린 카드를 직접 보려면 `aidectl board list`를, 카드 하나와 그 단계를 보려면 `aidectl board show <card>`를 실행하세요.
+AIDE 터미널 페인 안에서는 카드가 에이전트의 페인에 연결되고, 카드 링크 `aide://card/<vault>/<card>`가 그 페인을 열어요([페인에 연결된 카드](/ko/docs/guides/terminal/#페인에-연결된-카드) 참고). 에이전트는 `aidectl board`를 써요. 명령은 [aidectl 참고서](/ko/docs/developers/aidectl/#board)에 있어요. 페인 안에서는 플래그도 토큰도 필요 없어요. `aidectl`이 그 페인의 창 노트를 쓰고, 읽기 전용 에이전트도 보드는 쓸 수 있어요. 같은 컴퓨터의 다른 곳에서도 토큰은 필요 없어요. 보관소 창을 앞에 두거나 `aidectl --vault <folder>`로 쓰면 돼요. <Badge text="다음 릴리스" /> **설정 › 이 컴퓨터의 에이전트**에서 아무 터미널의 Claude Code와 Codex에 그 보관소의 AIDE 도구를 줄 수 있어요([MCP](/ko/docs/developers/mcp/)). 열린 카드를 직접 보려면 `aidectl board list`를, 카드 하나와 그 단계를 보려면 `aidectl board show <card>`를 실행하세요.
 
 에이전트는 `aidectl board add`와 `aidectl board show`가 출력하는 카드 링크로 카드를 알려 줘요. 터미널 페인에서 Mac은 <kbd>⌘</kbd>-클릭, Linux는 <kbd>Ctrl</kbd>-클릭, iPhone은 탭하면 보드에서 카드가 열려요. 에이전트 목록에서는 페인이 카드를 맡은 줄에 **카드:**와 카드 제목이 보이고, 메뉴의 **카드 열기**로 보드에서 카드를 볼 수 있어요([에이전트 목록](/ko/docs/guides/terminal/#에이전트-목록) 참고).
 

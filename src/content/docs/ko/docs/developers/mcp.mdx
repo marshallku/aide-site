@@ -39,6 +39,14 @@ AIDE는 Model Context Protocol을 지원해서, Claude(또는 어떤 MCP 클라�
 
 </Steps>
 
+<Badge text="다음 릴리스" /> **설정 › 이 컴퓨터의 에이전트**(Mac과 Linux, Mac App Store 버전 제외)에 창의 보관소에 맞는 줄들이 복사할 수 있게 나와요.
+
+- `aidectl --vault <folder> where`: `aidectl`이 어떤 노트를 쓰는지 알려 줘요.
+- Claude Code용 `claude mcp add --scope user aide-<folder>-<code> -- <aidectl> --vault <folder> mcp`, Codex용 `codex mcp add aide-<folder>-<code> -- <aidectl> --vault <folder> mcp`.
+- 다시 지우는 `claude mcp remove`와 `codex mcp remove` 줄.
+
+각 항목은 `aide-docs-676f540bab4f5226`처럼 보관소를 따라 이름이 붙어요. 폴더 이름과 그 경로의 보관소를 가리키는 코드라서 두 보관소나 보관소의 복사본이 한 항목을 같이 쓰는 일이 없고, 항목은 그 경로의 폴더를 따라가요. 쓰는 에이전트의 `mcp add` 줄을 복사해 아무 터미널에서나 한 번 실행하세요. 그 에이전트의 설정(Claude Code에서는 모든 프로젝트용)에 항목을 추가하고, AIDE는 그 설정을 직접 바꾸지 않아요. 페이지는 보관소가 호스팅 중인지 알려 주고, 아니면 **이 보관소 호스팅…**을 보여 줘요. `~/.local/bin/aidectl`이 이 앱의 `aidectl`로 이어지면 그것을, 아니면 AIDE 안의 것을 쓰고, 이건 AIDE를 옮기면 함께 옮겨져요. 같은 이름의 예전 항목은 먼저 지우세요. Claude Code에서 프로젝트에 같은 이름의 항목이 있으면 그쪽이 먼저예요. 서버의 창에서는 줄이 없어요. 그 창의 페인에서나 그 창을 앞에 두고 `aidectl`을 쓰면 그 노트를 나로서 쓰고, MCP에는 **설정 › Claude 앱**의 토큰이 필요해요([아래](#원격-claude-앱)).
+
 호스트의 소켓으로는 토큰이 없어요. 소켓에 닿는 사람은 곧 나이고, `aidectl` 자체와 같은 신뢰 수준이라 쓰기 도구까지 모든 도구가 제공돼요.
 
 `aidectl mcp`는 서버(`--server` 또는 `AIDE_URL`)와도 동작해요. 이때 `AIDE_TOKEN`(또는 `token=`)은 **설정 › Claude 앱**의 토큰이어야 하고, 다른 토큰은 `use a token of the claude plugin`으로 거부돼요. 만료되거나 폐기된 토큰이면 `aidectl mcp`는 클라이언트가 맞춰 볼 수 없는 응답을 돌려주는 대신 서버의 `401`로 멈춰요.
@@ -60,6 +68,7 @@ AIDE는 Model Context Protocol을 지원해서, Claude(또는 어떤 MCP 클라�
 - **새 토큰 만들기**는 이전 토큰을 바꾸고, 이전 토큰은 바로 쓸 수 없게 돼요. **노트 변경 허용**을 켜거나 끌 때도 이걸 쓰세요.
 - **연결 해제**는 토큰을 폐기해요.
 - **URL** 줄에 **서버에서 AIDE_PUBLIC_URL 설정**이 보이면 서버가 자기 공개 주소를 모르는 거예요. `AIDE_PUBLIC_URL`을 설정하고 서버를 다시 시작하세요. 데스크톱 호스트에는 공개 URL이 없어서 이 페이지가 줄 URL이 없어요. 그 컴퓨터에서 `aidectl mcp`를 쓰세요.
+- <Badge text="다음 릴리스" /> Mac과 Linux에서는 이 페이지 아래쪽에 이 컴퓨터의 에이전트는 토큰이 필요 없다는 안내와 함께 **설정 › 이 컴퓨터의 에이전트**를 가리켜요([위](#로컬-aidectl-mcp)).
 
 Claude Code에서는 같은 URL과 토큰을 HTTP 서버로 추가해요.
 

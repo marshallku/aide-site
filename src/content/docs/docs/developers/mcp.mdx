@@ -39,6 +39,14 @@ Both reach the same tools, described [below](#tools).
 
 </Steps>
 
+<Badge text="Next release" /> **Settings › Agents on this computer** (Mac and Linux; not the Mac App Store version) gives you the lines for the window's vault, ready to copy:
+
+- `aidectl --vault <folder> where`, which says which notes `aidectl` uses;
+- `claude mcp add --scope user aide-<folder>-<code> -- <aidectl> --vault <folder> mcp` for Claude Code, and `codex mcp add aide-<folder>-<code> -- <aidectl> --vault <folder> mcp` for Codex;
+- the `claude mcp remove` and `codex mcp remove` lines that take them out again.
+
+Each entry is named after the vault, such as `aide-docs-676f540bab4f5226`: the folder's name and a code for the vault at that path, so two vaults, or a copy of one, never share an entry, and each follows the folder at that path. Copy the `mcp add` line for your agent and run it once in any terminal: it adds the entry to that agent's own settings (Claude Code's for every project), which AIDE never changes itself. The page says whether the vault is hosted, with **Host this vault…** when it isn't. It names `~/.local/bin/aidectl` when that leads to this app's `aidectl`, else the one inside AIDE, which moves when AIDE moves. Remove an older entry of the same name first; a project's entry of that name in Claude Code comes before yours. In a window on a server the page has no lines: `aidectl` in its panes, or with the window in front, uses its notes as you, and MCP needs a token from **Settings › Claude app** ([below](#remote-the-claude-app)).
+
 Over the host's socket there is no token: whoever can reach the socket is you, the same trust as `aidectl` itself, so every tool is offered, the write tools included.
 
 `aidectl mcp` also works against a server (`--server` or `AIDE_URL`). Then `AIDE_TOKEN` (or `token=`) must be a token from **Settings › Claude app**; any other token is refused with `use a token of the claude plugin`. An expired or revoked token stops `aidectl mcp` with the server's `401` instead of returning a reply your client can't match.
@@ -60,6 +68,7 @@ On your own server, AIDE serves MCP over Streamable HTTP at `POST /mcp` under th
 - **Make a new token** replaces the old token; the old one stops working at once. Use it to switch **Allow changes to notes** on or off too.
 - **Disconnect** revokes the token.
 - If the **URL** row reads **Set AIDE_PUBLIC_URL on the server**, the server doesn't know its public address; set `AIDE_PUBLIC_URL` and restart it. A desktop host has no public URL, so this page has no URL to give there: use `aidectl mcp` on that computer instead.
+- <Badge text="Next release" /> On the Mac and Linux the page's footer says that agents on this computer need no token and points to **Settings › Agents on this computer** ([above](#local-aidectl-mcp)).
 
 With Claude Code, add the same URL and token as an HTTP server:
 
