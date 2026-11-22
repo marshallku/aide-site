@@ -5,6 +5,9 @@ sidebar:
     order: 12
 ---
 
+import { Badge } from "@astrojs/starlight/components";
+
+
 **Settings › Appearance** changes how AIDE looks on this device, with a live preview of the editor
 at the top of the page. **Settings › Language** picks the language of the app and of what plugins
 write for you.
@@ -102,6 +105,30 @@ window follows at once.
   `config.toml`. While high contrast is on, windows stay opaque and keep the value for later.
 
 The iPhone and iPad have no window opacity: their windows can't show what's behind them.
+
+## Sidebar order
+
+<Badge text="Next release" />
+
+Arrange the sidebar's sections, plugin tabs included, in the order you like. The one at the top is
+the section AIDE opens on when it starts; there's no separate setting for it.
+
+- **Mac and iPad:** hold <kbd>⌘</kbd> and drag a section in the sidebar to its new place (on the
+  iPad with a keyboard and pointer). A plain drag does nothing, so a click never moves one by
+  accident.
+- **Linux:** hold <kbd>Ctrl</kbd> and drag it.
+- **Settings › Appearance › Sidebar order** lists them with **Move up** and **Move down**, for the
+  keyboard and VoiceOver too, and the iPad without a keyboard.
+- **Reset order**, in the sidebar's right-click menu or with the **Sidebar order** list (under it on the Mac and iPad, in its header on Linux), brings back the built-in
+  order.
+- **Plugins** and **Settings** stay at the bottom.
+- <kbd>⌘</kbd><kbd>1</kbd>–<kbd>⌘</kbd><kbd>9</kbd> (<kbd>Alt</kbd><kbd>1</kbd>–<kbd>Alt</kbd><kbd>9</kbd>
+  on Linux) follow the order.
+- A plugin tab you turn off keeps its place and comes back to it.
+- The order is this device's own. On Linux it's `ribbon` under `[layout]` in `config.toml`.
+- On the iPhone, and on the iPad in a narrow Split View or Slide Over window (where AIDE shows a
+  tab bar instead of the sidebar), **Settings › Tab bar** orders the tabs the same way, and the app
+  opens on the first one. The sidebar and **Sidebar order** are on the iPad at full and wide widths.
 
 ## Language
 
