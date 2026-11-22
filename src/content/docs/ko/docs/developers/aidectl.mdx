@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 `aidectl`은 터미널, 스크립트, 에디터, 상태 표시줄에서 AIDE 노트를 읽고 써요. AIDE의 노트 규칙을 그대로 따르기 때문에, 보지 못한 편집을 덮어쓰는 일은 없어요. 특정 작업 방식은 정해 두지 않았어요. `get`, `put`, `append`, `toggle`을 직접 조합해서 쓰면 돼요.
 
@@ -44,9 +44,9 @@ import { Aside, Badge } from "@astrojs/starlight/components";
 - `aidectl where`는 다음 명령이 어떤 노트에 닿을지와 그 이유를 보여 줘요.
 - 페인은 자기를 띄운 AIDE의 `aidectl`을 써요. 셸 시작 파일이 실행된 뒤 그 `aidectl`을 `PATH` 맨 앞에 두고,
   `$AIDECTL`에 전체 경로를 넣어 둬요. 그래서 Homebrew나 `~/.local/bin`의 예전 `aidectl`이 대신 실행되지 않아요.
-  다음 릴리스부터는 AIDE의 `claude`와 `codex`만 그보다 앞에 와요.
+  AIDE의 `claude`와 `codex`만 그보다 앞에 와요.
   `aidectl where`는 실행된 바이너리도 알려 줘요. 예전 것이면 `$AIDECTL`로 실행하세요.
-- <Badge text="다음 릴리스" /> `aidectl where`는 한 줄로 실행한 페인이 Claude Code와 Codex에게 AIDE 맥락을 줄 수 있는지 알려 줘요.
+- `aidectl where`는 한 줄로 실행한 페인이 Claude Code와 Codex에게 AIDE 맥락을 줄 수 있는지 알려 줘요.
   `agent context: on`, 또는 `off`와 그 이유예요([에이전트에게 주는 AIDE 맥락](/ko/docs/guides/terminal/#에이전트에게-주는-aide-맥락)
   참고). 그 아래에는 둘 중 하나가 AIDE를 건너뛰게 만드는 별칭, 셸 함수, 앞선 `PATH` 항목을 알려 줘요. `on`이어도 반드시
   받는 건 아니에요. AIDE가 쓰는 옵션이 없는 버전처럼, 맥락 없이 시작되는 경우가 있어요. AIDE가 시작한 에이전트 안에서 실행하면 그 세션을 시작할 때 AIDE가 정한 결과를
@@ -231,8 +231,6 @@ aidectl board start <card> --worktree [--repo DIR] [--branch B] [--from REF] [--
 변경은 모두 방금 읽은 노트를 바탕으로 만들고, 그사이 아무도 노트를 바꾸지 않았을 때만 저장해요. 그 순간 노트에서 단계를 체크했다면 aidectl이 다시 읽고 그 위에 변경을 더해요. 덮어쓰지 않아요. `board` 폴더 밖의 노트로 옮긴 카드는 더 이상 카드가 아니에요.
 
 ### guide
-
-<Badge text="다음 릴리스" />
 
 ```sh
 aidectl guide board
@@ -427,7 +425,7 @@ aidectl terminal-layout show [--json]
 aidectl terminal-layout check <file.json | -> [--json]
 ```
 
-<Badge text="다음 릴리스" /> AIDE 앱에서 터미널 화면의 배치를 앱이 읽는 그대로 읽어요. 터미널 섹션의
+AIDE 앱에서 터미널 화면의 배치를 앱이 읽는 그대로 읽어요. 터미널 섹션의
 [왼쪽 목록](/ko/docs/guides/terminal/#에이전트-목록), 오른쪽 패널 보기의 순서, 지금 쓰는 행 형식, 한 줄 행, 조용한
 스페이스를 접는지, 쓸 수 없는 설정을 보여 주고, 읽을 수 없는 행 형식은 몇 행 몇 열인지도 알려 줘요. `check`는 같은
 키(`left`, `right`, `row_format`, `row_lines`, `fold_quiet`)로 된 JSON 객체를 파일이나 표준 입력에서 읽어 같은

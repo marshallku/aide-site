@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE는 같은 단축키를 써요. Linux에서 <kbd>Ctrl</kbd>을 쓰는 자리에 Mac에서는 <kbd>⌘</kbd>를 써요.
 Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 단축키와 함께 명령 팔레트에 있어요.
@@ -143,7 +143,7 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 | 확인이 필요한 에이전트로 이동 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>B</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd> |
 | 가장 최근에 끝난 에이전트로 이동 | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd> | 없음 |
 | 스페이스, 탭, 에이전트로 전환… | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>O</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>O</kbd> |
-| [페인에서 스위처 열기](/ko/docs/guides/terminal/#스위처-키)(한 번 더 누르거나 <kbd>Esc</kbd>로 닫아요) <Badge text="다음 릴리스" /> | <kbd>⌃</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>F</kbd> |
+| [페인에서 스위처 열기](/ko/docs/guides/terminal/#스위처-키)(한 번 더 누르거나 <kbd>Esc</kbd>로 닫아요) | <kbd>⌃</kbd><kbd>F</kbd> | <kbd>Ctrl</kbd><kbd>F</kbd> |
 | 대화 다시 열기… | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>R</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>R</kbd> |
 | 알림 | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>N</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>N</kbd> |
 | 탭을 왼쪽으로 / 오른쪽으로 | 없음 | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Down</kbd> |
@@ -176,7 +176,7 @@ Linux에서 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd>는 이제 왼쪽 페�
 <kbd>Ctrl</kbd><kbd>W</kbd>, 그리고 탭 전환 키예요. <kbd>Ctrl</kbd><kbd>,</kbd>를 비롯한 나머지는 계속 동작해요.
 다시 쓰려면 터미널 바깥을 클릭하세요.
 
-<Badge text="다음 릴리스" /> 페인에서는 잠겨 있지 않으면 <kbd>Ctrl</kbd><kbd>F</kbd>가 대신 스위처를 열어요
+페인에서는 잠겨 있지 않으면 <kbd>Ctrl</kbd><kbd>F</kbd>가 대신 스위처를 열어요
 ([스위처 키](/ko/docs/guides/terminal/#스위처-키)).
 </Aside>
 
@@ -208,7 +208,7 @@ comux나 tmux의 <kbd>Ctrl</kbd><kbd>B</kbd>에 손이 익었다면 터미널에
 | <kbd>&lt;</kbd> / <kbd>&gt;</kbd> | 이전 위치로 / 다음 위치로 |
 | <kbd>m</kbd> / <kbd>'</kbd> | 이 페인 표시하기… / 표시한 곳으로 가기… |
 | <kbd>f</kbd> 또는 <kbd>w</kbd> | 탭 목록… |
-| <kbd>g</kbd> <Badge text="다음 릴리스" /> | [스위처 키 잠그기](/ko/docs/guides/terminal/#스위처-키), 또는 잠금 풀기. 잠겨 있는 동안 상태 표시줄에 `LOCK`이 보여요 |
+| <kbd>g</kbd> | [스위처 키 잠그기](/ko/docs/guides/terminal/#스위처-키), 또는 잠금 풀기. 잠겨 있는 동안 상태 표시줄에 `LOCK`이 보여요 |
 | <kbd>Shift</kbd><kbd>←</kbd> / <kbd>Shift</kbd><kbd>→</kbd> | 탭을 왼쪽으로 / 탭을 오른쪽으로 |
 | <kbd>!</kbd> | 확인이 필요한 에이전트로 이동 |
 | <kbd>u</kbd> | 가장 최근에 끝난 에이전트로 이동 |
@@ -308,7 +308,7 @@ Page Down, Insert, Delete, Backspace, Tab, Return, Esc, Space도 쓸 수 있어�
   <kbd>Ctrl</kbd><kbd>Alt</kbd>가 들어간 단축키(그리고 <kbd>Ctrl</kbd><kbd>,</kbd>)만 AIDE가 받아요.
   <kbd>Ctrl</kbd>과 글자만 누르는 단축키, <kbd>Super</kbd> 단축키, 기능 키는 프로그램으로 가요.
 
-<Badge text="다음 릴리스" /> 페인에서 AIDE가 받는 키가 하나 더 있어요. 스위처 키, 곧 **페인에서 스위처 열기**예요. Mac에서는
+페인에서 AIDE가 받는 키가 하나 더 있어요. 스위처 키, 곧 **페인에서 스위처 열기**예요. Mac에서는
 <kbd>⌃</kbd><kbd>F</kbd>, Linux에서는 <kbd>Ctrl</kbd><kbd>F</kbd>예요([스위처 키](/ko/docs/guides/terminal/#스위처-키)를
 보세요). **설정 › 키보드**의 목록 아래 안내에도 나와요.
 
@@ -431,8 +431,8 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `terminal/rename-space`, `terminal/end-space` | 스페이스 이름 변경…, 스페이스 끝내기…(단축키를 주기 전까지는 없음) |
 | `terminal/jump-blocked`, `terminal/jump-unread` | 확인이 필요한 에이전트로 이동, 가장 최근에 끝난 에이전트로 이동 |
 | `terminal/switcher`, `terminal/tab-list` | 스페이스, 탭, 에이전트로 전환…, 탭 목록… |
-| `terminal/switcher-key` <Badge text="다음 릴리스" /> | 페인에서 스위처 열기: Mac에서는 <kbd>⌃</kbd><kbd>F</kbd>, Linux에서는 <kbd>Ctrl</kbd><kbd>F</kbd>, 페인에 키보드가 있을 때만 |
-| `terminal/lock` <Badge text="다음 릴리스" /> | 스위처 키 잠그기(단축키를 주기 전까지 없음. 프리픽스의 <kbd>g</kbd>) |
+| `terminal/switcher-key` | 페인에서 스위처 열기: Mac에서는 <kbd>⌃</kbd><kbd>F</kbd>, Linux에서는 <kbd>Ctrl</kbd><kbd>F</kbd>, 페인에 키보드가 있을 때만 |
+| `terminal/lock` | 스위처 키 잠그기(단축키를 주기 전까지 없음. 프리픽스의 <kbd>g</kbd>) |
 | `terminal/nav-back`, `terminal/nav-forward`, `terminal/nav-last` | 이전 위치로, 다음 위치로, 직전 위치(직접 주기 전까지 단축키 없음) |
 | `terminal/mark`, `terminal/goto-mark` | 이 페인 표시하기…, 표시한 곳으로 가기…(직접 주기 전까지 단축키 없음) |
 | `terminal/move-tab-left`, `terminal/move-tab-right` | 탭을 왼쪽으로, 탭을 오른쪽으로 |

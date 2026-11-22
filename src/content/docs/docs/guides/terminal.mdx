@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 On the Mac and Linux, AIDE has a terminal of its own, so you can keep a shell next to your notes. On
 the iPhone, which has no local shell, the SSH section opens terminals to your servers instead.
@@ -190,7 +190,7 @@ bottom of the pane says **Copy mode**. The keys are comux's:
 The right panel (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>\\</kbd>, <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>\\</kbd> on
 Linux) has a **Terminal** view: the same tabs and the same shells, next to whatever the main area
 shows, such as a note. While the main area is the Terminal section, the shells are there, so the
-panel doesn't offer its Terminal view <Badge text="Next release" />. If the panel was showing it, it
+panel doesn't offer its Terminal view. If the panel was showing it, it
 shows **Outline** there instead; the panel keeps Terminal as its view, so it's back when you go to
 another section.
 
@@ -200,7 +200,7 @@ The right panel's **Work graph** view shows what each Claude Code or
 Codex agent in your panes has read, edited, written, searched and run, as a graph that grows while
 it works. Open it from the panel's views, or choose **Work graph** in the command palette.
 
-<Badge text="Next release" /> **Settings › Terminal › Layout › Right panel views** (on Linux also
+**Settings › Terminal › Layout › Right panel views** (on Linux also
 `right` under `[terminal.layout]` in `config.toml`) lists the right panel's configurable views in
 their order: `agents`, `notices`, `today` and `workgraph`, all four by default. Type the names
 separated by commas and press <kbd>Return</kbd>; a name AIDE doesn't know is dropped and said under
@@ -228,7 +228,7 @@ the field. Empty leaves them all out, and the Work graph out of the command pale
 
 #### Agents in the right panel
 
-<Badge text="Next release" /> Beside the Terminal section, the right panel's **Agents** view lists your
+Beside the Terminal section, the right panel's **Agents** view lists your
 agents as the [agent overview](#agent-overview) does, and shows one of them in detail above the list:
 the agent in the pane you're in, or the one you click, until you go to another pane. In a pane with
 no agent it goes on showing the one it showed. Other sections don't offer it, nor does a `right` that leaves
@@ -245,7 +245,7 @@ no agent it goes on showing the one it showed. Other sections don't offer it, no
   [work graph](#work-graph) and update every few seconds while the view shows; with **Keep a work
   graph** off it says **None yet**.
 
-<Badge text="Next release" /> **Focused** and **All** at the top of the view switch between that and a
+**Focused** and **All** at the top of the view switch between that and a
 board of every agent. The choice is per window and isn't kept. **All** shows:
 
 - How many agents are **Working**, **Needs you** (waiting for your answer), **Unseen** (finished
@@ -258,7 +258,7 @@ board of every agent. The choice is per window and isn't kept. **All** shows:
 
 #### Notifications in the right panel
 
-<Badge text="Next release" /> The right panel's **Notifications** view is the
+The right panel's **Notifications** view is the
 [notification center](#notification-center) in the panel, in every section while the terminal is
 on (unless `right` above leaves `notices` out): the same rows, **Clear all** and **Dismiss**, and <kbd>↑</kbd>, <kbd>↓</kbd>, <kbd>Return</kbd> and
 <kbd>Delete</kbd> as there. Going to a pane from it leaves the panel as it is. A terminal server from an older AIDE says to restart it for the notification center.
@@ -283,18 +283,18 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   its × shows on the tab on screen and when you point at another. **+** opens a new tab.
 - On the right: `ZOOM` while the tab on screen has a pane zoomed, `SYNC` while it's
   [synced](#arrange-a-tab-and-type-into-every-pane) , `COPY` while its pane is in
-  [copy mode](#copy-mode), `LOCK` <Badge text="Next release" /> while the
+  [copy mode](#copy-mode), `LOCK` while the
   [switcher key](#the-switcher-key) is locked (click it to unlock), `^B` while the
   [prefix key](/docs/guides/shortcuts/#the-prefix-key) waits for its next key, then the agents in every space,
   each count after its mark from the Agents list (working, needs you, and done: finished, and you
   haven't looked yet), the usage readout, and the clock. Click the needs-you count to
   [jump to the agent that needs you](#jump-to-an-agent), the done count to jump to the one that
   finished last, and the working count to open the [agent overview](#agent-overview).
-- <Badge text="Next release" /> Before the agent counts, a bell and the number of unread
+- Before the agent counts, a bell and the number of unread
   [notifications](#notification-center) of panes still open. Click it to go to the newest one's
   pane (another pane's first, when the one you're in has some too), its space first; the
   notification is read once the pane shows. A pane closed since says **That pane is gone**.
-- <Badge text="Next release" /> While the Terminal section's panel shows its list (Agents or Tabs),
+- While the Terminal section's panel shows its list (Agents or Tabs),
   the bar leaves the space (the pill, or the chips with **Every space**) and the agent counts to the
   list. What the space menu offered is on the list instead: right-click a space's heading, or its
   row under **Spaces**, for **Open space**, **Show todos** (for a space with a project, while the
@@ -309,14 +309,14 @@ Option+digit switches tabs** off (on Linux, **Alt+digit switches
 tabs**), and you can give the tabs other keys in **Settings › Keyboard**.
 
 When the window is narrow, the bar gives things up in this order: the clock, the usage gauges (the
-percentages stay), the usage, the tabs away from the one on screen (`‹` and `›` stand for them and
-show the nearest one), and the pill's branch.
+percentages stay), the usage, the tabs away from the one on screen (one **+N** button stands for
+them), and the pill's branch.
 
-<Badge text="Next release" /> While the panel shows its list, only the tabs give way first: their
+While the panel shows its list, only the tabs give way first: their
 names are cut to six characters, then only their numbers show (point at one for its whole name), then
 the tabs away from the one on screen; only then the clock and the usage.
 
-<Badge text="Next release" /> The tabs left out become one **+N** button instead of `‹` and `›`. It
+The **+N** button for the tabs left out
 carries the mark of the most pressing agent among them (▲ needs you, then ✓ done, then ● working), so
 a blocked tab out of sight still shows. Click it for a menu of those tabs, and choose one to go to it.
 A tab whose agent reports how much of its context window it has used has a thin line under its label,
@@ -368,11 +368,11 @@ and both read them the same way.
 |---|---|---|
 | **Tab format** | Empty | How a tab is labelled; empty uses **Tab labels**. See below. |
 | **Left side** | `space, tabs` | The parts at the left end, in order. |
-| **Right side** | `flags, attention, agents, usage, clock` <Badge text="Next release" /> | The parts at the right end, in order. |
+| **Right side** | `flags, attention, agents, usage, clock` | The parts at the right end, in order. |
 | **Tab color**, **Active tab color**, **Mode flags color**, **Clock color** | **Default** | **Text**, **Secondary text**, **Accent**, **Success**, **Warning**, **Danger** or **Info**. |
 
 The parts are `space` (the pill, or the chips with **Every space**), `tabs` (with **+** after them),
-`flags` (`ZOOM`, `^B`, and from the next release `LOCK`), `attention` (the bell, from the next release), `agents`, `usage` and `clock`. A right side saved as the old default, `flags, agents, usage, clock` in that order, gets `attention`; any other keeps its parts until you add it. Each part goes in one side only, and the tabs
+`flags` (`ZOOM`, `^B` and `LOCK`), `attention` (the bell), `agents`, `usage` and `clock`. A right side saved as the old default, `flags, agents, usage, clock` in that order, gets `attention`; any other keeps its parts until you add it. Each part goes in one side only, and the tabs
 are always there: left out of both sides, they join the left. **Show status bar** off keeps only the
 space and the tabs, where you put them, and **Clock** off drops the clock; your order stays for when
 you turn them back on. A name AIDE doesn't know shows under the field and is left out.
@@ -559,7 +559,7 @@ Get back to where you just were, to a pane you marked, or to any tab by a few le
   does; <kbd>←</kbd> and <kbd>→</kbd> switch between **Spaces**, **Agents** and **Tabs** (turn on
   **All spaces** for every space's tabs), <kbd>↑</kbd> and <kbd>↓</kbd> move, <kbd>Return</kbd> goes
   there and <kbd>F2</kbd> renames a space. Under the list, the selected one's last lines show.
-- <Badge text="Next release" /> **Spaces**, **Agents** and **Tabs** each show how many they have, or
+- **Spaces**, **Agents** and **Tabs** each show how many they have, or
   how many match what you typed. On **Agents**, with nothing typed, the agents come in groups: **Needs
   you** (waiting for your answer, then finished while you weren't looking), **Working**, then
   **Idle**, each the most recently changed first; <kbd>↑</kbd> and <kbd>↓</kbd> pass over the
@@ -582,15 +582,13 @@ Get back to where you just were, to a pane you marked, or to any tab by a few le
 - **Move tab left** and **Move tab right** move the tab you're on along the bar
   (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Page Up</kbd> and <kbd>Page Down</kbd> on Linux).
 
-Only the switcher and Linux's move-tab keys have a shortcut (from the next release, so does the
-[switcher key](#the-switcher-key)); give the others one in **Settings › Keyboard**, or run them from
+Only the switcher, the [switcher key](#the-switcher-key) and Linux's move-tab keys have a
+shortcut; give the others one in **Settings › Keyboard**, or run them from
 the command palette. Marks and the switcher's preview
 need the terminal server from this version: an older one shows **The terminal server needs
 updating** until it restarts.
 
 #### The switcher key
-
-<Badge text="Next release" />
 
 One key reaches the switcher from any pane, as comux's <kbd>Ctrl</kbd><kbd>f</kbd> does. While a pane
 has the keyboard, press <kbd>⌃</kbd><kbd>F</kbd> on the Mac or <kbd>Ctrl</kbd><kbd>F</kbd> on Linux:
@@ -1020,18 +1018,18 @@ it printed, with a small gauge of its context when AIDE knows it.
 - Click a row to go to that agent: its tab is selected, its pane gets the keyboard and the window
   comes forward. Looking at it this way turns **Done** into **Waiting**.
 - With none, the list says **No agents running**.
-- <Badge text="Next release" /> Click a space's or host's heading to fold it; a folded heading still
+- Click a space's or host's heading to fold it; a folded heading still
   shows how many of its agents need you (▲), are done (✓) and are working (●). Going to a space opens
   it until you leave it again; a heading you fold or open yourself stays that way.
-- <Badge text="Next release" /> The context gauge turns to the warning colour once the context is 80%
+- The context gauge turns to the warning colour once the context is 80%
   full or more.
-- <Badge text="Next release" /> The row of an agent that needs you has an **Open inline** button: the
+- The row of an agent that needs you has an **Open inline** button: the
   right panel shows **Agents** › **Focused** on that agent with its pane's last lines, read again every
   two seconds, and **Open pane** to go there (**Can't read this pane** when they don't come). Where the
   pane's terminal server can't send its lines, or the panel has no Agents view, the button is **Open**
   and goes to the pane as a click on the row does. Neither shows while the row says **Not updating**.
 
-<Badge text="Next release" /> The panel shows a **Tabs** list by default, instead of the Agents list
+The panel shows a **Tabs** list by default, instead of the Agents list
 above. To get the Agents list back, set **Settings › Terminal › Layout › Left list** to **Agents** (on
 Linux also `left = ["agents"]` under `[terminal.layout]` in `config.toml`). The Agents list was the
 default before, so choosing it then saved nothing: choose it again after the update. The Tabs list shows every tab of every space under its space's heading, with
@@ -1041,7 +1039,7 @@ the iPhone's as the whole path). On the Mac that's the tabs of the space the win
 bell fold into one **Quiet · N spaces** row, which you click to list them; the space on screen never
 folds, and a space leaves the fold as soon as one of those arrives.
 
-<Badge text="Next release" /> While an agent needs you, both lists start with a **Needs you** group: the agents waiting for your
+While an agent needs you, both lists start with a **Needs you** group: the agents waiting for your
 answer, then those that finished while you weren't looking. One finished agent is listed and the
 others are summed up as **N more finished**, with their spaces; while you filter, every match is
 listed. Each row names its space and tab, and
@@ -1049,7 +1047,7 @@ does what that agent's own row further down does, and is tinted orange. A finish
 group once you look at it. The group's heading always shows how many need you, and it folds like a
 space.
 
-<Badge text="Next release" /> Above the rows, **Filter spaces, tabs, agents** narrows both lists as
+Above the rows, **Filter spaces, tabs, agents** narrows both lists as
 you type. It matches space and tab names, what an agent is doing and its card's title, and opens the
 spaces that match; in the Tabs list, quiet ones too. The chips under it, **All**, **Needs you**, **Agents** and
 **Working**, each with its count, narrow it further. **Esc** in the field clears it, and ⌘F (Ctrl+F on
@@ -1166,7 +1164,7 @@ one reaches the server, and the last change wins. On Linux they're also kept in 
 |---|---|---|
 | **Watch for coding agents** | On | Off, AIDE doesn't look for agents at all: the list stays empty, and there are no marks, status item or notifications (`agents`). |
 | **Keep a work graph** | On | What each agent reads, edits and runs, for the right panel's [Work graph](#work-graph), kept 30 days on the computer the terminal server runs on (`graph`). Off, nothing is read or kept. |
-| **Give agents AIDE's context** <Badge text="Next release" /> | On | Claude Code and Codex started in a pane learn about your board and notes for that session (`agent_context`). See [AIDE's context for agents](#aides-context-for-agents). |
+| **Give agents AIDE's context** | On | Claude Code and Codex started in a pane learn about your board and notes for that session (`agent_context`). See [AIDE's context for agents](#aides-context-for-agents). |
 | **Notify when an agent finishes** | On | A notification when an agent's turn ends (`notify_done`). Off, it still shows as **Done**. |
 | **Notify when an agent needs you** | On | A notification when an agent asks you something (`notify_blocked`). |
 | **Remind after** | 10 min | **Off**, 5, 10 or 30 min: one more notification that long after an agent started needing you, if you haven't looked at it (`notify_remind`). |
@@ -1280,8 +1278,6 @@ When a coding agent in one of AIDE's panes adds an [agent card](/docs/guides/age
 
 #### AIDE's context for agents
 
-<Badge text="Next release" />
-
 When you start Claude Code or Codex in a pane, it already knows it's in AIDE: where your notes are,
 how to keep its plan on the [agent board](/docs/guides/agent-board/), and which card the pane works
 on. Nothing is written to the agents' own settings: the context is for that session only, and an
@@ -1318,7 +1314,7 @@ what AIDE decided when that session started.
 
 #### Plugin skills
 
-From the next release, Claude Code and Codex started in a pane learn the board for that session
+Claude Code and Codex started in a pane learn the board for that session
 without this, while **Give agents AIDE's context** is on: Claude Code as the skill, Codex as a pointer
 to `aidectl guide board` (see [AIDE's context for agents](#aides-context-for-agents)). These skills
 are for the other plugins, for Grok, and for agents you start outside AIDE. On the Mac and on Linux, AIDE can give Claude Code, Codex and Grok the skills of the plugins you turn
@@ -1424,7 +1420,7 @@ Touching and holding the row offers **Open AIDE** too.
    shows one pane at a time.
 3. Type. What you type, paste and tap goes to that pane's shell on the other computer.
 
-<Badge text="Next release" /> The screens follow the Mac's and Linux's terminal:
+The screens follow the Mac's and Linux's terminal:
 
 - **Sessions** says how many spaces and tabs the host has, and **Search spaces, tabs, agents**
   narrows it as you type. First, under **Needs you**, the agents waiting for your answer with
