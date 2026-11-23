@@ -327,6 +327,13 @@ a blocked tab out of sight still shows. Click it for a menu of those tabs, and c
 A tab whose agent reports how much of its context window it has used has a thin line under its label,
 as long as that share: green, orange from 80%.
 
+<Badge text="Next release" /> Claude Code names its context window only in its status line. Unless
+[`aidectl agent install-hooks`](/docs/developers/aidectl/#agent) put AIDE's report in yours, AIDE
+measures a Claude Code's context against 200k tokens, or 1M once it has used more than that, and
+marks its share with `~`, such as `~62%`; another agent whose window isn't known shows its tokens,
+such as `131k`. A one-line row in the left list now shows how full its context is whenever that's
+known, not only from 80%.
+
 The usage readout comes last: Claude's 5-hour and weekly limits, and Codex's. The terminal server
 reads them for every AIDE on the computer, from Claude Code's own sign-in and Codex's newest session,
 about once a minute while AIDE is open.
@@ -573,8 +580,9 @@ Get back to where you just were, to a pane you marked, or to any tab by a few le
   for while it needs you, otherwise what it's doing) and, from 80%, how full its context is. Typing
   ranks them all in one list, matching what the rows show as well as the state and how full the
   context is. With an agent selected, the preview says how full its context is when the agent reports
-  it (a token count such as `131k` when the size of its window isn't known) and how long it has been
-  in its state, and shows its card under its last lines when its pane works on one.
+  it (when the size of its window isn't known, a token count such as `131k`, or
+  <Badge text="Next release" /> for Claude Code a share of an estimated window marked `~`) and how
+  long it has been in its state, and shows its card under its last lines when its pane works on one.
 - **List tabs…** opens the same list on **Tabs** with the tab you were on before selected, so it
   and then <kbd>Return</kbd> flip between two tabs.
 - **Back to the previous place**, **Forward to the next place** and **Last place** walk the places
@@ -1067,7 +1075,7 @@ The other settings there (on Linux, the keys under `[terminal.layout]`):
 | Setting | Default | What it does |
 |---|---|---|
 | **Fold quiet spaces** (`fold_quiet`) | On | Off lists the quiet spaces like the others. |
-| **Rows** (`row_lines`, `auto_lines`) | Auto | **Auto** draws a row on up to three lines (its title, what it's doing, its card), and on one line while the list is longer than the panel; the selected tab's row and an agent waiting for your answer keep theirs. **One line**, **Two lines** or **Three lines** draw a row on at most that many lines, however long the list. A one-line row shows the context gauge only from 80%. A `row_lines` set in `config.toml` from before stays a fixed count. |
+| **Rows** (`row_lines`, `auto_lines`) | Auto | **Auto** draws a row on up to three lines (its title, what it's doing, its card), and on one line while the list is longer than the panel; the selected tab's row and an agent waiting for your answer keep theirs. **One line**, **Two lines** or **Three lines** draw a row on at most that many lines, however long the list. A one-line row shows the context gauge only from 80% (<Badge text="Next release" /> whenever its context is known). A `row_lines` set in `config.toml` from before stays a fixed count. |
 | **Row format** (`row_format`) | the title | A template for a row's title over `glyph`, `title`, `action`, `card`, `context` and `space`, written as the status bar's **Tab format** is. One that doesn't read shows its line and column under the field and is kept as you wrote it, while the list uses the title. |
 
 On Linux, a setting you put back to its default in Settings is taken out of `config.toml`, so a later
