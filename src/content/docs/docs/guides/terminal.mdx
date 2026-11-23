@@ -892,7 +892,9 @@ split and list panes and tabs from a script.
 comux, tmux and other multiplexers run in a pane like any other program and draw their own screens.
 To drive AIDE's own panes with comux's <kbd>Ctrl</kbd><kbd>B</kbd> keys, set a
 [prefix key](/docs/guides/shortcuts/#the-prefix-key); pressed twice, it still reaches a comux or
-tmux running in a pane.
+tmux running in a pane. <Badge text="Next release" /> The prefix is <kbd>Ctrl</kbd><kbd>B</kbd> unless you set another,
+so a comux or tmux in a pane gets <kbd>Ctrl</kbd><kbd>B</kbd> when you press it twice, or every time once you **Clear**
+the prefix.
 A comux in a pane can still bring its pane forward when you click one of
 its notifications, through the terminal socket above.
 
