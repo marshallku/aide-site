@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 AIDE는 Model Context Protocol을 지원해서, Claude(또는 어떤 MCP 클라이언트든)가 노트를 검색하고 읽고, 할 일을 추가하고 체크하고, 하루 계획을 제안할 수 있어요. 들어오는 길은 두 가지예요. 보관소를 호스팅하는 컴퓨터의 클라이언트를 위한 `aidectl mcp`, 그리고 직접 운영하는 서버에서 Claude 앱을 위한 원격 엔드포인트예요.
 
@@ -39,7 +39,7 @@ AIDE는 Model Context Protocol을 지원해서, Claude(또는 어떤 MCP 클라�
 
 </Steps>
 
-<Badge text="다음 릴리스" /> **설정 › 이 컴퓨터의 에이전트**(Mac과 Linux, Mac App Store 버전 제외)에 창의 보관소에 맞는 줄들이 복사할 수 있게 나와요.
+**설정 › 이 컴퓨터의 에이전트**(Mac과 Linux, Mac App Store 버전 제외)에 창의 보관소에 맞는 줄들이 복사할 수 있게 나와요.
 
 - `aidectl --vault <folder> where`: `aidectl`이 어떤 노트를 쓰는지 알려 줘요.
 - Claude Code용 `claude mcp add --scope user aide-<folder>-<code> -- <aidectl> --vault <folder> mcp`, Codex용 `codex mcp add aide-<folder>-<code> -- <aidectl> --vault <folder> mcp`.
@@ -68,7 +68,7 @@ AIDE는 Model Context Protocol을 지원해서, Claude(또는 어떤 MCP 클라�
 - **새 토큰 만들기**는 이전 토큰을 바꾸고, 이전 토큰은 바로 쓸 수 없게 돼요. **노트 변경 허용**을 켜거나 끌 때도 이걸 쓰세요.
 - **연결 해제**는 토큰을 폐기해요.
 - **URL** 줄에 **서버에서 AIDE_PUBLIC_URL 설정**이 보이면 서버가 자기 공개 주소를 모르는 거예요. `AIDE_PUBLIC_URL`을 설정하고 서버를 다시 시작하세요. 데스크톱 호스트에는 공개 URL이 없어서 이 페이지가 줄 URL이 없어요. 그 컴퓨터에서 `aidectl mcp`를 쓰세요.
-- <Badge text="다음 릴리스" /> Mac과 Linux에서는 이 페이지 아래쪽에 이 컴퓨터의 에이전트는 토큰이 필요 없다는 안내와 함께 **설정 › 이 컴퓨터의 에이전트**를 가리켜요([위](#로컬-aidectl-mcp)).
+- Mac과 Linux에서는 이 페이지 아래쪽에 이 컴퓨터의 에이전트는 토큰이 필요 없다는 안내와 함께 **설정 › 이 컴퓨터의 에이전트**를 가리켜요([위](#로컬-aidectl-mcp)).
 
 Claude Code에서는 같은 URL과 토큰을 HTTP 서버로 추가해요.
 

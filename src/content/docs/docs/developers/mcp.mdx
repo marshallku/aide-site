@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 AIDE speaks the Model Context Protocol, so Claude (or any MCP client) can search and read your notes, add todos, check them off and propose a plan for your day. There are two ways in: `aidectl mcp` for a client on the computer that hosts your vault, and a remote endpoint for the Claude app on your own server.
 
@@ -39,7 +39,7 @@ Both reach the same tools, described [below](#tools).
 
 </Steps>
 
-<Badge text="Next release" /> **Settings › Agents on this computer** (Mac and Linux; not the Mac App Store version) gives you the lines for the window's vault, ready to copy:
+**Settings › Agents on this computer** (Mac and Linux; not the Mac App Store version) gives you the lines for the window's vault, ready to copy:
 
 - `aidectl --vault <folder> where`, which says which notes `aidectl` uses;
 - `claude mcp add --scope user aide-<folder>-<code> -- <aidectl> --vault <folder> mcp` for Claude Code, and `codex mcp add aide-<folder>-<code> -- <aidectl> --vault <folder> mcp` for Codex;
@@ -68,7 +68,7 @@ On your own server, AIDE serves MCP over Streamable HTTP at `POST /mcp` under th
 - **Make a new token** replaces the old token; the old one stops working at once. Use it to switch **Allow changes to notes** on or off too.
 - **Disconnect** revokes the token.
 - If the **URL** row reads **Set AIDE_PUBLIC_URL on the server**, the server doesn't know its public address; set `AIDE_PUBLIC_URL` and restart it. A desktop host has no public URL, so this page has no URL to give there: use `aidectl mcp` on that computer instead.
-- <Badge text="Next release" /> On the Mac and Linux the page's footer says that agents on this computer need no token and points to **Settings › Agents on this computer** ([above](#local-aidectl-mcp)).
+- On the Mac and Linux the page's footer says that agents on this computer need no token and points to **Settings › Agents on this computer** ([above](#local-aidectl-mcp)).
 
 With Claude Code, add the same URL and token as an HTTP server:
 

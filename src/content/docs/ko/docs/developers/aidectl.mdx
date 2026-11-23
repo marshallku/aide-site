@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 `aidectl`은 터미널, 스크립트, 에디터, 상태 표시줄에서 AIDE 노트를 읽고 써요. AIDE의 노트 규칙을 그대로 따르기 때문에, 보지 못한 편집을 덮어쓰는 일은 없어요. 특정 작업 방식은 정해 두지 않았어요. `get`, `put`, `append`, `toggle`을 직접 조합해서 쓰면 돼요.
 
@@ -83,7 +83,7 @@ vault=~/Notes
 
 직접 운영하는 서버에서는 호출하는 쪽이 건드려도 되는 범위로 제한한 플러그인 토큰을 쓰세요. 서버의 `aide plugin-token` 명령으로 발급해요. 토큰과 범위는 [서버 플러그인 만들기](/ko/docs/developers/server-plugins/)에서 설명해요.
 
-토큰의 범위가 허용하지 않는 요청은 빠진 범위(예: `notes:write:board`)와 그 범위를 얻는 방법을 알려 줘요. AIDE 터미널 페인 안에서 `aidectl`을 실행하거나, **설정 › Claude 앱**(Linux에서는 **설정 › Claude**)에서 Claude를 다시 연결하거나, 그 범위로 토큰을 발급하세요. <Badge text="다음 릴리스" /> 그보다 먼저 이 컴퓨터의 보관소에는 토큰이 필요 없다고(`aidectl --vault <folder> …`, 또는 AIDE 터미널 페인) 알려 주고, `a server needs a token`도 그렇게 알려 줘요. `board:write`는 보드가 켜져 있는 동안 보드 폴더가 어디로 옮겨 가든 그 아래에 써요. 읽기 전용 에이전트도 보드는 쓸 수 있어요.
+토큰의 범위가 허용하지 않는 요청은 빠진 범위(예: `notes:write:board`)와 그 범위를 얻는 방법을 알려 줘요. AIDE 터미널 페인 안에서 `aidectl`을 실행하거나, **설정 › Claude 앱**(Linux에서는 **설정 › Claude**)에서 Claude를 다시 연결하거나, 그 범위로 토큰을 발급하세요. 그보다 먼저 이 컴퓨터의 보관소에는 토큰이 필요 없다고(`aidectl --vault <folder> …`, 또는 AIDE 터미널 페인) 알려 주고, `a server needs a token`도 그렇게 알려 줘요. `board:write`는 보드가 켜져 있는 동안 보드 폴더가 어디로 옮겨 가든 그 아래에 써요. 읽기 전용 에이전트도 보드는 쓸 수 있어요.
 
 ## 노트와 경로
 
@@ -392,8 +392,6 @@ aidectl event tail [--json] [--all]
 
 ### notify
 
-<Badge text="다음 릴리스" />
-
 ```sh
 aidectl notify <title> [body] [--pane P] [--id K]
 aidectl notify --when-done [--title T] [--pane P] [--id K] -- <command> [args…]
@@ -654,7 +652,7 @@ AIDE가 유지하는 링크(Mac은 `~/Library/Application Support/AIDE/bin/aide-
 - 보드가 켜져 있는데 토큰이 보드에 쓸 수 없으면(`board:write`도, 보드 폴더의 `notes:write`도 없으면)
   `sync`가 그렇게 알려 줘요. 그 토큰을 AIDE 터미널 페인 밖에서 쓰는 에이전트는 카드를 관리할 수 없어요. 페인
   안에서는 `aidectl`이 그 창의 노트를 쓰고, 아니면 **설정 › Claude 앱**(Linux에서는 **설정 › Claude**)에서 Claude를 다시 연결하세요. 읽기 전용
-  에이전트도 보드는 쓸 수 있어요. <Badge text="다음 릴리스" /> 그보다 먼저 이 컴퓨터의 보관소에는 토큰이 필요
+  에이전트도 보드는 쓸 수 있어요. 그보다 먼저 이 컴퓨터의 보관소에는 토큰이 필요
   없다고 알려 줘요. 페인 밖에서는 `aidectl --vault <folder>`를 쓰세요.
 - `sync --print`는 아무것도 쓰지 않고 어떤 스킬을 줄지만 알려 줘요.
 - `remove`는 `sync`가 준 것을 빼요. `--print`는 무엇을 뺄지만 알려 줘요.

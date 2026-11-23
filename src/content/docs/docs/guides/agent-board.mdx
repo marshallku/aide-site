@@ -5,8 +5,6 @@ sidebar:
     order: 15
 ---
 
-import { Badge } from "@astrojs/starlight/components";
-
 
 When Claude Code, Codex or Grok works on a task with more than one step, it writes its plan into your notes as a card: a short title, its steps, and a line that says what it's doing now. You see the work in your notes without reading the agent's terminal, and you can tick a step yourself at any time.
 
@@ -34,7 +32,7 @@ You can edit the note as usual. An agent's change is always made on the note as 
 
 The `aide-board` skill tells an agent when to add a card, how to keep its steps and status line current, when to move it to waiting, and how to finish it with a one-line outcome. On the Mac and Linux, AIDE gives it to your coding agents with the other [plugin skills](/docs/guides/terminal/#plugin-skills) once **Give plugins' skills to your coding agents** is on. Claude Code and Codex started in a terminal pane learn it for that session without that setting, while **Give agents AIDE's context** is on: Claude Code gets the skill itself, and Codex is told to read it with `aidectl guide board` (see [AIDE's context for agents](/docs/guides/terminal/#aides-context-for-agents)).
 
-In an AIDE terminal pane, the card is linked to the agent's pane, and its link `aide://card/<vault>/<card>` opens that pane (see [Cards linked to panes](/docs/guides/terminal/#cards-linked-to-panes)). The agents use `aidectl board`; the [aidectl reference](/docs/developers/aidectl/#board) lists its commands. In a pane they need no flag or token: `aidectl` uses the pane's window's notes, and read-only agents can still use the board. Elsewhere on the same computer they need no token either: with the vault's window in front, or with `aidectl --vault <folder>`; <Badge text="Next release" /> **Settings › Agents on this computer** gives Claude Code and Codex in any terminal AIDE's tools for the vault ([MCP](/docs/developers/mcp/)). Run `aidectl board list` to see the open cards yourself, or `aidectl board show <card>` for one card and its steps.
+In an AIDE terminal pane, the card is linked to the agent's pane, and its link `aide://card/<vault>/<card>` opens that pane (see [Cards linked to panes](/docs/guides/terminal/#cards-linked-to-panes)). The agents use `aidectl board`; the [aidectl reference](/docs/developers/aidectl/#board) lists its commands. In a pane they need no flag or token: `aidectl` uses the pane's window's notes, and read-only agents can still use the board. Elsewhere on the same computer they need no token either: with the vault's window in front, or with `aidectl --vault <folder>`; **Settings › Agents on this computer** gives Claude Code and Codex in any terminal AIDE's tools for the vault ([MCP](/docs/developers/mcp/)). Run `aidectl board list` to see the open cards yourself, or `aidectl board show <card>` for one card and its steps.
 
 An agent tells you about its card with the card's link, which `aidectl board add` and `aidectl board show` print. In a terminal pane, <kbd>⌘</kbd>-click it on the Mac, <kbd>Ctrl</kbd>-click it on Linux, or tap it on the iPhone, and the card opens on the Board. In the Agents list, a row whose pane works on a card says **on:** with the card's title, and **Open card** in its menu shows the card on the Board (see [The Agents list](/docs/guides/terminal/#the-agents-list)).
 

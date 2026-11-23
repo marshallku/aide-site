@@ -12,6 +12,14 @@
     --content-inset: 24px;
     --content-inset-phone: 16px;
     --panel-inset: 14px;
+    --row-pad-y: 6px;
+    --row-gap: 4px;
+    --card-pad: 12px;
+    --card-gap: 4px;
+    --card-spacing: 8px;
+    --feed-row-pad-y: 12px;
+    --feed-row-pad-x: 16px;
+    --feed-row-gap: 6px;
     --reading-width: 720px;
     --panel-width: 280px;
     --rail-button: 32px;
@@ -27,6 +35,8 @@
     --chrome: #ececec;
     --card: #ffffff;
     --fill: #e2e2e4;
+    --card-fill: #e8e8eb;
+    --card-fill-grouped: #ffffff;
     --separator: #d4d4d6;
     --text: #1c1c1e;
     --text-secondary: #636366;
@@ -49,6 +59,8 @@
     --chrome: #282828;
     --card: #1e1e1e;
     --fill: #38383a;
+    --card-fill: #323235;
+    --card-fill-grouped: #1c1c1e;
     --separator: #3d3d40;
     --text: #f2f2f7;
     --text-secondary: #a1a1a6;
@@ -72,6 +84,8 @@
         --chrome: #282828;
         --card: #1e1e1e;
         --fill: #38383a;
+        --card-fill: #323235;
+        --card-fill-grouped: #1c1c1e;
         --separator: #3d3d40;
         --text: #f2f2f7;
         --text-secondary: #a1a1a6;

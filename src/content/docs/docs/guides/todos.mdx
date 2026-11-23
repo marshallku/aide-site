@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { Badge, LinkCard } from "@astrojs/starlight/components";
+import { LinkCard } from "@astrojs/starlight/components";
 
 A todo in AIDE is a checkbox line in a note, so there's no separate todo database: `- [ ] Call the bank` in any note is a todo, and the Todos screen gathers every open one from all your notes. Checking it off anywhere changes that line in its note.
 
@@ -291,7 +291,7 @@ The [assistant](/docs/guides/assistant/) can propose changes to your todos: time
 
 ### Shortening a long todo
 
-A todo whose title runs past 80 characters, or holds two or more links, gets a small ✨ button at the end of its row on the Todos screen and on its card on the [Board](/docs/guides/agent-board/) (<Badge text="Next release" /> inside the card, after its title at the trailing edge, so it never covers the title). Click it (its tooltip is **Shorten the title**) and the [assistant](/docs/guides/assistant/) suggests a shorter title of at most 60 characters.
+A todo whose title runs past 80 characters, or holds two or more links, gets a small ✨ button at the end of its row on the Todos screen and on its card on the [Board](/docs/guides/agent-board/) (inside the card, after its title at the trailing edge, so it never covers the title). Click it (its tooltip is **Shorten the title**) and the [assistant](/docs/guides/assistant/) suggests a shorter title of at most 60 characters.
 
 The suggestion waits under the todo like any proposal: the old title struck through, over **Shorten · ** and the new title, with why. Nothing changes until you take it (**✓**); **✕** drops it. The ✨ button hides while a suggestion waits.
 
