@@ -5,6 +5,8 @@ sidebar:
     order: 6
 ---
 
+import { Badge } from "@astrojs/starlight/components";
+
 AIDE has three ways to look across your notes: search finds one, the graph shows how they connect, and Review shows what you got done in a week, month, quarter or year.
 
 ## Searching notes
@@ -26,6 +28,7 @@ Inside one note, **Find in Note…** (<kbd>⌘</kbd><kbd>F</kbd>, <kbd>Ctrl</kbd
 
 **Backlinks** lists the notes that point at the note you're reading. On the Mac and Linux it's a view of the right panel (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>\\</kbd>, <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>\\</kbd> on Linux), next to the outline; on the iPhone, open it from the note's **More › Backlinks**.
 
+- <Badge text="Next release" /> **Branches**, first: the notes you grew out of this one with [Branch to a new note](/docs/guides/editor/#connecting-a-block), each with its title and first lines. A note that was itself branched shows **Branched from …** at the top, to go back to its origin. Click a row to open that note; <kbd>⌘</kbd>-click (<kbd>Ctrl</kbd>-click or the middle button on Linux) opens it in a new tab. A branch is listed here only, not again under the mentions.
 - **Linked mentions**: each line of another note with a link that opens this note, the same way a click resolves it: a `[[wikilink]]`, an embed or a relative Markdown link. A link in code doesn't count: inline code, a fenced code block or, a code block indented by four spaces.
 - **Unlinked mentions**, folded: lines of notes that name this note by its title or an alias without linking it. Code, links and web addresses don't count. **Link** beside a line turns that name into a link to this note, in place: `[[Name]]` as you wrote it when that opens the note, otherwise a link by its path that still reads as you wrote it. Only that line changes, and only if it still reads as shown.
 
