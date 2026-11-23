@@ -5,7 +5,7 @@ sidebar:
     order: 1
 ---
 
-import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
 
 Every note in AIDE is a Markdown file, and you edit it in one live-preview editor that is the same on the iPhone, the Mac and Linux. What you type stays plain Markdown; the editor only styles it and hides the syntax on lines your cursor isn't on.
 
@@ -83,7 +83,11 @@ AIDE reads both kinds of links Obsidian uses.
 - `[text](other-note.md)` is a regular Markdown link, relative to the note's folder; `#Some%20Heading` after it works the same way.
 - `[[2026-10-22]]`, or a link to a path your daily-note format produces, opens that day's daily note and creates it from its template if it doesn't exist yet.
 
-Typing `[[` opens a list of your notes ranked by what you type; pick one to insert its link. Typing `[text](` offers the same list and inserts the note's relative path. The list offers notes only: a `#Heading` or `#^block` part you type yourself.
+Typing `[[` opens a list of your notes ranked by what you type; pick one to insert its link. Typing `[text](` lists your notes too and inserts the note's relative path.
+
+<Badge text="Next release" /> The `[[` list also finds notes by their aliases: a row found that way reads "alias — Title" and inserts `[[Note|alias]]`. Press <kbd>Tab</kbd> on a row (or click its **›**; on the iPhone, tap **Headings**) to go on to that note's headings and blocks and insert `[[Note#Heading]]` or `[[Note#^block-id]]`; typing `#` after a name does the same when only one note has it. When no note answers to what you typed and it can name a new note (not a date such as `2026-10-22` or a default daily, weekly or monthly note path, and not a name that would turn into another note's, such as `C++`), the last row is **Link to new note “…”**: it inserts only the link. As with any link to a missing note, clicking it asks first, and **Create note** makes the note.
+
+<Badge text="Next release" /> To turn words you've written into a link, select them and press <kbd>⌘</kbd><kbd>L</kbd> (<kbd>Ctrl</kbd><kbd>L</kbd> on Linux; **Edit › Link to Note…** on the Mac; the **Link to note** button above the keyboard on the iPhone). Pick a note and the words become `[[Note|your words]]`; <kbd>Tab</kbd> goes on to its headings. <kbd>Esc</kbd> leaves the text as it was. Only text on one line, without `#` or link marks, can become a link; for anything else AIDE says so and changes nothing. With nothing selected, it starts a `[[` link at the cursor.
 
 Click a rendered link to follow it. <kbd>⌘</kbd>-click (<kbd>Ctrl</kbd>-click on Linux) or a middle-click opens it in a new tab on the desktop. On the line your cursor is on, the link shows as raw text and clicking it just places the cursor.
 
