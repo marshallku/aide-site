@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 Periodic notes are one note per day, week, month, quarter or year, made from a template the first time you open them. They're where AIDE puts the day's todos, your calendar agenda and what plugins write about a day.
 
@@ -140,6 +140,25 @@ To reach the day note from your daily note, link it in the daily template. With 
 ```markdown
 [Briefing](../briefings/{{date}}.md)
 ```
+
+## Diary <Badge text="Next release" />
+
+Your daily note can keep a short diary: your mood and energy from 1 to 5, and one line each for **Joy**, **Reset** (what recharged you) and **Tomorrow**. AIDE keeps it in a **Diary** block of the daily note, written as fields you can query:
+
+```markdown
+### Diary
+mood:: 4
+energy:: 3
+joy:: Tea with Mina
+- Walked home the long way
+```
+
+You fill it in two ways:
+
+- **In the evening**: from the time set in **Settings › Assistant › Speak first › Evening recap** until the day ends, a **Diary** card sits at the top of the Assistant (on the Mac, iPhone and Linux). A card you opened in the evening stays on that day, so saving it after midnight still writes to the evening's note. Pick a mood and an energy, write any of the three lines, then **Save**, or **Skip** for today. The card folds to **Diary saved** or **Skipped**; **Edit** opens it again with what the note now holds. It works without **Keep conversations** and without a model. Leaving **Evening recap** empty turns the card off.
+- **With Shortcuts** on the iPhone and Mac: **Log mood and energy in AIDE** asks for both, and **Add to Today's Diary in AIDE** adds a line under them. On the iPhone they run in the background without opening AIDE; on the Mac they open AIDE to write.
+
+Only the fields you give change: a mood logged by a Shortcut in the afternoon stays unless you change the mood on the card, and the card's other lines leave it alone. Today's daily note is made only when something is written. Text is kept to one line, and a line you add twice is kept twice.
 
 ## Coming from Obsidian
 

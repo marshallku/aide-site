@@ -5,7 +5,7 @@ sidebar:
     order: 2
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 주기 노트는 하루, 한 주, 한 달, 한 분기, 한 해마다 하나씩 있는 노트로, 처음 열 때 템플릿으로 만들어져요. AIDE는 그날의 할 일, 캘린더 일정, 플러그인이 그날에 대해 쓴 내용을 여기에 넣어요.
 
@@ -140,6 +140,25 @@ import { Aside } from "@astrojs/starlight/components";
 ```markdown
 [Briefing](../briefings/{{date}}.md)
 ```
+
+## 일기 <Badge text="다음 릴리스" />
+
+일일 노트에 짧은 일기를 남길 수 있어요. 1부터 5까지의 기분과 에너지, 그리고 **기쁨**, **재충전**(오늘 기운을 되찾게 해 준 것), **내일**을 한 줄씩 적어요. AIDE는 이것을 일일 노트의 **일기** 블록에 조회할 수 있는 필드로 써 둬요.
+
+```markdown
+### Diary
+mood:: 4
+energy:: 3
+joy:: Tea with Mina
+- Walked home the long way
+```
+
+채우는 방법은 두 가지예요.
+
+- **저녁에**: **설정 › 어시스턴트 › 먼저 말하기 › 저녁 정리**에 정한 시간부터 그날이 끝날 때까지 어시스턴트 맨 위에 **일기** 카드가 떠요(Mac, iPhone, Linux). 저녁에 연 카드는 그날에 머물러서, 자정이 지나 저장해도 그 저녁의 노트에 써요. 기분과 에너지를 고르고 세 줄 중 원하는 것을 쓴 뒤 **저장**하거나, 오늘은 **건너뛰기**를 눌러요. 카드는 **일기를 저장했어요** 또는 **건너뛰었어요**로 접히고, **편집**을 누르면 노트에 지금 있는 내용으로 다시 열려요. **대화 보관**을 꺼도, 모델이 없어도 동작해요. **저녁 정리**를 비워 두면 카드가 뜨지 않아요.
+- **단축어로**(iPhone, Mac): **Log mood and energy in AIDE**는 기분과 에너지를 묻고, **Add to Today's Diary in AIDE**는 그 아래에 한 줄을 더해요. iPhone에서는 AIDE를 열지 않고 백그라운드에서 실행되고, Mac에서는 AIDE를 열어서 써요.
+
+입력한 필드만 바뀌어요. 오후에 단축어로 기록한 기분은 카드에서 기분을 바꾸지 않는 한 그대로 남고, 카드의 다른 줄은 그것을 건드리지 않아요. 오늘의 일일 노트는 무언가를 쓸 때만 만들어져요. 텍스트는 한 줄로 저장되고, 같은 줄을 두 번 더하면 두 줄로 남아요.
 
 ## Obsidian에서 옮겨 올 때
 
