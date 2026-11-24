@@ -1062,6 +1062,31 @@ does what that agent's own row further down does, and is tinted orange. A finish
 group once you look at it. The group's heading always shows how many need you, and it folds like a
 space.
 
+#### Answer a prompt without going to the pane
+
+<Badge text="Next release" /> When Claude Code, started in a terminal pane, asks before it runs a
+command, fetches a page or searches the web, or asks you a question with one answer, its row shows
+what it asks: the command or address in a monospaced line, then **Allow once** and **Deny**, or one
+button per answer for a question (hold the pointer over one for its description). The buttons show
+once, in **Needs you** while that group is open, and **Open** stays beside them.
+
+- **Allow once** allows that one call. Claude asks again the next time; nothing is added to its
+  permission rules. **Deny** tells Claude "Denied in AIDE".
+- **Agents** › **Focused** in the right panel shows the prompt whole with its buttons, also when it's
+  too long for a row.
+- Edits, new files, other tools, a command with its own time limit, a question that takes several
+  answers or comes with other questions, and anything too long to show whole get **Open** only:
+  answer those in the pane.
+- The pane's own dialog still works. Whichever answer reaches Claude first counts. When your answer
+  goes through you see **Answer sent**. When it can't (the prompt changed, or the connection
+  dropped), AIDE says why, for example **The prompt changed. Answer it in the pane.**, and on the
+  Mac and Linux the pane opens.
+- It works for sessions AIDE starts; AIDE adds its hook for those sessions alone and never changes
+  Claude Code's own settings. `claude -p` runs without it, as no one is at a dialog.
+- With a terminal server from before this release, prompts show **Open** only.
+- On the iPhone, the **Needs you** rows of a host's AIDE sessions show the same buttons. There, a
+  press that sends nothing shows why on the list and leaves the row's **Open** to reach the pane.
+
 Above the rows, **Filter spaces, tabs, agents** narrows both lists as
 you type. It matches space and tab names, what an agent is doing and its card's title, and opens the
 spaces that match; in the Tabs list, quiet ones too. The chips under it, **All**, **Needs you**, **Agents** and
