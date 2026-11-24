@@ -5,7 +5,7 @@ sidebar:
     order: 3
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 Mac이나 Linux의 AIDE 앱은 보관소를 열어 두는 동안 그 보관소의 노트를 Unix 소켓으로 제공해요. 같은 컴퓨터에서 실행하는 프로그램이라면 서버도 토큰도 없이 평범한 HTTP로 노트를 읽고 쓸 수 있고, 서버가 주는 것과 같은 응답을 받아요. [`aidectl`](/ko/docs/developers/aidectl/)도 이 위에서 만들어졌어요. 이 페이지는 직접 호출하고 싶을 때를 위한 거예요.
 
@@ -139,6 +139,7 @@ Mac과 Linux에서는 **설정 › 코어 플러그인**에서 켜 둔 [브라�
 | `409` | `plugin_off` | 브라우저가 꺼져 있어요 |
 | `409` | `no_tab` | 열린 탭이 없어요 |
 | `409` | `tab_protected`, `requires_protected`, `origin_mismatch` | 보호된 탭이 있어서 거부했거나, 보호되지 않은 탭이나 다른 사이트에 비밀번호 op를 요청했어요 |
+| `409` | `another_protected` | <Badge text="다음 릴리스" /> 다른 탭이 보호된 동안 `tab/protect`를 요청했어요. 한 번에 하나의 탭만 보호되고, 처음 탭은 계속 보호돼요 |
 | `409` | `purge_incomplete` | 사이트의 service worker나 캐시를 지우지 못해서 보호나 채우기를 거부했어요 |
 | `409` | `superseded`, `timeout`, `cancelled` | 다른 가져오기로 바뀌었거나, 시간이 지났거나, 끝난 가져오기예요 |
 | `500` | `js_error`, `snapshot_failed`, `fill_failed`, `secret_backend_unavailable` | 페이지 스크립트가 실패했거나, 스크린샷을 못 찍었거나(Linux에서 화면에 없는 탭), 페이지가 값을 받지 않았거나, 키체인·키링이 없어요 |

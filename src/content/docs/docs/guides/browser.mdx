@@ -5,7 +5,7 @@ sidebar:
     order: 16
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 The Browser is a web browser built into AIDE on the Mac and Linux. You browse in it like any other
 browser, and a coding agent in your terminal can drive the same pages with
@@ -76,6 +76,9 @@ protected:
   can still click and type, and get only "done" back.
 - Every other tab shows a blank page and loads nothing until protection ends.
 - Tab titles read **Protected**.
+
+<Badge text="Next release" /> One tab is protected at a time. Protecting another while one is protected is refused with "Another
+tab is protected. Turn its protection off first.", and the first tab stays protected.
 
 The usual sign-in: open the login page, protect the tab, fill the password
 (`aidectl secret fill`), press the sign-in button, then end protection. To save a password, type it
