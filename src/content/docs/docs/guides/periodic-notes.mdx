@@ -143,10 +143,11 @@ To reach the day note from your daily note, link it in the daily template. With 
 
 ## Diary <Badge text="Next release" />
 
-Your daily note can keep a short diary: your mood and energy from 1 to 5, and one line each for **Joy**, **Reset** (what recharged you) and **Tomorrow**. AIDE keeps it in a **Diary** block of the daily note, written as fields you can query:
+Your daily note can keep a short diary: a photo of the day, your mood and energy from 1 to 5, and one line each for **Joy**, **Reset** (what recharged you) and **Tomorrow**. AIDE keeps it in a **Diary** block of the daily note, written as fields you can query:
 
 ```markdown
 ### Diary
+photo:: ![](attachments/img-20261124-211503-3fa2.jpg)
 mood:: 4
 energy:: 3
 joy:: Tea with Mina
@@ -157,6 +158,8 @@ You fill it in two ways:
 
 - **In the evening**: from the time set in **Settings › Assistant › Speak first › Evening recap** until the day ends, a **Diary** card sits at the top of the Assistant (on the Mac, iPhone and Linux). A card you opened in the evening stays on that day, so saving it after midnight still writes to the evening's note. Pick a mood and an energy, write any of the three lines, then **Save**, or **Skip** for today. The card folds to **Diary saved** or **Skipped**; **Edit** opens it again with what the note now holds. It works without **Keep conversations** and without a model. Leaving **Evening recap** empty turns the card off.
 - **With Shortcuts** on the iPhone and Mac: **Log mood and energy in AIDE** asks for both, and **Add to Today's Diary in AIDE** adds a line under them. On the iPhone they run in the background without opening AIDE; on the Mac they open AIDE to write.
+
+**Photo of the day** on the card picks one photo (from your photo library on the Mac and iPhone, a file on Linux). AIDE saves a copy in `attachments/` as soon as you pick it and shows it on the card; it's written into the Diary with the rest when you **Save**. **Skip** leaves it out of the Diary, but the copy stays in `attachments/`. The copy is a JPEG without the photo's location or other metadata (anything visible in the picture itself stays), and a GIF is saved as a still JPEG of its first frame. Picking another photo replaces the day's photo; the earlier file stays in `attachments/`.
 
 Only the fields you give change: a mood logged by a Shortcut in the afternoon stays unless you change the mood on the card, and the card's other lines leave it alone. Today's daily note is made only when something is written. Text is kept to one line, and a line you add twice is kept twice.
 
