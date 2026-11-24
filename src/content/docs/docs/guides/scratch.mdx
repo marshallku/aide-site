@@ -5,7 +5,7 @@ sidebar:
     order: 5
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 Scratch is where you write without deciding where something belongs. Each scratch note is an ordinary note kept under `scratch/`; later, **Organize** proposes a place in your wiki for each one, and nothing moves until you approve it.
 
@@ -41,7 +41,7 @@ If AIDE can't reach your notes when you capture (the server is offline, say), th
 <Steps>
 
 1. In the Scratch panel's header, choose **Organize** (on the iPhone, Scratch's **More › Organize**; on the desktop, also **Organize scratch notes…** in the command palette). The sheet says how many scratch notes will get a proposed home in your wiki.
-2. Choose **Propose**. Each scratch note gets one proposal, with a short reason: **New page** at a path, or **Append to** an existing page.
+2. Choose **Propose**. Each scratch note gets one proposal, with a short reason: **New page** at a path, or **Append to** an existing page. <Badge text="Next release" /> With a desktop host, or a server that keeps notes as files (its default), a scratch note an earlier organize still holds is left out until you resolve it (below).
 3. Every proposal starts selected. Click one to leave it out.
 4. Choose **Apply** to file the selected ones. Proposals you left out stay as scratch notes, untouched.
 
@@ -49,7 +49,7 @@ If AIDE can't reach your notes when you capture (the server is offline, say), th
 
 A proposal to a new page creates it with the scratch note's text. One that appends adds the text to the end of that page; a daily note that doesn't exist yet is made from its template first, so the text lands in the day's note as your template shapes it. Applied scratch notes are archived from Scratch, not deleted, and can be brought back from **Settings › Notes › Recently deleted**.
 
-If a note changed between Propose and Apply, Apply stops and asks you to propose again so it works from the latest text. If AIDE was interrupted partway through filing, the sheet shows "An earlier organize needs a look" with the pages involved; check them, and the scratch notes stay until you do.
+If a note changed between Propose and Apply, Apply stops and asks you to propose again so it works from the latest text. If AIDE was interrupted partway through filing, the sheet shows "An earlier organize needs a look" with the pages involved; check them, and the scratch notes stay until you do. With a desktop host, or a server that keeps notes as files (its default), choose **Resolve** beside a page once you've checked it: the page stays as it is and takes changes again. <Badge text="Next release" /> Until then, Organize leaves that page's scratch note out of its proposals instead of proposing it only for Apply to refuse it.
 
 ### With AI or by rules
 
