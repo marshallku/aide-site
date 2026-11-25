@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { LinkCard } from "@astrojs/starlight/components";
+import { Badge, LinkCard } from "@astrojs/starlight/components";
 
 A todo in AIDE is a checkbox line in a note, so there's no separate todo database: `- [ ] Call the bank` in any note is a todo, and the Todos screen gathers every open one from all your notes. Checking it off anywhere changes that line in its note.
 
@@ -238,7 +238,7 @@ A todo's open subtasks ride on it instead of being cards of their own, and a car
 
 Each project is a lane across the columns: projects with an agent card in progress come first, then the others, then **No project**, which starts folded when it holds more than 10. Click a lane's name to fold it. In a column, cards that need you come first, then overdue ones, then by priority, due date and age.
 
-A card shows its title on two lines, then its agent (**Claude**, **Codex**, **Grok** or **Agent**) and its progress, such as **2/4**, and one line of what's happening. While the agent's terminal pane is open in AIDE, the card shows what the pane is doing, the same way everywhere:
+A card shows its title on two lines, then its agent (**Claude**, **Codex**, **Grok** or **Agent**) and its progress, such as **2/4**, and one line of what's happening; <Badge text="Next release" /> a card whose agent works in a terminal pane ends with where that pane is (below). While the agent's terminal pane is open in AIDE, the card shows what the pane is doing, the same way everywhere:
 
 - a filled dot and **Working**, with what it's running (**Bash: Run the tests**);
 - a warning sign and **Needs you: Approve** or **Needs you: Answer**, with what it's asking;
@@ -246,7 +246,9 @@ A card shows its title on two lines, then its agent (**Claude**, **Codex**, **Gr
 
 The board never moves a card because of this: the column is what the note says. Without an open pane, a card in **Doing** says when the agent last wrote it and its status line, such as **Updated 2h ago · Running the Linux e2e**.
 
-Click a card to see its details beside the board (in the right panel's **Card** view on the Mac and Linux, in a sheet on the iPhone): its column, agent and project, what its pane is doing with **Open pane**, its **Plan** with a checkbox for each step you can tick, its status, **Landed** with the card's refs, where it came from, and its note with **Open note**. A pull request or issue on GitHub shows as `owner/repo#42` and a commit as `owner/repo@1a2b3c4`; any other link shows its host and path. Each opens in your browser. A bare commit hash shows its first 7 digits as text. Double-click a card to open its note at the card. On the Mac and Linux, with a card selected, the arrow keys move between cards, <kbd>Return</kbd> shows its details, <kbd>O</kbd> opens its pane and <kbd>⌘</kbd><kbd>Return</kbd> (<kbd>Ctrl</kbd><kbd>Return</kbd> on Linux) opens its note.
+<Badge text="Next release" /> A card whose agent works in a terminal pane says where, on its last line: the space and the tab, such as **aide › 2 build** for the second tab, which you named build, or **aide › 3** for an unnamed one (a tab's changing terminal title isn't used, so the place stays put while the agent works), with the computer's name first for a pane on another computer (**mac-mini › docs › 1**). When AIDE can open that pane from this device, click the place to go straight to it, in the Terminal section (its space first), without opening the card; on the iPhone, tap it to open that computer's AIDE sessions on the pane. If the connection to that computer dropped, this connects again too: on the Mac and Linux it brings the pane's tab forward and reconnects, and after reconnecting the computer may focus another split of that tab. The card's menu has **Open pane** then too. When more than one pane worked on a card, AIDE picks one it can open here: a pane on a computer that's connected now before one whose connection dropped, then the one linked last. A pane AIDE can't open from this device (such as one whose session ended, or one on a computer this device doesn't know) shows its place as plain text with no **Open pane** anywhere, and the card's details say **Not open on this device**.
+
+Click a card to see its details beside the board (in the right panel's **Card** view on the Mac and Linux, in a sheet on the iPhone): its column, agent and project, what its pane is doing with **Open pane** and <Badge text="Next release" /> where that pane is (**Open pane** shows only while AIDE can open that pane here), its **Plan** with a checkbox for each step you can tick, its status, **Landed** with the card's refs, where it came from, and its note with **Open note**. A pull request or issue on GitHub shows as `owner/repo#42` and a commit as `owner/repo@1a2b3c4`; any other link shows its host and path. Each opens in your browser. A bare commit hash shows its first 7 digits as text. Double-click a card to open its note at the card. On the Mac and Linux, with a card selected, the arrow keys move between cards, <kbd>Return</kbd> shows its details, <kbd>O</kbd> opens its pane and <kbd>⌘</kbd><kbd>Return</kbd> (<kbd>Ctrl</kbd><kbd>Return</kbd> on Linux) opens its note.
 
 On the iPhone the board shows one column at a time, **Doing** first; the bar under the summary switches columns and shows how many cards each holds. The iPhone shows what a pane is doing only for the computers whose AIDE terminal it's connected to.
 
