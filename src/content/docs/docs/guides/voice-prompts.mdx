@@ -5,7 +5,7 @@ sidebar:
     order: 17
 ---
 
-import { Aside, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
 A voice prompt lets you talk to a [coding agent](/docs/guides/terminal/#coding-agents) the way you
 would to a person, false starts and all, and gives the agent a prompt it can work from. You say it;
@@ -198,7 +198,7 @@ iPhone it's a bar above the key bar of the AIDE session pane.
 | **In Claude's box: press Enter** | The prompt is in the agent's box, waiting for you to press Enter. | **Copy**, **Copy what I said**. It goes away after 8 seconds; a flagged one stays until you close it. |
 | **Claude is asking something. Answer it first.** | The agent is waiting on a question or a permission, so nothing was typed. | Answer the agent, then **Insert anyway**; while it's still asking, the pill stays and says so. **Copy**. |
 | **The agent in that pane went away.** | The agent quit or something else runs there now. | **Copy**. |
-| **The agent in that pane went away.**, with only ✕ | You chose **Say a prompt to this agent**, and that agent quit or was replaced before the recording began. Nothing was recorded or typed. <Badge text="Next release" /> The same on the Mac and iPhone as on Linux. | **Dismiss**. |
+| **The agent in that pane went away.**, with only ✕ | You chose **Say a prompt to this agent**, and that agent quit or was replaced before the recording began. Nothing was recorded or typed. | **Dismiss**. |
 | **No agent to send to.** | No pane with an agent when you started. | **Copy**. |
 | **Update AIDE on … to insert prompts** | The computer running that pane has an older AIDE. Nothing was typed. | Update AIDE there. **Copy**. |
 | **Not sure it went in — check the pane.** | The connection went while the prompt was on its way. | Look at the pane. **Retry** for 5 minutes types it at most once; after that, **Insert again** sends it anew. **Copy**. |

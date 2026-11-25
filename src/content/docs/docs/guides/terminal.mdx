@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 On the Mac and Linux, AIDE has a terminal of its own, so you can keep a shell next to your notes. On
 the iPhone, which has no local shell, the SSH section opens terminals to your servers instead.
@@ -493,7 +493,7 @@ window shows one space at a time and switches between them; the shells of the ot
 - Every window on the computer lists the same spaces, and each window remembers the one it showed
   for its vault the next time it opens.
 
-To make one: <Badge text="Next release" />
+To make one:
 
 1. Press <kbd>⌃</kbd><kbd>⌘</kbd><kbd>N</kbd> (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd> on Linux),
    or choose **New space…**. A search field opens, ready for typing, over a list of folders: the
@@ -1039,9 +1039,8 @@ it printed, with a small gauge of its context when AIDE knows it.
 
 - The agents that need you come first, then the rest in tab order.
 - It lists the agents in every [space](#spaces), not only the one on
-  screen: once you have more than one space, each has a heading with its name, the space on screen
-  first, then the spaces with an agent that needs you. <Badge text="Next release" /> The spaces keep
-  the order they have everywhere else instead, so switching spaces doesn't move them: the space on
+  screen: once you have more than one space, each has a heading with its name, and the spaces keep
+  the order they have everywhere else, so switching spaces doesn't move them: the space on
   screen is only marked, and an agent that needs you shows in **Needs you** at the top while its
   space stays where it is. Clicking an agent in another space switches the window to that space
   first.
@@ -1528,7 +1527,7 @@ The screens follow the Mac's and Linux's terminal:
   pane** asks first, and names the program still running there.
 - The list includes the host's [spaces](#spaces), each with its git
   branch. **+** makes one: type the folder's whole path on the host (the folders its shells are in
-  are offered), and its name, which is filled in from the folder. <Badge text="Next release" /> The
+  are offered), and its name, which is filled in from the folder. The
   offered folders narrow as you type, the way the Mac's **New space…** finds them, with the host's
   spaces' folders among them; tap one to fill in the folder. Swipe a row for **Rename**; a
   space also has **End**, which asks first. A vault's own session can't be ended from the iPhone.
