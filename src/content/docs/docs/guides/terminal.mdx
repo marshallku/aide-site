@@ -1040,8 +1040,11 @@ it printed, with a small gauge of its context when AIDE knows it.
 - The agents that need you come first, then the rest in tab order.
 - It lists the agents in every [space](#spaces), not only the one on
   screen: once you have more than one space, each has a heading with its name, the space on screen
-  first, then the spaces with an agent that needs you. Clicking an agent in another space switches
-  the window to that space first.
+  first, then the spaces with an agent that needs you. <Badge text="Next release" /> The spaces keep
+  the order they have everywhere else instead, so switching spaces doesn't move them: the space on
+  screen is only marked, and an agent that needs you shows in **Needs you** at the top while its
+  space stays where it is. Clicking an agent in another space switches the window to that space
+  first.
 - Agents working in the same git checkout (the same folder of a
   repository, a linked worktree counting as its own) show the git mark and how many share it, as a
   reminder that they edit the same files.
