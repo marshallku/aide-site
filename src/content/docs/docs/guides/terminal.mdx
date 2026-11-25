@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 On the Mac and Linux, AIDE has a terminal of its own, so you can keep a shell next to your notes. On
 the iPhone, which has no local shell, the SSH section opens terminals to your servers instead.
@@ -493,16 +493,28 @@ window shows one space at a time and switches between them; the shells of the ot
 - Every window on the computer lists the same spaces, and each window remembers the one it showed
   for its vault the next time it opens.
 
-To make one:
+To make one: <Badge text="Next release" />
 
 1. Press <kbd>⌃</kbd><kbd>⌘</kbd><kbd>N</kbd> (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd> on Linux),
-   or choose **New space…**. A folder browser opens on the folder of the tab you're in.
-2. Type to narrow the folders (start with `.` to see hidden ones), or type a path starting with `/`
-   or `~/` and press <kbd>Return</kbd> to go there. <kbd>↑</kbd> and <kbd>↓</kbd> move,
-   <kbd>Return</kbd> or <kbd>→</kbd> enter a folder, <kbd>←</kbd> (or <kbd>Delete</kbd> with nothing
-   typed) goes up.
-3. Choose **. (this folder)**, the first row, to start the space in the folder you're in.
-4. Give it a name. The folder's name is filled in. Press <kbd>Return</kbd>.
+   or choose **New space…**. A search field opens, ready for typing, over a list of folders: the
+   folder of the tab you're in, folders you made spaces in lately, your spaces' folders, and the git
+   repositories (with their worktrees) in `~/dev`, `~/src`, `~/code`, `~/projects`, `~/repos`, `~/git`,
+   `~/work`, `~/workspace` and `~/Developer`, up to two folders deep.
+2. Type a few letters of the folder. They don't have to be next to each other: `aide` and `dvai` both
+   find `~/dev/aide`. The letters you typed show in bold, folders you use often come first, and the
+   line under the field says what <kbd>Return</kbd> does. Or type a path starting with `/` or `~/` to
+   list that folder's folders (start the last part with `.` to see hidden ones); <kbd>Tab</kbd> fills
+   in the highlighted folder's path, so you can keep going into it.
+3. Press <kbd>Return</kbd>. The space is made in that folder, named after it. When the folder already
+   has a space, its row says **Open space** and the space's name, and <kbd>Return</kbd> shows that
+   space instead of making a second one. When New space… is opened for a project, only that project's space counts, so a folder whose space belongs elsewhere gets a new one.
+
+<kbd>↑</kbd> and <kbd>↓</kbd> move (<kbd>⌃</kbd><kbd>P</kbd> and <kbd>⌃</kbd><kbd>N</kbd> too, or
+<kbd>Ctrl</kbd><kbd>P</kbd> and <kbd>Ctrl</kbd><kbd>N</kbd> on Linux). To give the space another name,
+or to make a second space in a folder that has one, press <kbd>⌘</kbd><kbd>Return</kbd>
+(<kbd>Ctrl</kbd><kbd>Enter</kbd> on Linux), type the name and press <kbd>Return</kbd>; <kbd>Esc</kbd>
+goes back to the list, and <kbd>Esc</kbd> in the list closes it. A folder's name that another space
+already has gets a number: `aide 2`.
 
 The new space opens with a shell in its folder, and its new tabs start there too. Splits start in the
 folder of the pane you split.
@@ -1513,7 +1525,9 @@ The screens follow the Mac's and Linux's terminal:
   pane** asks first, and names the program still running there.
 - The list includes the host's [spaces](#spaces), each with its git
   branch. **+** makes one: type the folder's whole path on the host (the folders its shells are in
-  are offered), and its name, which is filled in from the folder. Swipe a row for **Rename**; a
+  are offered), and its name, which is filled in from the folder. <Badge text="Next release" /> The
+  offered folders narrow as you type, the way the Mac's **New space…** finds them, with the host's
+  spaces' folders among them; tap one to fill in the folder. Swipe a row for **Rename**; a
   space also has **End**, which asks first. A vault's own session can't be ended from the iPhone.
 - Leaving the screen or the app only lets go of the session: its shells keep running on the other
   computer. Coming back shows each pane as it is now.
