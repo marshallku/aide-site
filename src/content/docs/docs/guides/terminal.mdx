@@ -299,12 +299,17 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   [notifications](#notification-center) of panes still open. Click it to go to the newest one's
   pane (another pane's first, when the one you're in has some too), its space first; the
   notification is read once the pane shows. A pane closed since says **That pane is gone**.
-- While the Terminal section's panel shows its list (Agents or Tabs),
-  the bar leaves the space (the pill, or the chips with **Every space**) and the agent counts to the
-  list. What the space menu offered is on the list instead: right-click a space's heading, or its
-  row under **Spaces**, for **Open space**, **Show todos** (for a space with a project, while the
-  board is on), **Rename space…**, **New worktree…**, **End space…**, **New space…** and
-  **New space from layout…**. Hide the panel and the pill or chips are back.
+- While the Terminal section's panel shows its list (Agents or Tabs), the list also offers what the
+  space menu does: right-click a space's heading, or its row under **Spaces**, for **Open space**,
+  **Show todos** (for a space with a project, while the board is on), **Rename space…**,
+  **New worktree…**, **End space…**, **New space…** and **New space from layout…**.
+  <Badge text="Next release" /> The bar keeps everything then too: the pill (or the chips) and the
+  agent counts stay on it.
+
+<Badge text="Next release" /> Each tab is a rounded box: its number in grey, its agent's mark, then
+its name, with the tab on screen filled in the accent colour. A tab you haven't named is called by
+the title its program set (an agent's task, `vim notes.md`), or by the program itself (`zsh`) when
+the title is only the shell's prompt (`you@host: ~/dir`). Its × shows only while you point at it.
 
 Press <kbd>⌥</kbd><kbd>1</kbd> to <kbd>⌥</kbd><kbd>9</kbd> on the Mac, or
 <kbd>Alt</kbd><kbd>1</kbd> to <kbd>Alt</kbd><kbd>9</kbd> on Linux, to show a tab by its number;
@@ -313,17 +318,17 @@ Option with a digit for itself (readline, emacs) gets it back with **Settings �
 Option+digit switches tabs** off (on Linux, **Alt+digit switches
 tabs**), and you can give the tabs other keys in **Settings › Keyboard**.
 
-When the window is narrow, the bar gives things up in this order: the clock, the usage gauges (the
-percentages stay), the usage, the tabs away from the one on screen (one **+N** button stands for
-them), and the pill's branch.
+<Badge text="Next release" /> When the window is narrow, only the tabs scroll: every tab stays whole,
+the one on screen is kept in view, and a trackpad or the mouse wheel over them scrolls them sideways.
+While some tabs are out of view, a **+N** button after them carries the mark of the most pressing
+agent among those (▲ needs you, then ✓ done, then ● working), so a blocked tab out of sight still
+shows; click it for a menu of every tab, and choose one to go to it. **+** for a new tab stays in
+view too. Everything on the right stays whole. Only when even that doesn't fit
+beside a little room for the tabs does it give way, in this order: the reset times, the names in the
+usage (`Claude` to `C`, then none), the percentages, the 5-hour limits, then the flags and the clock
+together (the first flag, `LOCK` while it's on, and `+N` for the rest; the clock without its date or
+seconds), and last the gauges, which become one icon that lists every limit when you point at it.
 
-While the panel shows its list, only the tabs give way first: their
-names are cut to six characters, then only their numbers show (point at one for its whole name), then
-the tabs away from the one on screen; only then the clock and the usage.
-
-The **+N** button for the tabs left out
-carries the mark of the most pressing agent among them (▲ needs you, then ✓ done, then ● working), so
-a blocked tab out of sight still shows. Click it for a menu of those tabs, and choose one to go to it.
 A tab whose agent reports how much of its context window it has used has a thin line under its label,
 as long as that share: green, orange from 80%.
 
@@ -338,13 +343,28 @@ The usage readout comes last: Claude's 5-hour and weekly limits, and Codex's. Th
 reads them for every AIDE on the computer, from Claude Code's own sign-in and Codex's newest session,
 about once a minute while AIDE is open.
 
+- <Badge text="Next release" /> AIDE reads the sign-in Claude Code itself uses: on the Mac the
+  **Claude Code-credentials** item in the login Keychain (the first time, macOS may ask whether
+  `security` can read it), and the credentials file only when there is no such item; on Linux the
+  credentials file. A sign-in about to expire isn't used, and one the usage service refuses counts as
+  expired: open Claude Code to renew it. AIDE never refreshes or changes the sign-in, and tries no
+  other one. When it can't read one, the readout says why (the sign-in has expired, or the Keychain
+  couldn't be read).
+
 - Each page shows one limit, such as `claude 5h ━━━╌╌╌╌╌ 34% ⟳ 2h13m`: a gauge, the percentage and
   how long until it resets. The gauge turns yellow from 70% and red from 90%. `1/4` after it says
   which page you're on.
 - Click it, or scroll over it, for the next page.
+- <Badge text="Next release" /> The pages are gone: Claude and Codex each get one row, the name, then each limit's
+  window (`5h`, `wk`), a small bar as full as that limit is used, the percentage and how long until
+  it resets (`⟳ 2h13m`). The bar turns yellow from 70% and red from 90%. Point at the usage for every
+  limit in words.
+- <Badge text="Next release" /> When nothing of Claude's could be read, its row is `Claude —`, and
+  pointing at it says why (the sign-in has expired, the Keychain couldn't be read). Codex's row shows
+  once a Codex session has given its limits.
 - Right-click it for **Refresh** and **Status bar settings…**, and
   **Token and cost report…** ([below](#token-and-cost-report)).
-- When a limit can't be read right now, the last reading stays, marked `~` (`~claude`), for up to
+- When a limit can't be read right now, the last reading stays, marked `~` (`~Claude`), for up to
   3 hours.
 
 Change it in **Settings › Terminal › Status bar**:
@@ -353,22 +373,29 @@ Change it in **Settings › Terminal › Status bar**:
 |---|---|---|
 | **Show status bar** | On | Off hides the right side of the bar; the pill, the tabs and **+** stay. |
 | **Position** | **Under the panes** | **Over the panes** puts the bar where the tab row was. |
-| **Spaces** | **The shown space** | **The shown space** is the pill; **Every space** shows a chip for each space instead, with a dot on one whose agent needs you, and `+N` for those that don't fit. |
-| **Tab labels** | **Number and name** | **Number and name** (`2:zsh`), **Name**, or **Number**. |
+| **Spaces** | **The shown space** | **The shown space** is the pill; **Every space** shows a chip for each space instead, with a dot on one whose agent needs you. <Badge text="Next release" /> The chips stay in view, wherever the space is on the bar; when they don't all fit, the pill shows instead, and its menu lists every space. |
+| **Tab labels** | **Number and name** | **Number and name** (`2 zsh`, the number in grey), **Name**, or **Number**. |
 | **Clock** | On | Off hides the clock. |
 | **Clock format** | `%H:%M` | `%H` `%M` `%S` (24-hour time), `%I` `%p` (12-hour), `%a` `%b` `%d` `%m` `%Y` `%y` (the date), `%%` for a percent sign. |
-| **Usage** | **Gauges** | **Gauges**, **Percentages**, or **Off** to hide the readout. |
-| **Layout** | **Pages** | **Pages** shows one page at a time; **One row** shows every limit at once, without reset times. |
-| **Each page shows** | **One window** | **One window** (one limit), **One provider** (Claude's, then Codex's), or **Usage, then resets**. |
+| **Usage** | **Gauges** | **Gauges**, **Percentages** (no bars), or **Off** to hide the usage. |
+| **Layout** | **Pages** | **Pages** shows one page at a time; **One row** shows every limit at once, without reset times. <Badge text="Next release" /> Gone. |
+| **Each page shows** | **One window** | **One window** (one limit), **One provider** (Claude's, then Codex's), or **Usage, then resets**. <Badge text="Next release" /> Gone. |
 | **Resets** | **Time left** | **Time left** (`⟳ 2h13m`), **Clock time** (`⟳ 14:32`, or `⟳ Wed 09:00` a day or more ahead), or **Off**. |
-| **Next page every** | Off | Turns the page by itself every so many seconds (up to 600). |
-| **Gauge width** | 8 | 4 to 20 characters. |
+| **Next page every** | Off | Turns the page by itself every so many seconds (up to 600). <Badge text="Next release" /> Gone. |
+| **Gauge width** | 8 | 4 to 20 characters. <Badge text="Next release" /> Gone. |
 | **Claude, 5 hours**, **Claude, weekly**, **Codex, 5 hours**, **Codex, weekly** | On | Which limits it shows. |
+
+<Badge text="Next release" /> **Layout**, **Each page shows**, **Next page every** and **Gauge width**
+go away with the pages: every limit shows at once. Settings saved with them are read and the four
+are ignored.
 
 On Linux the same settings are also in `config.toml` under `[terminal.status_bar]` (`show`,
 `position` as `bottom` or `top`, `spaces` as `current` or `all`, `tab_labels` as `both`, `name` or
 `index`, `clock`, `clock_format`, `usage`, `usage_layout`, `usage_page_unit`, `usage_reset`,
 `usage_rotate_secs`, `usage_bar_width`, `usage_windows`), with the names and values comux used.
+<Badge text="Next release" /> `usage_layout`, `usage_page_unit`, `usage_rotate_secs` and
+`usage_bar_width` go away and are ignored when set, and AIDE writes only the settings you changed from
+their default, so a later default reaches the rest.
 
 #### Arrange the bar
 
@@ -429,8 +456,12 @@ To stop reading one of them at all, set `usage` in the terminal server's `config
 `~/.local/state/aide-mux/config.json` on Linux), for example `"usage": {"codex": false}`. Nothing is
 then read for it, and the bar doesn't show it.
 
-On the iPhone, a host's **AIDE on** screen shows the same limits as one line under its title, such as
-`Claude 5h 34% · wk 27% · Codex wk 45%`. Tap it for that host's
+On the iPhone, a host's **AIDE on** screen shows the same limits under its title.
+<Badge text="Next release" /> They're the bar's rows: Claude's and Codex's, each limit with its small
+bar, percentage and reset, and `Claude —` before anything is read. When they don't fit on one line,
+each provider takes a line; with larger text, or on a narrow screen, a provider's limits take one line
+each, and a reset moves under its bar when even that doesn't fit. When Claude shows `—`, the reason
+shows under the rows. Tap them for that host's
 [token and cost report](#token-and-cost-report).
 
 An agent can read them too, before it starts a big task: `aidectl agent usage` (see
