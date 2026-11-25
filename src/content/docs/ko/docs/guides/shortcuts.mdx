@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE는 같은 단축키를 써요. Linux에서 <kbd>Ctrl</kbd>을 쓰는 자리에 Mac에서는 <kbd>⌘</kbd>를 써요.
 Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 단축키와 함께 명령 팔레트에 있어요.
@@ -63,7 +63,7 @@ Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 �
 | 실행 취소 / 다시 실행 | <kbd>⌘</kbd><kbd>Z</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Z</kbd>(Linux: <kbd>Ctrl</kbd><kbd>Z</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd>) |
 | 줄이나 목록 항목 들여쓰기 / 내어쓰기 | <kbd>Tab</kbd> / <kbd>Shift</kbd><kbd>Tab</kbd> |
 | 다음 줄에서 목록이나 할 일 이어 쓰기 | <kbd>Return</kbd> |
-| <Badge text="다음 릴리스" /> 선택한 글을 노트에 링크 | <kbd>⌘</kbd><kbd>L</kbd>(Linux: <kbd>Ctrl</kbd><kbd>L</kbd>) |
+| 선택한 글을 노트에 링크 | <kbd>⌘</kbd><kbd>L</kbd>(Linux: <kbd>Ctrl</kbd><kbd>L</kbd>) |
 
 격자로 편집하는 표에서는:
 
@@ -183,13 +183,11 @@ Linux에서 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd>는 이제 왼쪽 페�
 
 ### 프리픽스 키
 
-comux나 tmux의 <kbd>Ctrl</kbd><kbd>B</kbd>에 손이 익었다면 터미널에 프리픽스 키를 정해 두세요. 프리픽스를 눌렀다 떼고
-키를 하나 더 누르는 방식이에요. **설정 › 키보드 › 터미널 프리픽스**에서 **없음**을 클릭하고 쓰고 싶은 키를
-누르면 돼요. **지우기**를 누르면 다시 꺼져요. 정하기 전까지는 꺼져 있어요. 프리픽스는 <kbd>Ctrl</kbd>(Mac에서는 <kbd>⌃</kbd>)에 글자, <kbd>Space</kbd>,
+터미널에는 comux나 tmux처럼 프리픽스 키가 있어요. 프리픽스를 눌렀다 떼고 키를 하나 더 누르는 방식이에요.
+다른 키를 정하기 전까지 프리픽스는 <kbd>Ctrl</kbd><kbd>B</kbd>(Mac에서는 <kbd>⌃</kbd><kbd>B</kbd>)이고,
+**설정 › 키보드 › 터미널 프리픽스**에 Mac에서 **⌃B (기본값)**, Linux에서 **Ctrl+B (기본값)**으로 보여요. 그것을 클릭하고
+쓰고 싶은 키를 누르면 바뀌어요. **지우기**를 누르면 프리픽스가 꺼지고, 꺼진 채로 유지돼요. 프리픽스는 <kbd>Ctrl</kbd>(Mac에서는 <kbd>⌃</kbd>)에 글자, <kbd>Space</kbd>,
 <kbd>[</kbd>, <kbd>\\</kbd>, <kbd>]</kbd> 중 하나를 더한 키예요. 다른 키는 받지 않아요.
-
-<Badge text="다음 릴리스" /> 다른 키를 정하기 전까지 프리픽스는 <kbd>Ctrl</kbd><kbd>B</kbd>(Mac에서는 <kbd>⌃</kbd><kbd>B</kbd>)예요.
-설정에는 Mac에서 **⌃B (기본값)**, Linux에서 **Ctrl+B (기본값)**으로 보여요. **지우기**를 누르면 꺼지고, 꺼진 채로 유지돼요.
 
 터미널에 키보드 포커스가 있으면 프리픽스는 프로그램에 가지 않아요. 상태 표시줄에 `^B`(<kbd>Ctrl</kbd><kbd>B</kbd>일 때)가
 보이고, 다음 키가 아래 중 하나를 해요.

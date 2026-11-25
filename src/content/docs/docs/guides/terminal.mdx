@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 On the Mac and Linux, AIDE has a terminal of its own, so you can keep a shell next to your notes. On
 the iPhone, which has no local shell, the SSH section opens terminals to your servers instead.
@@ -303,10 +303,10 @@ tab row at the top is gone: everything you used it for is in the bar. From left 
   space menu does: right-click a space's heading, or its row under **Spaces**, for **Open space**,
   **Show todos** (for a space with a project, while the board is on), **Rename space…**,
   **New worktree…**, **End space…**, **New space…** and **New space from layout…**.
-  <Badge text="Next release" /> The bar keeps everything then too: the pill (or the chips) and the
+  The bar keeps everything then too: the pill (or the chips) and the
   agent counts stay on it.
 
-<Badge text="Next release" /> Each tab is a rounded box: its number in grey, its agent's mark, then
+Each tab is a rounded box: its number in grey, its agent's mark, then
 its name, with the tab on screen filled in the accent colour. A tab you haven't named is called by
 the title its program set (an agent's task, `vim notes.md`), or by the program itself (`zsh`) when
 the title is only the shell's prompt (`you@host: ~/dir`). Its × shows only while you point at it.
@@ -318,7 +318,7 @@ Option with a digit for itself (readline, emacs) gets it back with **Settings �
 Option+digit switches tabs** off (on Linux, **Alt+digit switches
 tabs**), and you can give the tabs other keys in **Settings › Keyboard**.
 
-<Badge text="Next release" /> When the window is narrow, only the tabs scroll: every tab stays whole,
+When the window is narrow, only the tabs scroll: every tab stays whole,
 the one on screen is kept in view, and a trackpad or the mouse wheel over them scrolls them sideways.
 While some tabs are out of view, a **+N** button after them carries the mark of the most pressing
 agent among those (▲ needs you, then ✓ done, then ● working), so a blocked tab out of sight still
@@ -332,18 +332,18 @@ seconds), and last the gauges, which become one icon that lists every limit when
 A tab whose agent reports how much of its context window it has used has a thin line under its label,
 as long as that share: green, orange from 80%.
 
-<Badge text="Next release" /> Claude Code names its context window only in its status line. Unless
+Claude Code names its context window only in its status line. Unless
 [`aidectl agent install-hooks`](/docs/developers/aidectl/#agent) put AIDE's report in yours, AIDE
 measures a Claude Code's context against 200k tokens, or 1M once it has used more than that, and
 marks its share with `~`, such as `~62%`; another agent whose window isn't known shows its tokens,
-such as `131k`. A one-line row in the left list now shows how full its context is whenever that's
-known, not only from 80%.
+such as `131k`. A one-line row in the left list shows how full its context is whenever that's
+known.
 
 The usage readout comes last: Claude's 5-hour and weekly limits, and Codex's. The terminal server
 reads them for every AIDE on the computer, from Claude Code's own sign-in and Codex's newest session,
 about once a minute while AIDE is open.
 
-- <Badge text="Next release" /> AIDE reads the sign-in Claude Code itself uses: on the Mac the
+- AIDE reads the sign-in Claude Code itself uses: on the Mac the
   **Claude Code-credentials** item in the login Keychain (the first time, macOS may ask whether
   `security` can read it), and the credentials file only when there is no such item; on Linux the
   credentials file. A sign-in about to expire isn't used, and one the usage service refuses counts as
@@ -351,15 +351,11 @@ about once a minute while AIDE is open.
   other one. When it can't read one, the readout says why (the sign-in has expired, or the Keychain
   couldn't be read).
 
-- Each page shows one limit, such as `claude 5h ━━━╌╌╌╌╌ 34% ⟳ 2h13m`: a gauge, the percentage and
-  how long until it resets. The gauge turns yellow from 70% and red from 90%. `1/4` after it says
-  which page you're on.
-- Click it, or scroll over it, for the next page.
-- <Badge text="Next release" /> The pages are gone: Claude and Codex each get one row, the name, then each limit's
+- Claude and Codex each get one row: the name, then each limit's
   window (`5h`, `wk`), a small bar as full as that limit is used, the percentage and how long until
   it resets (`⟳ 2h13m`). The bar turns yellow from 70% and red from 90%. Point at the usage for every
   limit in words.
-- <Badge text="Next release" /> When nothing of Claude's could be read, its row is `Claude —`, and
+- When nothing of Claude's could be read, its row is `Claude —`, and
   pointing at it says why (the sign-in has expired, the Keychain couldn't be read). Codex's row shows
   once a Codex session has given its limits.
 - Right-click it for **Refresh** and **Status bar settings…**, and
@@ -373,29 +369,20 @@ Change it in **Settings › Terminal › Status bar**:
 |---|---|---|
 | **Show status bar** | On | Off hides the right side of the bar; the pill, the tabs and **+** stay. |
 | **Position** | **Under the panes** | **Over the panes** puts the bar where the tab row was. |
-| **Spaces** | **The shown space** | **The shown space** is the pill; **Every space** shows a chip for each space instead, with a dot on one whose agent needs you. <Badge text="Next release" /> The chips stay in view, wherever the space is on the bar; when they don't all fit, the pill shows instead, and its menu lists every space. |
+| **Spaces** | **The shown space** | **The shown space** is the pill; **Every space** shows a chip for each space instead, with a dot on one whose agent needs you. The chips stay in view, wherever the space is on the bar; when they don't all fit, the pill shows instead, and its menu lists every space. |
 | **Tab labels** | **Number and name** | **Number and name** (`2 zsh`, the number in grey), **Name**, or **Number**. |
 | **Clock** | On | Off hides the clock. |
 | **Clock format** | `%H:%M` | `%H` `%M` `%S` (24-hour time), `%I` `%p` (12-hour), `%a` `%b` `%d` `%m` `%Y` `%y` (the date), `%%` for a percent sign. |
 | **Usage** | **Gauges** | **Gauges**, **Percentages** (no bars), or **Off** to hide the usage. |
-| **Layout** | **Pages** | **Pages** shows one page at a time; **One row** shows every limit at once, without reset times. <Badge text="Next release" /> Gone. |
-| **Each page shows** | **One window** | **One window** (one limit), **One provider** (Claude's, then Codex's), or **Usage, then resets**. <Badge text="Next release" /> Gone. |
 | **Resets** | **Time left** | **Time left** (`⟳ 2h13m`), **Clock time** (`⟳ 14:32`, or `⟳ Wed 09:00` a day or more ahead), or **Off**. |
-| **Next page every** | Off | Turns the page by itself every so many seconds (up to 600). <Badge text="Next release" /> Gone. |
-| **Gauge width** | 8 | 4 to 20 characters. <Badge text="Next release" /> Gone. |
 | **Claude, 5 hours**, **Claude, weekly**, **Codex, 5 hours**, **Codex, weekly** | On | Which limits it shows. |
-
-<Badge text="Next release" /> **Layout**, **Each page shows**, **Next page every** and **Gauge width**
-go away with the pages: every limit shows at once. Settings saved with them are read and the four
-are ignored.
 
 On Linux the same settings are also in `config.toml` under `[terminal.status_bar]` (`show`,
 `position` as `bottom` or `top`, `spaces` as `current` or `all`, `tab_labels` as `both`, `name` or
-`index`, `clock`, `clock_format`, `usage`, `usage_layout`, `usage_page_unit`, `usage_reset`,
-`usage_rotate_secs`, `usage_bar_width`, `usage_windows`), with the names and values comux used.
-<Badge text="Next release" /> `usage_layout`, `usage_page_unit`, `usage_rotate_secs` and
-`usage_bar_width` go away and are ignored when set, and AIDE writes only the settings you changed from
-their default, so a later default reaches the rest.
+`index`, `clock`, `clock_format`, `usage`, `usage_reset`, `usage_windows`), with the names and values
+comux used. AIDE writes only the settings you changed from their default, so a later default reaches
+the rest. The old page settings (`usage_layout`, `usage_page_unit`, `usage_rotate_secs`,
+`usage_bar_width`) are ignored when set.
 
 #### Arrange the bar
 
@@ -457,7 +444,7 @@ To stop reading one of them at all, set `usage` in the terminal server's `config
 then read for it, and the bar doesn't show it.
 
 On the iPhone, a host's **AIDE on** screen shows the same limits under its title.
-<Badge text="Next release" /> They're the bar's rows: Claude's and Codex's, each limit with its small
+They're the bar's rows: Claude's and Codex's, each limit with its small
 bar, percentage and reset, and `Claude —` before anything is read. When they don't fit on one line,
 each provider takes a line; with larger text, or on a narrow screen, a provider's limits take one line
 each, and a reset moves under its bar when even that doesn't fit. When Claude shows `—`, the reason
@@ -612,7 +599,7 @@ Get back to where you just were, to a pane you marked, or to any tab by a few le
   ranks them all in one list, matching what the rows show as well as the state and how full the
   context is. With an agent selected, the preview says how full its context is when the agent reports
   it (when the size of its window isn't known, a token count such as `131k`, or
-  <Badge text="Next release" /> for Claude Code a share of an estimated window marked `~`) and how
+  for Claude Code a share of an estimated window marked `~`) and how
   long it has been in its state, and shows its card under its last lines when its pane works on one.
 - **List tabs…** opens the same list on **Tabs** with the tab you were on before selected, so it
   and then <kbd>Return</kbd> flip between two tabs.
@@ -929,11 +916,10 @@ split and list panes and tabs from a script.
 ### comux and tmux
 
 comux, tmux and other multiplexers run in a pane like any other program and draw their own screens.
-To drive AIDE's own panes with comux's <kbd>Ctrl</kbd><kbd>B</kbd> keys, set a
-[prefix key](/docs/guides/shortcuts/#the-prefix-key); pressed twice, it still reaches a comux or
-tmux running in a pane. <Badge text="Next release" /> The prefix is <kbd>Ctrl</kbd><kbd>B</kbd> unless you set another,
-so a comux or tmux in a pane gets <kbd>Ctrl</kbd><kbd>B</kbd> when you press it twice, or every time once you **Clear**
-the prefix.
+AIDE's own panes take comux's <kbd>Ctrl</kbd><kbd>B</kbd> keys through the
+[prefix key](/docs/guides/shortcuts/#the-prefix-key), which is <kbd>Ctrl</kbd><kbd>B</kbd> unless you set another.
+Pressed twice, the prefix still reaches a comux or tmux running in a pane; once you **Clear** the
+prefix, <kbd>Ctrl</kbd><kbd>B</kbd> reaches it every time.
 A comux in a pane can still bring its pane forward when you click one of
 its notifications, through the terminal socket above.
 
@@ -1095,7 +1081,7 @@ space.
 
 #### Answer a prompt without going to the pane
 
-<Badge text="Next release" /> When Claude Code, started in a terminal pane, asks before it runs a
+When Claude Code, started in a terminal pane, asks before it runs a
 command, fetches a page or searches the web, or asks you a question with one answer, its row shows
 what it asks: the command or address in a monospaced line, then **Allow once** and **Deny**, or one
 button per answer for a question (hold the pointer over one for its description). The buttons show
@@ -1131,7 +1117,7 @@ The other settings there (on Linux, the keys under `[terminal.layout]`):
 | Setting | Default | What it does |
 |---|---|---|
 | **Fold quiet spaces** (`fold_quiet`) | On | Off lists the quiet spaces like the others. |
-| **Rows** (`row_lines`, `auto_lines`) | Auto | **Auto** draws a row on up to three lines (its title, what it's doing, its card), and on one line while the list is longer than the panel; the selected tab's row and an agent waiting for your answer keep theirs. **One line**, **Two lines** or **Three lines** draw a row on at most that many lines, however long the list. A one-line row shows the context gauge only from 80% (<Badge text="Next release" /> whenever its context is known). A `row_lines` set in `config.toml` from before stays a fixed count. |
+| **Rows** (`row_lines`, `auto_lines`) | Auto | **Auto** draws a row on up to three lines (its title, what it's doing, its card), and on one line while the list is longer than the panel; the selected tab's row and an agent waiting for your answer keep theirs. **One line**, **Two lines** or **Three lines** draw a row on at most that many lines, however long the list. A one-line row shows the context gauge whenever its context is known. A `row_lines` set in `config.toml` from before stays a fixed count. |
 | **Row format** (`row_format`) | the title | A template for a row's title over `glyph`, `title`, `action`, `card`, `context` and `space`, written as the status bar's **Tab format** is. One that doesn't read shows its line and column under the field and is kept as you wrote it, while the list uses the title. |
 
 On Linux, a setting you put back to its default in Settings is taken out of `config.toml`, so a later

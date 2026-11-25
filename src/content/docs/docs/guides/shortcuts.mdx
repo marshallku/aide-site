@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 AIDE on the Mac and Linux has the same shortcuts, with <kbd>⌘</kbd> on the Mac where Linux uses
 <kbd>Ctrl</kbd>. On the Mac each one is also in the menu bar, and every command is in the command
@@ -65,7 +65,7 @@ The editor is the same on the Mac, Linux and iPhone.
 | Undo / redo | <kbd>⌘</kbd><kbd>Z</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Z</kbd> (Linux: <kbd>Ctrl</kbd><kbd>Z</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd>) |
 | Indent / outdent a line or list item | <kbd>Tab</kbd> / <kbd>Shift</kbd><kbd>Tab</kbd> |
 | Continue a list or todo on the next line | <kbd>Return</kbd> |
-| <Badge text="Next release" /> Link the selected words to a note | <kbd>⌘</kbd><kbd>L</kbd> (Linux: <kbd>Ctrl</kbd><kbd>L</kbd>) |
+| Link the selected words to a note | <kbd>⌘</kbd><kbd>L</kbd> (Linux: <kbd>Ctrl</kbd><kbd>L</kbd>) |
 
 In a table edited as a grid:
 
@@ -187,14 +187,11 @@ In a pane, <kbd>Ctrl</kbd><kbd>F</kbd> opens the switcher instead (the
 
 ### The prefix key
 
-If your hands know comux's or tmux's <kbd>Ctrl</kbd><kbd>B</kbd>, give the terminal a prefix key: press it, let go,
-then press one more key. Set it in **Settings › Keyboard › Terminal prefix**: click **None** and
-press the key you want; **Clear** turns it off again. It's off until you set one. The prefix is <kbd>Ctrl</kbd> (on the Mac <kbd>⌃</kbd>) with a
+The terminal has a prefix key, as comux and tmux do: press it, let go, then press one more key. The prefix is
+<kbd>Ctrl</kbd><kbd>B</kbd> (on the Mac <kbd>⌃</kbd><kbd>B</kbd>) until you set another one: **Settings › Keyboard ›
+Terminal prefix** shows **⌃B (default)** on the Mac and **Ctrl+B (default)** on Linux. Click it and press the key you
+want; **Clear** turns the prefix off, and it stays off. The prefix is <kbd>Ctrl</kbd> (on the Mac <kbd>⌃</kbd>) with a
 letter, <kbd>Space</kbd>, <kbd>[</kbd>, <kbd>\\</kbd> or <kbd>]</kbd>; anything else isn't taken.
-
-<Badge text="Next release" /> The prefix is <kbd>Ctrl</kbd><kbd>B</kbd> (on the Mac <kbd>⌃</kbd><kbd>B</kbd>) until you
-set another one: Settings shows **⌃B (default)** on the Mac and **Ctrl+B (default)** on Linux. **Clear** turns it off,
-and it stays off.
 
 While a terminal has the keyboard, the prefix doesn't reach the program: the status bar shows `^B`
 (for <kbd>Ctrl</kbd><kbd>B</kbd>) until the next key, which does one of these:

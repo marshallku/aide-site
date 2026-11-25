@@ -5,7 +5,7 @@ sidebar:
     order: 16
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 브라우저는 Mac과 Linux의 AIDE에 들어 있는 웹 브라우저예요. 여느 브라우저처럼 직접 쓰면서, 터미널의 코딩
 에이전트도 [`aidectl browser`](/ko/docs/developers/aidectl/#browser)로 같은 페이지를 다룰 수 있어요. 페이지를
@@ -72,7 +72,7 @@ AIDE를 다시 시작하면 탭이 각자 그 사이트의 첫 주소(경로를 
 - 다른 탭은 모두 빈 페이지가 되고, 보호가 끝날 때까지 아무것도 불러오지 않아요.
 - 탭 제목은 **보호됨**으로 보여요.
 
-<Badge text="다음 릴리스" /> 한 번에 하나의 탭만 보호할 수 있어요. 보호된 탭이 있는 동안 다른 탭을 보호하려고 하면 "다른 탭이 보호
+한 번에 하나의 탭만 보호할 수 있어요. 보호된 탭이 있는 동안 다른 탭을 보호하려고 하면 "다른 탭이 보호
 중이에요. 먼저 그 탭의 보호를 꺼 주세요."라고 알리고 거부해요. 처음 탭은 계속 보호돼요.
 
 보통의 로그인 순서는 이래요. 로그인 페이지를 열고, 탭을 보호하고, 비밀번호를 채우고(`aidectl secret
