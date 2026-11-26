@@ -259,7 +259,8 @@ z = "none"                           # a key taken out of the table
 A key is one character as you type it (`%`, `H`, `|`), or a named key with `ctrl`, `alt` or
 `shift` (`shift+left`, `tab`); comux's `C-o`, `M-1` and `S-Left` work too. An entry that isn't a key
 with `action:<id>` or `none` is listed in **Settings › Keyboard** and left out. On the Mac the table
-is kept in the app's settings with the prefix.
+is kept in the app's settings with the prefix. <Badge text="Next release" /> A value reads as the
+shortcuts' values do: `action:<id>` followed by other words is `<id>`, and `none` works in any case.
 
 ## Change your shortcuts
 
@@ -281,6 +282,12 @@ give an action a new shortcut, turn one off, and put shell commands on shortcuts
 The new shortcut replaces the action's built-in one. If another action had it, that action loses
 it, and AIDE says so: "… had this shortcut; it's off now." That action stays off, so its built-in
 shortcut doesn't come back later when you move yours elsewhere.
+
+<Badge text="Next release" /> Giving an action its own built-in shortcut back takes it from no
+other action's built-in one: on the Mac, <kbd>⌘</kbd><kbd>T</kbd> back for **Open today's note**
+leaves **New terminal tab** on <kbd>⌘</kbd><kbd>T</kbd> in a terminal. An action with two built-in
+shortcuts that loses one keeps the other, and AIDE says nothing: Linux's **Back** keeps
+<kbd>Alt</kbd><kbd>Left</kbd> when another action takes <kbd>Ctrl</kbd><kbd>[</kbd>.
 
 - **Clear** turns an action's shortcut off, built-in one included.
 - **Reset** gives one action its built-in shortcut back. It appears only on an action you changed.
@@ -328,6 +335,15 @@ in **Settings › Keyboard** says so too.
 - On Linux it shares <kbd>Ctrl</kbd><kbd>F</kbd> with **Find in note**: one acts in a pane, the other
   in a note. Giving either one its own shortcut back takes nothing from the other. Recording
   <kbd>Ctrl</kbd><kbd>F</kbd> for any other action takes it from both.
+- <Badge text="Next release" /> The switcher key and the other actions no longer take each other's
+  built-in shortcuts. Recording <kbd>Ctrl</kbd><kbd>F</kbd> (on the Mac <kbd>⌃</kbd><kbd>F</kbd>)
+  for another action takes it from **Find in note** on Linux, but a pane keeps it as the switcher
+  key; and recording an action's built-in shortcut for the switcher key leaves that action its
+  shortcut outside a pane. A shortcut you recorded is still one action's: recording it for the
+  switcher key, or the switcher key's for another action, takes it, and the one that had it is off.
+  The exception is the switcher key's own <kbd>Ctrl</kbd><kbd>F</kbd>: giving it back to the
+  switcher key takes nothing, so an action you recorded <kbd>Ctrl</kbd><kbd>F</kbd> for keeps it
+  outside a pane.
 
 The terminal's own actions (**New terminal tab**, **Split right**, **Split down**, **Next pane**,
 **Previous pane**, **Close pane**, the focus, divider, zoom and pane-number ones, the space
