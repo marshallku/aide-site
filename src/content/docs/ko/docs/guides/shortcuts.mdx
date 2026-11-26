@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE는 같은 단축키를 써요. Linux에서 <kbd>Ctrl</kbd>을 쓰는 자리에 Mac에서는 <kbd>⌘</kbd>를 써요.
 Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 단축키와 함께 명령 팔레트에 있어요.
@@ -365,6 +365,9 @@ actions = ["new-scratch"]
   `up`, `down`, `home`, `end`, `pageup`, `pagedown`, `insert`, `delete`, `backspace`, `tab`, `return`,
   `escape`예요. 대소문자는 상관없고, GTK의 이름(`<Control><Shift>g`, `Page_Down`)도 돼요. `ctrl+!`가 아니라
   `ctrl+shift+1`로 써요.
+- <Badge text="다음 릴리스" /> 이 파일은 Mac이 읽는 표기를 모두 읽어서, 어느 쪽으로 쓴 줄이든 돼요. 수식 키보다
+  키를 먼저 쓴 것(`j+ctrl`), Mac의 기호(`⌃⌥J`), 그리고 뒤에 다른 단어가 붙은 `action:<id>`(뒤의 단어는
+  무시해요)도 돼요.
 - 여기서 단축키를 준 동작은 기본 단축키를 잃어요. 한 동작에 단축키를 여러 개 줄 수도 있어요.
 - 내 단축키는 같은 키를 쓰는 기본 단축키보다 우선해요.
 

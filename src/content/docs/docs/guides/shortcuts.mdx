@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
 AIDE on the Mac and Linux has the same shortcuts, with <kbd>⌘</kbd> on the Mac where Linux uses
 <kbd>Ctrl</kbd>. On the Mac each one is also in the menu bar, and every command is in the command
@@ -376,6 +376,9 @@ actions = ["new-scratch"]
   `f1`–`f24`, `left`, `right`, `up`, `down`, `home`, `end`, `pageup`, `pagedown`, `insert`,
   `delete`, `backspace`, `tab`, `return` or `escape`. Any case works, and so do GTK's names
   (`<Control><Shift>g`, `Page_Down`). Use `ctrl+shift+1`, not `ctrl+!`.
+- <Badge text="Next release" /> The file reads every spelling the Mac reads, so a line written either
+  way works: the key before its modifiers (`j+ctrl`), the Mac's symbols (`⌃⌥J`), and
+  `action:<id>` followed by other words, which are ignored.
 - An action you give a shortcut here loses its built-in one; an action can have several.
 - One of yours wins over a built-in shortcut with the same keys.
 
