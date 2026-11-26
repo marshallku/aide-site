@@ -717,7 +717,7 @@ iPhone에는 스위처 키가 없어요.
 | **Option을 Meta로 사용**(Mac) | 켜짐 | <kbd>⌥</kbd>가 특수 문자를 입력하는 대신 셸에서 Meta/Alt로 동작해요. |
 | **Option-Return으로 Esc Return 보내기**(Mac) | 켜짐 | Option을 Meta로 사용이 꺼져 있어도 <kbd>⌥</kbd><kbd>Return</kbd>이 Esc Return을 보내요. Claude Code 프롬프트나 여러 REPL에서 줄바꿈이 돼요. kitty 키보드 프로토콜을 쓰는 프로그램에는 그 방식대로 보내요. |
 | **Option-Esc로 Esc Esc 보내기**(Mac) | 꺼짐 | <kbd>⌥</kbd><kbd>Esc</kbd>도 같은 방식으로 보내요. |
-| **프로그램의 클립보드 복사 허용**(Mac) | 켜짐 | tmux와 Neovim이 ssh에서 쓰는 OSC 52로 프로그램이 복사할 수 있어요. 클립보드를 읽을 수는 없어요. Linux 터미널은 이를 허용하지 않아요. |
+| **프로그램의 클립보드 복사 허용** | 켜짐 | tmux와 Neovim이 ssh에서 쓰는 OSC 52로 프로그램이 복사할 수 있어요. 클립보드를 읽을 수는 없어요. <Badge text="다음 릴리스" /> Linux에서도 돼요(`[terminal]`의 `osc52`, `"allow"` 또는 `"deny"`). 그전에는 Linux 터미널이 이를 허용하지 않았어요. |
 | **스크롤 기록** | 10,000줄 | 0부터 100,000까지. 0이면 남기지 않아요. |
 | **GPU로 그리기**(Mac) | 켜짐 | 터미널을 Metal로 그려요. 끄면 Core Text로 그려요. 새 탭부터 적용돼요. |
 | **글자 두껍게**(Mac) | **끔** | **켬**, **끔**, **Retina가 아닌 디스플레이에서**: 글자를 조금 더 두껍게 그려요. |

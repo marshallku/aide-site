@@ -780,7 +780,7 @@ after AIDE quits**. Then:
 | **Use Option as Meta** (Mac) | On | <kbd>⌥</kbd> works as Meta/Alt in the shell instead of typing special characters. |
 | **Option-Return sends Esc Return** (Mac) | On | <kbd>⌥</kbd><kbd>Return</kbd> sends Esc Return even with Use Option as Meta off, as a new line in Claude Code's prompt and many REPLs. A program using the kitty keyboard protocol gets its own encoding instead. |
 | **Option-Esc sends Esc Esc** (Mac) | Off | The same for <kbd>⌥</kbd><kbd>Esc</kbd>. |
-| **Programs can copy to the clipboard** (Mac) | On | Programs copy with OSC 52, as tmux and Neovim do over ssh. They can never read the clipboard. On Linux the terminal never lets them. |
+| **Programs can copy to the clipboard** | On | Programs copy with OSC 52, as tmux and Neovim do over ssh. They can never read the clipboard. <Badge text="Next release" /> On Linux too (`osc52` in `[terminal]`, `"allow"` or `"deny"`); before, the Linux terminal never let them. |
 | **Scrollback** | 10,000 lines | 0 to 100,000. 0 keeps none. |
 | **Draw with the GPU** (Mac) | On | Draws the terminal with Metal. Off draws it with Core Text. Applies to new tabs. |
 | **Font thickening** (Mac) | **Off** | **On**, **Off**, or **On non-Retina displays**: draws text a little heavier. |
