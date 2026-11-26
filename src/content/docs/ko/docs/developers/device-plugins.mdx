@@ -5,9 +5,9 @@ sidebar:
     order: 4
 ---
 
-import { Aside, Steps } from "@astrojs/starlight/components";
+import { Aside, Badge, Steps } from "@astrojs/starlight/components";
 
-기기 플러그인은 파일 최대 네 개로 된 폴더예요. AIDE는 이 폴더를 iPhone, Mac, Linux 앱의 샌드박스 웹 뷰에
+기기 플러그인은 몇 개의 파일(아래 참고)로 된 작은 폴더예요. AIDE는 이 폴더를 iPhone, Mac, Linux 앱의 샌드박스 웹 뷰에
 불러와요. 플러그인은 탭, 데스크톱 오른쪽 패널의 뷰, 노트 위에 뜨는 시트, 팔레트 명령, 예약 실행을 추가할 수
 있어요. 노트에는 `aide.call(…)`로만 접근하고, 그것도 소유자가 설치할 때 켠 권한 안에서만 가능해요. 앱 업데이트도
 서버도 필요 없어요. 폴더를 아무 정적 HTTPS 서버에 올리고 URL로 설치하면 돼요.
@@ -26,9 +26,17 @@ import { Aside, Steps } from "@astrojs/starlight/components";
 | `main.js`       | 예     | 플러그인 코드                                                                                 |
 | `index.html`    | 아니요 | 페이지(`web` 플러그인). 없으면 AIDE가 `main.js`를 불러오는 빈 페이지를 써요                    |
 | `styles.css`    | 아니요 | 페이지 스타일                                                                                 |
+| `skill-<name>.md` | 아니요 | 매니페스트에 적은 에이전트 스킬. 최대 세 개, 파일마다 최대 32 KB                          |
 
 패키지는 모든 파일의 SHA-256 해시로 식별돼요. 설치한 뒤 기기에서 파일이 하나라도 바뀌면, AIDE는 다시 설치할
 때까지 플러그인을 꺼 둬요.
+
+<Badge text="다음 릴리스" /> 모든 앱이 같은 규칙으로 패키지를 확인하고, 패키지를 거부한 이유를 앱의 언어로 알려
+줘요. `manifest.json`과 스킬 파일은 바이트 순서 표시(BOM) 없는 UTF-8로 저장하고, 키는 한 번씩만 쓰세요. 이제
+Mac과 iPhone도 Linux 앱과 공개 색인처럼 UTF-16이나 BOM으로 저장한 매니페스트, 최상위 키를 두 번 쓴 매니페스트,
+BOM으로 시작하는 스킬 파일을 거부해요. 매니페스트의 이름과 탭, 시트, 패널, 설정 페이지, 명령 제목의 길이 제한은 모든 앱에서
+사람이 보는 글자 수로 세요. 그래서 Linux 앱도 이제 두 코드 포인트로 쓴 악센트 글자를 제한 안에서 받아요. `locales`의 번역 텍스트는 여전히 코드 포인트로 세요.
+`strings` 카탈로그의 64 KB도 모든 앱에서 같은 방식으로 재요.
 
 페이지는 네트워크에서 아무것도 불러올 수 없어요. `http(s)`, `ws`, `file`, `blob` 로드는 모두 막히고, 탐색은
 플러그인 자체 출처인 `aide-plugin://<id>/`를 벗어나지 않아요. 네트워크 접근은 소유자가 승인한 호스트에 한해
