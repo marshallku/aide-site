@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE에는 자체 터미널이 있어서, 노트 옆에 셸을 띄워 둘 수 있어요. 로컬 셸이 없는 iPhone에서는
 대신 SSH 섹션에서 서버로 터미널을 열어요.
@@ -708,7 +708,8 @@ iPhone에는 스위처 키가 없어요.
 | **셸** | 내 로그인 셸 | 새 탭이 시작할 프로그램이에요. |
 | **셸 종료 시 탭 닫기** | 켜짐 | 끄면 끝난 탭이 열린 채로 남아서 출력된 내용을 읽을 수 있어요. |
 | **실행 중인 프로그램을 닫기 전에 묻기** | 켜짐 | 셸이 아닌 프로그램이 실행 중인 페인이나 탭을 닫을 때 먼저 물어봐요. 끄면 바로 닫혀요(Linux에서는 `confirm_close`). |
-| **테마** | **시스템(라이트 및 다크)** | 시스템은 라이트 모드에서 Catppuccin Latte, 다크 모드에서 Catppuccin Mocha를 써요. 그 밖에 Catppuccin Frappé, Catppuccin Macchiato, Dracula, Nord, Tokyo Night, Gruvbox Dark, One Dark, Solarized Dark가 있어요. |
+| **테마** | **시스템(라이트 및 다크)** | 시스템은 라이트 모드에서 Catppuccin Latte, 다크 모드에서 Catppuccin Mocha를 써요. 그 밖에 Catppuccin Frappé, Catppuccin Macchiato, Dracula, Nord, Tokyo Night, Gruvbox Dark, One Dark, Solarized Dark가 있어요. <Badge text="다음 릴리스" /> Solarized Light, Gruvbox Light, One Light, Tokyo Night Day도 있어요. 메뉴에는 다크 테마, 그다음 라이트 테마가 각각 색 견본과 함께 나와요. 열려 있는 페인도 바로 바뀌어요. |
+| **라이트 모드에서**, **다크 모드에서** <Badge text="다음 릴리스" /> | **Catppuccin Latte**, **Catppuccin Mocha** | 테마가 시스템일 때 보여요. 라이트 모드와 다크 모드에서 쓸 테마예요. 어느 쪽에든 아무 테마나 고를 수 있어요(Linux에서는 `system_light`, `system_dark`). |
 | **글꼴** | 설치된 Nerd Font가 있으면 그것, 없으면 시스템 고정폭 글꼴 | 설치된 글꼴을 이름으로 지정해요. |
 | **크기** | 13 | 8부터 32까지. |
 | **커서** | **블록** | **블록**, **막대**, **밑줄**. |

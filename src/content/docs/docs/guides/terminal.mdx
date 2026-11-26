@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 On the Mac and Linux, AIDE has a terminal of its own, so you can keep a shell next to your notes. On
 the iPhone, which has no local shell, the SSH section opens terminals to your servers instead.
@@ -771,7 +771,8 @@ after AIDE quits**. Then:
 | **Shell** | Your login shell | The program a new tab starts. |
 | **Close a tab when its shell exits** | On | Off keeps an ended tab open so you can read what it printed. |
 | **Ask before closing a running program** | On | Closing a pane or tab with a program other than the shell running in it asks first. Off, it closes at once (`confirm_close` on Linux). |
-| **Theme** | **System (light and dark)** | System uses Catppuccin Latte in light mode and Catppuccin Mocha in dark. Others: Catppuccin Frappé, Catppuccin Macchiato, Dracula, Nord, Tokyo Night, Gruvbox Dark, One Dark, Solarized Dark. |
+| **Theme** | **System (light and dark)** | System uses Catppuccin Latte in light mode and Catppuccin Mocha in dark. Others: Catppuccin Frappé, Catppuccin Macchiato, Dracula, Nord, Tokyo Night, Gruvbox Dark, One Dark, Solarized Dark. <Badge text="Next release" /> Also Solarized Light, Gruvbox Light, One Light and Tokyo Night Day. The menu lists the dark themes, then the light ones, each with a swatch of its colours. Open panes change at once. |
+| **In light mode**, **In dark mode** <Badge text="Next release" /> | **Catppuccin Latte**, **Catppuccin Mocha** | Shown while the theme is System: the theme it uses in light mode and in dark mode. Any theme can go in either (`system_light` and `system_dark` on Linux). |
 | **Font** | A Nerd Font if one is installed, else the system's monospace | Any installed font by name. |
 | **Size** | 13 | 8 to 32. |
 | **Cursor** | **Block** | **Block**, **Bar** or **Underline**. |
