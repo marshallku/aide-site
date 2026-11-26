@@ -1207,6 +1207,15 @@ Desktop notifications, for agents and for the ones you post with [`aidectl notif
 The first notification asks for permission on the Mac. On Linux the desktop may keep the window from
 coming forward; the pane is selected all the same.
 
+<Badge text="Next release" /> Programs can raise one too, with the escape codes other terminals use:
+`printf '\e]9;Build finished\a'` (iTerm2's) or `printf '\e]777;notify;Build;cargo test passed\a'`
+(urxvt's and kitty's, with a title). It comes from the pane like an agent's: in the notification
+center, on the desktop while **Desktop notifications** is on, and a click goes to the pane. Without
+a title it uses the pane's. A pane keeps only its latest one in the list, and up to three at once
+reach you, then one every 2 seconds; more are dropped. One from the pane you're typing in is kept
+as already read, with no desktop banner. Unlike an agent's, it never goes to your phone. ConEmu's
+progress codes (`\e]9;4;…`) aren't notifications.
+
 #### Notification center
 
 The notification center keeps the notifications your agents raised on
