@@ -416,7 +416,8 @@ and both read them the same way.
 | **Tab color**, **Active tab color**, **Mode flags color**, **Clock color** | **Default** | **Text**, **Secondary text**, **Accent**, **Success**, **Warning**, **Danger** or **Info**. |
 
 The parts are `space` (the pill, or the chips with **Every space**), `tabs` (with **+** after them),
-`flags` (`ZOOM`, `^B` and `LOCK`), `voice` (the mic), `attention` (the bell), `agents`, `usage` and `clock`. A right side saved as an old default, `flags, agents, usage, clock` or `flags, attention, agents, usage, clock` in that order, gets what came after it (`attention`, `voice`); any other keeps its parts until you add them. Each part goes in one side only, and the tabs
+`flags` (`ZOOM`, `^B` and `LOCK`), `voice` (the mic), `attention` (the bell), `agents`, `usage` and `clock`; and
+<Badge text="Next release" /> `exit`, the last command's exit status when it isn't 0 ([Prompts and command output](#prompts-and-command-output)), on no side by default. A right side saved as an old default, `flags, agents, usage, clock` or `flags, attention, agents, usage, clock` in that order, gets what came after it (`attention`, `voice`); any other keeps its parts until you add them. Each part goes in one side only, and the tabs
 are always there: left out of both sides, they join the left. **Show status bar** off keeps only the
 space and the tabs, where you put them, and **Clock** off drops the clock; your order stays for when
 you turn them back on. A name AIDE doesn't know shows under the field and is left out.
@@ -988,6 +989,30 @@ To fork the agent in a pane you're looking at, right-click its row in the Agents
 
 Links a program writes with OSC 8 work the same way. On the iPhone, tapping an AIDE link in a
 session's pane opens it.
+
+### Prompts and command output
+
+<Badge text="Next release" /> AIDE's zsh and bash mark where each prompt starts and where each
+command's output starts and ends (shell integration marks, OSC 133, as iTerm2, kitty and VS Code read
+them). With them:
+
+- **Previous prompt** and **Next prompt** scroll the pane to the prompt above or below:
+  <kbd>⌘</kbd><kbd>↑</kbd> and <kbd>⌘</kbd><kbd>↓</kbd> on the Mac, <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd>
+  and <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd> on Linux (there, a program in the pane no longer gets
+  those two keys). Change them in **Settings › Keyboard**. In copy mode on the Mac, the same keys move
+  the copy-mode cursor to the prompt above or below.
+- **Copy the last command's output**, in the command palette, copies what the last finished command
+  printed (one still running isn't taken). It ends at the next prompt's row, so a last line with no
+  newline that the prompt shares isn't copied, and output with none leaves nothing to copy. Over 512 KiB, its last part is copied, from a whole line, and AIDE says how many lines.
+  Output longer than the scrollback copies what is left of it, the same way.
+- The status bar's `exit` part shows the last command's exit status when it isn't 0 (not while a
+  command runs). It isn't on the bar until you add it ([The status bar](#the-status-bar)).
+
+The marks stay when you quit and reopen AIDE, and when the terminal server updates. A prompt that
+already sends them, such as powerlevel10k with its shell integration on, or iTerm2's integration,
+keeps its own. Set `AIDE_SHELL_MARKS=0` in your shell to turn AIDE's off. macOS's own bash (3.2)
+marks prompts but not output, so copying output and the exit status need zsh or a newer bash. fish
+gets nothing from AIDE; marks it sends itself are used.
 
 ### Keys and pictures
 

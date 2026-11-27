@@ -132,6 +132,7 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 | 구분선을 왼쪽 / 아래 / 위 / 오른쪽으로 | <kbd>⌃</kbd><kbd>⌘</kbd>와 화살표 | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd>와 화살표 |
 | 페인 확대 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd> |
 | 복사 모드([vi 키](/ko/docs/guides/terminal/#복사-모드)) | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd> |
+| <Badge text="다음 릴리스" /> 이전 / 다음 [프롬프트](/ko/docs/guides/terminal/#프롬프트와-명령-출력) | <kbd>⌘</kbd><kbd>↑</kbd> / <kbd>⌘</kbd><kbd>↓</kbd> | <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd> / <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd> |
 | [페인 동시 입력](/ko/docs/guides/terminal/#탭-배치와-모든-페인에-입력하기) | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>I</kbd> | 없음 |
 | 이전 / 다음 탭 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
 | 1–9번 탭으로 이동 | <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> 또는 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
@@ -317,6 +318,9 @@ Page Down, Insert, Delete, Backspace, Tab, Return, Esc, Space도 쓸 수 있어�
 - **Linux**: 터미널에 키보드 포커스가 있는 동안에는 <kbd>Ctrl</kbd><kbd>Shift</kbd>나
   <kbd>Ctrl</kbd><kbd>Alt</kbd>가 들어간 단축키(그리고 <kbd>Ctrl</kbd><kbd>,</kbd>)만 AIDE가 받아요.
   <kbd>Ctrl</kbd>과 글자만 누르는 단축키, <kbd>Super</kbd> 단축키, 기능 키는 프로그램으로 가요.
+  <Badge text="다음 릴리스" /> **이전 프롬프트**와 **다음 프롬프트**의 <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd>와
+  <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd>도 AIDE가 받아서, 페인의 프로그램은 이 두 키를 더 받지 않아요.
+  **설정 › 키보드**에서 이 동작에 다른 키를 주면 프로그램이 다시 받아요.
 
 페인에서 AIDE가 받는 키가 하나 더 있어요. 스위처 키, 곧 **페인에서 스위처 열기**예요. Mac에서는
 <kbd>⌃</kbd><kbd>F</kbd>, Linux에서는 <kbd>Ctrl</kbd><kbd>F</kbd>예요([스위처 키](/ko/docs/guides/terminal/#스위처-키)를
@@ -438,6 +442,7 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `terminal/zoom-pane` | 페인 확대 |
 | `terminal/copy-mode` | 복사 모드 |
 | `terminal/edit-scrollback` | 편집기에서 기록 열기 <Badge text="다음 릴리스" /> |
+| `terminal/prompt-previous`, `terminal/prompt-next`, `terminal/copy-last-output` | <Badge text="다음 릴리스" /> 이전 프롬프트, 다음 프롬프트, 마지막 명령의 출력 복사 |
 | `terminal/layout-even-horizontal`, `terminal/layout-even-vertical`, `terminal/layout-main-horizontal`, `terminal/layout-main-vertical`, `terminal/layout-tiled` | 가로로 균등 배치, 세로로 균등 배치, 주 페인 위 배치, 주 페인 왼쪽 배치, 바둑판 배치 |
 | `terminal/next-layout`, `terminal/spread-panes` | 다음 배치, 페인 크기 고르게 |
 | `terminal/swap-pane-prev`, `terminal/swap-pane-next` | 이전 페인과 자리 바꾸기, 다음 페인과 자리 바꾸기 |
