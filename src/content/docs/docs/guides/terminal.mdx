@@ -796,7 +796,7 @@ aide-mux attach                # the space you looked at last in AIDE
 aide-mux attach --space aide   # or one by name
 ```
 
-On a Mac, `aide-mux` isn't on your `PATH` yet, so give its whole path:
+On a Mac, put `aide-mux` on your `PATH` first (below), or give its whole path:
 `"$HOME/Library/Application Support/AIDE/bin/aide-mux" attach`.
 
 - It starts the terminal server if none is running, and opens the space last shown in an AIDE
@@ -817,14 +817,34 @@ On a Mac, `aide-mux` isn't on your `PATH` yet, so give its whole path:
   closing a running program** turns the question off here too.
 - A pane whose shell has ended shows **[exited]** (or **[exited 3]** when it ended with a nonzero code) at its
   bottom right and takes no input. <kbd>x</kbd> closes it.
-- The bottom row shows the space, its tabs and the time. A tab with more panes than fit shows the
-  pane you're in, and a terminal too small for even one says so.
+- The bottom row is AIDE's status bar, as you set it up in **Settings › Terminal › Status bar**
+  (on Linux, `[terminal.status_bar]` in `config.toml`): the space, its tabs with their agents' marks
+  (▲ needs you, ✓ done, ● working), `Z` on a zoomed tab and `!` on a tab whose pane rang its bell
+  while you were elsewhere, then the flags, the bell with your unread notifications, the agents of
+  every space (working, needing you, done) and the clock. It moves to the top if you put it there.
+  Plan usage isn't shown here yet. A tab with more panes than fit shows the pane you're in, and a
+  terminal too small for even one says so.
+- <kbd>Ctrl</kbd><kbd>B</kbd> then <kbd>[</kbd> starts [copy mode](#copy-mode) on the pane, with the
+  same vi keys as in AIDE's window: move, <kbd>v</kbd> to select, <kbd>/</kbd> or <kbd>?</kbd> to
+  search, <kbd>y</kbd> to copy, <kbd>q</kbd> to leave (<kbd>Esc</kbd> clears a selection first, then leaves). The bar shows **COPY** and
+  how far up you are. The copy goes to your own computer's clipboard through your terminal (OSC 52),
+  over ssh too, when that terminal lets programs copy to the clipboard; inside tmux that needs `set -g set-clipboard on`. Resizing the terminal leaves copy
+  mode.
+- The mouse: a click picks the pane under it, and a click on a tab in the bar shows it. The wheel
+  scrolls into copy mode, and scrolling back down to the bottom leaves it unless you're selecting; dragging selects, and
+  letting go copies. A program that asks for the mouse, such as Vim or htop, gets the clicks and the
+  wheel itself, and a pager on the alternate screen such as `less` scrolls with it. Most terminals select their own text
+  instead while you hold <kbd>Shift</kbd>. Dragging a divider doesn't resize panes yet.
 - A pane takes the size of the window you last focused or typed in: while you're in the terminal,
-  AIDE's window shows the pane at that size, and the other way round.
+  AIDE's window shows the pane at that size, and the other way round. Coming back to the terminal
+  after a sleep or a lost ssh resize, it asks the terminal for its real size.
 - Inside tmux, its prefix and AIDE's are both <kbd>Ctrl</kbd><kbd>B</kbd> unless you change one.
-- On Linux, `aide-mux` is on your `PATH` (`~/.local/bin`) once AIDE is installed. On the Mac it's
-  `~/Library/Application Support/AIDE/bin/aide-mux` for now, as above.
-- Not yet: copy mode, the mouse, and the agents count and bell in the bottom row.
+- On Linux, `aide-mux` is on your `PATH` (`~/.local/bin`) once AIDE is installed. On the Mac, click
+  **Install aide-mux on PATH** in **Settings › Terminal › From any terminal**: it links
+  `~/.local/bin/aide-mux` to AIDE's, but only where nothing is there yet (anything else there is
+  named and left alone), and says whether a new terminal or ssh session finds it. If it says
+  `~/.local/bin` isn't on your login shell's `PATH`, add it there, in `~/.zprofile` for zsh:
+  `export PATH="$HOME/.local/bin:$PATH"`.
 
 ### Settings › Terminal
 
@@ -858,6 +878,7 @@ On a Mac, `aide-mux` isn't on your `PATH` yet, so give its whole path:
 | **Folder name** | `{repo}-{branch}` | Under **Worktrees**: the folder a new worktree goes in, beside the repository. See [Worktrees](#worktrees). |
 | **Repository folder** and **Command to run** | None | Under **Worktrees**: a command a repository's new worktrees run in their first pane. |
 | **Keep shells running after AIDE quits** | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide). |
+| **Install aide-mux on PATH** (Mac) <Badge text="Next release" /> | Not installed | Under **From any terminal**: links `~/.local/bin/aide-mux` to AIDE's, for `aide-mux attach` in another terminal or over ssh. See [From any terminal, over ssh](#from-any-terminal-over-ssh-). |
 
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
 are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`,
