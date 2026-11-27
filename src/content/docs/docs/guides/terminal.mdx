@@ -763,6 +763,48 @@ after AIDE quits**. Then:
   with new shells.
 - A server with no window for 24 hours ends its shells and stops.
 
+### From any terminal, over ssh <Badge text="Next release" />
+
+Your spaces are also reachable from any terminal, on the same computer or over ssh: run
+`aide-mux attach` there. It shows a space's tabs and panes full screen, live: the same shells, still
+running in AIDE's windows too, so what you type in either shows in both.
+
+```sh
+ssh my-computer
+aide-mux attach                # the space you looked at last in AIDE
+aide-mux attach --space aide   # or one by name
+```
+
+On a Mac, `aide-mux` isn't on your `PATH` yet, so give its whole path:
+`"$HOME/Library/Application Support/AIDE/bin/aide-mux" attach`.
+
+- It starts the terminal server if none is running, and opens the space last shown in an AIDE
+  window. With none open, it opens a space that's running, else a new one in the current folder.
+- The keys are AIDE's [prefix keys](/docs/guides/shortcuts/#the-prefix-key), with your own
+  bindings: <kbd>Ctrl</kbd><kbd>B</kbd> then <kbd>%</kbd> or <kbd>"</kbd> splits, the arrows or
+  <kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd> move between panes, <kbd>z</kbd> zooms,
+  <kbd>x</kbd> closes a pane, <kbd>c</kbd> opens a tab, <kbd>n</kbd>, <kbd>p</kbd> and
+  <kbd>1</kbd>–<kbd>9</kbd> change tabs, <kbd>&</kbd> closes one and <kbd>,</kbd> renames it,
+  <kbd>C</kbd>, <kbd>(</kbd>, <kbd>)</kbd> and <kbd>$</kbd> make, change and rename spaces.
+- <kbd>Ctrl</kbd><kbd>B</kbd> then <kbd>d</kbd> detaches: the terminal goes back to your shell and
+  everything keeps running. <kbd>Ctrl</kbd><kbd>B</kbd> then <kbd>r</kbd> draws the screen again.
+  Pressed twice, the prefix reaches the program in the pane. If you've bound <kbd>d</kbd> to
+  something else, `--detach-key` picks another key.
+- Closing a pane or a tab (<kbd>x</kbd>, <kbd>&</kbd>) where a program other than the shell runs
+  asks first in the bottom row, as AIDE's windows do: "Close this pane? vim is still running in
+  it. (y/n)". <kbd>y</kbd> (or <kbd>Y</kbd>) closes it, any other key keeps it. **Settings › Terminal › Ask before
+  closing a running program** turns the question off here too.
+- A pane whose shell has ended shows **[exited]** (or **[exited 3]** when it ended with a nonzero code) at its
+  bottom right and takes no input. <kbd>x</kbd> closes it.
+- The bottom row shows the space, its tabs and the time. A tab with more panes than fit shows the
+  pane you're in, and a terminal too small for even one says so.
+- A pane takes the size of the window you last focused or typed in: while you're in the terminal,
+  AIDE's window shows the pane at that size, and the other way round.
+- Inside tmux, its prefix and AIDE's are both <kbd>Ctrl</kbd><kbd>B</kbd> unless you change one.
+- On Linux, `aide-mux` is on your `PATH` (`~/.local/bin`) once AIDE is installed. On the Mac it's
+  `~/Library/Application Support/AIDE/bin/aide-mux` for now, as above.
+- Not yet: copy mode, the mouse, and the agents count and bell in the bottom row.
+
 ### Settings › Terminal
 
 | Setting | Default | What it does |

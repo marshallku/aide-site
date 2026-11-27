@@ -700,6 +700,48 @@ iPhone에는 스위처 키가 없어요.
   끝내지 않아요. 배치는 남아 있어서 다음에 시작하면 새 셸로 열려요.
 - 창 없이 24시간이 지난 서버는 셸을 끝내고 멈춰요.
 
+### 아무 터미널에서, ssh로도 <Badge text="다음 릴리스" />
+
+스페이스는 같은 컴퓨터든 ssh로 접속한 곳이든 아무 터미널에서나 열 수 있어요. 그 터미널에서
+`aide-mux attach`를 실행하면 스페이스의 탭과 페인이 전체 화면에 실시간으로 보여요. AIDE 창에서 돌던
+바로 그 셸들이라 어느 쪽에 입력해도 양쪽에 다 보여요.
+
+```sh
+ssh my-computer
+aide-mux attach                # AIDE에서 마지막으로 본 스페이스
+aide-mux attach --space aide   # 이름으로 고를 수도 있어요
+```
+
+Mac에서는 아직 `aide-mux`가 `PATH`에 없으니 전체 경로로 실행해요:
+`"$HOME/Library/Application Support/AIDE/bin/aide-mux" attach`.
+
+- 터미널 서버가 실행 중이 아니면 먼저 시작하고, AIDE 창에서 마지막으로 보던 스페이스를 열어요.
+  열린 창이 없으면 실행 중인 스페이스를, 그것도 없으면 지금 폴더에 새 스페이스를 열어요.
+- 키는 AIDE의 [프리픽스 키](/ko/docs/guides/shortcuts/#프리픽스-키)와 내가 정한 바인딩 그대로예요.
+  <kbd>Ctrl</kbd><kbd>B</kbd> 다음에 <kbd>%</kbd>나 <kbd>"</kbd>로 나누고, 화살표나
+  <kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd>로 페인을 옮기고, <kbd>z</kbd>로 확대,
+  <kbd>x</kbd>로 페인 닫기, <kbd>c</kbd>로 새 탭, <kbd>n</kbd>, <kbd>p</kbd>,
+  <kbd>1</kbd>–<kbd>9</kbd>로 탭 이동, <kbd>&</kbd>로 탭 닫기, <kbd>,</kbd>로 이름 바꾸기,
+  <kbd>C</kbd>, <kbd>(</kbd>, <kbd>)</kbd>, <kbd>$</kbd>로 스페이스를 만들고 옮기고 이름을 바꿔요.
+- <kbd>Ctrl</kbd><kbd>B</kbd> 다음에 <kbd>d</kbd>를 누르면 빠져나와요. 터미널은 원래 셸로 돌아가고
+  모든 것이 계속 실행돼요. <kbd>Ctrl</kbd><kbd>B</kbd> 다음에 <kbd>r</kbd>은 화면을 다시 그려요.
+  프리픽스를 두 번 누르면 페인 안의 프로그램에 전달돼요. <kbd>d</kbd>를 다른 동작에 묶어 두었다면
+  `--detach-key`로 다른 키를 정할 수 있어요.
+- 셸이 아닌 프로그램이 실행 중인 페인이나 탭을 닫으면(<kbd>x</kbd>, <kbd>&</kbd>) AIDE 창처럼 맨 아래
+  줄에서 먼저 물어봐요. "이 페인을 닫을까요? 아직 vim이(가) 실행 중이에요. (y/n)". <kbd>y</kbd>(또는 <kbd>Y</kbd>)를 누르면
+  닫히고, 다른 키를 누르면 그대로예요. **설정 › 터미널 › 실행 중인 프로그램을 닫기 전에 묻기**를 끄면
+  여기서도 묻지 않아요.
+- 셸이 끝난 페인은 오른쪽 아래에 **[exited]**(0이 아닌 코드로 끝났으면 **[exited 3]**)가 보이고 입력을 받지
+  않아요. <kbd>x</kbd>로 닫아요.
+- 맨 아래 줄에는 스페이스, 탭, 시각이 보여요. 페인이 다 들어가지 않는 탭은 지금 있는 페인만 보여 주고,
+  페인 하나도 들어가지 않을 만큼 작은 터미널은 그렇다고 알려 줘요.
+- 페인 크기는 마지막으로 포커스를 주거나 입력한 창을 따라요. 터미널을 쓰는 동안에는 AIDE 창에도 그
+  크기로 보이고, 반대도 마찬가지예요.
+- tmux 안에서는 tmux의 프리픽스와 AIDE의 프리픽스가 둘 다 <kbd>Ctrl</kbd><kbd>B</kbd>이니 하나를 바꿔 주세요.
+- Linux에서는 AIDE를 설치하면 `aide-mux`가 `PATH`(`~/.local/bin`)에 있어요. Mac에서는 지금은
+  위처럼 `~/Library/Application Support/AIDE/bin/aide-mux`로 실행해요.
+- 아직 없는 것: 복사 모드, 마우스, 맨 아래 줄의 에이전트 수와 알림 종.
+
 ### 설정 › 터미널
 
 | 설정 | 기본값 | 하는 일 |
