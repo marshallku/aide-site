@@ -761,6 +761,9 @@ after AIDE quits**. Then:
 - After you quit, the server ends the shells of the vaults this AIDE showed, unless another AIDE
   (on another computer, say) still has them open. The layout is kept, and the next start opens it
   with new shells.
+- Quitting also ends every space nothing shows, such as one you switched away from (a space open
+  in `aide-mux attach` is kept).
+  <Badge text="Next release" /> The question before quitting names the programs running there too.
 - A server with no window for 24 hours ends its shells and stops.
 
 ### From any terminal, over ssh <Badge text="Next release" />
