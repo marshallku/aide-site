@@ -185,6 +185,24 @@ bottom of the pane says **Copy mode**. The keys are comux's:
   the view back to the bottom.
 - The iPhone has no copy mode: touch and hold to select text as before.
 
+#### Open a pane's history in your editor <Badge text="Next release" />
+
+**Open history in editor** opens the focused pane's text and its scrollback in your editor, in a new
+tab: `$VISUAL`, else `$EDITOR`, else `less`. Use the [prefix key](/docs/guides/shortcuts/#the-prefix-key)
+and then <kbd>Ctrl</kbd><kbd>E</kbd>, the **Go** menu on the Mac, or the command palette. Search it,
+copy from it or save it with your own tools; the pane itself is untouched.
+
+- The text is plain, one line per line the program wrote, without colours. While a full-screen
+  program such as vim is open, it's the shell's text underneath.
+- A very long history keeps its newest 8 MB, and the first line says how much was left out.
+- Quitting the editor closes its pane. While the terminal server keeps running, the editor survives AIDE quitting and reopening like any shell; a restart of the terminal server doesn't bring it back.
+- The copy is a private file on the computer the shell runs on. It's deleted at least a minute after
+  the editor command returns, so a graphical editor that returns at once (`code`) can still open it.
+  With `--wait`, the file stays while the editor's window is open.
+- When no editor is found, no tab opens and AIDE says why. An older terminal server asks you to
+  update it.
+- The iPhone doesn't have it.
+
 ### Beside your notes
 
 The right panel (<kbd>⌥</kbd><kbd>⌘</kbd><kbd>\\</kbd>, <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>\\</kbd> on
