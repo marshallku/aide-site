@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 AIDE on the Mac and Linux has the same shortcuts, with <kbd>⌘</kbd> on the Mac where Linux uses
 <kbd>Ctrl</kbd>. On the Mac each one is also in the menu bar, and every command is in the command
@@ -134,7 +134,7 @@ While a terminal has the keyboard, these act on its tabs and panes:
 | Move the divider left / down / up / right | <kbd>⌃</kbd><kbd>⌘</kbd> and the arrows | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd> and the arrows |
 | Zoom pane | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd> |
 | Copy mode ([vi keys](/docs/guides/terminal/#copy-mode)) | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd> |
-| <Badge text="Next release" /> Previous / next [prompt](/docs/guides/terminal/#prompts-and-command-output) | <kbd>⌘</kbd><kbd>↑</kbd> / <kbd>⌘</kbd><kbd>↓</kbd> | <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd> / <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd> |
+| Previous / next [prompt](/docs/guides/terminal/#prompts-and-command-output) | <kbd>⌘</kbd><kbd>↑</kbd> / <kbd>⌘</kbd><kbd>↓</kbd> | <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd> / <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd> |
 | [Sync panes](/docs/guides/terminal/#arrange-a-tab-and-type-into-every-pane) | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>I</kbd> | none |
 | Previous / next tab | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
 | Go to tab 1–9 | <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> or <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
@@ -221,7 +221,7 @@ While a terminal has the keyboard, the prefix doesn't reach the program: the sta
 | <kbd>u</kbd> | Jump to the newest finished agent |
 | <kbd>R</kbd> | Resume a conversation… |
 | <kbd>[</kbd> | Copy mode |
-| <kbd>Ctrl</kbd><kbd>E</kbd> | Open history in editor <Badge text="Next release" /> |
+| <kbd>Ctrl</kbd><kbd>E</kbd> | Open history in editor |
 | <kbd>Space</kbd> | Next layout |
 | <kbd>Alt</kbd><kbd>1</kbd> … <kbd>Alt</kbd><kbd>5</kbd> (<kbd>⌥</kbd> on the Mac) | Even horizontal, Even vertical, Main horizontal, Main vertical, Tiled layout |
 | <kbd>E</kbd> | Spread panes evenly |
@@ -261,7 +261,7 @@ z = "none"                           # a key taken out of the table
 A key is one character as you type it (`%`, `H`, `|`), or a named key with `ctrl`, `alt` or
 `shift` (`shift+left`, `tab`); comux's `C-o`, `M-1` and `S-Left` work too. An entry that isn't a key
 with `action:<id>` or `none` is listed in **Settings › Keyboard** and left out. On the Mac the table
-is kept in the app's settings with the prefix. <Badge text="Next release" /> A value reads as the
+is kept in the app's settings with the prefix. A value reads as the
 shortcuts' values do: `action:<id>` followed by other words is `<id>`, and `none` works in any case.
 
 ## Change your shortcuts
@@ -285,7 +285,7 @@ The new shortcut replaces the action's built-in one. If another action had it, t
 it, and AIDE says so: "… had this shortcut; it's off now." That action stays off, so its built-in
 shortcut doesn't come back later when you move yours elsewhere.
 
-<Badge text="Next release" /> Giving an action its own built-in shortcut back takes it from no
+Giving an action its own built-in shortcut back takes it from no
 other action's built-in one: on the Mac, <kbd>⌘</kbd><kbd>T</kbd> back for **Open today's note**
 leaves **New terminal tab** on <kbd>⌘</kbd><kbd>T</kbd> in a terminal. An action with two built-in
 shortcuts that loses one keeps the other, and AIDE says nothing: Linux's **Back** keeps
@@ -323,7 +323,7 @@ The keys you press in a terminal belong to the program running there, so your sh
 - **Linux**: while a terminal has the keyboard, only shortcuts with <kbd>Ctrl</kbd><kbd>Shift</kbd>
   or <kbd>Ctrl</kbd><kbd>Alt</kbd> (and <kbd>Ctrl</kbd><kbd>,</kbd>) reach AIDE. Plain
   <kbd>Ctrl</kbd> letters, <kbd>Super</kbd> shortcuts and function keys go to the program.
-  <Badge text="Next release" /> Also <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd> and
+  Also <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd> and
   <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd>, **Previous prompt** and **Next prompt**: a program in
   the pane no longer gets those two. Give the actions other keys in **Settings › Keyboard** and the
   program gets them again.
@@ -341,7 +341,7 @@ in **Settings › Keyboard** says so too.
 - On Linux it shares <kbd>Ctrl</kbd><kbd>F</kbd> with **Find in note**: one acts in a pane, the other
   in a note. Giving either one its own shortcut back takes nothing from the other. Recording
   <kbd>Ctrl</kbd><kbd>F</kbd> for any other action takes it from both.
-- <Badge text="Next release" /> The switcher key and the other actions no longer take each other's
+- The switcher key and the other actions no longer take each other's
   built-in shortcuts. Recording <kbd>Ctrl</kbd><kbd>F</kbd> (on the Mac <kbd>⌃</kbd><kbd>F</kbd>)
   for another action takes it from **Find in note** on Linux, but a pane keeps it as the switcher
   key; and recording an action's built-in shortcut for the switcher key leaves that action its
@@ -398,7 +398,7 @@ actions = ["new-scratch"]
   `f1`–`f24`, `left`, `right`, `up`, `down`, `home`, `end`, `pageup`, `pagedown`, `insert`,
   `delete`, `backspace`, `tab`, `return` or `escape`. Any case works, and so do GTK's names
   (`<Control><Shift>g`, `Page_Down`). Use `ctrl+shift+1`, not `ctrl+!`.
-- <Badge text="Next release" /> The file reads every spelling the Mac reads, so a line written either
+- The file reads every spelling the Mac reads, so a line written either
   way works: the key before its modifiers (`j+ctrl`), the Mac's symbols (`⌃⌥J`), and
   `action:<id>` followed by other words, which are ignored.
 - An action you give a shortcut here loses its built-in one; an action can have several.
@@ -459,8 +459,8 @@ window has now, with their titles (see [aidectl](/docs/developers/aidectl/#actio
 | `terminal/resize-left`, `terminal/resize-down`, `terminal/resize-up`, `terminal/resize-right` | Move the divider left, down, up, right |
 | `terminal/zoom-pane` | Zoom pane |
 | `terminal/copy-mode` | Copy mode |
-| `terminal/edit-scrollback` | Open history in editor <Badge text="Next release" /> |
-| `terminal/prompt-previous`, `terminal/prompt-next`, `terminal/copy-last-output` | <Badge text="Next release" /> Previous prompt, Next prompt, Copy the last command's output |
+| `terminal/edit-scrollback` | Open history in editor |
+| `terminal/prompt-previous`, `terminal/prompt-next`, `terminal/copy-last-output` | Previous prompt, Next prompt, Copy the last command's output |
 | `terminal/layout-even-horizontal`, `terminal/layout-even-vertical`, `terminal/layout-main-horizontal`, `terminal/layout-main-vertical`, `terminal/layout-tiled` | Even horizontal layout, Even vertical layout, Main horizontal layout, Main vertical layout, Tiled layout |
 | `terminal/next-layout`, `terminal/spread-panes` | Next layout, Spread panes evenly |
 | `terminal/swap-pane-prev`, `terminal/swap-pane-next` | Swap with the previous pane, Swap with the next pane |

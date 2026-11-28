@@ -5,7 +5,7 @@ sidebar:
     order: 14
 ---
 
-import { Aside, Badge } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 On the Mac and Linux, AIDE has a terminal of its own, so you can keep a shell next to your notes. On
 the iPhone, which has no local shell, the SSH section opens terminals to your servers instead.
@@ -185,7 +185,7 @@ bottom of the pane says **Copy mode**. The keys are comux's:
   the view back to the bottom.
 - The iPhone has no copy mode: touch and hold to select text as before.
 
-#### Open a pane's history in your editor <Badge text="Next release" />
+#### Open a pane's history in your editor
 
 **Open history in editor** opens the focused pane's text and its scrollback in your editor, in a new
 tab: `$VISUAL`, else `$EDITOR`, else `less`. Use the [prefix key](/docs/guides/shortcuts/#the-prefix-key)
@@ -417,7 +417,7 @@ and both read them the same way.
 
 The parts are `space` (the pill, or the chips with **Every space**), `tabs` (with **+** after them),
 `flags` (`ZOOM`, `^B` and `LOCK`), `voice` (the mic), `attention` (the bell), `agents`, `usage` and `clock`; and
-<Badge text="Next release" /> `exit`, the last command's exit status when it isn't 0 ([Prompts and command output](#prompts-and-command-output)), on no side by default. A right side saved as an old default, `flags, agents, usage, clock` or `flags, attention, agents, usage, clock` in that order, gets what came after it (`attention`, `voice`); any other keeps its parts until you add them. Each part goes in one side only, and the tabs
+`exit`, the last command's exit status when it isn't 0 ([Prompts and command output](#prompts-and-command-output)), on no side by default. A right side saved as an old default, `flags, agents, usage, clock` or `flags, attention, agents, usage, clock` in that order, gets what came after it (`attention`, `voice`); any other keeps its parts until you add them. Each part goes in one side only, and the tabs
 are always there: left out of both sides, they join the left. **Show status bar** off keeps only the
 space and the tabs, where you put them, and **Clock** off drops the clock; your order stays for when
 you turn them back on. A name AIDE doesn't know shows under the field and is left out.
@@ -782,10 +782,10 @@ after AIDE quits**. Then:
   with new shells.
 - Quitting also ends every space nothing shows, such as one you switched away from (a space open
   in `aide-mux attach` is kept).
-  <Badge text="Next release" /> The question before quitting names the programs running there too.
+  The question before quitting names the programs running there too.
 - A server with no window for 24 hours ends its shells and stops.
 
-### From any terminal, over ssh <Badge text="Next release" />
+### From any terminal, over ssh
 
 Your spaces are also reachable from any terminal, on the same computer or over ssh: run
 `aide-mux attach` there. It shows a space's tabs and panes full screen, live: the same shells, still
@@ -855,8 +855,8 @@ On a Mac, put `aide-mux` on your `PATH` first (below), or give its whole path:
 | **Shell** | Your login shell | The program a new tab starts. |
 | **Close a tab when its shell exits** | On | Off keeps an ended tab open so you can read what it printed. |
 | **Ask before closing a running program** | On | Closing a pane or tab with a program other than the shell running in it asks first. Off, it closes at once (`confirm_close` on Linux). |
-| **Theme** | **System (light and dark)** | System uses Catppuccin Latte in light mode and Catppuccin Mocha in dark. Others: Catppuccin Frappé, Catppuccin Macchiato, Dracula, Nord, Tokyo Night, Gruvbox Dark, One Dark, Solarized Dark. <Badge text="Next release" /> Also Solarized Light, Gruvbox Light, One Light and Tokyo Night Day. The menu lists the dark themes, then the light ones, each with a swatch of its colours. Open panes change at once. |
-| **In light mode**, **In dark mode** <Badge text="Next release" /> | **Catppuccin Latte**, **Catppuccin Mocha** | Shown while the theme is System: the theme it uses in light mode and in dark mode. Any theme can go in either (`system_light` and `system_dark` on Linux). |
+| **Theme** | **System (light and dark)** | System uses Catppuccin Latte in light mode and Catppuccin Mocha in dark. Others: Catppuccin Frappé, Catppuccin Macchiato, Dracula, Nord, Tokyo Night, Gruvbox Dark, One Dark, Solarized Dark. Also Solarized Light, Gruvbox Light, One Light and Tokyo Night Day. The menu lists the dark themes, then the light ones, each with a swatch of its colours. Open panes change at once. |
+| **In light mode**, **In dark mode** | **Catppuccin Latte**, **Catppuccin Mocha** | Shown while the theme is System: the theme it uses in light mode and in dark mode. Any theme can go in either (`system_light` and `system_dark` on Linux). |
 | **Font** | A Nerd Font if one is installed, else the system's monospace | Any installed font by name. |
 | **Size** | 13 | 8 to 32. |
 | **Cursor** | **Block** | **Block**, **Bar** or **Underline**. |
@@ -864,7 +864,7 @@ On a Mac, put `aide-mux` on your `PATH` first (below), or give its whole path:
 | **Use Option as Meta** (Mac) | On | <kbd>⌥</kbd> works as Meta/Alt in the shell instead of typing special characters. |
 | **Option-Return sends Esc Return** (Mac) | On | <kbd>⌥</kbd><kbd>Return</kbd> sends Esc Return even with Use Option as Meta off, as a new line in Claude Code's prompt and many REPLs. A program using the kitty keyboard protocol gets its own encoding instead. |
 | **Option-Esc sends Esc Esc** (Mac) | Off | The same for <kbd>⌥</kbd><kbd>Esc</kbd>. |
-| **Programs can copy to the clipboard** | On | Programs copy with OSC 52, as tmux and Neovim do over ssh. They can never read the clipboard. <Badge text="Next release" /> On Linux too (`osc52` in `[terminal]`, `"allow"` or `"deny"`); before, the Linux terminal never let them. |
+| **Programs can copy to the clipboard** | On | Programs copy with OSC 52, as tmux and Neovim do over ssh. They can never read the clipboard. On Linux too (`osc52` in `[terminal]`, `"allow"` or `"deny"`); before, the Linux terminal never let them. |
 | **Scrollback** | 10,000 lines | 0 to 100,000. 0 keeps none. |
 | **Draw with the GPU** (Mac) | On | Draws the terminal with Metal. Off draws it with Core Text. Applies to new tabs. |
 | **Font thickening** (Mac) | **Off** | **On**, **Off**, or **On non-Retina displays**: draws text a little heavier. |
@@ -879,7 +879,7 @@ On a Mac, put `aide-mux` on your `PATH` first (below), or give its whole path:
 | **Folder name** | `{repo}-{branch}` | Under **Worktrees**: the folder a new worktree goes in, beside the repository. See [Worktrees](#worktrees). |
 | **Repository folder** and **Command to run** | None | Under **Worktrees**: a command a repository's new worktrees run in their first pane. |
 | **Keep shells running after AIDE quits** | On | Your shells and the programs in them go on when you quit AIDE or it closes unexpectedly. Off, quitting ends them. See [Shells that outlive AIDE](#shells-that-outlive-aide). |
-| **Install aide-mux on PATH** (Mac) <Badge text="Next release" /> | Not installed | Under **From any terminal**: links `~/.local/bin/aide-mux` to AIDE's, for `aide-mux attach` in another terminal or over ssh. See [From any terminal, over ssh](#from-any-terminal-over-ssh-). |
+| **Install aide-mux on PATH** (Mac) | Not installed | Under **From any terminal**: links `~/.local/bin/aide-mux` to AIDE's, for `aide-mux attach` in another terminal or over ssh. See [From any terminal, over ssh](#from-any-terminal-over-ssh). |
 
 Changes reach open tabs at once, except where the table says new tabs. On Linux the same settings
 are also kept in `config.toml` under `[terminal]` (`kitty_keyboard`, `images`, `reopen_tabs`,
@@ -992,7 +992,7 @@ session's pane opens it.
 
 ### Prompts and command output
 
-<Badge text="Next release" /> AIDE's zsh and bash mark where each prompt starts and where each
+AIDE's zsh and bash mark where each prompt starts and where each
 command's output starts and ends (shell integration marks, OSC 133, as iTerm2, kitty and VS Code read
 them). With them:
 
@@ -1316,7 +1316,7 @@ Desktop notifications, for agents and for the ones you post with [`aidectl notif
 The first notification asks for permission on the Mac. On Linux the desktop may keep the window from
 coming forward; the pane is selected all the same.
 
-<Badge text="Next release" /> Programs can raise one too, with the escape codes other terminals use:
+Programs can raise one too, with the escape codes other terminals use:
 `printf '\e]9;Build finished\a'` (iTerm2's) or `printf '\e]777;notify;Build;cargo test passed\a'`
 (urxvt's and kitty's, with a title). It comes from the pane like an agent's: in the notification
 center, on the desktop while **Desktop notifications** is on, and a click goes to the pane. Without

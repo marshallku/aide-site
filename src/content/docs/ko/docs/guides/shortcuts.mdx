@@ -5,7 +5,7 @@ sidebar:
     order: 13
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 Mac과 Linux의 AIDE는 같은 단축키를 써요. Linux에서 <kbd>Ctrl</kbd>을 쓰는 자리에 Mac에서는 <kbd>⌘</kbd>를 써요.
 Mac에서는 모든 단축키가 메뉴 막대에도 있고, 모든 명령은 단축키와 함께 명령 팔레트에 있어요.
@@ -132,7 +132,7 @@ Linux에서는 데스크톱이나 컴포지터에서 `aidectl capture`에 단축
 | 구분선을 왼쪽 / 아래 / 위 / 오른쪽으로 | <kbd>⌃</kbd><kbd>⌘</kbd>와 화살표 | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd>와 화살표 |
 | 페인 확대 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Return</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd> |
 | 복사 모드([vi 키](/ko/docs/guides/terminal/#복사-모드)) | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>Y</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Y</kbd> |
-| <Badge text="다음 릴리스" /> 이전 / 다음 [프롬프트](/ko/docs/guides/terminal/#프롬프트와-명령-출력) | <kbd>⌘</kbd><kbd>↑</kbd> / <kbd>⌘</kbd><kbd>↓</kbd> | <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd> / <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd> |
+| 이전 / 다음 [프롬프트](/ko/docs/guides/terminal/#프롬프트와-명령-출력) | <kbd>⌘</kbd><kbd>↑</kbd> / <kbd>⌘</kbd><kbd>↓</kbd> | <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd> / <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd> |
 | [페인 동시 입력](/ko/docs/guides/terminal/#탭-배치와-모든-페인에-입력하기) | <kbd>⌥</kbd><kbd>⌘</kbd><kbd>I</kbd> | 없음 |
 | 이전 / 다음 탭 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>[</kbd> / <kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd> | <kbd>Ctrl</kbd><kbd>Page Up</kbd> / <kbd>Ctrl</kbd><kbd>Page Down</kbd> |
 | 1–9번 탭으로 이동 | <kbd>⌥</kbd><kbd>1</kbd>–<kbd>9</kbd> 또는 <kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd> | <kbd>Alt</kbd><kbd>1</kbd>–<kbd>9</kbd> |
@@ -217,7 +217,7 @@ Linux에서 <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Left</kbd>는 이제 왼쪽 페�
 | <kbd>u</kbd> | 가장 최근에 끝난 에이전트로 이동 |
 | <kbd>R</kbd> | 대화 다시 열기… |
 | <kbd>[</kbd> | 복사 모드 |
-| <kbd>Ctrl</kbd><kbd>E</kbd> | 편집기에서 기록 열기 <Badge text="다음 릴리스" /> |
+| <kbd>Ctrl</kbd><kbd>E</kbd> | 편집기에서 기록 열기 |
 | <kbd>Space</kbd> | 다음 배치 |
 | <kbd>Alt</kbd><kbd>1</kbd> … <kbd>Alt</kbd><kbd>5</kbd>(Mac은 <kbd>⌥</kbd>) | 가로로 균등, 세로로 균등, 주 페인 위, 주 페인 왼쪽, 바둑판 배치 |
 | <kbd>E</kbd> | 페인 크기 고르게 |
@@ -256,7 +256,7 @@ z = "none"                           # 표에서 키 빼기
 키는 입력한 그대로의 문자 하나(`%`, `H`, `|`)이거나 `ctrl`, `alt`, `shift`를 붙인 이름 있는 키(`shift+left`,
 `tab`)예요. comux의 `C-o`, `M-1`, `S-Left`도 돼요. 키와 `action:<id>` 또는 `none`이 아닌 항목은
 **설정 › 키보드**에 문제로 나오고 빠져요. Mac에서는 이 표가 프리픽스와 함께 앱 설정에 저장돼요.
-<Badge text="다음 릴리스" /> 값은 단축키 값과 같이 읽어요. `action:<id>` 뒤에 다른 말이 붙어도 `<id>`이고, `none`은
+값은 단축키 값과 같이 읽어요. `action:<id>` 뒤에 다른 말이 붙어도 `<id>`이고, `none`은
 대소문자와 상관없이 돼요.
 
 ## 단축키 바꾸기
@@ -281,7 +281,7 @@ Mac과 Linux에서 명령 팔레트가 실행하는 것은 모두 이름 있는 
 AIDE가 "…에 있던 단축키라 그쪽은 꺼졌어요."라고 알려 줘요. 그 동작은 꺼진 채로 남아서, 나중에 내 단축키를
 다른 곳으로 옮겨도 기본 단축키가 다시 살아나지 않아요.
 
-<Badge text="다음 릴리스" /> 동작에 원래 기본 단축키를 돌려줄 때는 다른 동작의 기본 단축키를 가져가지 않아요.
+동작에 원래 기본 단축키를 돌려줄 때는 다른 동작의 기본 단축키를 가져가지 않아요.
 Mac에서 **오늘 노트 열기**에 <kbd>⌘</kbd><kbd>T</kbd>를 돌려줘도 터미널에서는 **새 터미널 탭**이 <kbd>⌘</kbd><kbd>T</kbd>로
 남아요. 기본 단축키가 둘인 동작이 하나를 잃으면 다른 하나는 남고, AIDE는 따로 알리지 않아요. Linux의 **뒤로**는 다른
 동작이 <kbd>Ctrl</kbd><kbd>[</kbd>를 가져가도 <kbd>Alt</kbd><kbd>Left</kbd>를 그대로 써요.
@@ -318,7 +318,7 @@ Page Down, Insert, Delete, Backspace, Tab, Return, Esc, Space도 쓸 수 있어�
 - **Linux**: 터미널에 키보드 포커스가 있는 동안에는 <kbd>Ctrl</kbd><kbd>Shift</kbd>나
   <kbd>Ctrl</kbd><kbd>Alt</kbd>가 들어간 단축키(그리고 <kbd>Ctrl</kbd><kbd>,</kbd>)만 AIDE가 받아요.
   <kbd>Ctrl</kbd>과 글자만 누르는 단축키, <kbd>Super</kbd> 단축키, 기능 키는 프로그램으로 가요.
-  <Badge text="다음 릴리스" /> **이전 프롬프트**와 **다음 프롬프트**의 <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd>와
+  **이전 프롬프트**와 **다음 프롬프트**의 <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd>와
   <kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd>도 AIDE가 받아서, 페인의 프로그램은 이 두 키를 더 받지 않아요.
   **설정 › 키보드**에서 이 동작에 다른 키를 주면 프로그램이 다시 받아요.
 
@@ -334,7 +334,7 @@ Page Down, Insert, Delete, Backspace, Tab, Return, Esc, Space도 쓸 수 있어�
 - Linux에서는 **노트에서 찾기**와 <kbd>Ctrl</kbd><kbd>F</kbd>를 함께 써요. 하나는 페인에서, 다른 하나는 노트에서 동작해요.
   둘 중 하나에 원래 단축키를 돌려줘도 다른 쪽은 그대로예요. 다른 동작에 <kbd>Ctrl</kbd><kbd>F</kbd>를 기록하면 둘 다에서
   빠져요.
-- <Badge text="다음 릴리스" /> 스위처 키와 다른 동작은 서로의 기본 단축키를 가져가지 않아요. 다른 동작에
+- 스위처 키와 다른 동작은 서로의 기본 단축키를 가져가지 않아요. 다른 동작에
   <kbd>Ctrl</kbd><kbd>F</kbd>(Mac에서는 <kbd>⌃</kbd><kbd>F</kbd>)를 기록하면 Linux에서는 **노트에서 찾기**에서는 빠지지만,
   페인에서는 스위처 키로 남아요. 어떤 동작의 기본 단축키를 스위처 키에 기록해도 그 동작은 페인 밖에서 그 단축키를 그대로 써요.
   직접 기록한 단축키는 여전히 한 동작의 것이에요. 그 단축키를 스위처 키에, 또는 스위처 키의 단축키를 다른 동작에 기록하면
@@ -383,7 +383,7 @@ actions = ["new-scratch"]
   `up`, `down`, `home`, `end`, `pageup`, `pagedown`, `insert`, `delete`, `backspace`, `tab`, `return`,
   `escape`예요. 대소문자는 상관없고, GTK의 이름(`<Control><Shift>g`, `Page_Down`)도 돼요. `ctrl+!`가 아니라
   `ctrl+shift+1`로 써요.
-- <Badge text="다음 릴리스" /> 이 파일은 Mac이 읽는 표기를 모두 읽어서, 어느 쪽으로 쓴 줄이든 돼요. 수식 키보다
+- 이 파일은 Mac이 읽는 표기를 모두 읽어서, 어느 쪽으로 쓴 줄이든 돼요. 수식 키보다
   키를 먼저 쓴 것(`j+ctrl`), Mac의 기호(`⌃⌥J`), 그리고 뒤에 다른 단어가 붙은 `action:<id>`(뒤의 단어는
   무시해요)도 돼요.
 - 여기서 단축키를 준 동작은 기본 단축키를 잃어요. 한 동작에 단축키를 여러 개 줄 수도 있어요.
@@ -441,8 +441,8 @@ Mac에서는 같은 단축키가 앱 설정에 저장돼요. **설정 › 키보
 | `terminal/resize-left`, `terminal/resize-down`, `terminal/resize-up`, `terminal/resize-right` | 구분선을 왼쪽, 아래, 위, 오른쪽으로 |
 | `terminal/zoom-pane` | 페인 확대 |
 | `terminal/copy-mode` | 복사 모드 |
-| `terminal/edit-scrollback` | 편집기에서 기록 열기 <Badge text="다음 릴리스" /> |
-| `terminal/prompt-previous`, `terminal/prompt-next`, `terminal/copy-last-output` | <Badge text="다음 릴리스" /> 이전 프롬프트, 다음 프롬프트, 마지막 명령의 출력 복사 |
+| `terminal/edit-scrollback` | 편집기에서 기록 열기 |
+| `terminal/prompt-previous`, `terminal/prompt-next`, `terminal/copy-last-output` | 이전 프롬프트, 다음 프롬프트, 마지막 명령의 출력 복사 |
 | `terminal/layout-even-horizontal`, `terminal/layout-even-vertical`, `terminal/layout-main-horizontal`, `terminal/layout-main-vertical`, `terminal/layout-tiled` | 가로로 균등 배치, 세로로 균등 배치, 주 페인 위 배치, 주 페인 왼쪽 배치, 바둑판 배치 |
 | `terminal/next-layout`, `terminal/spread-panes` | 다음 배치, 페인 크기 고르게 |
 | `terminal/swap-pane-prev`, `terminal/swap-pane-next` | 이전 페인과 자리 바꾸기, 다음 페인과 자리 바꾸기 |

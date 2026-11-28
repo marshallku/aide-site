@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 A device plugin is a small folder of files (below) that AIDE loads into a sandboxed web view on the iPhone, the Mac
 and the Linux app. It can add a tab, a view in the desktop's right panel, a sheet on notes, palette commands and
@@ -32,7 +32,7 @@ A package is a folder with these files, each at most 2 MB. Any other file is rej
 The package is identified by a SHA-256 hash of all its files. If a file of an installed copy changes on the
 device afterwards, AIDE turns the plugin off until it is installed again.
 
-<Badge text="Next release" /> Every app checks a package with the same rules and says why it refused one in
+Every app checks a package with the same rules and says why it refused one in
 the app's language. Save `manifest.json` and the skill files as UTF-8 without a byte order mark, and give each
 key once: the Mac and iPhone now refuse a manifest saved as UTF-16 or with a byte order mark, a top-level key given twice
 and a skill file that starts with a byte order mark, as the Linux app and the public index already do. The limits
